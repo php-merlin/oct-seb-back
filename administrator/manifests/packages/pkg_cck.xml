@@ -66,7 +66,6 @@
 			<file type="plugin" id="jform_timezone" group="cck_field">plg_cck_field_jform_timezone.zip</file>
 			<file type="plugin" id="jform_user" group="cck_field">plg_cck_field_jform_user.zip</file>
 			<file type="plugin" id="jform_usergroups" group="cck_field">plg_cck_field_jform_usergroups.zip</file>
-			<file type="plugin" id="joomla_module" group="cck_field">plg_cck_field_joomla_module.zip</file>
 			<file type="plugin" id="password" group="cck_field">plg_cck_field_password.zip</file>
 			<file type="plugin" id="radio" group="cck_field">plg_cck_field_radio.zip</file>
 			<file type="plugin" id="search_generic" group="cck_field">plg_cck_field_search_generic.zip</file>
