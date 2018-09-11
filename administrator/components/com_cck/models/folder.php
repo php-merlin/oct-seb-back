@@ -142,7 +142,6 @@ class CCKModelFolder extends JCckBaseLegacyModelAdmin
 		$data['tables_excluded']					=	CCK_Export::getCoreTables();
 		$data['variations']							=	array(
 															'empty'=>true,
-															'joomla'=>true,
 															'seb_css3'=>true,
 															'seb_css3b'=>true
 														);

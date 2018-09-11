@@ -40,7 +40,6 @@ class CCKModelVariations extends JModelList
 		$items		=	array();
 		$variations	=	array(
 							'empty'=>'',
-							'joomla'=>'',
 							'seb_css3'=>'',
 							'seb_css3b'=>''
 						);
