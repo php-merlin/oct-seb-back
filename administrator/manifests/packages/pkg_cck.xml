@@ -114,7 +114,6 @@
 			<file type="plugin" id="ajax_availability" group="cck_field_validation">plg_cck_field_validation_ajax_availability.zip</file>
 			<file type="plugin" id="confirm" group="cck_field_validation">plg_cck_field_validation_confirm.zip</file>
 			<file type="plugin" id="email" group="cck_field_validation">plg_cck_field_validation_email.zip</file>
-			<file type="plugin" id="letter_number_only" group="cck_field_validation">plg_cck_field_validation_letter_number_only.zip</file>
 			<file type="plugin" id="required" group="cck_field_validation">plg_cck_field_validation_required.zip</file>
 			<file type="plugin" id="url" group="cck_field_validation">plg_cck_field_validation_url.zip</file>
 			<!-- Plugin // Authentication -->
