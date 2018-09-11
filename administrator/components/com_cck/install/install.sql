@@ -1056,7 +1056,6 @@ CREATE TABLE IF NOT EXISTS `#__cck_core_templates` (
 
 INSERT IGNORE INTO `#__cck_core_templates` (`id`, `title`, `name`, `folder`, `mode`, `description`, `featured`, `published`, `checked_out`, `checked_out_time`) VALUES
 (1, 'One', 'seb_one', 3, 0, '', 1, 1, 0, '0000-00-00 00:00:00'),
-(2, 'Blog', 'seb_blog', 3, 2, '', 0, 1, 0, '0000-00-00 00:00:00'),
 (3, 'Table', 'seb_table', 3, 2, '', 0, 1, 0, '0000-00-00 00:00:00');
 
 

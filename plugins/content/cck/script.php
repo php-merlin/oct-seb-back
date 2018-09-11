@@ -198,9 +198,12 @@ class plgContentCCKInstallerScript
 			$query	=	'SELECT id FROM #__template_styles WHERE template="seb_one" ORDER BY id';
 			$db->setQuery( $query );
 			$style	=	$db->loadResult();
+			/* TODO#SEBLOD4 */
+			/*
 			$query	=	'SELECT id FROM #__template_styles WHERE template="seb_blog" ORDER BY id';
 			$db->setQuery( $query );
 			$style2	=	$db->loadResult();
+			*/
 			$query	=	'SELECT id FROM #__template_styles WHERE template="seb_table" ORDER BY id';
 			$db->setQuery( $query );
 			$style3	=	$db->loadResult();
@@ -211,9 +214,12 @@ class plgContentCCKInstallerScript
 			$db->execute();
 			
 			// - Search Types (Blog)
+			/* TODO#SEBLOD4 */
+			/*
 			$query	=	'UPDATE #__cck_core_searchs SET template_search = '.$style.', template_filter = '.$style.', template_list = '.$style2.', template_item = '.$style.' WHERE id IN (1,5,8)';
 			$db->setQuery( $query );
 			$db->execute();
+			*/
 
 			// - Search Types (Table)
 			$query	=	'UPDATE #__cck_core_searchs SET template_search = '.$style.', template_filter = '.$style.' WHERE id IN (11,15,18)';
