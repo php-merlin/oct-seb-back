@@ -2439,14 +2439,6 @@ Temporary Items
 /plugins/cck_field_validation/credit_card_mastercard/*
 /plugins/cck_field_validation/credit_card_visa/*
 
-######## SEBLOD Plug-ins >> Validation >> Date
-
-/administrator/language/en-GB/en-GB.plg_cck_field_validation_date.ini
-/administrator/language/en-GB/en-GB.plg_cck_field_validation_date.sys.ini
-/administrator/language/fr-FR/fr-FR.plg_cck_field_validation_date.ini
-/administrator/language/fr-FR/fr-FR.plg_cck_field_validation_date.sys.ini
-/plugins/cck_field_validation/date/*
-
 ######## SEBLOD Plug-ins >> Validation >> Empty
 
 /administrator/language/en-GB/en-GB.plg_cck_field_validation_empty.ini
