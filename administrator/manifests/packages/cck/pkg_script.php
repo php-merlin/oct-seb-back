@@ -42,6 +42,7 @@ class pkg_cckInstallerScript
 	public function postflight( $type, $parent )
 	{
 		if ( $type == 'install' ) {
+			$db			=	JFactory::getDbo();
 			$new_module	=	JTable::getInstance( 'Module', 'JTable' );
 			
 			if ( $new_module->save( array(
