@@ -2163,14 +2163,6 @@ Temporary Items
 
 /plugins/cck_ecommerce_payment/*
 
-######## SEBLOD Plug-ins >> Restriction >> Clear
-
-/administrator/language/en-GB/en-GB.plg_cck_field_restriction_clear.ini
-/administrator/language/en-GB/en-GB.plg_cck_field_restriction_clear.sys.ini
-/administrator/language/fr-FR/fr-FR.plg_cck_field_restriction_clear.ini
-/administrator/language/fr-FR/fr-FR.plg_cck_field_restriction_clear.sys.ini
-/plugins/cck_field_restriction/clear/*
-
 ######## SEBLOD Plug-ins >> Restriction >> GeoIP
 
 /administrator/language/en-GB/en-GB.plg_cck_field_restriction_geoip.ini
