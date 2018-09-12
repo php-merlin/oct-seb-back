@@ -55,7 +55,6 @@
 			<file type="plugin" id="jform_contentlanguage" group="cck_field">plg_cck_field_jform_contentlanguage.zip</file>
 			<file type="plugin" id="jform_editors" group="cck_field">plg_cck_field_jform_editors.zip</file>
 			<file type="plugin" id="jform_helpsite" group="cck_field">plg_cck_field_jform_helpsite.zip</file>
-			<file type="plugin" id="jform_groupparent" group="cck_field">plg_cck_field_jform_groupparent.zip</file>
 			<file type="plugin" id="jform_media" group="cck_field">plg_cck_field_jform_media.zip</file>
 			<file type="plugin" id="jform_menuitem" group="cck_field">plg_cck_field_jform_menuitem.zip</file>
 			<file type="plugin" id="jform_rules" group="cck_field">plg_cck_field_jform_rules.zip</file>
