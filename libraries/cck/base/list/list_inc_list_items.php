@@ -73,7 +73,7 @@ if ( $count ) {
 			$items[$i]->type_id			=	0;
 			$items[$i]->type_alias		=	'';
 		}
-		$item	=	new CCK_Item( $templateStyle->name, $search->name, $items[$i]->pk );
+		$item	=	new CCK_Rendering_Item( $templateStyle->name, $search->name, $items[$i]->pk );
 		
 		// --
 		if ( $count2 ) {
