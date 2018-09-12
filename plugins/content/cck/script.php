@@ -170,8 +170,9 @@ class plgContentCCKInstallerScript
 									1=>array( 'name'=>'mod_cck_quickicon', 'update'=>'title = "Quick Icons - SEBLOD", access = 3, published = 1, position = "icon", ordering = 2' ),
 									2=>array( 'name'=>'mod_cck_breadcrumbs', 'update'=>'title = "Breadcrumbs - SEBLOD"' ),
 									3=>array( 'name'=>'mod_cck_form', 'update'=>'title = "Form - SEBLOD"' ),
-									4=>array( 'name'=>'mod_cck_list', 'update'=>'title = "List - SEBLOD"' ),
-									5=>array( 'name'=>'mod_cck_search', 'update'=>'title = "Search - SEBLOD"' ) );
+									4=>array( 'name'=>'mod_cck_item', 'update'=>'title = "Item - SEBLOD"' ),
+									5=>array( 'name'=>'mod_cck_list', 'update'=>'title = "List - SEBLOD"' ),
+									6=>array( 'name'=>'mod_cck_search', 'update'=>'title = "Search - SEBLOD"' ) );
 			foreach ( $modules as $module ) {
 				$query	=	'UPDATE #__modules SET '.$module['update'].' WHERE module = "'.$module['name'].'"';
 				$db->setQuery( $query );
