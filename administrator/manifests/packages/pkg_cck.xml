@@ -52,7 +52,6 @@
 			<file type="plugin" id="jform_calendar" group="cck_field">plg_cck_field_jform_calendar.zip</file>
 			<file type="plugin" id="jform_category" group="cck_field">plg_cck_field_jform_category.zip</file>
 			<file type="plugin" id="jform_componentlayout" group="cck_field">plg_cck_field_jform_componentlayout.zip</file>
-			<file type="plugin" id="jform_editors" group="cck_field">plg_cck_field_jform_editors.zip</file>
 			<file type="plugin" id="jform_media" group="cck_field">plg_cck_field_jform_media.zip</file>
 			<file type="plugin" id="jform_menuitem" group="cck_field">plg_cck_field_jform_menuitem.zip</file>
 			<file type="plugin" id="jform_rules" group="cck_field">plg_cck_field_jform_rules.zip</file>
