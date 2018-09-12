@@ -46,6 +46,7 @@
 			<file type="plugin" id="email" group="cck_field">plg_cck_field_email.zip</file>
 			<file type="plugin" id="freetext" group="cck_field">plg_cck_field_freetext.zip</file>
 			<file type="plugin" id="field_x" group="cck_field">plg_cck_field_field_x.zip</file>
+			<file type="plugin" id="form_action" group="cck_field">plg_cck_field_form_action.zip</file>
 			<file type="plugin" id="group" group="cck_field">plg_cck_field_group.zip</file>
 			<file type="plugin" id="group_x" group="cck_field">plg_cck_field_group_x.zip</file>
 			<file type="plugin" id="icon" group="cck_field">plg_cck_field_icon.zip</file>

@@ -1488,14 +1488,6 @@ Temporary Items
 /administrator/language/fr-FR/fr-FR.plg_cck_field_folder.sys.ini
 /plugins/cck_field/folder/*
 
-######## SEBLOD Plug-ins >> Field >> Form Action
-
-/administrator/language/en-GB/en-GB.plg_cck_field_form_action.ini
-/administrator/language/en-GB/en-GB.plg_cck_field_form_action.sys.ini
-/administrator/language/fr-FR/fr-FR.plg_cck_field_form_action.ini
-/administrator/language/fr-FR/fr-FR.plg_cck_field_form_action.sys.ini
-/plugins/cck_field/form_action/*
-
 ######## SEBLOD Plug-ins >> Field >> Form Breadcrumbs
 
 /administrator/language/en-GB/en-GB.plg_cck_field_form_breadcrumbs.ini
