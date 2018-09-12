@@ -654,7 +654,12 @@ INSERT INTO `#__cck_core_fields` (`id`, `title`, `name`, `folder`, `type`, `desc
 (627, 'Category Alias (FR)', 'cat_alias_fr', 23, 'text', '', 1, 'Alias FR', '', 3, '', '', '', '', '', 0, 255, 32, 0, 0, 0, 0, '', 0, '', '', '', '', 0, 0, 0, 0, 0, 0, 1, '', '', 'standard', '', 'joomla_category', '#__cck_store_item_categories', 'alias_fr', '', '', '', 0, '0000-00-00 00:00:00'),
 (628, 'Core MetaDesc', 'core_metadesc', 3, 'text', '', 0, 'Override MetaDesc', '', 3, '', '', '', '', '', 0, 255, 32, 0, 0, 0, 0, '', 0, '', '', '', '', 0, 0, 0, 0, 0, 0, 1, '', '', 'dev', '', '', '', 'options[metadesc]', '', '', '', 0, '0000-00-00 00:00:00'),
 (629, 'Core SEF Canonical', 'core_sef_canonical', 3, 'select_simple', '', 0, 'SEF Canonical List', 'Use Global', 3, '', '', '', 'Canonical List All=0||Use Canonical=optgroup||Canonical List One=1||Canonical List Pages=2||Canonical List Pages Nav=3', '{\"options\":[]}', 0, 255, 32, 0, 0, 0, 0, '', 0, '', '', '', '', 0, 0, 0, 0, 0, 0, 1, '', '', 'dev', '', '', '', 'options[sef_canonical]', '', '', '', 0, '0000-00-00 00:00:00'),
-(630, 'Button Grp (Form) Alternative', 'button_grp_form_alternative', 3, 'group', '', 1, 'clear', '', 3, '', '', '', '', '', 0, 255, 32, 0, 1, 0, 0, '', 0, '', 'button_grp_form_alternative', '', '', 0, 0, 0, 0, 0, 0, 1, '', '', 'none', '', '', '', 'button_grp_form_alternative', '', '', '', 0, '0000-00-00 00:00:00');
+(630, 'Button Grp (Form) Alternative', 'button_grp_form_alternative', 3, 'group', '', 1, 'clear', '', 3, '', '', '', '', '', 0, 255, 32, 0, 1, 0, 0, '', 0, '', 'button_grp_form_alternative', '', '', 0, 0, 0, 0, 0, 0, 1, '', '', 'none', '', '', '', 'button_grp_form_alternative', '', '', '', 0, '0000-00-00 00:00:00'),
+(651, 'User (Login Form) Username', 'user_login_form_username', 13, 'text', '', 1, 'Username', '', 3, '', '', '', '', '', 0, 255, 32, 0, 0, 0, 0, '', 0, '', '', '', '', 0, 0, 0, 0, 0, 0, 1, '', '', 'none', 'user_login_form', '', '', 'user_login_form_username', '', '', '', 0, '0000-00-00 00:00:00'),
+(652, 'User (Login Form) Password', 'user_login_form_password', 13, 'password', '', 1, 'Password', '', 3, '', '', '', '', '', 5, 20, 32, 0, 0, 0, 0, '', 0, '', '', '', '', 0, 0, 0, 0, 0, 0, 1, '', '', 'none', '', '', '', 'user_login_form_password', '', '', '', 0, '0000-00-00 00:00:00'),
+(653, 'User (Login Form) Action', 'user_login_form_action', 13, 'form_action', '', 1, '', '', 0, '', '', '', 'user_login_form_username=username||user_login_form_password=password||user_login_form_remember_me=remember', '{\"anchor\":\"\",\"action\":\"index.php?option=com_users&task=user.login\",\"method\":\"post\",\"autocomplete\":\"0\",\"itemid\":\"\",\"enctype\":\"application\\/x-www-form-urlencoded\",\"target\":\"_self\"}', 0, 255, 32, 0, 0, 0, 0, '', 1, '', '', '', '', 0, 2, 0, 0, 0, 0, 1, '', '', 'none', '', '', '', 'user_login_form_action', '', '', '', 0, '0000-00-00 00:00:00'),
+(654, 'User (Login Form) Button Login', 'user_login_form_button_login', 13, 'button_free', '', 1, 'Login', '', 3, '', '', '', '', '{\"icon\":\"\",\"button_link\":\"\",\"button_link_options\":\"\",\"alt_link_text\":\"\",\"alt_link\":\"\",\"alt_link_options\":\"\",\"alt2_link_text\":\"\",\"alt2_link\":\"\",\"alt2_link_options\":\"\"}', 0, 255, 32, 0, 0, 0, 0, '', 1, '', '', '', '', 0, 1, 0, 1, 0, 1, 1, 'btn-primary', '', 'none', '', '', '', 'user_login_form_button_login', '', '', '', 0, '0000-00-00 00:00:00'),
+(655, 'User (Login Form) Remember Me', 'user_login_form_remember_me', 13, 'checkbox', '', 1, 'Remember Me', '', 3, '', '', '', 'yes', '{\"options\":[]}', 0, 255, 32, 0, 0, 0, 0, ',', 0, '', '', '', '', 1, 0, 0, 0, 0, 0, 1, '', '', 'none', '', '', '', 'user_login_form_remember_me', '', '', '', 0, '0000-00-00 00:00:00');
 
 
 -- --------------------------------------------------------
@@ -1122,7 +1127,8 @@ INSERT IGNORE INTO `#__cck_core_types` (`id`, `asset_id`, `title`, `name`, `alia
 (30, 0, 'Article Grp Images & Links', 'article_grp_images_links', '', 10, 7, 7, 7, 7, '', '', 0, '', '', '', '', 'none', 1, '', 0, 'joomla_article', '', 10, 0, '0000-00-00 00:00:00', 3, '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0),
 (35, 0, 'Button Grp (Form)', 'button_grp_form', '', 3, 7, 7, 7, 7, '', '', 0, '', '', '', '', 'none', 1, '', 0, 'none', '', 10, 0, '0000-00-00 00:00:00', 3, '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0),
 (38, 0, 'User Grp Password', 'user_grp_password', '', 13, 14, 15, 9, 9, '', 'none', 0, '', '', '', '', 'none', 1, '', 0, 'joomla_user', '', 10, 0, '0000-00-00 00:00:00', 3, '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0),
-(39, 0, 'Button Grp (Form) Alternative', 'button_grp_form_alternative', '', 3, 15, 16, 9, 9, '', 'none', 0, '', '', '', '', 'none', 1, '', 0, 'none', '', 3, 0, '0000-00-00 00:00:00', 3, '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0);
+(39, 0, 'Button Grp (Form) Alternative', 'button_grp_form_alternative', '', 3, 15, 16, 9, 9, '', 'none', 0, '', '', '', '', 'none', 1, '', 0, 'none', '', 3, 0, '0000-00-00 00:00:00', 3, '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0),
+(50, 0, 'User (Login Form)', 'user_login_form', '', 13, 16, 17, 10, 10, '', 'none', 1, '', '', '', 0, '', 1, '', 0, 'none', '', 7, 0, '0000-00-00 00:00:00', 3, '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0);
 
 
 -- --------------------------------------------------------
@@ -1513,7 +1519,12 @@ INSERT IGNORE INTO `#__cck_core_type_field` (`typeid`, `fieldid`, `client`, `ord
 (39, 588, 'admin', 1, '', '', '', '', '', '', '', '', '', '', '', '', '', ' btn-toolbar', '', 0, '', 0, 1, '', '', '', '', '', '', 'mainbody'),
 (39, 588, 'site', 1, '', '', '', '', '', '', '', '', '', '', '', '', '', ' btn-toolbar', '', 0, '', 0, 1, '', '', '', '', '', '', 'mainbody'),
 (39, 589, 'admin', 5, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 0, '', 0, 1, '', '', '', '', '', '', 'mainbody'),
-(39, 589, 'site', 5, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 0, '', 0, 1, '', '', '', '', '', '', 'mainbody');
+(39, 589, 'site', 5, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 0, '', 0, 1, '', '', '', '', '', '', 'mainbody'),
+(50, 651, 'site', 2, '', '', '', 'required', '', '', '', '', '', '', '', '', '', '', '', 0, '', 0, 1, '', '', '', '', '', '', 'mainbody'),
+(50, 652, 'site', 3, '', '', '', 'required', '', '', '', '', '', '', '', '', '', '', '', 0, '', 0, 1, '', '', '', '', '', '', 'mainbody'),
+(50, 653, 'site', 1, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 0, '', 0, 1, '', '', '', '', '', '', 'mainbody'),
+(50, 654, 'site', 5, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 0, '', 0, 1, '', '', '', '', '', '', 'mainbody'),
+(50, 655, 'site', 4, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 0, '', 0, 1, '', '', '', '', '', '', 'mainbody');
 
 
 -- --------------------------------------------------------
@@ -1604,7 +1615,10 @@ INSERT IGNORE INTO `#__cck_core_type_position` (`typeid`, `position`, `client`, 
 (39, 'clear', 'admin', '', '', '', '', '', ''),
 (39, 'clear', 'site', '', '', '', '', '', ''),
 (39, 'mainbody', 'admin', '', '', '', '', '', ''),
-(39, 'mainbody', 'site', '', '', '', '', '', '');
+(39, 'mainbody', 'site', '', '', '', '', '', ''),
+(50, 'clear', 'admin', '', '', '', '', '', ''),
+(50, 'clear', 'site', '', '', '', '', '', ''),
+(50, 'mainbody', 'site', '', '', '', '', '', '');
 
 
 -- --------------------------------------------------------
