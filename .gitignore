@@ -2245,14 +2245,6 @@ Temporary Items
 /administrator/language/fr-FR/fr-FR.plg_cck_field_restriction_cck_processing.sys.ini
 /plugins/cck_field_restriction/cck_processing/*
 
-######## SEBLOD Plug-ins >> Restriction >> Search Total
-
-/administrator/language/en-GB/en-GB.plg_cck_field_restriction_search_total.ini
-/administrator/language/en-GB/en-GB.plg_cck_field_restriction_search_total.sys.ini
-/administrator/language/fr-FR/fr-FR.plg_cck_field_restriction_search_total.ini
-/administrator/language/fr-FR/fr-FR.plg_cck_field_restriction_search_total.sys.ini
-/plugins/cck_field_restriction/search_total/*
-
 ######## SEBLOD Plug-ins >> Restriction >> SEBLOD eCommerce Cart
 
 /administrator/language/en-GB/en-GB.plg_cck_field_restriction_cck_ecommerce_cart.ini
