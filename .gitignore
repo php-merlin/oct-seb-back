@@ -1552,14 +1552,6 @@ Temporary Items
 /administrator/language/fr-FR/fr-FR.plg_cck_field_joomla_article.sys.ini
 /plugins/cck_field/joomla_article/*
 
-######## SEBLOD Plug-ins >> Field >> Message Redirection
-
-/administrator/language/en-GB/en-GB.plg_cck_field_message_redirection.ini
-/administrator/language/en-GB/en-GB.plg_cck_field_message_redirection.sys.ini
-/administrator/language/fr-FR/fr-FR.plg_cck_field_message_redirection.ini
-/administrator/language/fr-FR/fr-FR.plg_cck_field_message_redirection.sys.ini
-/plugins/cck_field/message_redirection/*
-
 ######## SEBLOD Plug-ins >> Field >> Radio Numeric
 
 /administrator/language/en-GB/en-GB.plg_cck_field_radio_numeric.ini
