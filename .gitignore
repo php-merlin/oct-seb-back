@@ -1919,15 +1919,6 @@ Temporary Items
 /administrator/language/fr-FR/fr-FR.plg_cck_field_link_cck_task.sys.ini
 /plugins/cck_field_link/cck_task/*
 
-######## SEBLOD Plug-ins >> Live >> Datetime
-
-/administrator/language/en-GB/en-GB.plg_cck_field_live_datetime.ini
-/administrator/language/en-GB/en-GB.plg_cck_field_live_datetime.sys.ini
-/administrator/language/fr-FR/fr-FR.plg_cck_field_live_datetime.ini
-/administrator/language/fr-FR/fr-FR.plg_cck_field_live_datetime.sys.ini
-/plugins/cck_field_live/datetime/*
-
-
 ######## SEBLOD Plug-ins >> Live >> GeoIP
 
 /administrator/language/en-GB/en-GB.plg_cck_field_live_geoip.ini
