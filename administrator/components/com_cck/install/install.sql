@@ -1053,9 +1053,11 @@ CREATE TABLE IF NOT EXISTS `#__cck_core_templates` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 DEFAULT COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=500 ;
 
 
-INSERT IGNORE INTO `#__cck_core_templates` (`id`, `title`, `name`, `folder`, `mode`, `description`, `featured`, `published`, `checked_out`, `checked_out_time`) VALUES
-(1, 'One', 'seb_one', 3, 0, '', 1, 1, 0, '0000-00-00 00:00:00'),
-(3, 'Table', 'seb_table', 3, 2, '', 0, 1, 0, '0000-00-00 00:00:00');
+INSERT IGNORE INTO `#__cck_core_templates` (`id`, `title`, `name`, `folder`, `mode`, `description`, `featured`, `options`, `published`, `checked_out`, `checked_out_time`) VALUES
+(1, 'One', 'seb_one', 3, 0, '', 0, '', 1, 0, '0000-00-00 00:00:00'),
+(3, 'Table', 'seb_table', 3, 2, '', 0, '', 1, 0, '0000-00-00 00:00:00'),
+(11, 'Minima', 'seb_minima', 3, 0, '', 1, '', 1, 0, '0000-00-00 00:00:00'),
+(12, 'List', 'seb_list', 3, 2, '', 0, '', 1, 0, '0000-00-00 00:00:00');
 
 
 -- --------------------------------------------------------

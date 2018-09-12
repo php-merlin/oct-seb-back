@@ -2637,12 +2637,6 @@ Temporary Items
 /language/fr-FR/fr-FR.tpl_seb_isotope.ini
 /templates/seb_isotope/*
 
-######## SEBLOD Templates >> List
-
-/language/en-GB/en-GB.tpl_seb_list.ini
-/language/fr-FR/fr-FR.tpl_seb_list.ini
-/templates/seb_list/*
-
 ######## SEBLOD Templates >> List2Mail
 
 /language/en-GB/en-GB.tpl_seb_list2mail.ini
@@ -2660,12 +2654,6 @@ Temporary Items
 /language/en-GB/en-GB.tpl_seb_masonry.ini
 /language/fr-FR/fr-FR.tpl_seb_masonry.ini
 /templates/seb_masonry/*
-
-######## SEBLOD Templates >> Minima
-
-/language/en-GB/en-GB.tpl_seb_minima.ini
-/language/fr-FR/fr-FR.tpl_seb_minima.ini
-/templates/seb_minima/*
 
 ######## SEBLOD Templates >> PDF
 

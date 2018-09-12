@@ -216,8 +216,9 @@ class Helper_Workshop
 	public static function getDefaultTemplate()
 	{
 		$name		=	JCckDatabaseCache::loadResult( 'SELECT name FROM #__cck_core_templates WHERE featured = 1 ORDER BY id' );
+		
 		if ( !$name) {
-			$name	=	'seb_one';
+			$name	=	'seb_minima';
 		}
 
 		return $name;

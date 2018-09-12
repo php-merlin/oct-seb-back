@@ -33,6 +33,8 @@
 			<file type="module" id="mod_cck_list" client="site">mod_cck_list.zip</file>
 			<file type="module" id="mod_cck_search" client="site">mod_cck_search.zip</file>
 			<!-- Template // Site -->
+			<file type="template" id="seb_list" client="site">tpl_seb_list.zip</file>
+			<file type="template" id="seb_minima" client="site">tpl_seb_minima.zip</file>
 			<file type="template" id="seb_one" client="site">tpl_seb_one.zip</file>
 			<file type="template" id="seb_table" client="site">tpl_seb_table.zip</file>
 			<!-- Plugin // CCK Field -->
