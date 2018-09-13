@@ -189,38 +189,48 @@ class plgContentCCKInstallerScript
 					// Do nothing
 				}
 			}
-				
+			
 			// Publish Plugins
 			$query	=	'UPDATE #__extensions SET enabled = 1 WHERE folder LIKE "cck_%"';
 			$db->setQuery( $query );
 			$db->execute();
 
 			// Set Template Styles
-			$query	=	'SELECT id FROM #__template_styles WHERE template="seb_minima" ORDER BY id';
+			$query			=	'SELECT id, params FROM #__template_styles WHERE template="seb_minima" ORDER BY id';
 			$db->setQuery( $query );
-			$style	=	$db->loadResult();
+			$style			=	$db->loadObject();
+			$style_params	=	'{"rendering_css_class":"","rendering_custom_attributes":"",'.substr( $style->params, 1 );
 			
-			$query	=	'SELECT id FROM #__template_styles WHERE template="seb_list" ORDER BY id';
+			$query			=	'UPDATE #__template_styles SET params = "'.$db->escape( $style_params ).'" WHERE id = '.(int)$style->id;
 			$db->setQuery( $query );
-			$style2	=	$db->loadResult();
+			$db->execute();
+			
+			$query			=	'SELECT id, params FROM #__template_styles WHERE template="seb_list" ORDER BY id';
+			$db->setQuery( $query );
+			$style2			=	$db->loadObject();
+			$style2_params	=	'{"rendering_item_attributes":"","rendering_css_class":"",'.substr( $style2->params, 1 );
+			
+			$query			=	'UPDATE #__template_styles SET params = "'.$db->escape( $style2_params ).'" WHERE id = '.(int)$style2->id;
+			$db->setQuery( $query );
+			$db->execute();
 			
 			$query	=	'SELECT id FROM #__template_styles WHERE template="seb_table" ORDER BY id';
 			$db->setQuery( $query );
 			$style3	=	$db->loadResult();
 			
 			// - Content Types
-			$query	=	'UPDATE #__cck_core_types SET template_admin = '.$style.', template_site = '.$style.', template_content = '.$style.', template_intro = '.$style;
+			$query	=	'UPDATE #__cck_core_types SET template_admin = '.$style->id.', template_site = '.$style->id.', template_content = '.$style->id.', template_intro = '.$style->id;
 			$db->setQuery( $query );
 			$db->execute();
 			
 			// - Search Types (List)
 			/* TODO#SEBLOD4 */
-			$query	=	'UPDATE #__cck_core_searchs SET template_search = '.$style.', template_filter = '.$style.', template_list = '.$style2.', template_item = '.$style.' WHERE id IN (1,5,8)';
+			$query	=	'UPDATE #__cck_core_searchs SET template_search = '.$style->id.', template_filter = '.$style->id.', template_list = '.$style2->id.', template_item = '.$style->id.' WHERE id IN (1,5,8)';
 			$db->setQuery( $query );
 			$db->execute();
 
 			// - Search Types (Table)
-			$query	=	'UPDATE #__cck_core_searchs SET template_search = '.$style.', template_filter = '.$style.' WHERE id IN (11,15,18)';
+			$query	=	'UPDATE #__cck_core_searchs SET template_search = '.$style->id.', template_filter = '.$style->id.' WHERE id IN (11,15,18)';
 			$db->setQuery( $query );
 			$db->execute();
 			
