@@ -14,17 +14,6 @@
 		<action name="core.export" title="COM_CCK_ACTION_EXPORT" description="COM_CCK_ACTION_EXPORT_DESC" />
 		<action name="core.process" title="COM_CCK_ACTION_PROCESS" description="COM_CCK_ACTION_PROCESS_DESC" />
 	</section>
-	<section name="folder">
-		<action name="core.create" title="JACTION_CREATE" description="COM_CCK_ACCESS_CREATE_DESC" />
-		<action name="core.delete" title="JACTION_DELETE" description="COM_CCK_ACCESS_DELETE_DESC" />
-		<action name="core.delete.own" title="COM_CCK_ACTION_DELETEOWN" description="COM_CCK_ACCESS_DELETEOWN_DESC" />
-		<action name="core.edit" title="JACTION_EDIT" description="COM_CCK_ACCESS_EDIT_DESC" />
-		<action name="core.edit.state" title="JACTION_EDITSTATE" description="COM_CCK_ACCESS_EDITSTATE_DESC" />
-		<action name="core.edit.own" title="JACTION_EDITOWN" description="COM_CCK_ACCESS_EDITOWN_DESC" />
-		<action name="core.addto.cart" title="COM_CCK_ACTION_ADD_TO_CART" description="COM_CCK_ACTION_ADD_TO_CART_DESC" />
-		<action name="core.export" title="COM_CCK_ACTION_EXPORT" description="COM_CCK_ACTION_EXPORT_DESC" />
-		<action name="core.process" title="COM_CCK_ACTION_PROCESS" description="COM_CCK_ACTION_PROCESS_DESC" />
-	</section>
 	<section name="form">
 		<action name="core.create" title="JACTION_CREATE" description="COM_CCK_ACCESS_CREATE_DESC" />
 		<action name="core.create.max.parent" title="COM_CCK_ACTION_CREATE_MAX_PARENT" description="COM_CCK_ACCESS_CREATE_MAX_PARENT_DESC" input_type="text" var_type="int" />

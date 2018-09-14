@@ -354,7 +354,6 @@ INSERT INTO `#__cck_core_fields` (`id`, `title`, `name`, `folder`, `type`, `desc
 (270, 'Core Computation Recalc', 'core_computation_recalc', 3, 'select_simple', '', 0, 'Rule', ' ', 3, '', '', 'global', 'Global=global||Self=0', '', 0, 255, 32, 0, 0, 0, 0, '', 0, '', '', '', '', 0, 0, 0, 0, 0, 0, 1, '', '', 'dev', '', '', '', 'recalc', '', '', '', 0, '0000-00-00 00:00:00'),
 (271, 'Core JGrid Type', 'core_jgrid_type', 3, 'select_simple', '', 0, 'Type', 'Select', 3, 'required', '', '', 'Joomla=optgroup||Activation=activation||Block=block||Checkbox=selection||Checkbox Label For=selection_label||Dropdown Menu=dropdown||Featured=featured||Increment=increment||Reordering=sort||Reordering Grip=sort_grip||Status=state||SEBLOD=optgroup||Form=form||Hidden=form_hidden||Form Disabled=form_disabled', '{"options":[]}', 0, 255, 32, 0, 0, 0, 0, '', 0, '', '', '', '', 0, 0, 0, 0, 0, 0, 1, '', '', 'dev', '', '', '', 'type', '', '', '', 0, '0000-00-00 00:00:00'),
 (272, 'Core Rules (Type)', 'core_rules_type', 3, 'jform_rules', '', 0, 'Permissions', ' ', 3, '', '', '', '', '{"extension":"com_cck","section":"form"}', 0, 255, 32, 0, 0, 0, 0, '', 0, '', '', '', '', 0, 0, 0, 0, 0, 0, 0, '', '', 'dev', '', '', '', 'jform[rules]', '', '', '', 0, '0000-00-00 00:00:00'),
-(273, 'Core Rules (Folder)', 'core_rules_folder', 3, 'jform_rules', '', 0, 'Permissions', ' ', 3, '', '', '', '', '{"extension":"com_cck","section":"folder"}', 0, 255, 32, 0, 0, 0, 0, '', 1, '', '', '', '', 0, 0, 0, 0, 0, 0, 0, '', '', 'dev', '', '', '', 'jform[rules]', '', '', '', 0, '0000-00-00 00:00:00'),
 (276, 'Core Location', 'core_location', 3, 'select_simple', '', 0, 'Content Creation', ' ', 3, '', '', '', 'Allowed=||Allowed Hidden=hidden||Not Allowed=none||location=optgroup||Administrator Only=admin||Site Only=site', '', 0, 255, 32, 0, 0, 0, 0, '', 0, '', '', '', '', 0, 0, 0, 0, 0, 0, 1, '', '', 'dev', '', '', '', 'location', '', '', '', 0, '0000-00-00 00:00:00'),
 (277, 'Core Cache2', 'core_cache2', 3, 'select_simple', '', 0, 'Cache', ' ', 3, '', '', '0', 'OFF=0||ON=optgroup||Global=1||Self=2', '{"options":[]}', 0, 255, 32, 0, 0, 0, 0, '', 0, '', '', '', '', 0, 0, 0, 0, 0, 0, 1, '', '', 'dev', '', '', '', 'options[cache2]', '', '', '', 0, '0000-00-00 00:00:00'),
 (278, 'Core Stages', 'core_stages', 3, 'select_numeric', '', 0, 'Stages', ' ', 3, '', '', '1', '', '{"math":"0","start":"1","first":"","step":"1","last":"","end":"6","force_digits":"0"}', 0, 255, 32, 0, 0, 0, 0, '', 0, '', '', '', '', 0, 0, 0, 0, 0, 0, 0, '', '', 'dev', '', '', '', 'options[stages]', '', '', '', 0, '0000-00-00 00:00:00'),
@@ -667,7 +666,6 @@ INSERT INTO `#__cck_core_fields` (`id`, `title`, `name`, `folder`, `type`, `desc
 
 CREATE TABLE IF NOT EXISTS `#__cck_core_folders` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `asset_id` int(10) unsigned NOT NULL DEFAULT '0',
   `parent_id` int(11) NOT NULL DEFAULT '0',
   `path` varchar(1024) NOT NULL,
   `title` varchar(50) NOT NULL,
@@ -692,32 +690,32 @@ CREATE TABLE IF NOT EXISTS `#__cck_core_folders` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 DEFAULT COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=500 ;
 
 
-INSERT IGNORE INTO `#__cck_core_folders` (`id`, `asset_id`, `parent_id`, `path`, `title`, `name`, `color`, `introchar`, `colorchar`, `elements`, `icon_path`, `depth`, `lft`, `rgt`, `description`, `app`, `featured`, `home`, `published`, `checked_out`, `checked_out_time`) VALUES
-(1, 0, 0, '', 'Quick Folder', 'quick_folder', '#ffd700', '', '#ffffff', 'type,field,search,template', '', 0, 0, 0, '', '', 0, 0, 1, 0, '0000-00-00 00:00:00'),
-(2, 0, 0, '', 'Top', 'TOP', '', '', '', '', '', 0, 1, 48, '', '', 0, 0, 1, 0, '0000-00-00 00:00:00'),
-(3, 0, 2, 'core', 'Core', 'core', '#184d9d', '*', '#ffffff', 'type,field,search,template', '', 1, 2, 5, '', '', 0, 0, 1, 0, '0000-00-00 00:00:00'),
-(4, 0, 3, 'core/table', 'Table', 'table', '#184d9d', '', '#ffffff', 'field', '', 2, 3, 4, '', '', 0, 0, 1, 0, '0000-00-00 00:00:00'),
-(5, 0, 2, 'joomla', 'JOOMLA', 'joomla', '#578ad6', '', '#ffffff', 'type,field,search,template', '', 1, 6, 41, '', '', 0, 0, 1, 0, '0000-00-00 00:00:00'),
-(6, 0, 2, 'seblod', 'SEBLOD', 'seblod', '#184d9d', '', '#ffffff', 'type,field,search,template', '', 1, 42, 47, '', '', 0, 0, 1, 0, '0000-00-00 00:00:00'),
-(7, 0, 6, 'seblod/apps', 'Apps', 'apps', '#184d9d', 'A', '#ffffff', 'type,field,search,template', '', 2, 43, 44, '', '', 0, 0, 1, 0, '0000-00-00 00:00:00'),
-(8, 0, 6, 'seblod/demo', 'Demo', 'demo', '#184d9d', 'D', '#ffffff', 'type,field,search,template', '', 2, 45, 46, '', '', 0, 0, 1, 0, '0000-00-00 00:00:00'),
-(10, 0, 5, 'joomla/joomla_article', 'Article', 'joomla_article', '#578ad6', 'A', '#ffffff', 'type,field,search,template', 'media/cck/apps/joomla_article/images/icon.png', 2, 7, 18, '', 'joomla_article', 1, 1, 1, 0, '0000-00-00 00:00:00'),
-(11, 0, 5, 'joomla/joomla_category', 'Category', 'joomla_category', '#578ad6', 'C', '#ffffff', 'type,field,search,template', 'media/cck/apps/joomla_category/images/icon.png', 2, 19, 28, '', 'joomla_category', 1, 1, 1, 0, '0000-00-00 00:00:00'),
-(13, 0, 5, 'joomla/joomla_user', 'User', 'joomla_user', '#578ad6', 'U', '#ffffff', 'type,field,search,template', 'media/cck/apps/joomla_user/images/icon.png', 2, 29, 36, '', 'joomla_user', 1, 1, 1, 0, '0000-00-00 00:00:00'),
-(14, 0, 5, 'joomla/joomla_user_group', 'User Group', 'joomla_user_group', '#578ad6', 'G', '#ffffff', 'type,field,search,template', 'media/cck/apps/joomla_user_group/images/icon.png', 2, 37, 40, '', 'joomla_user_group', 1, 1, 1, 0, '0000-00-00 00:00:00'),
-(15, 0, 10, 'joomla/joomla_article/publishing', 'Publishing', 'publishing', '#578ad6', 'A.', '#ffffff', 'field', '', 3, 16, 17, '', 'joomla_article', 0, 0, 1, 0, '0000-00-00 00:00:00'),
-(16, 0, 10, 'joomla/joomla_article/basic', 'Basic', 'basic', '#578ad6', 'A.', '#ffffff', 'field', '', 3, 10, 11, '', 'joomla_article', 0, 0, 1, 0, '0000-00-00 00:00:00'),
-(17, 0, 10, 'joomla/joomla_article/metadata', 'Metadata', 'metadata', '#578ad6', 'A.', '#ffffff', 'field', '', 3, 14, 15, '', 'joomla_article', 0, 0, 1, 0, '0000-00-00 00:00:00'),
-(18, 0, 11, 'joomla/joomla_category/publishing', 'Publishing', 'publishing', '#578ad6', 'C.', '#ffffff', 'field', '', 3, 26, 27, '', 'joomla_category', 0, 0, 1, 0, '0000-00-00 00:00:00'),
-(19, 0, 11, 'joomla/joomla_category/basic', 'Basic', 'basic', '#578ad6', 'C.', '#ffffff', 'field', '', 3, 22, 23, '', 'joomla_category', 0, 0, 1, 0, '0000-00-00 00:00:00'),
-(20, 0, 11, 'joomla/joomla_category/metadata', 'Metadata', 'metadata', '#578ad6', 'C.', '#ffffff', 'field', '', 3, 24, 25, '', 'joomla_category', 0, 0, 1, 0, '0000-00-00 00:00:00'),
-(21, 0, 13, 'joomla/joomla_user/basic', 'Basic', 'basic', '#578ad6', 'U.', '#ffffff', 'field', '', 3, 32, 33, '', 'joomla_user', 0, 0, 1, 0, '0000-00-00 00:00:00'),
-(22, 0, 10, 'joomla/joomla_article/base', 'Base', 'base', '#578ad6', 'A.', '#ffffff', 'field', '', 3, 8, 9, '', 'joomla_article', 0, 0, 1, 0, '0000-00-00 00:00:00'),
-(23, 0, 11, 'joomla/joomla_category/base', 'Base', 'base', '#578ad6', 'C.', '#ffffff', 'field', '', 3, 20, 21, '', 'joomla_category', 0, 0, 1, 0, '0000-00-00 00:00:00'),
-(24, 0, 13, 'joomla/joomla_user/base', 'Base', 'base', '#578ad6', 'U.', '#ffffff', 'field', '', 3, 30, 31, '', 'joomla_user', 0, 0, 1, 0, '0000-00-00 00:00:00'),
-(26, 0, 14, 'joomla/joomla_user_group/base', 'Base', 'base', '#578ad6', 'G.', '#ffffff', 'field', '', 3, 38, 39, '', 'joomla_user_group', 0, 0, 1, 0, '0000-00-00 00:00:00'),
-(28, 0, 10, 'joomla/joomla_article/images_links', 'Images & Links', 'images_links', '#578ad6', 'A.', '#ffffff', 'field', '', 3, 12, 13, '', 'joomla_article', 0, 0, 1, 0, '0000-00-00 00:00:00'),
-(29, 0, 13, 'joomla/joomla_user/profile', 'Profile', 'profile', '#578ad6', 'U.', '#ffffff', 'field', '', 3, 34, 35, '', 'joomla_user', 0, 0, 1, 0, '0000-00-00 00:00:00');
+INSERT IGNORE INTO `#__cck_core_folders` (`id`, `parent_id`, `path`, `title`, `name`, `color`, `introchar`, `colorchar`, `elements`, `icon_path`, `depth`, `lft`, `rgt`, `description`, `app`, `featured`, `home`, `published`, `checked_out`, `checked_out_time`) VALUES
+(1, 0, '', 'Quick Folder', 'quick_folder', '#ffd700', '', '#ffffff', 'type,field,search,template', '', 0, 0, 0, '', '', 0, 0, 1, 0, '0000-00-00 00:00:00'),
+(2, 0, '', 'Top', 'TOP', '', '', '', '', '', 0, 1, 48, '', '', 0, 0, 1, 0, '0000-00-00 00:00:00'),
+(3, 2, 'core', 'Core', 'core', '#184d9d', '*', '#ffffff', 'type,field,search,template', '', 1, 2, 5, '', '', 0, 0, 1, 0, '0000-00-00 00:00:00'),
+(4, 3, 'core/table', 'Table', 'table', '#184d9d', '', '#ffffff', 'field', '', 2, 3, 4, '', '', 0, 0, 1, 0, '0000-00-00 00:00:00'),
+(5, 2, 'joomla', 'JOOMLA', 'joomla', '#578ad6', '', '#ffffff', 'type,field,search,template', '', 1, 6, 41, '', '', 0, 0, 1, 0, '0000-00-00 00:00:00'),
+(6, 2, 'seblod', 'SEBLOD', 'seblod', '#184d9d', '', '#ffffff', 'type,field,search,template', '', 1, 42, 47, '', '', 0, 0, 1, 0, '0000-00-00 00:00:00'),
+(7, 6, 'seblod/apps', 'Apps', 'apps', '#184d9d', 'A', '#ffffff', 'type,field,search,template', '', 2, 43, 44, '', '', 0, 0, 1, 0, '0000-00-00 00:00:00'),
+(8, 6, 'seblod/demo', 'Demo', 'demo', '#184d9d', 'D', '#ffffff', 'type,field,search,template', '', 2, 45, 46, '', '', 0, 0, 1, 0, '0000-00-00 00:00:00'),
+(10, 5, 'joomla/joomla_article', 'Article', 'joomla_article', '#578ad6', 'A', '#ffffff', 'type,field,search,template', 'media/cck/apps/joomla_article/images/icon.png', 2, 7, 18, '', 'joomla_article', 1, 1, 1, 0, '0000-00-00 00:00:00'),
+(11, 5, 'joomla/joomla_category', 'Category', 'joomla_category', '#578ad6', 'C', '#ffffff', 'type,field,search,template', 'media/cck/apps/joomla_category/images/icon.png', 2, 19, 28, '', 'joomla_category', 1, 1, 1, 0, '0000-00-00 00:00:00'),
+(13, 5, 'joomla/joomla_user', 'User', 'joomla_user', '#578ad6', 'U', '#ffffff', 'type,field,search,template', 'media/cck/apps/joomla_user/images/icon.png', 2, 29, 36, '', 'joomla_user', 1, 1, 1, 0, '0000-00-00 00:00:00'),
+(14, 5, 'joomla/joomla_user_group', 'User Group', 'joomla_user_group', '#578ad6', 'G', '#ffffff', 'type,field,search,template', 'media/cck/apps/joomla_user_group/images/icon.png', 2, 37, 40, '', 'joomla_user_group', 1, 1, 1, 0, '0000-00-00 00:00:00'),
+(15, 10, 'joomla/joomla_article/publishing', 'Publishing', 'publishing', '#578ad6', 'A.', '#ffffff', 'field', '', 3, 16, 17, '', 'joomla_article', 0, 0, 1, 0, '0000-00-00 00:00:00'),
+(16, 10, 'joomla/joomla_article/basic', 'Basic', 'basic', '#578ad6', 'A.', '#ffffff', 'field', '', 3, 10, 11, '', 'joomla_article', 0, 0, 1, 0, '0000-00-00 00:00:00'),
+(17, 10, 'joomla/joomla_article/metadata', 'Metadata', 'metadata', '#578ad6', 'A.', '#ffffff', 'field', '', 3, 14, 15, '', 'joomla_article', 0, 0, 1, 0, '0000-00-00 00:00:00'),
+(18, 11, 'joomla/joomla_category/publishing', 'Publishing', 'publishing', '#578ad6', 'C.', '#ffffff', 'field', '', 3, 26, 27, '', 'joomla_category', 0, 0, 1, 0, '0000-00-00 00:00:00'),
+(19, 11, 'joomla/joomla_category/basic', 'Basic', 'basic', '#578ad6', 'C.', '#ffffff', 'field', '', 3, 22, 23, '', 'joomla_category', 0, 0, 1, 0, '0000-00-00 00:00:00'),
+(20, 11, 'joomla/joomla_category/metadata', 'Metadata', 'metadata', '#578ad6', 'C.', '#ffffff', 'field', '', 3, 24, 25, '', 'joomla_category', 0, 0, 1, 0, '0000-00-00 00:00:00'),
+(21, 13, 'joomla/joomla_user/basic', 'Basic', 'basic', '#578ad6', 'U.', '#ffffff', 'field', '', 3, 32, 33, '', 'joomla_user', 0, 0, 1, 0, '0000-00-00 00:00:00'),
+(22, 10, 'joomla/joomla_article/base', 'Base', 'base', '#578ad6', 'A.', '#ffffff', 'field', '', 3, 8, 9, '', 'joomla_article', 0, 0, 1, 0, '0000-00-00 00:00:00'),
+(23, 11, 'joomla/joomla_category/base', 'Base', 'base', '#578ad6', 'C.', '#ffffff', 'field', '', 3, 20, 21, '', 'joomla_category', 0, 0, 1, 0, '0000-00-00 00:00:00'),
+(24, 13, 'joomla/joomla_user/base', 'Base', 'base', '#578ad6', 'U.', '#ffffff', 'field', '', 3, 30, 31, '', 'joomla_user', 0, 0, 1, 0, '0000-00-00 00:00:00'),
+(26, 14, 'joomla/joomla_user_group/base', 'Base', 'base', '#578ad6', 'G.', '#ffffff', 'field', '', 3, 38, 39, '', 'joomla_user_group', 0, 0, 1, 0, '0000-00-00 00:00:00'),
+(28, 10, 'joomla/joomla_article/images_links', 'Images & Links', 'images_links', '#578ad6', 'A.', '#ffffff', 'field', '', 3, 12, 13, '', 'joomla_article', 0, 0, 1, 0, '0000-00-00 00:00:00'),
+(29, 13, 'joomla/joomla_user/profile', 'Profile', 'profile', '#578ad6', 'U.', '#ffffff', 'field', '', 3, 34, 35, '', 'joomla_user', 0, 0, 1, 0, '0000-00-00 00:00:00');
 
 
 -- --------------------------------------------------------

@@ -321,11 +321,6 @@ class plgContentCCKInstallerScript
 			
 			// Init ACL
 			require_once JPATH_ADMINISTRATOR.'/components/com_cck/helpers/helper_admin.php';
-			$pks	=	JCckDatabase::loadColumn( 'SELECT id FROM #__cck_core_folders ORDER BY lft' );
-			if ( count( $pks ) ) {
-				$rules	=	'{}';
-				Helper_Admin::initACL( array( 'table'=>'folder', 'name'=>'folder', 'rules'=>$rules ), $pks );
-			}
 			$pks	=	JCckDatabase::loadColumn( 'SELECT id FROM #__cck_core_types ORDER BY id' );
 			if ( count( $pks ) ) {
 				$rules	=	'{"core.create.max.parent":{"8":0},"core.create.max.parent.author":{"8":0},"core.create.max.author":{"8":0}}';

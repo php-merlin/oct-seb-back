@@ -135,7 +135,6 @@ class Helper_Admin extends CommonHelper_Admin
 			}
 		}
 		if ( $vName == 'folder' ) {
-			JToolBarHelper::custom( 'folders.clear', 'refresh', 'refresh', JText::_( 'COM_CCK_CLEAR_ACL' ), true );
 			JToolBarHelper::custom( 'folders.rebuild', 'refresh', 'refresh', JText::_( 'COM_CCK_REBUILD' ), false );
 
 			JHtml::_( 'bootstrap.modal', 'collapseModal' );

@@ -137,11 +137,6 @@ class CCK_Import
 	// afterImportFolder
 	public static function afterImportFolder( &$xml, $elemtype, $item, &$data )
 	{
-		$acl	=	(string)$xml->acl;
-		if ( $acl ) {
-			JCckDatabase::execute( 'UPDATE #__assets SET rules = "'.JFactory::getDbo()->escape( $acl ).'" WHERE name = "com_cck.folder.'.$item->id.'"' );
-		}
-		
 		Helper_Folder::rebuildTree( 2, 1 );
 		if ( !$item->path ) {
 			Helper_Folder::rebuildBranch( $item->id );

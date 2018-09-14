@@ -11,7 +11,7 @@
 defined( '_JEXEC' ) or die;
 
 $uix		=	JCck::getUIX();
-$config		=	JCckDev::init( array( '42', 'checkbox', 'colorpicker', 'jform_rules', 'radio', 'text', 'wysiwyg_editor' ), true, array( 'item' => $this->item ) );
+$config		=	JCckDev::init( array( '42', 'checkbox', 'colorpicker', 'radio', 'text', 'wysiwyg_editor' ), true, array( 'item' => $this->item ) );
 Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 ?>
 
@@ -48,13 +48,7 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
             echo JCckDev::renderForm( 'core_colorchar', $this->item->colorchar, $config );
             ?>
         </ul>
-        <a id="toggle_acl" href="javascript:void(0);" class="btn btn-small" style="float:right;"><span class="icon-users"></span></a>
 	</div>
-    
-	<div class="seblod" id="acl" style="display: none;">
-		<div class="legend top left"><?php echo JText::_( 'COM_CCK_PERMISSIONS' ); ?></div>
-		<?php echo JCckDev::getForm( 'core_rules_folder', $this->item->asset_id, $config ); ?>
-    </div>
 </div>
 
 <div class="clr"></div>
@@ -86,9 +80,6 @@ Helper_Display::quickCopyright();
         }
     };
     $(document).ready(function() {
-        $("#toggle_acl").click(function(){
-            $("#acl").slideToggle();
-        });
         var insidebox = '<?php echo $this->insidebox; ?>';
         if (insidebox) { $("#title").after(insidebox); }
     });

@@ -423,9 +423,6 @@ class CCK_Export
 				$xml->$elemtype->$n	=	'';
 			}
 		}
-		
-		$acl	=	( $elem->asset_id ) ? JCckDatabase::loadResult( 'SELECT rules FROM #__assets WHERE id = '.(int)$elem->asset_id ) : '{}';
-		$xml->addChild( 'acl', (string)$acl );
 
 		if ( isset( $data['processings2'][$elem->id] ) ) {
 			$data['elements']['processings'][$elem->id]	=	'';
