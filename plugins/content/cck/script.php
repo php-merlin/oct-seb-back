@@ -325,8 +325,8 @@ class plgContentCCKInstallerScript
 			if ( count( $pks ) ) {
 				$rules	=	'{"core.create.max.parent":{"8":0},"core.create.max.parent.author":{"8":0},"core.create.max.author":{"8":0}}';
 				$rules2	=	array(
-								8=>'{"core.create":{"1":1,"2":0},"core.create.max.parent":{"8":0},"core.create.max.parent.author":{"8":0},"core.create.max.author":{"8":0},"core.edit":{"4":0},"core.edit.own":{"2":1}}',
-								50=>'{"core.create":{"9":1},"core.create.max.parent":{"8":0},"core.create.max.parent.author":{"8":0},"core.create.max.author":{"8":0}}'
+								8=>'{"core.create":{"1":true,"2":false},"core.create.max.parent":{"8":0},"core.create.max.parent.author":{"8":0},"core.create.max.author":{"8":0},"core.edit":{"4":false},"core.edit.own":{"2":true}}',
+								50=>'{"core.create":{"9":true},"core.create.max.parent":{"8":0},"core.create.max.parent.author":{"8":0},"core.create.max.author":{"8":0}}'
 							);
 				Helper_Admin::initACL( array( 'table'=>'type', 'name'=>'form', 'rules'=>$rules ), $pks, $rules2 );
 			}
