@@ -1552,14 +1552,6 @@ Temporary Items
 /administrator/language/fr-FR/fr-FR.plg_cck_field_search_breadcrumbs.sys.ini
 /plugins/cck_field/search_breadcrumbs/*
 
-######## SEBLOD Plug-ins >> Field >> Search Join
-
-/administrator/language/en-GB/en-GB.plg_cck_field_search_join.ini
-/administrator/language/en-GB/en-GB.plg_cck_field_search_join.sys.ini
-/administrator/language/fr-FR/fr-FR.plg_cck_field_search_join.ini
-/administrator/language/fr-FR/fr-FR.plg_cck_field_search_join.sys.ini
-/plugins/cck_field/search_join/*
-
 ######## SEBLOD Plug-ins >> Field >> Search Operator
 
 /administrator/language/en-GB/en-GB.plg_cck_field_search_operator.ini
