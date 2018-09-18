@@ -2023,14 +2023,6 @@ Temporary Items
 /administrator/language/fr-FR/fr-FR.plg_cck_storage_location_joomla_user_note.sys.ini
 /plugins/cck_storage_location/joomla_user_note/*
 
-######## SEBLOD Plug-ins >> Object >> Joomla! Viewlevel
-
-/administrator/language/en-GB/en-GB.plg_cck_storage_location_joomla_viewlevel.ini
-/administrator/language/en-GB/en-GB.plg_cck_storage_location_joomla_viewlevel.sys.ini
-/administrator/language/fr-FR/fr-FR.plg_cck_storage_location_joomla_viewlevel.ini
-/administrator/language/fr-FR/fr-FR.plg_cck_storage_location_joomla_viewlevel.sys.ini
-/plugins/cck_storage_location/joomla_viewlevel/*
-
 ######## SEBLOD Plug-ins >> Object >> SEBLOD eCommerce Cart
 
 /administrator/language/en-GB/en-GB.plg_cck_storage_location_cck_ecommerce_cart.ini
