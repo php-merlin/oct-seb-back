@@ -2023,14 +2023,6 @@ Temporary Items
 /administrator/language/fr-FR/fr-FR.plg_cck_field_live_x.sys.ini
 /plugins/cck_field_live/x/*
 
-######## SEBLOD Plug-ins >> Object >> Joomla! Menu Item
-
-/administrator/language/en-GB/en-GB.plg_cck_storage_location_joomla_menu_item.ini
-/administrator/language/en-GB/en-GB.plg_cck_storage_location_joomla_menu_item.sys.ini
-/administrator/language/fr-FR/fr-FR.plg_cck_storage_location_joomla_menu_item.ini
-/administrator/language/fr-FR/fr-FR.plg_cck_storage_location_joomla_menu_item.sys.ini
-/plugins/cck_storage_location/joomla_menu_item/*
-
 ######## SEBLOD Plug-ins >> Object >> Joomla! Message
 
 /administrator/language/en-GB/en-GB.plg_cck_storage_location_joomla_message.ini
