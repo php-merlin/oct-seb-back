@@ -1520,14 +1520,6 @@ Temporary Items
 /administrator/language/fr-FR/fr-FR.plg_cck_field_iframe.sys.ini
 /plugins/cck_field/iframe/*
 
-######## SEBLOD Plug-ins >> Field >> ItemX
-
-/administrator/language/en-GB/en-GB.plg_cck_field_item_x.ini
-/administrator/language/en-GB/en-GB.plg_cck_field_item_x.sys.ini
-/administrator/language/fr-FR/fr-FR.plg_cck_field_item_x.ini
-/administrator/language/fr-FR/fr-FR.plg_cck_field_item_x.sys.ini
-/plugins/cck_field/item_x/*
-
 ######## SEBLOD Plug-ins >> Field >> JoinX
 
 /administrator/language/en-GB/en-GB.plg_cck_field_join_x.ini
@@ -1822,14 +1814,6 @@ Temporary Items
 /administrator/language/fr-FR/fr-FR.plg_cck_field_link_history_back_js.ini
 /administrator/language/fr-FR/fr-FR.plg_cck_field_link_history_back_js.sys.ini
 /plugins/cck_field_link/history_back_js/*
-
-######## SEBLOD Plug-ins >> Link >> ItemX
-
-/administrator/language/en-GB/en-GB.plg_cck_field_restriction_item_x.ini
-/administrator/language/en-GB/en-GB.plg_cck_field_restriction_item_x.sys.ini
-/administrator/language/fr-FR/fr-FR.plg_cck_field_restriction_item_x.ini
-/administrator/language/fr-FR/fr-FR.plg_cck_field_restriction_item_x.sys.ini
-/plugins/cck_field_restriction/item_x/*
 
 ######## SEBLOD Plug-ins >> Link >> JoinX
 
@@ -2154,14 +2138,6 @@ Temporary Items
 /administrator/language/fr-FR/fr-FR.plg_cck_field_restriction_increment.ini
 /administrator/language/fr-FR/fr-FR.plg_cck_field_restriction_increment.sys.ini
 /plugins/cck_field_restriction/increment/*
-
-######## SEBLOD Plug-ins >> Restriction >> ItemX
-
-/administrator/language/en-GB/en-GB.plg_cck_field_link_item_x.ini
-/administrator/language/en-GB/en-GB.plg_cck_field_link_item_x.sys.ini
-/administrator/language/fr-FR/fr-FR.plg_cck_field_link_item_x.ini
-/administrator/language/fr-FR/fr-FR.plg_cck_field_link_item_x.sys.ini
-/plugins/cck_field_link/item_x/*
 
 ######## SEBLOD Plug-ins >> Restriction >> Joomla! ACL (Pack)
 
