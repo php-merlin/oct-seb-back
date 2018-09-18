@@ -2031,14 +2031,6 @@ Temporary Items
 /administrator/language/fr-FR/fr-FR.plg_cck_storage_location_joomla_message.sys.ini
 /plugins/cck_storage_location/joomla_message/*
 
-######## SEBLOD Plug-ins >> Object >> Joomla! Module
-
-/administrator/language/en-GB/en-GB.plg_cck_storage_location_joomla_module.ini
-/administrator/language/en-GB/en-GB.plg_cck_storage_location_joomla_module.sys.ini
-/administrator/language/fr-FR/fr-FR.plg_cck_storage_location_joomla_module.ini
-/administrator/language/fr-FR/fr-FR.plg_cck_storage_location_joomla_module.sys.ini
-/plugins/cck_storage_location/joomla_module/*
-
 ######## SEBLOD Plug-ins >> Object >> Joomla! Redirection
 
 /administrator/language/en-GB/en-GB.plg_cck_storage_location_joomla_redirection.ini
