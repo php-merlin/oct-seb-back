@@ -39,8 +39,4 @@
 			</fieldset>
 		</fields>
 	</config>
-
-	<updateservers>
-		<server type="extension" priority="1" name="Date Validation Plug-in Updates">http://update.seblod.com/plg_cck_field_validation_date.xml</server>
-	</updateservers>
 </extension>

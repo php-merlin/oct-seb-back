@@ -49,12 +49,8 @@
 	<cck_integration>
 		<component>com_menus</component>
 		<context>com_menus.item</context>
-		<options>{}</options>
+		<options>{"default_type":"menu_item","add":"0","add_layout":"icon","add_alt":"2","add_redirect":"0","edit":"0","edit_alt":"0"}</options>
 		<vars />
 		<view />
 	</cck_integration>
-
-	<updateservers>
-		<server type="extension" priority="1" name="Joomla! Menu Item Object Plug-in Updates">http://update.seblod.com/plg_cck_storage_location_joomla_menu_item.xml</server>
-	</updateservers>
 </extension>

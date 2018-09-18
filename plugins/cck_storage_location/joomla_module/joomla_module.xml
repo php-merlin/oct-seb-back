@@ -49,12 +49,8 @@
 	<cck_integration>
 		<component>com_modules</component>
 		<context>com_modules.module</context>
-		<options>{}</options>
+		<options>{"default_type":"module","add":"0","add_layout":"icon","add_alt":"2","add_redirect":"0","edit":"0","edit_alt":"0"}</options>
 		<vars />
 		<view />
 	</cck_integration>
-
-	<updateservers>
-		<server type="extension" priority="1" name="Joomla! Module Object Plug-in Updates">http://update.seblod.com/plg_cck_storage_location_joomla_module.xml</server>
-	</updateservers>
 </extension>

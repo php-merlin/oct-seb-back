@@ -41,8 +41,4 @@
 			</fieldset>
 		</fields>
 	</config>
-
-	<updateservers>
-		<server type="extension" priority="1" name="Item X Field Plug-in Updates">http://update.seblod.com/plg_cck_field_item_x.xml</server>
-	</updateservers>
 </extension>

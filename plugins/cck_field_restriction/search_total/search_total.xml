@@ -39,8 +39,4 @@
 			</fieldset>
 		</fields>
 	</config>
-
-	<updateservers>
-		<server type="extension" priority="1" name="Search Total Restriction Plug-in Updates">http://update.seblod.com/plg_cck_field_restriction_search_total.xml</server>
-	</updateservers>
 </extension>

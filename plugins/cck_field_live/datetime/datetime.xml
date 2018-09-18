@@ -40,8 +40,4 @@
 			</fieldset>
 		</fields>
 	</config>
-
-	<updateservers>
-		<server type="extension" priority="1" name="DateTime Live Plug-in Updates">http://update.seblod.com/plg_cck_field_live_datetime.xml</server>
-	</updateservers>
 </extension>

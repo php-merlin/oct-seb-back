@@ -41,8 +41,4 @@
 			</fieldset>
 		</fields>
 	</config>
-
-	<updateservers>
-		<server type="extension" priority="1" name="Message Redirection Field Plug-in Updates">http://update.seblod.com/plg_cck_field_message_redirection.xml</server>
-	</updateservers>
 </extension>

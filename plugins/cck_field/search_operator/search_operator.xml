@@ -41,8 +41,4 @@
 			</fieldset>
 		</fields>
 	</config>
-
-	<updateservers>
-		<server type="extension" priority="1" name="Search Operator Field Plug-in Updates">http://update.seblod.com/plg_cck_field_search_operator.xml</server>
-	</updateservers>
 </extension>
