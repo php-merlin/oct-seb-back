@@ -51,6 +51,7 @@
 			<file type="plugin" id="group" group="cck_field">plg_cck_field_group.zip</file>
 			<file type="plugin" id="group_x" group="cck_field">plg_cck_field_group_x.zip</file>
 			<file type="plugin" id="icon" group="cck_field">plg_cck_field_icon.zip</file>
+			<file type="plugin" id="item_x" group="cck_field">plg_cck_field_item_x.zip</file>
 			<file type="plugin" id="jform_accesslevel" group="cck_field">plg_cck_field_jform_accesslevel.zip</file>
 			<file type="plugin" id="jform_associations" group="cck_field">plg_cck_field_jform_associations.zip</file>
 			<file type="plugin" id="jform_calendar" group="cck_field">plg_cck_field_jform_calendar.zip</file>
@@ -68,6 +69,8 @@
 			<file type="plugin" id="password" group="cck_field">plg_cck_field_password.zip</file>
 			<file type="plugin" id="radio" group="cck_field">plg_cck_field_radio.zip</file>
 			<file type="plugin" id="search_generic" group="cck_field">plg_cck_field_search_generic.zip</file>
+			<file type="plugin" id="search_join" group="cck_field">plg_cck_field_search_join.zip</file>
+			<file type="plugin" id="search_operator" group="cck_field">plg_cck_field_search_operator.zip</file>
 			<file type="plugin" id="search_ordering" group="cck_field">plg_cck_field_search_ordering.zip</file>
 			<file type="plugin" id="select_dynamic" group="cck_field">plg_cck_field_select_dynamic.zip</file>
 			<file type="plugin" id="select_multiple" group="cck_field">plg_cck_field_select_multiple.zip</file>
@@ -85,6 +88,7 @@
 			<file type="plugin" id="content_delete" group="cck_field_link">plg_cck_field_link_content_delete.zip</file>
 			<file type="plugin" id="cck_form" group="cck_field_link">plg_cck_field_link_cck_form.zip</file>
 			<file type="plugin" id="cck_list" group="cck_field_link">plg_cck_field_link_cck_list.zip</file>
+			<file type="plugin" id="item_x" group="cck_field_link">plg_cck_field_link_item_x.zip</file>
 			<!-- Plugin // CCK Field Live -->
 			<file type="plugin" id="datetime" group="cck_field_live">plg_cck_field_live_datetime.zip</file>
 			<file type="plugin" id="joomla_user" group="cck_field_live">plg_cck_field_live_joomla_user.zip</file>
@@ -92,6 +96,7 @@
 			<!-- Plugin // CCK Field Restriction -->
 			<file type="plugin" id="cck_workflow" group="cck_field_restriction">plg_cck_field_restriction_cck_workflow.zip</file>
 			<file type="plugin" id="clear" group="cck_field_restriction">plg_cck_field_restriction_clear.zip</file>
+			<file type="plugin" id="item_x" group="cck_field_restriction">plg_cck_field_restriction_item_x.zip</file>
 			<file type="plugin" id="search_total" group="cck_field_restriction">plg_cck_field_restriction_search_total.zip</file>
 			<file type="plugin" id="url_variable" group="cck_field_restriction">plg_cck_field_restriction_url_variable.zip</file>
 			<!-- Plugin // CCK Field Typo -->
@@ -101,6 +106,7 @@
 			<file type="plugin" id="heading" group="cck_field_typo">plg_cck_field_typo_heading.zip</file>
 			<file type="plugin" id="html" group="cck_field_typo">plg_cck_field_typo_html.zip</file>
 			<file type="plugin" id="image" group="cck_field_typo">plg_cck_field_typo_image.zip</file>
+			<file type="plugin" id="item_x" group="cck_field_typo">plg_cck_field_typo_item_x.zip</file>
 			<file type="plugin" id="italic" group="cck_field_typo">plg_cck_field_typo_italic.zip</file>
 			<file type="plugin" id="joomla_jgrid" group="cck_field_typo">plg_cck_field_typo_joomla_jgrid.zip</file>
 			<file type="plugin" id="underline" group="cck_field_typo">plg_cck_field_typo_underline.zip</file>
@@ -112,8 +118,11 @@
 			<file type="plugin" id="free" group="cck_storage_location">plg_cck_storage_location_free.zip</file>
 			<file type="plugin" id="joomla_article" group="cck_storage_location">plg_cck_storage_location_joomla_article.zip</file>
 			<file type="plugin" id="joomla_category" group="cck_storage_location">plg_cck_storage_location_joomla_category.zip</file>
+			<file type="plugin" id="joomla_menu_item" group="cck_storage_location">plg_cck_storage_location_joomla_menu_item.zip</file>
+			<file type="plugin" id="joomla_module" group="cck_storage_location">plg_cck_storage_location_joomla_module.zip</file>
 			<file type="plugin" id="joomla_user" group="cck_storage_location">plg_cck_storage_location_joomla_user.zip</file>
 			<file type="plugin" id="joomla_user_group" group="cck_storage_location">plg_cck_storage_location_joomla_user_group.zip</file>
+			<file type="plugin" id="joomla_viewlevel" group="cck_storage_location">plg_cck_storage_location_joomla_viewlevel.zip</file>
 			<!-- Plugin // CCK Validation -->
 			<file type="plugin" id="ajax_availability" group="cck_field_validation">plg_cck_field_validation_ajax_availability.zip</file>
 			<file type="plugin" id="confirm" group="cck_field_validation">plg_cck_field_validation_confirm.zip</file>
