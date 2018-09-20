@@ -23,12 +23,12 @@ $options2   =   JCckDev::fromJSON( $this->item->options2 );
         echo JCckDev::renderForm( 'core_bool', $this->item->bool, $config, array( 'label'=>'Behavior', 'defaultvalue'=>'0', 'options'=>'Standard=0||Multiple=1' ) );
 
         echo JCckDev::renderSpacer( JText::_( 'COM_CCK_ADD' ) );
-        echo JCckDev::renderForm( 'core_bool2', $this->item->bool2, $config, array( 'label'=>'Mode', 'defaultvalue'=>'0', 'options'=>'None=-2||Modal Box=0' ) );
+        echo JCckDev::renderForm( 'core_bool2', $this->item->bool2, $config, array( 'label'=>'Mode', 'defaultvalue'=>'-2', 'options'=>'None=-2||Modal Box=0' ) );
         echo JCckDev::renderForm( 'core_extended', @$locations[0], $config, array( 'label'=>_C2_TEXT, 'storage_field'=>'location' ) );
         echo JCckDev::renderForm( 'core_dev_textarea', @$options2['add_custom'], $config, array( 'label'=>'Custom Variables', 'defaultvalue'=>'', 'cols'=>92, 'rows'=>1, 'storage_field'=>'json[options2][add_custom]' ), array(), 'w100' );
 
         echo JCckDev::renderSpacer( JText::_( 'COM_CCK_SELECT' ) );
-        echo JCckDev::renderForm( 'core_bool3', $this->item->bool3, $config, array( 'label'=>'Mode', 'defaultvalue'=>'-2', 'options'=>'None=-2||Modal Box=0' ) );
+        echo JCckDev::renderForm( 'core_bool3', $this->item->bool3, $config, array( 'label'=>'Mode', 'defaultvalue'=>'0', 'options'=>'None=-2||Modal Box=0' ) );
         echo JCckDev::renderForm( 'core_extended', @$locations[1], $config, array( 'label'=>_C4_TEXT, 'storage_field'=>'location2' ) );
         echo JCckDev::renderBlank();
         echo JCckDev::renderForm( 'core_dev_select', @$options2['select_task'], $config, array( 'label'=>'Config Search Task', 'defaultvalue'=>'search', 'selectlabel'=>'', 'options'=>'No=no||Yes=search', 'storage_field'=>'json[options2][select_task]' ) );

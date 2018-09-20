@@ -78,6 +78,11 @@ class plgCCK_FieldItem_X extends JCckPluginField
 			$field->markup_class	.=	' multiple';
 		}
 
+		// Validate
+		if ( $config['doValidation'] > 1 ) {
+			plgCCK_Field_ValidationRequired::onCCK_Field_ValidationPrepareForm( $field, $id, $config );
+		}
+
 		// Prepare
 		$app		=	JFactory::getApplication();
 		$form		=	$field->location;
@@ -116,7 +121,7 @@ class plgCCK_FieldItem_X extends JCckPluginField
 			$task	=	'saveAjax';
 			$task2	=	'processAjax';
 		}
-		$context	=	'&context={"view":"form"}';
+		$context	=	'&context={"view":"form","referrer":""}';
 		$doc		=	JFactory::getDocument();
 		$html		=	'';
 		$link		=	'index.php?option=com_cck&view=form&layout='.$layout.'&type='.$form.'&tmpl='.$tmpl.$options2['add_custom'];
@@ -161,7 +166,9 @@ class plgCCK_FieldItem_X extends JCckPluginField
 										data: "format=raw&infinite="+infinite+"&pks="+pks,
 										type: "GET",
 										url: JCck.More.ItemX.instances[JCck.More.ItemX.active].link_list,
-										beforeSend:function(){},
+										beforeSend:function(){
+											this.url = this.url.replace(\'"referrer":""\',\'"referrer":"\'+JCck.More.ItemX.active+\'"\');
+										},
 										success: function(response){
 											if (JCck.More.ItemX.instances[JCck.More.ItemX.active].behavior) {
 												if (infinite == -1) {
@@ -329,6 +336,9 @@ class plgCCK_FieldItem_X extends JCckPluginField
 									var selection = "";
 									if (!JCck.More.ItemX.instances[JCck.More.ItemX.active].behavior) {
 										selection = $("#"+JCck.More.ItemX.active+" [name=\'"+JCck.More.ItemX.active+"[]\']").val();
+										if (selection===undefined) {
+											selection = "";
+										}
 										if (selection) {
 											selection = "&pks="+selection;
 										}
@@ -368,9 +378,9 @@ class plgCCK_FieldItem_X extends JCckPluginField
 									name = name || JCck.More.ItemX.active;
 									if (JCck.More.ItemX.instances[name].required) {
 										if (state) {
-											$("#"+name+" > .btn-toolbar").addClass("validate[required]");
+											$("#"+name+" > .btn-toolbar > button:last-child").addClass("validate[required]");
 										} else {
-											$("#"+name+" > .btn-toolbar").removeClass("validate[required]").validationEngine("hide");
+											$("#"+name+" > .btn-toolbar > button:last-child").removeClass("validate[required]").validationEngine("hide");
 										}
 									}
 								}
@@ -694,6 +704,34 @@ class plgCCK_FieldItem_X extends JCckPluginField
 
 	public static function getFieldProperty( $name, $property, $default = '' )
 	{
+		if ( !isset( self::$properties[$name] ) ) {
+			$field	=	JCckDatabaseCache::loadObject( 'SELECT name, bool2, bool3, location, required FROM #__cck_core_fields WHERE name = "'.$name.'"' );
+
+			self::$properties[$field->name]	=	array(
+													'required'=>( $field->required ? true : false ),
+													'task_add'=>( $field->bool2 > -2 ? true : false ),
+													'task_select'=>( $field->bool3 > -2 ? true : false )
+												);
+
+			// Check Permissions
+			if ( self::$properties[$field->name]['task_add'] ) {
+				$form		=	$field->location;
+				
+				if ( strpos( $form, '||' ) !== false ) {
+					$form	=	explode( '||', $form );
+					$form	=	$form[0];
+				}
+
+				$type_id	=	(int)JCckDatabaseCache::loadResult( 'SELECT id FROM #__cck_core_types WHERE name = "'.$form.'"' );
+				$canCreate	=	( $type_id ) ? JFactory::getUser()->authorise( 'core.create', 'com_cck.form.'.$type_id ) : false;
+					
+				if ( !$canCreate ) {
+					self::$properties[$field->name]['task_add']	=	false;
+				}
+			}
+		}
+
+
 		if ( isset( self::$properties[$name][$property] ) ) {
 			return self::$properties[$name][$property];
 		}
@@ -740,7 +778,7 @@ class plgCCK_FieldItem_X extends JCckPluginField
 		if ( !$field->bool ) {
 			$app->input->set( 'pks', $field->value );
 		}
-		$app->input->set( 'cck_item_x_parent_name', $field->name );
+		$app->input->set( 'cck_item_x_referrer', $field->name );
 
 		// -- TODO#SEBLOD:
 		$pagination		=	8;
@@ -773,7 +811,7 @@ class plgCCK_FieldItem_X extends JCckPluginField
 		if ( !$field->bool ) {
 			$app->input->set( 'pks', null );
 		}
-		$app->input->set( 'cck_item_x_parent_name', null );
+		$app->input->set( 'cck_item_x_referrer', null );
 
 		/*
 		$config	=	$main_config;

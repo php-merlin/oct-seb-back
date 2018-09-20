@@ -38,15 +38,15 @@ class plgCCK_Field_TypoItem_X extends JCckPluginTypo
 	// _typo
 	protected static function _typo( $typo, $field, $value, &$config = array() )
 	{
-		$app	=	JFactory::getApplication();
-		$pk		=	(int)$field->value;
-		$name	=	$app->input->getCmd( 'cck_item_x_referrer', $app->input->getCmd( 'referrer', uniqid() ) );
+		$app		=	JFactory::getApplication();
+		$pk			=	(int)$field->value;
+		$referrer	=	$app->input->getCmd( 'cck_item_x_referrer', $app->input->getCmd( 'referrer', uniqid() ) );
 
 		if ( !$pk ) {
 			return '';
 		}
 
-		return '<input type="hidden" id="'.$pk.'_'.$name.'" name="'.$name.'[]" value="'.$pk.'" data-cck-remove-before-search="" />';
+		return '<input type="hidden" id="'.$pk.'_'.$referrer.'" name="'.$referrer.'[]" value="'.$pk.'" data-cck-remove-before-search="" />';
 	}
 }
 ?>

@@ -56,15 +56,25 @@ class plgCCK_Field_RestrictionItem_X extends JCckPluginRestriction
 	// _authorise
 	protected static function _authorise( $restriction, &$field, &$config )
 	{
-		$do			=	$restriction->get( 'do', 0 );
-		$parent		=	JFactory::getApplication()->input->get( 'cck_item_x_parent_name' );
-		$property	=	$restriction->get( 'property' );
+		$app		=	JFactory::getApplication();
+		$property	=	'';
+		$referrer	=	$app->input->getCmd( 'cck_item_x_referrer', $app->input->getCmd( 'referrer', uniqid() ) );
+		$required	=	$restriction->get( 'required' );
+		$task		=	$restriction->get( 'task' );
 
-		if ( !plgCCK_FieldItem_X::getFieldProperty( $parent, $property ) ) {
-			return ( $do ) ? true : false;
+		if ( $task != '' ) {
+			if ( !plgCCK_FieldItem_X::getFieldProperty( $referrer, 'task_'.$task ) ) {
+				return false;
+			}
 		}
-		
-		return ( $do ) ? false : true;
+
+		if ( $required != '' ) {
+			if ( (bool)$required !== plgCCK_FieldItem_X::getFieldProperty( $referrer, 'required' ) ) {
+				return false;
+			}
+		}
+
+		return true;
 	}
 }
 ?>

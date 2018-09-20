@@ -17,8 +17,8 @@ JCckDev::initScript( 'restriction', $this->item );
 	<?php echo JCckDev::renderLegend( JText::_( 'COM_CCK_CONSTRUCTION' ), JText::_( 'PLG_CCK_FIELD_RESTRICTION_'.$this->item->name.'_DESC' ) ); ?>
     <ul class="adminformlist adminformlist-2cols">
         <?php
-		echo JCckDev::renderForm( 'core_dev_select', '', $config, array( 'label'=>'Mode', 'selectlabel'=>'Select', 'options'=>'Required=required||Task=optgroup||Add=task_add||Select=task_select', 'required'=>'', 'storage_field'=>'property' ) );
-		echo JCckDev::renderForm( 'core_bool', '', $config, array( 'label'=>'Invert', 'defaultvalue'=>'0', 'options'=>'Yes=1||No=0', 'storage_field'=>'do' ) );
+		echo JCckDev::renderForm( 'core_dev_select', '', $config, array( 'label'=>'Task', 'selectlabel'=>'Any Task', 'options'=>'Add=add||Select=select', 'required'=>'', 'storage_field'=>'task' ) );
+		echo JCckDev::renderForm( 'core_dev_select', '', $config, array( 'label'=>'Required', 'selectlabel'=>'Any Validation', 'options'=>'Yes=1||No=0', 'required'=>'', 'storage_field'=>'required' ) );
         ?>
     </ul>
 </div>
