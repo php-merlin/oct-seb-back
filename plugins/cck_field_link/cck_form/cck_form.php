@@ -177,6 +177,17 @@ class plgCCK_Field_LinkCCK_Form extends JCckPluginLink
 			// $redirection		=	'-1'; /* TODO#SEBLOD: */
 		// }
 		
+		if ( $link_target == 'modal' ) {
+			if ( strpos( $link_attr, 'data-cck-modal' ) === false ) {
+				$modal_json	=	$link->get( 'target_params', '' );
+
+				if ( $modal_json != '' ) {
+					$modal_json	=	'=\''.$modal_json.'\'';
+				}
+				$link_attr	=	trim( $link_attr.' data-cck-modal'.$modal_json );				
+			}
+		}
+		
 		// Set
 		if ( is_array( $field->value ) ) {
 			foreach ( $field->value as $f ) {
