@@ -165,14 +165,11 @@ class plgContentCCKInstallerScript
 		$db->execute();
 		
 		if ( $type == 'install' ) {
-			// Manage Modules
-			$modules	=	array(  0=>array( 'name'=>'mod_cck_quickadd', 'update'=>'title = "Quick Add - SEBLOD", access = 3, published = 1, position = "status", ordering = 0' ),
-									1=>array( 'name'=>'mod_cck_quickicon', 'update'=>'title = "Quick Icons - SEBLOD", access = 3, published = 1, position = "icon", ordering = 2' ),
-									2=>array( 'name'=>'mod_cck_breadcrumbs', 'update'=>'title = "Breadcrumbs - SEBLOD"' ),
-									3=>array( 'name'=>'mod_cck_form', 'update'=>'title = "Form - SEBLOD"' ),
-									4=>array( 'name'=>'mod_cck_item', 'update'=>'title = "Item - SEBLOD"' ),
-									5=>array( 'name'=>'mod_cck_list', 'update'=>'title = "List - SEBLOD"' ),
-									6=>array( 'name'=>'mod_cck_search', 'update'=>'title = "Search - SEBLOD"' ) );
+			// Manage Back-end Modules
+			$modules	=	array(
+								0=>array( 'name'=>'mod_cck_quickadd', 'task'=>'update', 'update'=>'title = "Quick Add - SEBLOD", access = 3, published = 1, position = "status", ordering = 0' ),
+								1=>array( 'name'=>'mod_cck_quickicon', 'task'=>'update', 'update'=>'title = "Quick Icons - SEBLOD", access = 3, published = 1, position = "icon", ordering = 2' )
+							);
 			foreach ( $modules as $module ) {
 				$query	=	'UPDATE #__modules SET '.$module['update'].' WHERE module = "'.$module['name'].'"';
 				$db->setQuery( $query );
@@ -189,7 +186,12 @@ class plgContentCCKInstallerScript
 					// Do nothing
 				}
 			}
-			
+
+			// Delete Front-end Modules
+			$query	=	'DELETE a.* FROM #__modules AS a WHERE a.module IN ("mod_cck_breadcrumbs","mod_cck_form","mod_cck_item","mod_cck_list","mod_cck_search")';
+			$db->setQuery( $query );
+			$db->execute();
+
 			// Publish Plugins
 			$query	=	'UPDATE #__extensions SET enabled = 1 WHERE folder LIKE "cck_%"';
 			$db->setQuery( $query );
@@ -214,9 +216,14 @@ class plgContentCCKInstallerScript
 			$db->setQuery( $query );
 			$db->execute();
 			
-			$query	=	'SELECT id FROM #__template_styles WHERE template="seb_table" ORDER BY id';
+			$query			=	'SELECT id, params FROM #__template_styles WHERE template="seb_table" ORDER BY id';
 			$db->setQuery( $query );
-			$style3	=	$db->loadResult();
+			$style3			=	$db->loadObject();
+			$style3_params	=	'{"rendering_item_attributes":"","rendering_css_class":"",'.substr( $style3->params, 1 );
+
+			$query			=	'UPDATE #__template_styles SET params = "'.$db->escape( $style3_params ).'" WHERE id = '.(int)$style3->id;
+			$db->setQuery( $query );
+			$db->execute();
 			
 			// - Content Types
 			$query	=	'UPDATE #__cck_core_types SET template_admin = '.$style->id.', template_site = '.$style->id.', template_content = '.$style->id.', template_intro = '.$style->id;
@@ -225,12 +232,12 @@ class plgContentCCKInstallerScript
 			
 			// - Search Types (List)
 			/* TODO#SEBLOD4 */
-			$query	=	'UPDATE #__cck_core_searchs SET template_search = '.$style->id.', template_filter = '.$style->id.', template_list = '.$style2->id.', template_item = '.$style->id.' WHERE id IN (1,5,8)';
+			$query	=	'UPDATE #__cck_core_searchs SET template_search = '.$style->id.', template_filter = '.$style->id.', template_list = '.$style2->id.' WHERE id IN (1,5,8,21)';
 			$db->setQuery( $query );
 			$db->execute();
 
 			// - Search Types (Table)
-			$query	=	'UPDATE #__cck_core_searchs SET template_search = '.$style->id.', template_filter = '.$style->id.' WHERE id IN (11,15,18)';
+			$query	=	'UPDATE #__cck_core_searchs SET template_search = '.$style->id.', template_filter = '.$style->id.', template_list = '.$style3->id.' WHERE id IN (11,15,18,22)';
 			$db->setQuery( $query );
 			$db->execute();
 			
@@ -243,6 +250,9 @@ class plgContentCCKInstallerScript
 									  ),
 								'18'=>array(
 										'list'=>array( 'seb_table', 0, '0', 'seb_table - user_manager (list)', '{"rendering_css_class":"","rendering_item_attributes":"","cck_client_item":"0","class_table":"table table-striped","table_header":"0","class_table_tr_even":"","table_layout":"responsive","class_table_tr_odd":"","table_columns":"0","position_margin":"10"}' )
+									  ),
+								'21'=>array(
+										'list'=>array( 'seb_list', 0, '0', 'seb_list - article_item (list)', '{"rendering_item_attributes":"","rendering_css_class":"","cck_client_item":"0","list_display":"0","tag":"div_div","class":"","auto_clean":"0","attributes":""}' )
 									  )
 							);
 
@@ -341,307 +351,15 @@ class plgContentCCKInstallerScript
 		} else {
 			$new		=	$app->cck_core_version;
 			$old		=	$app->cck_core_version_old;
-			$root		=	JPATH_ADMINISTRATOR.'/components/com_cck';
-			require_once JPATH_ADMINISTRATOR.'/components/'.CCK_COM.'/helpers/helper_folder.php';
 
-			// ******** ******** ******** ******** ******** ******** ******** ******** ******** ******** ******** ******** ******** ******** ******** ******** //
-			$versions	=	array(	0=>'2.0.0', 1=>'2.0.0.RC2', 2=>'2.0.0.RC2-1', 3=>'2.0.0.RC2-2', 4=>'2.0.0.RC2-3', 5=>'2.0.0.RC3', 6=>'2.0.0.RC4',
-									7=>'2.0.0.GA', 8=>'2.0.5', 9=>'2.0.6', 10=>'2.0.7', 11=>'2.1.0', 12=>'2.1.5', 13=>'2.2.0', 14=>'2.2.5',
-									15=>'2.3.0', 16=>'2.3.1', 17=>'2.3.5', 18=>'2.3.6', 19=>'2.3.7', 20=>'2.3.8', 21=>'2.3.9', 22=>'2.3.9.2',
-									23=>'2.4.5', 24=>'2.4.6', 25=>'2.4.7', 26=>'2.4.8', 27=>'2.4.8.5', 28=>'2.4.9',
-									29=>'2.4.9.1', 30=>'2.4.9.2', 31=>'2.4.9.5', 32=>'2.4.9.6', 33=>'2.4.9.7', 34=>'2.4.9.8', 35=>'2.5.0', 36=>'2.5.1', 37=>'2.5.2',
-									38=>'2.6.0', 39=>'2.7.0', 40=>'2.8.0', 41=>'2.9.0', 42=>'3.0.0', 43=>'3.0.1', 44=>'3.0.2', 45=>'3.0.3', 46=>'3.0.4', 47=>'3.0.5',
-									48=>'3.1.0', 49=>'3.1.1', 50=>'3.1.2', 51=>'3.1.3', 52=>'3.1.4', 53=>'3.1.5',
-									54=>'3.2.0', 55=>'3.2.1', 56=>'3.2.2', 57=>'3.3.0', 58=>'3.3.1', 59=>'3.3.2', 60=>'3.3.3', 61=>'3.3.4', 62=>'3.3.5', 63=>'3.3.6', 64=>'3.3.7', 65=>'3.3.8',
-									66=>'3.4.0', 67=>'3.4.1', 68=>'3.4.2', 69=>'3.4.3', 70=>'3.5.0', 71=>'3.5.1',
-									72=>'3.6.0', 73=>'3.6.1', 74=>'3.6.2', 75=>'3.6.3', 76=>'3.6.4', 77=>'3.6.5',
-									78=>'3.7.0', 79=>'3.7.1', 80=>'3.7.2', 81=>'3.7.3', 82=>'3.7.4', 83=>'3.7.5', 84=>'3.7.6', 85=>'3.7.7',
-									86=>'3.8.0', 87=>'3.8.1', 88=>'3.8.2', 89=>'3.8.3', 90=>'3.8.4', 91=>'3.8.5',
-									92=>'3.9.0', 93=>'3.9.1', 94=>'3.9.2', 95=>'3.10.0', 96=>'3.10.1', 97=>'3.10.2', 98=>'3.10.3', 99=>'3.10.4', 100=>'3.10.5', 101=>'3.10.6', 102=>'3.10.7', 103=>'3.10.8', 104=>'3.10.9',
-									105=>'3.11.0', 106=>'3.11.1', 107=>'3.11.2', 108=>'3.11.3', 109=>'3.11.4',
-									110=>'3.12.0', 111=>'3.12.1', 112=>'3.12.2', 113=>'3.12.3', 114=>'3.13.0', 115=>'3.13.1',
-									116=>'3.14.0', 117=>'3.14.1', 118=>'3.15.0', 119=>'3.15.1',
-									120=>'3.16.0', 121=>'3.16.1', 122=>'3.16.2', 123=>'3.16.3', 124=>'3.16.4',
-									125=>'3.17.0'
-							);
-			// ******** ******** ******** ******** ******** ******** ******** ******** ******** ******** ******** ******** ******** ******** ******** ******** //
-			
-			$i			=	array_search( $old, $versions );
-			$i2			=	$i;
-			$n			=	array_search( $new, $versions );
-			
-			if ( $i < 7 ) {		// ONLY < 2.0 GA
-				$prefix	=	JFactory::getConfig()->get( 'dbprefix' );
-				$tables	=	JCckDatabase::loadColumn( 'SHOW TABLES' );
-				
-				if ( count( $tables ) ) {
-					foreach ( $tables as $table ) {
-						if ( strpos( $table, $prefix.'cck_item_' ) !== false ) {
-							$replace	=	str_replace( $prefix.'cck_item_', $prefix.'cck_store_item_', $table );
-							
-							if ( $replace ) {
-								JCckDatabase::doQuery( 'ALTER TABLE '.$table.' RENAME '.$replace );
-							}
-						} elseif ( strpos( $table, $prefix.'cck_type_' ) !== false ) {
-							$replace	=	str_replace( $prefix.'cck_type_', $prefix.'cck_store_form_', $table );
-							
-							if ( $replace ) {
-								JCckDatabase::doQuery( 'ALTER TABLE '.$table.' RENAME '.$replace );
-							}
-						}
-					}
-				}
-				$fields	=	JCckDatabase::loadObjectList( 'SELECT id, storage_table FROM #__cck_core_fields WHERE storage_table LIKE "#__cck_item_%"' );
-				
-				if ( count( $fields ) ) {
-					foreach ( $fields as $field ) {
-						$replace	=	str_replace( '#__cck_item_', '#__cck_store_item_', $field->storage_table );
-						
-						JCckDatabase::doQuery( 'UPDATE #__cck_core_fields SET storage_table = "'.$replace.'" WHERE id = '.(int)$field->id );
-					}
-				}
-				$fields	=	JCckDatabase::loadObjectList( 'SELECT id, storage_table FROM #__cck_core_fields WHERE storage_table LIKE "#__cck_type_%"' );
-				
-				if ( count( $fields ) ) {
-					foreach ( $fields as $field ) {
-						$replace	=	str_replace( '#__cck_type_', '#__cck_store_form_', $field->storage_table );
-						
-						JCckDatabase::doQuery( 'UPDATE #__cck_core_fields SET storage_table = "'.$replace.'" WHERE id = '.(int)$field->id );
-					}
-				}
-				$fields	=	JCckDatabase::loadObjectList( 'SELECT id, options2 FROM #__cck_core_fields WHERE type = "select_dynamic"' );
-				
-				if ( count( $fields ) ) {
-					foreach ( $fields as $field ) {
-						$options2		=	$field->options2;
-						
-						if ( strpos( $options2, '#__cck_item_' ) !== false ) {
-							$options2	=	str_replace( '#__cck_item_', '#__cck_store_item_', $options2 );
-						}
-						if ( strpos( $options2, '#__cck_type_' ) !== false ) {
-							$options2	=	str_replace( '#__cck_type_', '#__cck_store_form_', $options2 );
-						}
-						if ( $options2 != $field->options2 ) {
-							JCckDatabase::doQuery( 'UPDATE #__cck_core_fields SET options2 = "'.$db->escape( $options2 ).'" WHERE id = '.(int)$field->id );
-						}
-					}
-				}
-			}
-			
-			if ( $i < 23 ) {	// ONLY < 2.4.5
-				JCckDatabase::doQuery( 'ALTER TABLE #__cck_core_folders ADD path VARCHAR( 1024 ) NOT NULL AFTER parent_id;' );
-				
-				require_once JPATH_ADMINISTRATOR.'/components/'.CCK_COM.'/helpers/helper_folder.php';
-				
-				$folders	=	JCckDatabase::loadColumn( 'SELECT id FROM #__cck_core_folders WHERE lft ORDER BY lft' );
-				
-				foreach ( $folders as $f ) {
-					$path	=	Helper_Folder::getPath( $f, '/' );
-					
-					JCckDatabase::doQuery( 'UPDATE #__cck_core_folders SET path = "'.$path.'" WHERE id = '.(int)$f );
-				}
-				if ( JCckDatabase::doQuery( 'INSERT IGNORE #__cck_core_folders (id) VALUES (29)' ) ) {
-					require_once JPATH_ADMINISTRATOR.'/components/'.CCK_COM.'/tables/folder.php';
-					
-					$folder			=	JTable::getInstance( 'Folder', 'CCK_Table' );
-					$folder->load( 29 );
-					$folder_data	=	array( 'parent_id'=>13, 'path'=>'joomla/user/profile', 'title'=>'Profile', 'name'=>'profile', 'color'=>'#0090d1',
-											   'introchar'=>'U.', 'colorchar'=>'#ffffff', 'elements'=>'field', 'featured'=>0, 'published'=>1 );
-					$rules			=	new JAccessRules( '{"core.create":[],"core.delete":[],"core.edit":[],"core.edit.state":[],"core.edit.own":[]}' );
-					$folder->setRules( $rules );
-					$folder->bind( $folder_data );
-					$folder->store();
-				}
-			}
-			
-			for ( $i = $i + 1; $i <= $n; $i++ ) {
-				$file		=	$root.'/install/upgrades/'.strtolower( $versions[$i] ).'.sql';
-				
-				if ( JFile::exists( $file ) ) {
-					$buffer		=	file_get_contents( $file );
-					$queries	=	JInstallerHelper::splitSql( $buffer );
-					
-					foreach ( $queries as $query ) {
-						$query	=	trim( $query );
-						
-						if ( $query != '' && $query{0} != '#' ) {
-							$db->setQuery( $query );
-							$db->execute();
-						}
-					}
-				}
-			}
-			
-			if ( $i2 < 23 ) {	// ONLY < 2.4.5
-				$bool	=	true;
-				$live	=	JCckDatabase::loadObjectList( 'SELECT typeid, fieldid, client, live, live_value FROM #__cck_core_type_field WHERE live IN ("url_var_int","url_var_string","user_profile")' );
-				
-				if ( count( $live ) ) {
-					foreach ( $live as $l ) {
-						if ( $l->live == 'user_profile' ) {
-							$live_type		=	'joomla_user';
-							$live_options	=	'{"content":"","property":"'.$l->live_value.'"}';
-						} elseif ( $l->live == 'url_var_int' ) {
-							$live_type		=	'url_variable';
-							$live_options	=	'{"variable":"'.$l->live_value.'","type":"int"}';
-						} elseif ( $l->live == 'url_var_string' ) {
-							$live_type		=	'url_variable';
-							$live_options	=	'{"variable":"'.$l->live_value.'","type":"string"}';
-						}
-						if ( !JCckDatabase::doQuery( 'UPDATE #__cck_core_type_field SET live = "'.$live_type.'", live_options = "'.$db->escape( $live_options ).'" WHERE typeid = '.$l->typeid.' AND fieldid = '.$l->fieldid.' AND client = "'.$l->client.'"' ) ) {
-							$bool	=	false;
-						}
-					}
-				}
-				$live	=	JCckDatabase::loadObjectList( 'SELECT searchid, fieldid, client, live, live_value FROM #__cck_core_search_field WHERE live IN ("url_var_int","url_var_string","user_profile")' );
-				
-				if ( count( $live ) ) {
-					foreach ( $live as $l ) {
-						if ( $l->live == 'user_profile' ) {
-							$live_type		=	'joomla_user';
-							$live_options	=	'{"content":"","property":"'.$l->live_value.'"}';
-						} elseif ( $l->live == 'url_var_int' ) {
-							$live_type		=	'url_variable';
-							$live_options	=	'{"variable":"'.$l->live_value.'","type":"int"}';
-						} elseif ( $l->live == 'url_var_string' ) {
-							$live_type		=	'url_variable';
-							$live_options	=	'{"variable":"'.$l->live_value.'","type":"string"}';
-						}
-						if ( !JCckDatabase::doQuery( 'UPDATE #__cck_core_search_field SET live = "'.$live_type.'", live_options = "'.$db->escape( $live_options ).'" WHERE searchid = '.$l->searchid.' AND fieldid = '.$l->fieldid.' AND client = "'.$l->client.'"' ) ) {
-							$bool	=	false;
-						}
-					}
-				}
-				if ( $bool ) {
-					JCckDatabase::doQuery( 'UPDATE #__extensions SET enabled = 0 WHERE element IN ("url_var_int","url_var_string","user_profile") AND folder = "cck_field_live"' );
-				}
-			}
-			if ( $i2 < 25 ) {
-				$table	=	JTable::getInstance( 'Asset' );
-				$table->loadByName( 'com_cck' );
-				
-				if ( $table->rules ) {
-					$rules	=	(array)json_decode( $table->rules );
-					$rules['core.delete.own']	=	array( 6=>"1" );
-					$table->rules	=	json_encode( $rules );
-					$table->store();
-				}
-			}
-			if ( $i2 < 33 ) {
-				$folders	=	array( 10, 11, 12, 13, 14 );
-				
-				foreach ( $folders as $folder ) {
-					Helper_Folder::rebuildBranch( $folder );
-				}
-			}
-			
-			if ( $i2 < 35 ) {
-				$objects	=	array(
-									'joomla_article'=>'article',
-									'joomla_category'=>'category',
-									'joomla_user'=>'user',
-									'joomla_user_group'=>'user_group',
-								);
-				
-				foreach ( $objects as $k=>$v ) {
-					$params	=	JCckDatabase::loadResult( 'SELECT options FROM #__cck_core_objects WHERE name = "'.$k.'"' );
-					$params	=	json_decode( $params );
-					$params->default_type	=	JCck::getConfig_Param( 'integration_'.$v, '' );
-					$params->add_redirect	=	( $params->default_type != '' ) ? '1' : '0';
-					$params->edit			=	JCck::getConfig_Param( 'integration_'.$v.'_edit', '0' );
-					
-					if ( $k == 'joomla_category' ) {
-						$params->exclude	=	JCck::getConfig_Param( 'integration_'.$v.'_exclude', '' );
-					}
-					JCckDatabase::doQuery( 'UPDATE #__cck_core_objects SET options = "'.$db->escape( json_encode( $params ) ).'" WHERE name = "'.$k.'"' );
-				}
-			}
-			
-			if ( $i2 < 45 ) {
-				$table		=	'#__cck_store_item_users';
-				$columns	=	$db->getTableColumns( $table );
-				
-				if ( isset( $columns['password2'] ) ) {
-					JCckDatabase::doQuery( 'ALTER TABLE '.JCckDatabase::quoteName( $table ).' DROP '.JCckDatabase::quoteName( 'password2' ) );
-				}
-			}
-			
-			if ( $i2 < 66 ) {
-				$path	=	JPATH_ADMINISTRATOR.'/components/com_cck/download.php';
-				
-				if ( JFile::exists( $path ) ) {
-					JFile::delete( $path );
-				}
-			}
-			
-			if ( $i2 < 70 ) {
-				$plg_image	=	JPluginHelper::getPlugin( 'cck_field', 'upload_image' );
-				$plg_params	=	new JRegistry( $plg_image->params );
-
-				$com_cck	=	JComponentHelper::getComponent( 'com_cck' );
-				$com_cck->params->set( 'media_quality_jpeg', $plg_params->get( 'quality_jpeg', '90' ) );
-				$com_cck->params->set( 'media_quality_png', $plg_params->get( 'quality_png', '3' ) );
-				
-				JCckDatabase::doQuery( 'UPDATE #__extensions SET params = "'.$db->escape( $com_cck->params->toString() ).'" WHERE type = "component" AND element = "com_cck"' );
-			}
-			
-			if ( $i2 < 105 ) {
-				$config		=	JFactory::getConfig();
-				$tmp_path	=	$config->get( 'tmp_path' );
-
-				if ( is_file( JPATH_SITE.'/components/com_cck/models/box.php' ) ) {
-					JFile::delete( JPATH_SITE.'/components/com_cck/models/box.php', $tmp_path.'/box.php' );
-				}
-				if ( is_dir( JPATH_SITE.'/components/com_cck/views/box' ) ) {
-					JFolder::delete( JPATH_SITE.'/components/com_cck/views/box', $tmp_path.'/box' );
-				}
-			}
-
-			if ( $i2 < 120 ) {
-				$path	=	JPATH_SITE.'/libraries/cms/cck/content';
-
-				if ( JFolder::exists( $path ) ) {
-					$path2	=	JPATH_SITE.'/libraries/cms/cck/content/trait';
-					$path3	=	JPATH_SITE.'/libraries/cms/cck/trait';
-
-					if ( JFolder::exists( $path2 ) ) {
-						JFolder::move( $path2, $path3 );
-					}
-
-					JFolder::delete( $path );
-
-					if ( JFolder::exists( $path3 ) ) {
-						JFolder::create( $path );
-						JFolder::move( $path3, $path2 );
-					}
-				}
-
-				$prefix	=	JFactory::getConfig()->get( 'dbprefix' );
-				$tables	=	$db->getTableList();
-				$tables	=	array_flip( $tables );
-				$names	=	array(
-								$prefix.'cck_store_item_content'=>array( 'alias_fr', 'alias_en' ),
-								$prefix.'cck_store_item_categories'=>array( 'alias_fr', 'alias_en' )
-							);
-
-				foreach ( $names as $table_name=>$table_columns ) {
-					if ( isset( $tables[$table_name] ) ) {
-						$columns=$db->getTableColumns( $table_name );
-
-						foreach ( $table_columns as $table_column ) {
-							if ( !isset( $columns[$table_column] ) ) {
-								$db->setQuery( 'ALTER TABLE '.$db->quoteName( $table_name ).' ADD '.$db->quoteName( $table_column ).' VARCHAR(400) NOT NULL DEFAULT "" AFTER '.$db->quoteName( 'cck' ) );
-								$db->execute();
-							}
-						}
-					}
-				}
-			}
+			/* TODO#SEBLOD4 */
 
 			// Convert Tables To Utf8mb4
 			self::_convertTablesToUtf8mb4();
 
 			// Rebuild Folder Tree
+			require_once JPATH_ADMINISTRATOR.'/components/'.CCK_COM.'/helpers/helper_folder.php';
+
 			Helper_Folder::rebuildTree( 2, 1 );
 		}
 		

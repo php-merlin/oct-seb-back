@@ -95,8 +95,11 @@ class JCckInstallerScriptPlugin
 										'plg_cck_storage_location_free'=>'',
 										'plg_cck_storage_location_joomla_article'=>'',
 										'plg_cck_storage_location_joomla_category'=>'',
+										'plg_cck_storage_location_joomla_menu_item'=>'',
+										'plg_cck_storage_location_joomla_module'=>'',
 										'plg_cck_storage_location_joomla_user'=>'',
-										'plg_cck_storage_location_joomla_user_group'=>''
+										'plg_cck_storage_location_joomla_user_group'=>'',
+										'plg_cck_storage_location_joomla_viewlevel'=>''
 									);
 				$name	=	(string)$parent->getParent()->getManifest()->name;
 
