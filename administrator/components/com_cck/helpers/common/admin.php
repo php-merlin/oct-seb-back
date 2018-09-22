@@ -128,17 +128,6 @@ class CommonHelper_Admin
 		JFactory::getApplication()->input->set( 'hidemainmenu', true );
 	}
 	
-	// addToolbarHistoryButton
-	public static function addToolbarHistoryButton( $extension = 'com_cck' )
-	{
-		$pk	=	JCckDatabase::loadResult( 'SELECT extension_id FROM #__extensions WHERE type = "component" AND element = "'.$extension.'"' );
-		
-		if ( $pk > 0 ) {
-			require_once JPATH_ADMINISTRATOR.'/components/com_cck/helpers/toolbar/link.php';
-			JToolBar::getInstance( 'toolbar' )->appendButton( 'CckLink', 'notification', 'COM_CCK_POSTINSTALL_HISTORY', JRoute::_( JUri::base().'index.php?option=com_postinstall&eid='.$pk ), '_self' );
-		}
-	}
-	
 	// addToolbarSupportButton
 	public static function addToolbarSupportButton()
 	{

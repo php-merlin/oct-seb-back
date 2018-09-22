@@ -114,7 +114,6 @@ class CCKViewCck extends JCckBaseLegacyView
 			JToolBarHelper::preferences( CCK_COM, 560, 840, 'JTOOLBAR_OPTIONS' );
 		}
 		
-		Helper_Admin::addToolbarHistoryButton();
 		// Helper_Admin::addToolbarSupportButton();
 	}
 }

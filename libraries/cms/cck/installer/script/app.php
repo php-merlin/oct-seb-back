@@ -21,22 +21,16 @@ class JCckInstallerScriptApp
 	// install
 	public function install( $parent )
 	{
-		// Post Install Log
-		self::postInstallMessage( 'install' );
 	}
 	
 	// uninstall
 	public function uninstall( $parent )
 	{
-		// Post Install Log
-		self::postInstallMessage( 'uninstall' );
 	}
 	
 	// update
 	public function update( $parent )
 	{
-		// Post Install Log
-		self::postInstallMessage( 'update' );
 	}
 	
 	// preflight
@@ -64,64 +58,6 @@ class JCckInstallerScriptApp
 		}
 
 		CCK_Install::import( $parent, 'elements', $this->cck );
-	}
-
-	// postInstallMessage
-	protected function postInstallMessage( $event, $pk = 0 )
-	{
-		if ( !( property_exists( $this, 'template_placeholder' ) && $this->template_placeholder != '' ) ) {
-			return;
-		}
-
-		if ( !version_compare( JVERSION, '3.2', 'ge' ) ) {
-			return;
-		}
-		if ( !$pk ) {
-			$db		=	JFactory::getDbo();
-			$query	=	'SELECT extension_id FROM #__extensions WHERE type = "component" AND element = "com_cck"';
-
-			$db->setQuery( $query );
-			$pk		=	$db->loadResult();
-			if ( !$pk ) {
-				return false;
-			}
-		}
-
-		$lang		=	JFactory::getLanguage();
-		$title		=	(string)$this->cck->xml->name;
-		$lang->load( $title.'.sys', JPATH_SITE, null, false, false );
-		$lang->load( 'lib_cck', JPATH_SITE, 'en-GB', true );
-		$title		=	JText::_( $title );
-		if ( isset( $this->cck->xml->version ) ) {
-			$title	=	str_replace( ' for SEBLOD', '', $title ).' '.(string)$this->cck->xml->version;
-		}
-		$user		=	JFactory::getUser();
-		$user_name	=	'<a href="index.php?option=com_cck&view=form&return_o=users&return_v=users&type=user&id='.$user->id.'" target="_blank" rel="noopener noreferrer">'.$user->name.'</a>';
-		$version	=	'3.2.0';
-		jimport( 'joomla.filesystem.file' );
-		if ( JFile::exists( JPATH_ADMINISTRATOR.'/components/com_cck/_VERSION.php' ) ) {
-			require_once JPATH_ADMINISTRATOR.'/components/com_cck/_VERSION.php';
-			if ( class_exists( 'JCckVersion' ) ) {
-				$version	=	new JCckVersion;
-				$version	=	$version->getShortVersion();
-			} else {
-				$version	=	file_get_contents( JPATH_ADMINISTRATOR.'/components/com_cck/_VERSION.php' );
-			}
-		}
-		
-		require_once JPATH_SITE.'/libraries/cms/cck/cck.php';			
-		require_once JPATH_SITE.'/libraries/cms/cck/database.php';
-		require_once JPATH_SITE.'/libraries/cms/cck/table.php';
-		$table						=	JCckTable::getInstance( '#__postinstall_messages' );
-		$table->extension_id		=	$pk;
-		$table->title_key			=	$title;
-		$table->description_key		=	JText::sprintf( 'LIB_CCK_POSTINSTALL_'.strtoupper( $event ).'_DESCRIPTION', $user_name, JFactory::getDate()->format( JText::_( 'DATE_FORMAT_LC2' ) ) );
-		$table->language_extension	=	'lib_cck';
-		$table->type				=	'message';
-		$table->version_introduced	=	$version;
-		$table->store();
-
-		return true;
 	}
 }
 ?>
