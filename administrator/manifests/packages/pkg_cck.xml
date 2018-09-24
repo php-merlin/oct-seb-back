@@ -63,7 +63,6 @@
 			<file type="plugin" id="jform_tag" group="cck_field">plg_cck_field_jform_tag.zip</file>
 			<file type="plugin" id="jform_templatestyle" group="cck_field">plg_cck_field_jform_templatestyle.zip</file>
 			<file type="plugin" id="jform_timezone" group="cck_field">plg_cck_field_jform_timezone.zip</file>
-			<file type="plugin" id="jform_user" group="cck_field">plg_cck_field_jform_user.zip</file>
 			<file type="plugin" id="jform_usergroups" group="cck_field">plg_cck_field_jform_usergroups.zip</file>
 			<file type="plugin" id="message_redirection" group="cck_field">plg_cck_field_message_redirection.zip</file>
 			<file type="plugin" id="password" group="cck_field">plg_cck_field_password.zip</file>
