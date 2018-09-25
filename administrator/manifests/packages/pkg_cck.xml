@@ -52,7 +52,6 @@
 			<file type="plugin" id="group_x" group="cck_field">plg_cck_field_group_x.zip</file>
 			<file type="plugin" id="icon" group="cck_field">plg_cck_field_icon.zip</file>
 			<file type="plugin" id="item_x" group="cck_field">plg_cck_field_item_x.zip</file>
-			<file type="plugin" id="jform_accesslevel" group="cck_field">plg_cck_field_jform_accesslevel.zip</file>
 			<file type="plugin" id="jform_associations" group="cck_field">plg_cck_field_jform_associations.zip</file>
 			<file type="plugin" id="jform_calendar" group="cck_field">plg_cck_field_jform_calendar.zip</file>
 			<file type="plugin" id="jform_category" group="cck_field">plg_cck_field_jform_category.zip</file>
