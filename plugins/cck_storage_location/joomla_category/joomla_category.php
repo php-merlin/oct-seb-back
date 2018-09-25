@@ -757,7 +757,7 @@ class plgCCK_Storage_LocationJoomla_Category extends JCckPluginLocation
 		$isMultiAlias		=	false;
 		$join				=	'';
 		$vars['option']		=	'com_content';
-		$vars['view']		=	self::$routes[(int)self::getStaticParams()->get( 'routing_context', 0 )];
+		$vars['view']		=	self::$routes[(int)self::getStaticParams()->get( 'routing_context', 2 )];
 		$where				=	'';
 
 		if ( $isMultiLanguage ) {
@@ -883,7 +883,7 @@ class plgCCK_Storage_LocationJoomla_Category extends JCckPluginLocation
 					$app		=	JFactory::getApplication();
 					$isChild	=	false;
 
-					if ( $item->query['view'] == self::$routes[(int)self::getStaticParams()->get( 'routing_context', 0 )] ) {
+					if ( $item->query['view'] == self::$routes[(int)self::getStaticParams()->get( 'routing_context', 2 )] ) {
 						$item2	=	$menu->getItem( $item->parent_id );
 
 						if ( is_object( $item2 ) && @$item2->query['option'] == 'com_cck' && @$item2->query['view'] == 'list' ) {
@@ -900,14 +900,14 @@ class plgCCK_Storage_LocationJoomla_Category extends JCckPluginLocation
 				// Check Query
 				if ( $itemIds[$index] == '/' ) {
 					return ''; /* No Link */
-				} elseif ( $itemIds[$index] == 'option=com_content&view='.self::$routes[(int)self::getStaticParams()->get( 'routing_context', 0 )] ) {
+				} elseif ( $itemIds[$index] == 'option=com_content&view='.self::$routes[(int)self::getStaticParams()->get( 'routing_context', 2 )] ) {
 					return 'index.php?Itemid='.$itemId; /* Direct Link */
 				}
 			}
 		}
 
 		$option	=	( $option != '' ) ? 'option='.$option.'&' : '';
-		$link	=	'index.php?'.$option.'view='.self::$routes[(int)self::getStaticParams()->get( 'routing_context', 0 )].$path;
+		$link	=	'index.php?'.$option.'view='.self::$routes[(int)self::getStaticParams()->get( 'routing_context', 2 )].$path;
 
 		if ( $id ) {
 			$link	.=	'&id='.$id; 
@@ -978,7 +978,7 @@ class plgCCK_Storage_LocationJoomla_Category extends JCckPluginLocation
 								);
 
 		if ( count( $properties ) ) {
-			$legacy	=	(int)self::getStaticParams()->get( 'routing_context', 0 );
+			$legacy	=	(int)self::getStaticParams()->get( 'routing_context', 2 );
 
 			foreach ( $properties as $i=>$p ) {
 				if ( isset( $autorized[$p] ) ) {
