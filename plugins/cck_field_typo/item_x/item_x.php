@@ -42,6 +42,11 @@ class plgCCK_Field_TypoItem_X extends JCckPluginTypo
 		$pk			=	(int)$field->value;
 		$referrer	=	$app->input->getCmd( 'cck_item_x_referrer', $app->input->getCmd( 'referrer', uniqid() ) );
 
+		if ( strpos( $referrer, '.' ) !== false ) {
+			$parts		=	explode( '.', $referrer );
+			$referrer	=	$parts[2];
+		}
+
 		if ( !$pk ) {
 			return '';
 		}

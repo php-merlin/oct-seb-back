@@ -68,11 +68,7 @@ class plgCCK_FieldItem_X extends JCckPluginField
 		// Init
 		$id				=	$field->name;
 		$name			=	$field->name;
-		$value			=	$field->label;
-
-		if ( $value == '' ) {
-			$value		=	JText::_( 'COM_CCK_ADD_NEW' );
-		}
+		
 		if ( $field->bool ) {
 			$field->label			=	'';
 			$field->markup_class	.=	' multiple';
@@ -126,7 +122,7 @@ class plgCCK_FieldItem_X extends JCckPluginField
 		$html		=	'';
 		$link		=	'index.php?option=com_cck&view=form&layout='.$layout.'&type='.$form.'&tmpl='.$tmpl.$options2['add_custom'];
 		$link		=	( $app->isClient( 'administrator' ) ) ? $link : JRoute::_( $link.'&Itemid='.$itemId );
-		$link2		=	JCckDevHelper::getAbsoluteUrl( 'auto', 'view=list&search='.$list.'&tmpl='.$tmpl.$options2['select_custom'] );
+		$link2		=	JCckDevHelper::getAbsoluteUrl( 'auto', 'view=list&search='.$list.'&tmpl='.$tmpl.'&referrer='.$config['type'].'.'.$config['client_form'].'.'.$name.$options2['select_custom'] );
 
 		if ( strpos( $link2, '$cck->' ) !== false ) {
 			parent::g_addProcess( 'beforeRenderForm', self::$type, $config, array( 'name'=>$field->name, 'target'=>'link_select', 'link'=>$link2, 'itemId'=>$itemId ), 5 );
@@ -145,6 +141,7 @@ class plgCCK_FieldItem_X extends JCckPluginField
 						(function ($){
 							JCck.More.ItemX = {
 								active: "",
+								form:"'.$config['type'].'.'.$config['client_form'].'",
 								instances: [],
 								modal: JCck.Core.getModal({"backclose":false,"title":"'.JText::_( 'COM_CCK_ADD' ).' / '.JText::_( 'COM_CCK_EDIT' ).'"}),
 								modal_preview: JCck.Core.getModal({"backclose":false,"backdrop":false,"title":"'.JText::_( 'COM_CCK_PREVIEW' ).'"}),
@@ -167,7 +164,7 @@ class plgCCK_FieldItem_X extends JCckPluginField
 										type: "GET",
 										url: JCck.More.ItemX.instances[JCck.More.ItemX.active].link_list,
 										beforeSend:function(){
-											this.url = this.url.replace(\'"referrer":""\',\'"referrer":"\'+JCck.More.ItemX.active+\'"\');
+											this.url = this.url.replace(\'"referrer":""\',\'"referrer":"\'+JCck.More.ItemX.form+\'.\'+JCck.More.ItemX.active+\'"\');
 										},
 										success: function(response){
 											if (JCck.More.ItemX.instances[JCck.More.ItemX.active].behavior) {
@@ -364,10 +361,12 @@ class plgCCK_FieldItem_X extends JCckPluginField
 											JCck.More.ItemX.toggleReorder();
 										}, 500);
 									} else {
-										if($("#"+name+" .cck-loading-more").html().length > 1) {
-											$("#"+name+" > .btn-toolbar").hide();
-										} else {
-											JCck.More.ItemX.toggleRequired(true,name);
+										if($("#"+name+" .cck-loading-more").length) {
+											if($("#"+name+" .cck-loading-more").html().length > 1) {
+												$("#"+name+" > .btn-toolbar").hide();
+											} else {
+												JCck.More.ItemX.toggleRequired(true,name);
+											}
 										}
 									}
 								},
@@ -390,6 +389,7 @@ class plgCCK_FieldItem_X extends JCckPluginField
 									JCck.More.ItemX.setFromClick(JCck.More.ItemX.modal.referrer,false);
 								};
 								JCck.More.ItemX.modal.settings.callbacks.loaded = function() {
+									/* TODO: hide checkboxes */
 									JCck.More.ItemX.dispatch();
 								};
 								JCck.More.ItemX.modal.settings.callbacks.hide = function() {
@@ -432,6 +432,7 @@ class plgCCK_FieldItem_X extends JCckPluginField
 		$doc->addScriptDeclaration( $js );
 		
 		self::$properties[$field->name]	=	array(
+												'mode'=>( $field->bool ? true : false ),
 												'required'=>( $field->required ? true : false ),
 												'task_add'=>( $field->bool2 > -2 ? true : false ),
 												'task_select'=>( $field->bool3 > -2 ? true : false )
@@ -447,7 +448,7 @@ class plgCCK_FieldItem_X extends JCckPluginField
 			}
 		}
 
-		$buffer		=	self::_render( $field, array(), $config );
+		$buffer		=	self::_render( $field, $value, array(), $config );
 		$html		.=	$buffer['form'];
 		$html		.=	$buffer['list'];
 		$html		=	'<div id="'.$field->name.'" class="item_x">'.$html.'</div>';
@@ -702,19 +703,50 @@ class plgCCK_FieldItem_X extends JCckPluginField
 
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Stuff & Script
 
-	public static function getFieldProperty( $name, $property, $default = '' )
+	public static function getFieldProperty( $referrer, $property, $default = '' )
 	{
-		if ( !isset( self::$properties[$name] ) ) {
-			$field	=	JCckDatabaseCache::loadObject( 'SELECT name, bool2, bool3, location, required FROM #__cck_core_fields WHERE name = "'.$name.'"' );
+		if ( !isset( self::$properties[$referrer] ) ) {
+			if ( strpos( $referrer, '.' ) !== false ) {
+				$parts	=	explode( '.', $referrer );
+			} else {
+				$parts	=	array( 0=>'', 1=>'', 2=>$referrer );
+			}
 
-			self::$properties[$field->name]	=	array(
+			$query	=	'SELECT DISTINCT a.name, a.bool, a.bool2, a.bool3, a.location';
+			
+			if ( $parts[0] ) {
+				$query	.=	', b.required, b.variation';
+			}
+
+			$query	.=	' FROM #__cck_core_fields AS a';
+
+			if ( $parts[0] ) {
+				$query	.= 	' LEFT JOIN #__cck_core_type_field AS b ON b.fieldid = a.id'
+						. 	' LEFT JOIN #__cck_core_types AS c ON c.id = b.typeid';
+			}
+
+			$query	.=	' WHERE a.name = "'.$parts[2].'"';
+
+			if ( $parts[0] ) {
+				$query	.=	' AND c.name="'.$parts[0].'" AND b.client = "'.$parts[1].'"';
+			}
+
+			$field	=	JCckDatabaseCache::loadObject( $query );
+
+			if ( !is_object( $field ) ) {
+				return $default;
+			}
+
+			self::$properties[$referrer]	=	array(
+													'mode'=>( $field->bool ? true : false ),
 													'required'=>( $field->required ? true : false ),
 													'task_add'=>( $field->bool2 > -2 ? true : false ),
-													'task_select'=>( $field->bool3 > -2 ? true : false )
+													'task_select'=>( $field->bool3 > -2 ? true : false ),
+													'variation'=>( $field->variation ? $field->variation : 'form' ),
 												);
 
 			// Check Permissions
-			if ( self::$properties[$field->name]['task_add'] ) {
+			if ( self::$properties[$referrer]['task_add'] ) {
 				$form		=	$field->location;
 				
 				if ( strpos( $form, '||' ) !== false ) {
@@ -726,21 +758,21 @@ class plgCCK_FieldItem_X extends JCckPluginField
 				$canCreate	=	( $type_id ) ? JFactory::getUser()->authorise( 'core.create', 'com_cck.form.'.$type_id ) : false;
 					
 				if ( !$canCreate ) {
-					self::$properties[$field->name]['task_add']	=	false;
+					self::$properties[$referrer]['task_add']	=	false;
 				}
 			}
 		}
 
 
-		if ( isset( self::$properties[$name][$property] ) ) {
-			return self::$properties[$name][$property];
+		if ( isset( self::$properties[$referrer][$property] ) ) {
+			return self::$properties[$referrer][$property];
 		}
 
 		return $default;
 	}
 
 	// _render
-	protected static function _render( $field, $lives, $config )
+	protected static function _render( $field, $value, $lives, $config )
 	{
 		/*
 		$main_config				=	$config;
@@ -776,9 +808,10 @@ class plgCCK_FieldItem_X extends JCckPluginField
 		$order_by		=	'';
 
 		if ( !$field->bool ) {
-			$app->input->set( 'pks', $field->value );
+			$app->input->set( 'pks', $value );
 		}
-		$app->input->set( 'cck_item_x_referrer', $field->name );
+
+		$app->input->set( 'cck_item_x_referrer', $config['type'].'.'.$config['client_form'].'.'.$field->name );
 
 		// -- TODO#SEBLOD:
 		$pagination		=	8;

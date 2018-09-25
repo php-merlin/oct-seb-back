@@ -57,13 +57,41 @@ class plgCCK_Field_RestrictionItem_X extends JCckPluginRestriction
 	protected static function _authorise( $restriction, &$field, &$config )
 	{
 		$app		=	JFactory::getApplication();
+		$mode		=	$restriction->get( 'mode' );
 		$property	=	'';
 		$referrer	=	$app->input->getCmd( 'cck_item_x_referrer', $app->input->getCmd( 'referrer', uniqid() ) );
 		$required	=	$restriction->get( 'required' );
 		$task		=	$restriction->get( 'task' );
+		$variation	=	$restriction->get( 'variation' );
+
+		if ( $mode != '' ) {
+			if ( (bool)$mode !== plgCCK_FieldItem_X::getFieldProperty( $referrer, 'mode' ) ) {
+				return false;
+			}
+		}
 
 		if ( $task != '' ) {
 			if ( !plgCCK_FieldItem_X::getFieldProperty( $referrer, 'task_'.$task ) ) {
+				return false;
+			}
+		}
+
+		// if ( 1 == 1 ) {
+		// 	return true;
+		// }
+
+		if ( $variation != '' ) {
+			$referrer_variation	=	plgCCK_FieldItem_X::getFieldProperty( $referrer, 'variation' );
+
+			if ( $variation == 'visible' ) {
+				if ( !( $referrer_variation == 'form' || $referrer_variation == 'disabled' || $referrer_variation == 'value' ) ) {
+					return false;
+				}
+			} elseif ( $variation == 'visible_form' ) {
+				if ( !( $referrer_variation == 'form' || $referrer_variation == 'disabled' ) ) {
+					return false;
+				}
+			} elseif ( $variation !== $referrer_variation  ) {
 				return false;
 			}
 		}
