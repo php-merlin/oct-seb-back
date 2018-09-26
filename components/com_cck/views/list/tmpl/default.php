@@ -56,9 +56,10 @@ if ( $this->show_list_desc && $this->description != '' ) {
 	}
 	if ( !$this->raw_rendering ) {
 		$description	=	'<'.$this->tag_desc.' class="cck_page_desc'.$this->pageclass_sfx.' cck-clrfix">' . $description . '</'.$this->tag_desc.'>';
-	}
-	if ( $this->tag_desc == 'div' ) {
-		$description	.=	'<div class="clr"></div>';
+
+		if ( $this->tag_desc == 'div' ) {
+			$description	.=	'<div class="clr"></div>';
+		}
 	}
 }
 if ( $this->show_list_desc == 1 && $this->description != '' ) {

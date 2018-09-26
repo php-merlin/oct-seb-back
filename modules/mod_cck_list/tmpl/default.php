@@ -22,10 +22,12 @@ if ( $show_list_desc && $description != '' ) {
 	if ( !( $tag_desc == 'p' && strpos( $description, '<p>' ) === false ) ) {
 		$tag_desc	=	'div';
 	}
-	$description	=	'<'.$tag_desc.' class="cck_module_desc'.$class_sfx.'">' . $description . '</'.$tag_desc.'>';
+	if ( !$raw_rendering ) {
+		$description	=	'<'.$tag_desc.' class="cck_module_desc'.$class_sfx.'">' . $description . '</'.$tag_desc.'>';
 
-	if ( $tag_desc == 'div' ) {
-		$description	.=	'<div class="clr"></div>';
+		if ( $tag_desc == 'div' ) {
+			$description	.=	'<div class="clr"></div>';
+		}
 	}
 }
 if ( $show_list_desc == 1 && $description != '' ) {

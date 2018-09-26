@@ -35,8 +35,9 @@
 			<field name="variation" type="cckhidden" label="" description="" />
 		</fieldset>
 		<fieldset name="advanced">
-			<field name="raw_rendering" type="list" label="LIB_CCK_RAW_RENDERING" default="0" description="LIB_CCK_RAW_RENDERING_DESC" class="inputbox">
-			<option value="0">JNO</option>
+			<field name="raw_rendering" type="list" label="LIB_CCK_RAW_RENDERING" default="" description="LIB_CCK_RAW_RENDERING_DESC" class="inputbox">
+				<option value="">COM_CCK_INHERITED_SL</option>
+				<option value="0">JNO</option>
 				<option	value="1">JYES</option>
 			</field>
 			<field name="urlvars" type="text" label="COM_CCK_CONFIG_URL_VARS" description="COM_CCK_CONFIG_URL_VARS_DESC" class="inputbox" size="50" />

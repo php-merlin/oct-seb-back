@@ -31,10 +31,10 @@ if ( $cache ) {
 	$cache->setCaching( 1 );
 	$data		=	$cache->call( array( 'CCK_Item', 'prepare' ), '::cck::'.$data.'::/cck::' );
 } else {
-	$data	=	CCK_Item::prepare( '::cck::'.$data.'::/cck::' );
+	$data		=	CCK_Item::prepare( '::cck::'.$data.'::/cck::' );
 }
 
-$raw_rendering		=	$params->get( 'raw_rendering', 0 );
+$raw_rendering		=	$params->get( 'raw_rendering', JCck::getConfig_Param( 'raw_rendering', '0' ) );
 $moduleclass_sfx	=	htmlspecialchars( $params->get( 'moduleclass_sfx' ) );
 $class_sfx			=	( $params->get( 'force_moduleclass_sfx', 0 ) == 1 ) ? $moduleclass_sfx : '';
 require JModuleHelper::getLayoutPath( 'mod_cck_item', $params->get( 'layout', 'default' ) );

@@ -215,6 +215,10 @@
 			<option value="0">JNO</option>
 		</field>
 		<field name="COM_CCK_CONFIG_LEGEND_SCRIPT_STYLE" type="spacer" hr="false" />
+		<field name="raw_rendering" type="radio" default="0" label="COM_CCK_CONFIG_RAW_RENDERING" description="COM_CCK_CONFIG_RAW_RENDERING_DESC" class="btn-group btn-group-yesno">
+			<option value="1">JYES</option>
+			<option value="0">JNO</option>
+		</field>
 		<field name="site_variation" type="cck" construction="core_variation" default="seb_css3" label="COM_CCK_CONFIG_DEFAULT_VARIATION_CONTENT" description="COM_CCK_CONFIG_DEFAULT_VARIATION_CONTENT_DESC" class="inputbox" />
 		<field name="site_variation_form" type="cck" construction="core_variation" default="seb_css3" label="COM_CCK_CONFIG_DEFAULT_VARIATION_FORM" description="COM_CCK_CONFIG_DEFAULT_VARIATION_FORM_DESC" class="inputbox" />
 		<field name="site_modal_box" type="list" default="0" label="COM_CCK_CONFIG_SITE_MODAL_BOX" description="COM_CCK_CONFIG_SITE_MODAL_BOX_DESC" class="inputbox chzn-color" >

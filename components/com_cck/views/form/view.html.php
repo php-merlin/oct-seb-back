@@ -91,7 +91,7 @@ class CCKViewForm extends JViewLegacy
 			$this->document->setMetadata( 'robots', $params->get( 'robots' ) );
 		}
 		$this->pageclass_sfx	=	htmlspecialchars( $params->get( 'pageclass_sfx' ) );
-		$this->raw_rendering	=	$params->get( 'raw_rendering', 0 );
+		$this->raw_rendering	=	$params->get( 'raw_rendering', JCck::getConfig_Param( 'raw_rendering', '0' ) );
 
 		// Prepare
 		jimport( 'cck.base.form.form' );
