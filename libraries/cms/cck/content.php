@@ -1813,12 +1813,6 @@ class JCckContent
 			}
 		}
 
-		if ( count( $data['more2'] ) ) {
-			if ( !isset( $data['more2']['cck'] ) ) { /* TODO#SEBLOD: remove "cck" column */
-				$data['more2']['cck']	=	$this->_type;
-			}
-		}
-
 		// Core
 		$data['core']	=	array(
 								'author_id'=>0,
