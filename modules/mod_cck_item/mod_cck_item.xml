@@ -27,7 +27,7 @@
 	<config>
 		<fields name="params" addfieldpath="/libraries/cck/construction/field">
 			<fieldset name="basic">
-				<field name="id" type="text" class="inputbox input-small" required="true" label="MOD_CCK_ITEM_CONFIG_ID" description="MOD_CCK_ITEM_CONFIG_ID_DESC" />
+				<field name="id" type="cck" construction="core_dev_text" class="inputbox input-small" required="true" label="MOD_CCK_ITEM_CONFIG_ID" description="MOD_CCK_ITEM_CONFIG_ID_DESC" />
 			</fieldset>
 			<fieldset name="cck-url" label="LIB_CCK_FIELDSET_URL_ASSIGNMENT">
 				<field name="url_show" type="text" label="MOD_CCK_ITEM_CONFIG_URL_SHOW" description="MOD_CCK_ITEM_CONFIG_URL_SHOW_DESC" class="inputbox" size="50" />

@@ -34,6 +34,10 @@ $options2   =   JCckDev::fromJSON( $this->item->options2 );
         echo JCckDev::renderForm( 'core_dev_select', @$options2['select_task'], $config, array( 'label'=>'Config Search Task', 'defaultvalue'=>'search', 'selectlabel'=>'', 'options'=>'No=no||Yes=search', 'storage_field'=>'json[options2][select_task]' ) );
         echo JCckDev::renderForm( 'core_dev_textarea', @$options2['select_custom'], $config, array( 'label'=>'Custom Variables', 'defaultvalue'=>'', 'cols'=>92, 'rows'=>1, 'storage_field'=>'json[options2][select_custom]' ), array(), 'w100' );
 
+        echo JCckDev::renderSpacer( JText::_( 'COM_CCK_BATCH' ) );
+        echo JCckDev::renderForm( 'core_bool4', $this->item->bool4, $config, array( 'label'=>'Mode', 'defaultvalue'=>'0', 'options'=>'Disabled=0||Enabled=1' ) );
+        echo JCckDev::renderBlank();
+
 		echo JCckDev::renderSpacer( JText::_( 'COM_CCK_STORAGE' ), JText::_( 'COM_CCK_STORAGE_DESC' ) );
 		echo JCckDev::getForm( 'core_storage', $this->item->storage, $config );
         ?>

@@ -1,6 +1,6 @@
 <?php
 /**
-* @version 			SEBLOD 3.x Core ~ $Id: mod_cck_form.php sebastienheraud $
+* @version 			SEBLOD 3.x Core ~ $Id: mod_cck_item.php sebastienheraud $
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				https://www.seblod.com
 * @editor			Octopoos - www.octopoos.com

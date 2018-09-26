@@ -435,6 +435,7 @@ class plgCCK_FieldItem_X extends JCckPluginField
 												'mode'=>( $field->bool ? true : false ),
 												'required'=>( $field->required ? true : false ),
 												'task_add'=>( $field->bool2 > -2 ? true : false ),
+												'task_batch'=>( (int)$field->bool4 > 0 ? true : false ),
 												'task_select'=>( $field->bool3 > -2 ? true : false )
 											);
 
@@ -818,7 +819,6 @@ class plgCCK_FieldItem_X extends JCckPluginField
 		// -- TODO#SEBLOD:
 		
 		$raw_rendering	=	$field->bool;
-		$show_list_desc	=	0;
 		$variation		=	'';
 		
 		// Prepare

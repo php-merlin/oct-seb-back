@@ -9,10 +9,6 @@
 **/
 
 defined( '_JEXEC' ) or die;
-
-if ( $show_list_desc == 1 && $description != '' ) {
-	echo '<div class="cck_module_desc'.$class_sfx.'">' . $description . '</div><div class="clr"></div>';
-}
 ?>
 <?php if ( !$raw_rendering ) { ?>
 <div class="cck_module_list<?php echo $class_sfx; ?>">
