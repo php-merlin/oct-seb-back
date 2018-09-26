@@ -256,7 +256,7 @@ class plgCCK_Storage_LocationJoomla_Menu_Item extends JCckPluginLocation
 			if ( $table->parent_id == $data['parent_id'] ) {
 				//
 			} else {
-				$table->setLocation($data['parent_id'], 'last-child');
+				$table->setLocation( $data['parent_id'], 'last-child' );
 			}
 		} else {
 			$table->setLocation( $data['parent_id'], 'last-child' );
@@ -270,7 +270,7 @@ class plgCCK_Storage_LocationJoomla_Menu_Item extends JCckPluginLocation
 		if ( isset( $config['storages'][$storeTable]['item_type'] ) ) {
 			$menuItemType	=	$config['storages'][$storeTable]['item_type'];
 
-			if ( $menuItemType == 'separator' || $menuItemType == 'url' ) {
+			if ( strpos( $menuItemType, '.' ) === false ) {
 				$data['type']	=	$menuItemType;
 			}
 
@@ -283,13 +283,19 @@ class plgCCK_Storage_LocationJoomla_Menu_Item extends JCckPluginLocation
 					switch ( $menuItemType ) {
 						case 'com_content.article':
 							$component		=	'com_content';
+							/*
 							$table->link	= 	sprintf(
 													'index.php?option=com_content&view=article&id=%s',
 													$config['storages'][$storeTable]['article']
 												);
+							*/
+							break;
+						case 'com_cck.form':
+							$component	=	'com_cck';
 							break;
 						case 'com_cck.list':
 							$component	=	'com_cck';
+							/*
 							$itemId		=	$config['storages'][$storeTable]['list_search'];
 							$search		=	(bool)$config['storages'][$storeTable]['search'];
 
@@ -312,12 +318,22 @@ class plgCCK_Storage_LocationJoomla_Menu_Item extends JCckPluginLocation
 							}
 							
 							$table->link	=	$link;
+							*/
+							break;
+						case 'com_users.logout':
+							$component	=	'com_users';
 							break;
 						default:
 							break;
 					}
 
 					$table->component_id 	= 	(int)JTable::getInstance( 'Extension' )->find( array( 'name'=>$component, 'type'=>'component' ) );
+					break;
+				case 'alias':
+					$table->component_id	=	0;
+					break;
+				case 'heading':
+					$table->component_id	=	0;
 					break;
 				case 'separator':
 					$table->component_id	=	0;

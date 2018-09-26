@@ -262,7 +262,24 @@ class plgCCK_Storage_LocationJoomla_Module extends JCckPluginLocation
 		}
 		
 		// Prepare
-		$table->bind( $data );
+		if ( is_array( $data ) ) {
+			$table->bind( $data );
+		}
+		if ( $isNew && !isset( $data['rules'] ) ) {
+			$data['rules']	=	array(
+									'core.delete'=>array(),
+									'core.edit'=>array(),
+									'core.edit.state'=>array(),
+									'module.edit.frontend'=>array()
+								);
+		}
+		if ( isset( $data['rules'] ) && $data['rules'] ) {
+			if ( !is_array( $data['rules'] ) ) {
+				$data['rules']	=	json_decode( $data['rules'] );
+			}
+			$rules	=	new JAccessRules( JCckDevHelper::getRules( $data['rules'] ) );
+			$table->setRules( $rules );
+		}
 		$table->check();
 		self::_completeTable( $table, $data, $config );
 		

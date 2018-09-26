@@ -363,7 +363,13 @@ class plgCCK_Storage_LocationJoomla_Category extends JCckPluginLocation
 			$table->bind( $data );
 		}
 		if ( $isNew && !isset( $data['rules'] ) ) {
-			$data['rules']	=	array( 'core.create'=>array(), 'core.delete'=>array(), 'core.edit'=>array(), 'core.edit.state'=>array(), 'core.edit.own'=>array() );
+			$data['rules']	=	array(
+									'core.create'=>array(),
+									'core.delete'=>array(),
+									'core.edit'=>array(),
+									'core.edit.state'=>array(),
+									'core.edit.own'=>array()
+								);
 		}
 		if ( isset( $data['rules'] ) && $data['rules'] ) {
 			if ( !is_array( $data['rules'] ) ) {
