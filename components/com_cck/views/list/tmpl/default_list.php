@@ -46,7 +46,7 @@ if ( !$this->raw_rendering ) { ?>
 		echo '<div class="'.$this->class_items_number.'"><span>' . $this->total .'</span> '. $label . '</div>';
 	}
 	if ( ( $this->show_pagination == -1 || $this->show_pagination == 1 ) && $this->pages_total > 1 ) {
-		echo '<div class="'.$this->class_pagination.'">' . ( ( $pagination_replace != '' ) ? str_replace( '?', '?'.$pagination_replace, $this->pagination->getPagesLinks() ) : $this->pagination->getPagesLinks() ) . '</div>';
+		echo '<div data-cck-loadmore-pagination class="'.$this->class_pagination.'">' . ( ( $pagination_replace != '' ) ? str_replace( '?', '?'.$pagination_replace, $this->pagination->getPagesLinks() ) : $this->pagination->getPagesLinks() ) . '</div>';
 	}
 	if ( @$this->search->content > 0 ) {
 		echo ( $this->raw_rendering ) ? $this->data : '<div class="cck_page_items">'.$this->data.'</div>';
@@ -54,7 +54,7 @@ if ( !$this->raw_rendering ) { ?>
 		echo $this->loadTemplate( 'items' );
 	}
 	if ( ( $this->show_pages_number || $this->show_pagination > -1 ) && $this->pages_total > 1 ) {
-	    echo '<div class="'.$this->class_pagination.'"'.( $this->show_pagination == 8 ? ' style="display:none;"' : '' ).'>';
+	    echo '<div data-cck-loadmore-pagination class="'.$this->class_pagination.'"'.( $this->show_pagination == 8 ? ' style="display:none;"' : '' ).'>';
 		$pagesCounter	=	$this->pagination->getPagesCounter();
     	if ( $this->show_pages_number && $pagesCounter ) {
 	        echo '<p class="counter">' . $pagesCounter . '</p>';

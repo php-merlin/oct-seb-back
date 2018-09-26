@@ -145,16 +145,16 @@ if ( $app->input->get( 'tmpl' ) == 'raw' ) {
 					var $el = $("#seblod_form_load_more");
 					$($el).attr("data-start",0).attr("data-end",response.total);
 					if (response.total > response.count) {
-						$("#seblod_form_load_more, .cck_page_list .pagination").show();
+						$("#seblod_form_load_more, [data-cck-loadmore-pagination]").show();
 					} else {
-						$(".cck_page_list .pagination").hide();
+						$("[data-cck-loadmore-pagination]").hide();
 					}
 					response = response.html;
 				} else {
 					if (has_more != 1) {
 						$("#seblod_form_load_more").show()<?php echo ( $this->show_pagination == 8 ) ? '.click()' : ''; ?>;
 					} else {
-						$(".cck_page_list .pagination").hide();
+						$("[data-cck-loadmore-pagination]").hide();
 					}	
 				}
 				$("#seblod_form_loading_more").hide();

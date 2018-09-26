@@ -224,8 +224,8 @@ class plgCCK_FieldItem_X extends JCckPluginField
 									});
 									$("#"+JCck.More.ItemX.modal_form_id+" a[data-cck-modal]").CckModal();
 
-									if ($("#"+JCck.More.ItemX.modal_form_id+" .cck_page_items").length) {
-										$("#"+JCck.More.ItemX.modal_form_id+" .cck_page_items input:checkbox[name=\'cid[]\']").each(function(i) {
+									if ($("#"+JCck.More.ItemX.modal_form_id+" .cck-loading-more").length) {
+										$("#"+JCck.More.ItemX.modal_form_id+" .cck-loading-more input:checkbox[name=\'cid[]\']").each(function(i) {
 											var v = $(this).val();
 											if (JCck.More.ItemX.check(v)) {
 												$(this).parents("tr").find(".item_x-assign").hide();
