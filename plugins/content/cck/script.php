@@ -229,15 +229,19 @@ class plgContentCCKInstallerScript
 			$query	=	'UPDATE #__cck_core_types SET template_admin = '.$style->id.', template_site = '.$style->id.', template_content = '.$style->id.', template_intro = '.$style->id;
 			$db->setQuery( $query );
 			$db->execute();
+
+			// - Search Types (None)
+			$query	=	'UPDATE #__cck_core_searchs SET template_search = '.$style->id.', template_filter = '.$style->id.' WHERE id IN (27,28)';
+			$db->setQuery( $query );
+			$db->execute();
 			
 			// - Search Types (List)
-			/* TODO#SEBLOD4 */
-			$query	=	'UPDATE #__cck_core_searchs SET template_search = '.$style->id.', template_filter = '.$style->id.', template_list = '.$style2->id.' WHERE id IN (1,5,8,21)';
+			$query	=	'UPDATE #__cck_core_searchs SET template_search = '.$style->id.', template_filter = '.$style->id.', template_list = '.$style2->id.' WHERE id IN (21,23,25,29)';
 			$db->setQuery( $query );
 			$db->execute();
 
 			// - Search Types (Table)
-			$query	=	'UPDATE #__cck_core_searchs SET template_search = '.$style->id.', template_filter = '.$style->id.', template_list = '.$style3->id.' WHERE id IN (11,15,18,22)';
+			$query	=	'UPDATE #__cck_core_searchs SET template_search = '.$style->id.', template_filter = '.$style->id.', template_list = '.$style3->id.' WHERE id IN (11,15,18,22,24,26,30)';
 			$db->setQuery( $query );
 			$db->execute();
 			
@@ -253,6 +257,15 @@ class plgContentCCKInstallerScript
 									  ),
 								'21'=>array(
 										'list'=>array( 'seb_list', 0, '0', 'seb_list - article_item (list)', '{"rendering_item_attributes":"","rendering_css_class":"","cck_client_item":"0","list_display":"0","tag":"div_div","class":"","auto_clean":"0","attributes":""}' )
+									  ),
+								'23'=>array(
+										'list'=>array( 'seb_list', 0, '0', 'seb_list - category_item (list)', '{"rendering_item_attributes":"","rendering_css_class":"","cck_client_item":"0","list_display":"0","tag":"div_div","class":"","auto_clean":"0","attributes":""}' )
+									  ),
+								'25'=>array(
+										'list'=>array( 'seb_list', 0, '0', 'seb_list - user_item (list)', '{"rendering_item_attributes":"","rendering_css_class":"","cck_client_item":"0","list_display":"0","tag":"div_div","class":"","auto_clean":"0","attributes":""}' )
+									  ),
+								'29'=>array(
+										'list'=>array( 'seb_list', 0, '0', 'seb_list - menu_item_item (list)', '{"rendering_item_attributes":"","rendering_css_class":"","cck_client_item":"0","list_display":"0","tag":"div_div","class":"","auto_clean":"0","attributes":""}' )
 									  )
 							);
 
