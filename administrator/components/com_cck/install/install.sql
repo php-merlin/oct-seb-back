@@ -1918,7 +1918,6 @@ INSERT IGNORE INTO `#__cck_core_versions` (`id`, `e_id`, `e_title`, `e_name`, `e
 
 CREATE TABLE IF NOT EXISTS `#__cck_store_item_content` (
   `id` int(10) unsigned NOT NULL,
-  `cck` varchar(50) NOT NULL,
   `alias_en` varchar(400) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT '',
   `alias_fr` varchar(400) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT '',
   PRIMARY KEY (`id`),
@@ -1932,7 +1931,6 @@ CREATE TABLE IF NOT EXISTS `#__cck_store_item_content` (
 
 CREATE TABLE IF NOT EXISTS `#__cck_store_item_categories` (
   `id` int(10) unsigned NOT NULL,
-  `cck` varchar(50) NOT NULL,
   `alias_en` varchar(400) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT '',
   `alias_fr` varchar(400) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT '',
   PRIMARY KEY (`id`),
@@ -1946,7 +1944,6 @@ CREATE TABLE IF NOT EXISTS `#__cck_store_item_categories` (
 
 CREATE TABLE IF NOT EXISTS `#__cck_store_item_menu` (
   `id` int(11) NOT NULL,
-  `cck` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
   `item_type` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -1957,7 +1954,6 @@ CREATE TABLE IF NOT EXISTS `#__cck_store_item_menu` (
 
 CREATE TABLE IF NOT EXISTS `#__cck_store_item_users` (
   `id` int(10) unsigned NOT NULL,
-  `cck` varchar(50) NOT NULL,
   `gender` varchar(255) NOT NULL,
   `last_name` varchar(255) NOT NULL,
   `first_name` varchar(255) NOT NULL,
