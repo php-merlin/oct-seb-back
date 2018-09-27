@@ -2503,14 +2503,6 @@ Temporary Items
 /administrator/language/fr-FR/fr-FR.plg_cck_field_validation_zipcode.sys.ini
 /plugins/cck_field_validation/zipcode/*
 
-######## SEBLOD Plug-ins >> Validation >> X
-
-/administrator/language/en-GB/en-GB.plg_cck_field_validation_x.ini
-/administrator/language/en-GB/en-GB.plg_cck_field_validation_x.sys.ini
-/administrator/language/fr-FR/fr-FR.plg_cck_field_validation_x.ini
-/administrator/language/fr-FR/fr-FR.plg_cck_field_validation_x.sys.ini
-/plugins/cck_field_validation/x/*
-
 ######## SEBLOD Plug-ins >> WebServices >> *
 
 /plugins/cck_webservice/*
