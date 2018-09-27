@@ -16,15 +16,27 @@ $cck	=	CCK_Rendering::getInstance( $this->template );
 if ( $cck->initialize() === false ) { return; }
 
 // -- Prepare
-$attributes	=	$cck->id_attributes ? ' '.$cck->id_attributes : '';
-$attributes	=	$cck->replaceLive( $attributes );
+$attributes	=	$cck->replaceLive( $cck->id_attributes );
+$class		=	'';
+$wrap		=	false;
 
 // -- Render
 if ( $cck->id_class != '' ) {
-	echo '<div class="'.trim( $cck->id_class ).'"'.$attributes.'>'.$cck->renderPosition( 'mainbody', '', $cck->h( 'mainbody' ) ).'</div>';
+	$class		=	' class="'.trim( $cck->id_class ).'"';
+	$wrap		=	true;
+} elseif ( $attributes != '' ) {
+	$wrap		=	true;
 } else {
-	echo $cck->renderPosition( 'mainbody', '', $cck->h( 'mainbody' ) );
+	$attributes	=	'';
 }
+
+if ( $wrap ) { ?>
+<div<?php echo $class.$attributes; ?>>
+<?php }
+echo $cck->renderPosition( 'mainbody', '', $cck->h( 'mainbody' ) );
+if ( $wrap ) { ?>
+</div>
+<?php }
 
 for ( $i = 1; $i <= 5; $i++ ) {
 	$suffix	=	( $i == 1 ) ? '' : $i;
