@@ -15,7 +15,7 @@ require_once __DIR__.'/config.php';
 $cck	=	CCK_Rendering::getInstance( $this->template );
 if ( $cck->initialize() === false ) { return; }
 
-$attributes		=	$cck->item_attributes ? ' '.$cck->item_attributes : '';
+$attributes		=	$cck->item_attributes;
 $table_columns	=	$cck->getStyleParam( 'table_columns', 0 );
 $table_header	=	$cck->getStyleParam( 'table_header', 0 );
 $table_layout	=	$cck->getStyleParam( 'table_layout', '' );
@@ -27,10 +27,6 @@ $class_table	=	trim( $cck->getStyleParam( 'class_table', 'category zebra table' 
 $class_table	=	( $isFixed ) ? $class_table.' fixed' : $class_table;
 $class_table	=	( $isResponsive ) ? $class_table.' responsive' : $class_table;
 $class_table	=	$class_table ? ' class="'.$class_table.'"' : '';
-$class_row0		=	trim( $cck->getStyleParam( 'class_table_tr_even', 'cat-list-row%i' ) );
-$class_row0		=	$class_row0 ? ' class="'.str_replace( '%i', '0', $class_row0 ).'"' : '';
-$class_row1		=	trim( $cck->getStyleParam( 'class_table_tr_odd', 'cat-list-row%i' ) );
-$class_row1		=	$class_row1 ? ' class="'.str_replace( '%i', '1', $class_row1 ).'"' : '';
 $translate		=	JCck::getConfig_Param( 'language_jtext', 0 );
 
 $doc			=	JFactory::getDocument();
@@ -47,9 +43,9 @@ if ( $cck->isGoingToLoadMore() ) {
 }
 
 // -- Render
-if ( !$isMore ) {
+if ( $cck->id_class && !$isMore ) {
 ?>
-<div id="<?php echo $cck->id; ?>" class="<?php echo $cck->id_class; ?>cck-f100 cck-pad-<?php echo $cck->getStyleParam( 'position_margin', '10' ); ?>">
+<div id="<?php echo $cck->id; ?>" class="<?php echo $cck->id_class; ?>">
 	<div>
 	<?php }
 	$attr		=	array(
@@ -136,7 +132,7 @@ if ( !$isMore ) {
 		$i	=	0;
         foreach ( $items as $item ) {
         	$body[$i]['cols']	=	array();
-			$body[$i]['html']	=	'<tr '.${'class_row'.($i % 2)}.$item->replaceLive( $attributes ).'>';
+			$body[$i]['html']	=	'<tr'.$item->replaceLive( $attributes ).'>';
 
             foreach ( $positions as $name=>$position ) {
 				$fieldnames	=	$cck->getFields( $name, '', false );
@@ -216,7 +212,7 @@ if ( !$isMore ) {
 	}
 	echo $html;
 
-	if ( !$isMore ) { ?>
+	if ( $cck->id_class && !$isMore ) { ?>
     </div>
 </div>
 <?php
