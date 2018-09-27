@@ -801,6 +801,22 @@ class JCckPluginField extends JPlugin
 		if ( $field->label == 'clear' || $field->label == 'none' ) {
 			$field->label	=	'';
 		}
+		$pos	=	strpos( $field->description, 'J(' );
+
+		if ( trim( $field->description ) && $pos !== false ) {
+			$desc		=	trim( $field->description );
+			if ( $desc ) {
+				$matches	=	'';
+				$search		=	'#J\((.*)\)#U';
+				preg_match_all( $search, $desc, $matches );
+				if ( count( $matches[1] ) ) {
+					foreach ( $matches[1] as $text ) {
+						$desc	=	str_replace( 'J('.$text.')', JText::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $text ) ) ), $desc );
+					}
+					$field->description	=	$desc;
+				}
+			}
+		}
 		if ( $config['doTranslation'] ) {
 			if ( $field->label == '&nbsp;' ) {
 				$field->label	=	'Nbsp';
@@ -808,7 +824,7 @@ class JCckPluginField extends JPlugin
 			if ( trim( $field->label ) ) {
 				$field->label	=	JText::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $field->label ) ) );
 			}
-			if ( trim( $field->description ) ) {
+			if ( $pos === false && trim( $field->description ) ) {
 				$desc	=	trim( strip_tags( $field->description ) );
 				if ( $desc ) {
 					$field->description	=	JText::_( 'COM_CCK_' . str_replace( ' ', '_', $desc ) );
