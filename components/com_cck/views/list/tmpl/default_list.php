@@ -50,8 +50,6 @@ if ( !$this->raw_rendering ) { ?>
 	}
 	if ( @$this->search->content > 0 ) {
 		echo ( $this->raw_rendering ) ? $this->data : '<div class="cck_page_items">'.$this->data.'</div>';
-	} else {
-		echo $this->loadTemplate( 'items' );
 	}
 	if ( ( $this->show_pages_number || $this->show_pagination > -1 ) && $this->pages_total > 1 ) {
 	    echo '<div data-cck-loadmore-pagination class="'.$this->class_pagination.'"'.( $this->show_pagination == 8 ? ' style="display:none;"' : '' ).'>';
