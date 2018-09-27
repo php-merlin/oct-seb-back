@@ -16,7 +16,7 @@ $cck	=	CCK_Rendering::getInstance( $this->template );
 if ( $cck->initialize() === false ) { return; }
 
 // -- Prepare
-$attributes		=	$cck->item_attributes ? ' '.$cck->item_attributes : '';
+$attributes		=	$cck->item_attributes;
 $class			=	trim( $cck->getStyleParam( 'class', '' ) );
 $custom_attr	=	trim( $cck->getStyleParam( 'attributes', '' ) );
 $custom_attr	=	$custom_attr ? ' '.$custom_attr : '';
