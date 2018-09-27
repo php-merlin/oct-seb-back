@@ -2221,14 +2221,6 @@ Temporary Items
 /administrator/language/fr-FR/fr-FR.plg_cck_field_restriction_cck_options.sys.ini
 /plugins/cck_field_restriction/cck_options/*
 
-######## SEBLOD Plug-ins >> Restriction >> X
-
-/administrator/language/en-GB/en-GB.plg_cck_field_restriction_x.ini
-/administrator/language/en-GB/en-GB.plg_cck_field_restriction_x.sys.ini
-/administrator/language/fr-FR/fr-FR.plg_cck_field_restriction_x.ini
-/administrator/language/fr-FR/fr-FR.plg_cck_field_restriction_x.sys.ini
-/plugins/cck_field_restriction/x/*
-
 ######## SEBLOD Plug-ins >> Shipping >> *
 
 /plugins/cck_ecommerce_shipping/*
