@@ -247,13 +247,10 @@ class plgContentCCKInstallerScript
 			
 			$searchs	=	array(
 								'11'=>array(
-										'list'=>array( 'seb_table', 0, '0', 'seb_table - article_manager (list)', '{"rendering_css_class":"","rendering_item_attributes":"sortable-group-id=\\"$cck->getValue(\'art_catid\')\\"","cck_client_item":"0","class_table":"table table-striped","table_header":"0","class_table_tr_even":"","table_layout":"responsive","class_table_tr_odd":"","table_columns":"0","position_margin":"10"}' )
+										'list'=>array( 'seb_table', 0, '0', 'seb_table - article_manager (list)', '{"rendering_item_attributes":"sortable-group-id=\\"$cck->getValue(\'art_catid\')\\"","rendering_css_class":"","cck_client_item":"0","class_table":"table table-striped","table_header":"0","table_columns":"0","table_layout":"responsive"}' )
 									  ),
 								'15'=>array(
-										'list'=>array( 'seb_table', 0, '0', 'seb_table - category_manager (list)', '{"rendering_css_class":"","rendering_item_attributes":"sortable-group-id=\\"$cck->getValue(\'cat_parent_id\')\\"","cck_client_item":"0","class_table":"table table-striped","table_header":"0","class_table_tr_even":"","table_layout":"responsive","class_table_tr_odd":"","table_columns":"0","position_margin":"10"}' )
-									  ),
-								'18'=>array(
-										'list'=>array( 'seb_table', 0, '0', 'seb_table - user_manager (list)', '{"rendering_css_class":"","rendering_item_attributes":"","cck_client_item":"0","class_table":"table table-striped","table_header":"0","class_table_tr_even":"","table_layout":"responsive","class_table_tr_odd":"","table_columns":"0","position_margin":"10"}' )
+										'list'=>array( 'seb_table', 0, '0', 'seb_table - category_manager (list)', '{"rendering_item_attributes":"sortable-group-id=\\"$cck->getValue(\'cat_parent_id\')\\"","rendering_css_class":"","cck_client_item":"0","class_table":"table table-striped","table_header":"0","table_columns":"0","table_layout":"responsive"}' )
 									  ),
 								'21'=>array(
 										'list'=>array( 'seb_list', 0, '0', 'seb_list - article_item (list)', '{"rendering_item_attributes":"","rendering_css_class":"","cck_client_item":"0","list_display":"0","tag":"div_div","class":"","auto_clean":"0","attributes":""}' )
@@ -296,12 +293,9 @@ class plgContentCCKInstallerScript
 			}
 
 			// Add Categories
-			JPluginHelper::importPlugin( 'content' );
 			JLoader::register( 'JTableCategory', JPATH_PLATFORM.'/joomla/database/table/category.php' );
-			
 			$categories	=	array(	0=>array( 'title'=>'Users', 'published'=>'1', 'access'=>'2', 'language'=>'*', 'parent_id'=>1, 'plg_name'=>'joomla_user' ),
 									1=>array( 'title'=>'User Groups', 'published'=>'1', 'access'=>'2', 'language'=>'*', 'parent_id'=>1, 'plg_name'=>'joomla_user_group' ) );
-			$dispatcher	=	JEventDispatcher::getInstance();
 			
 			foreach ( $categories as $category ) {
 				$table	=	JTable::getInstance( 'Category' );
@@ -315,10 +309,6 @@ class plgContentCCKInstallerScript
 				$table->path		.=	$table->alias;
 				$table->language	=	'*';
 				$table->store();
-				
-				$dispatcher->trigger( 'onContentBeforeSave', array( '', &$table, true ) );
-				$table->store();
-				$dispatcher->trigger( 'onContentAfterSave', array( '', &$table, true ) );
 				
 				$query			=	'SELECT extension_id as id, params FROM #__extensions WHERE type="plugin" AND folder="cck_storage_location" AND element="'.$category['plg_name'].'"';
 				$db->setQuery( $query );
