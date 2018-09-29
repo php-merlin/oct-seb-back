@@ -772,7 +772,7 @@ INSERT IGNORE INTO `#__cck_core_folders` (`id`, `parent_id`, `path`, `title`, `n
 (5, 2, 'joomla', 'JOOMLA', 'joomla', '#578ad6', '', '#ffffff', 'type,field,search,template', '', 1, 6, 59, '', '', 0, 0, 1, 0, '0000-00-00 00:00:00'),
 (6, 2, 'seblod', 'SEBLOD', 'seblod', '#184d9d', '', '#ffffff', 'type,field,search,template', '', 1, 60, 65, '', '', 0, 0, 1, 0, '0000-00-00 00:00:00'),
 (7, 6, 'seblod/apps', 'Apps', 'apps', '#184d9d', 'A', '#ffffff', 'type,field,search,template', '', 2, 61, 62, '', '', 0, 0, 1, 0, '0000-00-00 00:00:00'),
-(8, 6, 'seblod/demo', 'Demo', 'demo', '#184d9d', 'D', '#ffffff', 'type,field,search,template', '', 2, 63, 64, '', '', 0, 0, 1, 0, '0000-00-00 00:00:00'),
+(8, 6, 'seblod/elements', 'Elements', 'elements', '#184d9d', 'E', '#ffffff', 'type,field,search,template', '', 2, 63, 64, '', '', 0, 0, 1, 0, '0000-00-00 00:00:00'),
 (10, 5, 'joomla/joomla_article', 'Article', 'joomla_article', '#578ad6', 'A', '#ffffff', 'type,field,search,template', 'media/cck/apps/joomla_article/images/icon.png', 2, 7, 18, '', 'joomla_article', 1, 1, 1, 0, '0000-00-00 00:00:00'),
 (11, 5, 'joomla/joomla_category', 'Category', 'joomla_category', '#578ad6', 'C', '#ffffff', 'type,field,search,template', 'media/cck/apps/joomla_category/images/icon.png', 2, 19, 28, '', 'joomla_category', 1, 1, 1, 0, '0000-00-00 00:00:00'),
 (13, 5, 'joomla/joomla_user', 'User', 'joomla_user', '#578ad6', 'U', '#ffffff', 'type,field,search,template', 'media/cck/apps/joomla_user/images/icon.png', 2, 41, 50, '', 'joomla_user', 1, 1, 1, 0, '0000-00-00 00:00:00'),
