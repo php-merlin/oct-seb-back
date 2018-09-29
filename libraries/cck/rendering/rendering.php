@@ -545,7 +545,6 @@ class CCK_Rendering
 		if ( !$field ) {
 			return $html;
 		}
-		
 		if ( $field->display ) {
 			$html	=	JCck::callFunc_Array( 'plgCCK_Field'.$field->type, $this->methodRender, array( &$field, &$this->config ) );
 			
@@ -585,9 +584,9 @@ class CCK_Rendering
 					
 					// Description
 					$desc	=	'';
-					if ( $this->getStyleParam( 'field_description', 0 ) ) {
+					if ( $options->get( 'field_description', $this->getStyleParam( 'field_description', 0 ) ) ) {
 						if ( $field->description != '' ) {
-							if ( $this->getStyleParam( 'field_description', 0 ) == 5 ) {
+							if ( $options->get( 'field_description', $this->getStyleParam( 'field_description', 0 ) ) == 5 ) {
 								JHtml::_( 'bootstrap.popover', '.hasPopover', array( 'container'=>'body', 'html'=>true, 'trigger'=>'hover' ) );
 								$desc	=	'<div class="hasPopover" data-placement="top" data-animation="false" data-content="'.htmlspecialchars( $field->description ).'" title="'.htmlspecialchars( $field->label ).'"><span class="icon-help"></span></div>';
 							} else {
@@ -596,7 +595,7 @@ class CCK_Rendering
 							$desc	=	 '<div id="'.$this->id.'_desc_'.$fieldname.'" class="cck_desc cck_desc_'.$field->type.'">'.$desc.'</div>';
 						}
 					}
-					
+
 					// Label
 					$label	=	'';
 					if ( $options->get( 'field_label', $this->getStyleParam( 'field_label', 1 ) ) ) {
@@ -801,7 +800,7 @@ class CCK_Rendering
 			$options	=	new JRegistry;
 			$options->loadString( $this->positions_m[$position]->variation_options );
 		} else {
-			$options	=	null;
+			$options	=	$this->loadDefaultOptions( $variation );
 		}
 		
 		$legend		=	( isset( $this->positions_m[$position]->legend ) && $this->positions_m[$position]->legend ) ? trim( $this->positions_m[$position]->legend ) : (( $this->doDebug() ) ? $position : '' );
@@ -907,6 +906,30 @@ class CCK_Rendering
 	
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Variations
 	
+	// loadVariationOptions
+	protected function loadDefaultOptions( $variation )
+	{
+		if ( !$variation ) {
+			return null;
+		}
+		$file		=	'variations/'.$variation.'/default.json';
+		
+		if ( $this->isFile( $this->path.'/'.$file ) ) {
+			$file	=	$this->path.'/'.$file;
+		} elseif ( $this->isFile( $this->path_lib.'/'.$file ) ) {
+			$file	=	$this->path_lib.'/'.$file;
+		} else {
+			return null;
+		}
+
+		$registry	=	new JRegistry;
+		$registry->loadFile( $file );
+
+		/* TODO#SEBLOD4: cache per variation */
+
+		return $registry;
+	}
+
 	// renderVariation
 	public function renderVariation( $variation, $legend, $content, $options, $position, $height = 0, $markup = true )
 	{
