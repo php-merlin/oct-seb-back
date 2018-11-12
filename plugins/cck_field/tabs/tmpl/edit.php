@@ -26,6 +26,7 @@ JCckDev::forceStorage();
         echo JCckDev::renderForm( 'core_dev_text', $this->item->location, $config, array( 'label'=>'GROUP_IDENTIFIER', 'storage_field'=>'location' ) );
         echo JCckDev::renderForm( 'core_dev_bool', $this->item->bool2, $config, array( 'label'=>'URL', 'defaultvalue'=>'0', 'options'=>'None=0||Set Active Pane=1||Set Active Pane and URL Hash=2', 'storage_field'=>'bool2' ) );
         echo JCckDev::renderForm( 'core_dev_bool', $this->item->bool3, $config, array( 'label'=>'ITEM_IDENTIFIER', 'defaultvalue'=>'0', 'options'=>'Field Name=0||Label=1', 'storage_field'=>'bool3' ) );
+        echo JCckDev::renderForm( 'core_dev_bool', $this->item->bool4, $config, array( 'label'=>'Position', 'defaultvalue'=>'0', 'options'=>'Top=0||Left=1', 'storage_field'=>'bool4' ) );
 		
 		echo JCckDev::renderSpacer( JText::_( 'COM_CCK_STORAGE' ), JText::_( 'COM_CCK_STORAGE_DESC' ) );
 		echo JCckDev::getForm( 'core_storage', $this->item->storage, $config );
@@ -36,6 +37,6 @@ JCckDev::forceStorage();
 <script type="text/javascript">
 jQuery(document).ready(function($) {
     $('#defaultvalue').isVisibleWhen('bool','0',false);
-    $('#bool2,#bool3').isVisibleWhen('bool','0');
+    $('#bool2,#bool3,#bool4').isVisibleWhen('bool','0');
 });
 </script>

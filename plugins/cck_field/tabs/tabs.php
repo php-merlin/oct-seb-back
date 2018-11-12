@@ -205,24 +205,40 @@ class plgCCK_FieldTabs extends JCckPluginField
 	{
 		$id				=	$process['id'];
 		$label			=	$process['label'];
+		$layout			=	JFactory::getApplication()->input->get( 'tmpl' );
 		$name			=	$process['name'];
 		$group_id		=	$process['group_id'];
 		$value			=	$process['value'];
 
 		static $groups	=	array();
+
+		if ( $layout == 'component' || $layout == 'raw' ) {
+			$group_id	.=	'_raw';
+		}
+
 		if ( !isset( $groups[$group_id] ) ) {
 			$groups[$group_id]	=	array( 'active'=>$value, 'current'=>0, 'identifier'=>$process['identifier'], 'url_actions'=>$process['url_actions'] );
 		}
 		if ( $groups[$group_id]['identifier'] ) {
 			$id			=	JCckDev::toSafeID( $label );
 		}
+
+		if ( $layout == 'component' || $layout == 'raw' ) {
+			$id		.=	'_raw';
+		}
 		
 		if ( $fields[$name]->bool == 2 ) {
-			$html	=	JCckDevTabs::end();
+			$html	=	'</div>'.JCckDevTabs::end().'</div>';
 		} elseif ( $fields[$name]->bool == 1 ) {
-			$html	=	JCckDevTabs::open( $group_id, $id, $label );
+			$html	=	'</div>'.JCckDevTabs::open( $group_id, $id, $label );
 			if ( $target == 'form' ) {
+				$css	=	$fields[$name]->css;
+				if ( strpos( $css, 'o-form' ) === false ) {
+					$css	=	'o-form';
+				}
 				$html	=	str_replace( 'class="tab-pane', 'class="tab-pane cck-tab-pane', $html );
+
+				$html	.=	'<div class="'.$css.'">';
 			}
 			$js		=	'';
 			if ( $groups[$group_id]['current'] == $groups[$group_id]['active'] ) {
@@ -239,10 +255,20 @@ class plgCCK_FieldTabs extends JCckPluginField
 				JFactory::getDocument()->addScriptDeclaration( $js );
 			}
 		} else {
-			$html	=	JCckDevTabs::start( $group_id, $id, $label, array( 'active'=>$id ) );
+			$class	=	'';
+			if ( $fields[$name]->bool4 ) {
+				$class	.=	'-left';
+			}
+			$html	=	'<div class="o-tabs'.$class.'">'.JCckDevTabs::start( $group_id, $id, $label, array( 'active'=>$id ) );
 			if ( $target == 'form' ) {
+				$css	=	$fields[$name]->css;
+				if ( strpos( $css, 'o-form' ) === false ) {
+					$css	=	'o-form';
+				}
 				$html	=	str_replace( 'class="nav nav-tabs"', 'class="nav nav-tabs cck-tabs"', $html );
 				$html	=	str_replace( 'class="tab-pane', 'class="tab-pane cck-tab-pane', $html );
+
+				$html	.=	'<div class="'.$css.'">';
 			}
 		}
 		$groups[$group_id]['current']++;
