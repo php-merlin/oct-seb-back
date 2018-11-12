@@ -198,7 +198,7 @@ class plgCCK_FieldTextarea extends JCckPluginField
 
 		JFactory::getDocument()->addScriptDeclaration( 'jQuery(document).ready(function($) {'.$js.'});' );
 		
-		return '<div id="chars-'.$id.'">'.JText::sprintf( 'COM_CCK_N_CHARACTERS_REMAINING', $length ).'</div>';
+		return '<div id="chars-'.$id.'" class="remaining-chars">'.JText::sprintf( 'COM_CCK_N_CHARACTERS_REMAINING', $length ).'</div>';
 	}
 
 	// _br2nl
