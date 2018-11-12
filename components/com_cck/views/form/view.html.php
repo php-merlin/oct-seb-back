@@ -90,6 +90,7 @@ class CCKViewForm extends JViewLegacy
 		if ( $params->get( 'robots' ) ) {
 			$this->document->setMetadata( 'robots', $params->get( 'robots' ) );
 		}
+
 		$this->pageclass_sfx	=	htmlspecialchars( $params->get( 'pageclass_sfx' ) );
 		$this->raw_rendering	=	$params->get( 'raw_rendering', JCck::getConfig_Param( 'raw_rendering', '0' ) );
 
@@ -153,6 +154,7 @@ class CCKViewForm extends JViewLegacy
 			$this->show_form_title	=	false;
 		}
 		
+		$this->class_desc			=	$params->get( 'class_form_desc', '' );
 		$this->config				=	&$config;
 		$this->data					=	&$data;
 		$this->form_id				=	$preconfig['formId'];
@@ -160,6 +162,7 @@ class CCKViewForm extends JViewLegacy
 		$this->params				=	&$params;
 		$this->skip					=	( $app->input->get( 'skip' ) ) ? '1' : '0';
 		$this->stage				=	&$stage;
+		$this->tag_desc				=	$params->get( 'tag_form_desc', 'div' );
 		$this->type					=	&$type;
 		$this->unique				=	&$unique;
 	}

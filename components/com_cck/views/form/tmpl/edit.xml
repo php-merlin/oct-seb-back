@@ -29,6 +29,12 @@
 			<field name="form_desc" type="cck" construction="core_description" default="" label="" description="..." class="inputbox" cck_selectlabel="Edit"
 				   js_appendto="jform_params_show_form_desc=a.wysiwyg_editor_box"
 				   js_isvisiblewhen="a.wysiwyg_editor_box='jform_params_show_form_desc','1,2',false" js_format="html" hidden="true" filter="raw" />
+			<field name="tag_form_desc" type="list" default="div" label="COM_CCK_CONFIG_DESCRIPTION_TAG" description="COM_CCK_CONFIG_DESCRIPTION_TAG_DESC" class="inputbox">
+				<option value="div">div</option>
+				<option value="div_div">div + div</option>
+				<option value="p">p</option>
+			</field>
+			<field name="class_form_desc" type="cck" construction="core_class_title" default="" label="" description="" class="inputbox" cck_attributes="placeholder='J(Class)'" />
 		</fieldset>
 		<fieldset name="cck-overrides" label="LIB_CCK_FIELDSET_OVERRIDES" description="COM_CCK_CONFIG_LIST_LIVE_DESC">
 			<field name="live" type="cckhidden" label="" description="" />

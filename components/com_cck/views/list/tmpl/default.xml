@@ -35,8 +35,10 @@
 				   js_isvisiblewhen="a.wysiwyg_editor_box='jform_params_show_list_desc','1,2',false" js_format="html" hidden="true" filter="raw" />
 			<field name="tag_list_desc" type="list" default="div" label="COM_CCK_CONFIG_DESCRIPTION_TAG" description="COM_CCK_CONFIG_DESCRIPTION_TAG_DESC" class="inputbox">
 				<option value="div">div</option>
+				<option value="div_div">div + div</option>
 				<option value="p">p</option>
 			</field>
+			<field name="class_list_desc" type="cck" construction="core_class_title" default="" label="" description="" class="inputbox" cck_attributes="placeholder='J(Class)'" />
 			<field name="show_form" type="cck" construction="core_show_hide2" default="" cck_selectlabel="Use Global" cck_options="Hide=0||Prepare=-1||Show=optgroup||Above=1||Below=2"
 				   label="COM_CCK_CONFIG_SHOW_SEARCH_FORM" description="COM_CCK_CONFIG_SHOW_SEARCH_FORM_DESC" class="inputbox" />
 			<field name="show_list" type="cck" construction="core_show_hide" default="" cck_selectlabel="Use Global" 

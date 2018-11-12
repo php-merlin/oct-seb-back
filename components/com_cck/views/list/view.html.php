@@ -277,6 +277,7 @@ class CCKViewList extends JViewLegacy
 			JHtml::_( 'behavior.core' );
 		}
 
+		$this->class_desc				=	$params->get( 'class_list_desc', '' );
 		$this->config					=	&$config;
 		$this->context					=	$config['context'];
 		$this->data						=	&$data;
