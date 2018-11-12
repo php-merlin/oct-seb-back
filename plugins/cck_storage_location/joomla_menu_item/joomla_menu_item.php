@@ -276,49 +276,45 @@ class plgCCK_Storage_LocationJoomla_Menu_Item extends JCckPluginLocation
 
 			switch ( $data['type'] ) {
 				case 'component':
-					$component	=	'';
+					$component		=	'';
+					$item_request	=	json_decode( $config['storages'][$storeTable]['item_request'] );
 
 					unset( $data['link'] );
 
 					switch ( $menuItemType ) {
 						case 'com_content.article':
 							$component		=	'com_content';
-							/*
 							$table->link	= 	sprintf(
 													'index.php?option=com_content&view=article&id=%s',
-													$config['storages'][$storeTable]['article']
+													$item_request->id
 												);
-							*/
+							break;
+						case 'com_content.category':
+							$component		=	'com_content';
+							$table->link	= 	sprintf(
+													'index.php?option=com_content&view=category&id=%s',
+													$item_request->id
+												);
 							break;
 						case 'com_cck.form':
-							$component	=	'com_cck';
+							$component		=	'com_cck';
+							$table->link	= 	sprintf(
+													'index.php?option=com_cck&view=form&layout=edit&type=%s',
+													$item_request->type
+												);
 							break;
 						case 'com_cck.list':
-							$component	=	'com_cck';
-							/*
-							$itemId		=	$config['storages'][$storeTable]['list_search'];
-							$search		=	(bool)$config['storages'][$storeTable]['search'];
+							$component		=	'com_cck';
+							$table->link 	= 	sprintf(
+													'index.php?option=com_cck&view=list&search=%s',
+													$item_request->search
+												);
 
-							$db 		= 	JFactory::getDbo();
-							$query 		= 	$db->getQuery( true )
-											   ->select( 'name' )
-											   ->from( '#__cck_core_searchs' )
-											   ->where( 'id = '.(int)$itemId
-											);
-
-							$db->setQuery( $query );
-							$searchName = 	$db->loadResult();
-
-							$link 		= 	sprintf( 'index.php?option=com_cck&view=list&search=%s', $searchName );
-
-							if ( $search ) {
-								$link	.=	'&task=search';
+							if ( isset( $item_request->task ) && !$item_request->task ) {
+								$table->link	.=	'&task=no';
 							} else {
-								$link	.=	'&task=no';
+								$table->link	.=	'&task=search';
 							}
-							
-							$table->link	=	$link;
-							*/
 							break;
 						case 'com_users.logout':
 							$component	=	'com_users';
@@ -326,7 +322,6 @@ class plgCCK_Storage_LocationJoomla_Menu_Item extends JCckPluginLocation
 						default:
 							break;
 					}
-
 					$table->component_id 	= 	(int)JTable::getInstance( 'Extension' )->find( array( 'name'=>$component, 'type'=>'component' ) );
 					break;
 				case 'alias':
@@ -347,8 +342,24 @@ class plgCCK_Storage_LocationJoomla_Menu_Item extends JCckPluginLocation
 			}
 		}
 		
-		$table->bind( $data );
+		if ( !$isNew ) {
+			if ( isset( $data['params'] ) && $data['params'] != '' ) {
+				if ( $table->params != '' ) {
+					$new_params	=	json_decode( $data['params'] );
+					$params		=	json_decode( $table->params );
 
+					foreach ( $new_params as $k=>$v ) {
+						$params->$k	=	$v;
+					}
+
+					$table->params	=	json_encode( $params );
+
+					unset( $data['params'] );
+				}
+			}
+		}
+		$table->bind( $data );
+		
 		if ( !$table->check() ) {
 			JFactory::getApplication()->enqueueMessage( $table->getError(), 'error' );
 		}
