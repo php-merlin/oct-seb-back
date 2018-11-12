@@ -68,10 +68,15 @@ class plgCCK_FieldItem_X extends JCckPluginField
 		// Init
 		$id				=	$field->name;
 		$name			=	$field->name;
+
+		if ( isset( $inherit['caller'] ) && $inherit['caller'] ) {
+			$referrer	=	$inherit['caller'].'.'.$config['client_form'];
+		} else {
+			$referrer	=	$config['type'].'.'.$config['client_form'];
+		}
 		
-		if ( $field->bool ) {
-			$field->label			=	'';
-			$field->markup_class	.=	' multiple';
+		if ( $field->bool && $field->label ) {
+			$field->markup_class	.=	' o-input-top';
 		}
 
 		// Validate
@@ -122,8 +127,12 @@ class plgCCK_FieldItem_X extends JCckPluginField
 		$html		=	'';
 		$link		=	'index.php?option=com_cck&view=form&layout='.$layout.'&type='.$form.'&tmpl='.$tmpl.$options2['add_custom'];
 		$link		=	( $app->isClient( 'administrator' ) ) ? $link : JRoute::_( $link.'&Itemid='.$itemId );
-		$link2		=	JCckDevHelper::getAbsoluteUrl( 'auto', 'view=list&search='.$list.'&tmpl='.$tmpl.'&referrer='.$config['type'].'.'.$config['client_form'].'.'.$name.$options2['select_custom'] );
+		$link2		=	JCckDevHelper::getAbsoluteUrl( 'auto', 'view=list&search='.$list.'&tmpl='.$tmpl.'&referrer='.$referrer.'.'.$name.$options2['select_custom'] );
 
+		if ( strpos( $link, '$cck-' ) !== false ) {
+			$link 	=	str_replace( '&gt;', '>', $link );
+			parent::g_addProcess( 'beforeRenderForm', self::$type, $config, array( 'name'=>$field->name, 'target'=>'link_add', 'link'=>$link, 'itemId'=>0 ), 5 );
+		}
 		if ( strpos( $link2, '$cck->' ) !== false ) {
 			parent::g_addProcess( 'beforeRenderForm', self::$type, $config, array( 'name'=>$field->name, 'target'=>'link_select', 'link'=>$link2, 'itemId'=>$itemId ), 5 );
 		}
@@ -141,9 +150,9 @@ class plgCCK_FieldItem_X extends JCckPluginField
 						(function ($){
 							JCck.More.ItemX = {
 								active: "",
-								form:"'.$config['type'].'.'.$config['client_form'].'",
+								form:"'.$referrer.'",
 								instances: [],
-								modal: JCck.Core.getModal({"backclose":false,"title":"'.JText::_( 'COM_CCK_ADD' ).' / '.JText::_( 'COM_CCK_EDIT' ).'"}),
+								modal: JCck.Core.getModal({"backclose":false,"class":"modal-backend","title":"'.JText::_( 'COM_CCK_ADD' ).' / '.JText::_( 'COM_CCK_EDIT' ).'"}),
 								modal_preview: JCck.Core.getModal({"backclose":false,"backdrop":false,"title":"'.JText::_( 'COM_CCK_PREVIEW' ).'"}),
 								modal_form_id:"'.$config['formId'].'_'.$tmpl.'",
 								token:"'.JSession::getFormToken().'=1",
@@ -176,7 +185,8 @@ class plgCCK_FieldItem_X extends JCckPluginField
 												JCck.More.ItemX.toggleReorder();
 											} else {
 												JCck.More.ItemX.toggleRequired(false);
-												$("#"+JCck.More.ItemX.active+" > .btn-toolbar").hide();
+												$("#"+JCck.More.ItemX.active+" > [class$=\"-toolbar\"]").hide();
+												$("#"+JCck.More.ItemX.active+" > [class$=\"-toolbar\"] + *").show();
 												$("#"+JCck.More.ItemX.active+" .cck-loading-more").html(response);
 											}
 	    									$(".hasTooltip").tooltip({"html": true,"container": "body"});
@@ -269,7 +279,8 @@ class plgCCK_FieldItem_X extends JCckPluginField
 										$("#"+JCck.More.ItemX.active+" .cck-loading-more").find(".hasTooltip").tooltip("destroy");
 										$("#"+JCck.More.ItemX.active+" .cck-loading-more").html("");
 										JCck.More.ItemX.toggleRequired(true);
-										$("#"+JCck.More.ItemX.active+" > .btn-toolbar").show();
+										$("#"+JCck.More.ItemX.active+" > [class$=\"-toolbar\"]").show();
+										$("#"+JCck.More.ItemX.active+" > [class$=\"-toolbar\"] + *").hide();
 									}
 									if (close !== false) {
 										JCck.More.ItemX.modal.hide();
@@ -363,9 +374,11 @@ class plgCCK_FieldItem_X extends JCckPluginField
 									} else {
 										if($("#"+name+" .cck-loading-more").length) {
 											if($("#"+name+" .cck-loading-more").html().length > 1) {
-												$("#"+name+" > .btn-toolbar").hide();
+												$("#"+name+" > [class$=\"-toolbar\"]").hide();
+												$("#"+name+" > [class$=\"-toolbar\"] + *").show();
 											} else {
 												JCck.More.ItemX.toggleRequired(true,name);
+												$("#"+name+" > [class$=\"-toolbar\"] + *").hide();
 											}
 										}
 									}
@@ -377,9 +390,9 @@ class plgCCK_FieldItem_X extends JCckPluginField
 									name = name || JCck.More.ItemX.active;
 									if (JCck.More.ItemX.instances[name].required) {
 										if (state) {
-											$("#"+name+" > .btn-toolbar > button:last-child").addClass("validate[required]");
+											$("#"+name+" > [class$=\"-toolbar\"] > button:last-child").addClass("validate[required]");
 										} else {
-											$("#"+name+" > .btn-toolbar > button:last-child").removeClass("validate[required]").validationEngine("hide");
+											$("#"+name+" > [class$=\"-toolbar\"] > button:last-child").removeClass("validate[required]").validationEngine("hide");
 										}
 									}
 								}
@@ -418,7 +431,7 @@ class plgCCK_FieldItem_X extends JCckPluginField
 						$(document).ready(function() {
 							var data = {
 								"behavior":'.$field->bool.',
-								"link_add":\''.$link.'\',
+								"link_add":"'.htmlspecialchars_decode( $link ).'",
 								"link_list":\''.$link5.'\',
 								"link_process":\''.$link7.'\',
 								"link_select":"'.htmlspecialchars_decode( $link2 ).'",
@@ -449,10 +462,14 @@ class plgCCK_FieldItem_X extends JCckPluginField
 			}
 		}
 
-		$buffer		=	self::_render( $field, $value, array(), $config );
+		$buffer		=	self::_render( $field, $value, array(), $config, $referrer );
 		$html		.=	$buffer['form'];
 		$html		.=	$buffer['list'];
 		$html		=	'<div id="'.$field->name.'" class="item_x">'.$html.'</div>';
+
+		if ( $buffer['validation'] ) {
+			$config['validation']	=	array_merge( $config['validation'], $buffer['validation'] );
+		}
 
 		if ( $field->bool ) {
 			JHtml::_( 'jquery.ui', array( 'core', 'sortable' ) );
@@ -575,8 +592,11 @@ class plgCCK_FieldItem_X extends JCckPluginField
 				}
 				$link		=	str_replace( $matches[0][$k], $value, $link );
 			}
-			$link		=	( JFactory::getApplication()->isAdmin() ) ? $link : JRoute::_( $link.'&Itemid='.$process['itemId'] );
 
+			if ( $process['itemId'] ) {
+				$link		=	( JFactory::getApplication()->isAdmin() ) ? $link : JRoute::_( $link.'&Itemid='.$process['itemId'] );
+			}
+			
 			$js		=	'
 						(function ($){
 							$(document).ready(function() {
@@ -773,35 +793,35 @@ class plgCCK_FieldItem_X extends JCckPluginField
 	}
 
 	// _render
-	protected static function _render( $field, $value, $lives, $config )
+	protected static function _render( $field, $value, $lives, $config, $referrer )
 	{
 		/*
 		$main_config				=	$config;
 		$main_field					=	$field;
 		*/
-		$app		=	JFactory::getApplication();
-		$class_sfx	=	'';
-		$uniqId		=	'f'.$field->id;
-		$formId		=	'seblod_form'; /* 'seblod_list_'.$uniqId; */
-		
-		$option		=	$app->input->get( 'option', '' );
-		$view		=	'';
-		$preconfig	=	array(
-							'action'=>'',
-							'auto_redirect'=>0,
-							'client'=>'search',
-							'formId'=>$formId,
-							'idx'=>$field->id,
-							'itemId'=>$app->input->getInt( 'Itemid', 0 ),
-							'limitend'=>25,
-							'limit2'=>0,
-							'ordering'=>'',
-							'ordering2'=>'',
-							'search'=>$field->extended,
-							'show_form'=>1,
-							'submit'=>'JCck.Core.submit_'.$uniqId,
-							'task'=>'search',
-						);
+		$app			=	JFactory::getApplication();
+		$class_sfx		=	'';
+		$uniqId			=	'f'.$field->id;
+		$formId			=	'seblod_form'; /* 'seblod_list_'.$uniqId; */
+		$formValidation	=	'';
+		$option			=	$app->input->get( 'option', '' );
+		$view			=	'';
+		$preconfig		=	array(
+								'action'=>'',
+								'auto_redirect'=>0,
+								'client'=>'search',
+								'formId'=>$formId,
+								'idx'=>$field->id,
+								'itemId'=>$app->input->getInt( 'Itemid', 0 ),
+								'limitend'=>25,
+								'limit2'=>0,
+								'ordering'=>'',
+								'ordering2'=>'',
+								'search'=>$field->extended,
+								'show_form'=>1,
+								'submit'=>'JCck.Core.submit_'.$uniqId,
+								'task'=>'search',
+							);
 		
 		$offset			=	0;
 		$limitstart		=	-1;
@@ -812,13 +832,13 @@ class plgCCK_FieldItem_X extends JCckPluginField
 			$app->input->set( 'pks', $value );
 		}
 
-		$app->input->set( 'cck_item_x_referrer', $config['type'].'.'.$config['client_form'].'.'.$field->name );
+		$app->input->set( 'cck_item_x_referrer', $referrer.'.'.$field->name );
 
 		// -- TODO#SEBLOD:
 		$pagination		=	8;
 		// -- TODO#SEBLOD:
 		
-		$raw_rendering	=	$field->bool;
+		$raw_rendering	=	1;
 		$variation		=	'';
 		
 		// Prepare
@@ -838,7 +858,8 @@ class plgCCK_FieldItem_X extends JCckPluginField
 		include __DIR__.'/tmpl/render.php';
 		$buffer	=	array(
 						'form'=>$form,
-						'list'=>ob_get_clean()
+						'list'=>ob_get_clean(),
+						'validation'=>$formValidation
 					);
 		
 		if ( !$field->bool ) {
