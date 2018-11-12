@@ -418,9 +418,7 @@ class Helper_Workshop
 											'100'=>JHtml::_( 'select.option', '<OPTGROUP>', JText::_( 'COM_CCK_FORM' ) ),
 											''=>JHtml::_( 'select.option', '', JText::_( 'COM_CCK_DEFAULT' ) ),
 											'form_filter'=>JHtml::_( 'select.option', 'form_filter', JText::_( 'COM_CCK_FORM_FILTER' ) ),
-											/*
 											'form_filter_ajax'=>JHtml::_( 'select.option', 'form_filter_ajax', JText::_( 'COM_CCK_FORM_FILTER_AJAX' ) ),
-											*/
 											'disabled'=>JHtml::_( 'select.option', 'disabled', JText::_( 'COM_CCK_FORM_DISABLED_AND_SECURED' ) ),
 											'101'=>JHtml::_( 'select.option', '</OPTGROUP>', '' ) );
 				$data['match_mode']	=	array(
