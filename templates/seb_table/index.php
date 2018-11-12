@@ -45,7 +45,7 @@ if ( $cck->isGoingToLoadMore() ) {
 // -- Render
 if ( $cck->id_class && !$isMore ) {
 ?>
-<div id="<?php echo $cck->id; ?>" class="<?php echo $cck->id_class; ?>">
+<div id="<?php echo $cck->id; ?>" class="<?php echo $cck->id_class; ?>"<?php echo ( $cck->id_attributes ? ' '.$cck->id_attributes : '' ); ?>>
 	<div>
 	<?php }
 	$attr		=	array(

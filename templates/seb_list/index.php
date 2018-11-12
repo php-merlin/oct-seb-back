@@ -48,7 +48,7 @@ $class			=	$class ? ' class="'.$class.'"' : '';
 // -- Render
 if ( $id_class && !$isMore ) {
 ?>
-<div class="<?php echo trim( $cck->id_class ); ?>"><?php }
+<div class="<?php echo trim( $cck->id_class ); ?>"<?php echo ( $cck->id_attributes ? ' '.$cck->id_attributes : '' ); ?>><?php }
 if ( !( $isRaw || $isMore ) ) { ?>
 <<?php echo $tags[0]; ?><?php echo $class.$custom_attr; ?>>
 <?php }
