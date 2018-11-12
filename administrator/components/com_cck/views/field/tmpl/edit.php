@@ -93,7 +93,7 @@ JText::script( 'COM_CCK_FIELD_ROW_AJAX_ERROR' );
 						.	',"alertTextOk": "* '.JText::_( 'PLG_CCK_FIELD_VALIDATION_AJAX_AVAILABILITY_ALERT2' ).'"'
 						.	',"alertTextLoad": "* '.JText::_( 'PLG_CCK_FIELD_VALIDATION_AJAX_AVAILABILITY_ALERT3' ).'"}';
 				echo	'<li><label>'.JText::_( 'COM_CCK_NAME' ).'<span class="star"> *</span></label>'
-					.	'<input type="text" id="name" name="name" value="'.$this->item->name.'" class="'.$class.'" maxlength="50" size="28" tabindex="3" />'
+					.	'<input type="text" id="name" name="name" value="'.$this->item->name.'" class="'.$class.'" maxlength="80" size="28" tabindex="3" />'
 					.	'</li>';				
 			} else {
 				echo '<li><label>'.JText::_( 'COM_CCK_NAME' ).'</label><span class="variation_value" style="display:block;"><strong>'.$this->item->name.'</strong></span>'

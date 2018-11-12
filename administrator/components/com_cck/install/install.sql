@@ -41,7 +41,7 @@ CREATE TABLE IF NOT EXISTS `#__cck_core_downloads` (
 CREATE TABLE IF NOT EXISTS `#__cck_core_fields` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `title` varchar(50) NOT NULL,
-  `name` varchar(50) NOT NULL,
+  `name` varchar(80) NOT NULL,
   `folder` int(11) NOT NULL,
   `type` varchar(50) NOT NULL,
   `description` varchar(5120) NOT NULL,
@@ -128,7 +128,7 @@ INSERT IGNORE INTO `#__cck_core_fields` (`id`, `title`, `name`, `folder`, `type`
 (33, 'Core Storage', 'core_storage', 3, 'storage', '', 0, 'Storage', '', 3, '', '', '', '', '', 0, 50, 32, 0, 0, 0, 0, '', 0, '', '', '', '', 0, 0, 0, 0, 0, 0, 0, '', '', 'dev', '', '', '', 'storage', '', '', '', 0, '0000-00-00 00:00:00'),
 (34, 'Core Storage Field', 'core_storage_field', 3, 'text', '', 0, 'Field', ' ', 3, '', '', '', '', '', 0, 50, 26, 0, 0, 0, 0, '', 0, '', '', '', '', 0, 0, 0, 0, 0, 0, 0, '', '', 'dev', '', '', '', 'storage_field', '', '', '', 0, '0000-00-00 00:00:00'),
 (35, 'Core Name (Template)', 'core_name_template', 3, 'select_dynamic', '', 0, 'Name', 'Select Template', 3, 'required', '', '', '', '{"query":"","table":"#__extensions","name":"name","where":"type=\\"template\\" AND name NOT IN (\\"atomic\\",\\"beez5\\",\\"beez_20\\",\\"bluestork\\",\\"hathor\\")","value":"name","orderby":"name","orderby_direction":"ASC","limit":"","language_detection":"joomla","language_codes":"EN,GB,US,FR","language_default":"EN"}', 0, 50, 32, 0, 0, 0, 0, ',', 0, '', '', '', '', 0, 0, 0, 0, 0, 0, 1, '', 'tabindex="2"', 'dev', '', '', '', 'name', '', '', '', 0, '0000-00-00 00:00:00'),
-(36, 'Core Name (Field)', 'core_name_field', 3, 'text', '', 0, 'Name', ' ', 3, 'required', '', '', '', '', 0, 50, 32, 0, 0, 0, 0, '', 0, '', '', '', '', 0, 0, 0, 0, 0, 0, 0, '', 'tabindex="2"', 'dev', '', '', '', 'name', '', '', '', 0, '0000-00-00 00:00:00'),
+(36, 'Core Name (Field)', 'core_name_field', 3, 'text', '', 0, 'Name', ' ', 3, 'required', '', '', '', '', 0, 80, 32, 0, 0, 0, 0, '', 0, '', '', '', '', 0, 0, 0, 0, 0, 0, 0, '', 'tabindex="2"', 'dev', '', '', '', 'name', '', '', '', 0, '0000-00-00 00:00:00'),
 (37, 'Core Title (Template)', 'core_title_template', 3, 'text', '', 0, 'Title', ' ', 3, 'required', '', '', '', '', 0, 50, 28, 0, 0, 0, 0, '', 0, '', '', '', 'if(!$("#title").val()){ $("#title").focus(); }', 0, 0, 0, 0, 0, 0, 0, '', 'tabindex="1"', 'dev', '', '', '', 'title', '', '', '', 0, '0000-00-00 00:00:00'),
 (38, 'Core Title (Type)', 'core_title_type', 3, 'text', '', 0, 'Title', ' ', 3, 'required', '', '', '', '', 0, 50, 28, 0, 0, 0, 0, '', 0, '', '', '', '$("#title").on("change", function() {\r\n  if ( !$("#name").val() ) {\r\n    JCck.DevHelper.transliterateName();\r\n  }\r\n}); if( !$("#title").val() ) { $("#title").focus(); }', 0, 0, 0, 0, 0, 0, 0, '', 'tabindex="1"', 'dev', '', '', '', 'title', '', '', '', 0, '0000-00-00 00:00:00'),
 (39, 'Core Title (Search)', 'core_title_search', 3, 'text', '', 0, 'Title', ' ', 3, 'required', '', '', '', '', 0, 50, 28, 0, 0, 0, 0, '', 0, '', '', '', '$("#title").on("change", function() {\r\n  if ( !$("#name").val() ) {\r\n    JCck.DevHelper.transliterateName();\r\n  }\r\n}); if( !$("#title").val() ) { $("#title").focus(); }', 0, 0, 0, 0, 0, 0, 0, '', 'tabindex="1"', 'dev', '', '', '', 'title', '', '', '', 0, '0000-00-00 00:00:00'),
@@ -838,7 +838,7 @@ INSERT IGNORE INTO `#__cck_core_objects` (`id`, `title`, `name`, `component`, `c
 CREATE TABLE IF NOT EXISTS `#__cck_core_searchs` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `title` varchar(50) NOT NULL,
-  `name` varchar(50) NOT NULL,
+  `name` varchar(80) NOT NULL,
   `alias` varchar(50) NOT NULL,
   `folder` int(11) NOT NULL,
   `content` int(11) NOT NULL DEFAULT '0',
