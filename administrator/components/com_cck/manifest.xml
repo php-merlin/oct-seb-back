@@ -24,6 +24,7 @@
 	</install>
 	
 	<files folder="site">
+		<folder>layouts</folder>
 		<folder>models</folder>
 		<folder>views</folder>
 		
