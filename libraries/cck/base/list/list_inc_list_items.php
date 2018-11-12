@@ -227,8 +227,12 @@ if ( $count ) {
 			}
 			
 			$item->$target_f	=	$fieldsI;
+
+			if ( isset( $config['validation'] ) ) {
+				$validation	=	$config['validation'];
+			}
 		}
-		
+
 		if ( $count3 ) {
 			$config		=	array(
 								'author'=>$items[$i]->author,

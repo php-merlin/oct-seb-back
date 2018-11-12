@@ -374,6 +374,9 @@ class CCK_List
 		
 		include JPATH_SITE.'/libraries/cck/base/list/list_inc_list.php';
 
+		if ( $validation ) {
+			$data['config']['formValidation']	=	$validation;
+		}
 		if ( isset( $config['formWrapper'] ) && $config['formWrapper'] ) {
 			$data['config']['formWrapper']	=	$config['formWrapper'];
 		}

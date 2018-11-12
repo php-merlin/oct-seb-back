@@ -572,6 +572,11 @@ if ( $preconfig['task'] == 'search' ) {
 			}
 			if ( is_array( $data ) ) {
 				if ( count( $data['config'] ) ) {
+					if ( isset( $data['config']['formValidation'] ) ) {
+						$formValidation	=	$data['config']['formValidation'];
+
+						unset( $data['config']['formValidation'] );
+					}
 					foreach ( $data['config'] as $k=>$v ) {
 						$config[$k]	=	$v;
 					}
@@ -662,6 +667,11 @@ if ( $no_action ) {
 		$data		=	CCK_List::render( $items, ${$target}, $path, $preconfig['client'], $config['Itemid'], $options, $config );
 
 		if ( count( $data['config'] ) ) {
+			if ( isset( $data['config']['formValidation'] ) ) {
+				$formValidation	=	$data['config']['formValidation'];
+
+				unset( $data['config']['formValidation'] );
+			}
 			foreach ( $data['config'] as $k=>$v ) {
 				$config[$k]	=	$v;
 			}
