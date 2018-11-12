@@ -119,8 +119,18 @@ class CCK_Rendering_Item
 	public function init() { $this->initialize(); } // (deprecated)
 	public function initialize()
 	{
+
 		$this->me			=	( isset( $this->fields_list ) && $this->fields_list ) ? $this->fields_list : ( ( isset( $this->fields ) ) ? $this->fields : new stdClass );
 		$this->methodRender	=	'onCCK_FieldRenderContent';
+
+		// Legacy
+		$legacy	=	(int)JCck::getConfig_Param( 'core_legacy', '2012' );
+		
+		if ( $legacy && $legacy <= 2018 ) {
+			$this->markup	=	'legacy';
+		} else {
+			$this->markup	=	'';
+		}
 	}
 
 	// finalize
@@ -219,8 +229,9 @@ class CCK_Rendering_Item
 				if ( ! $options ) {
 					return $html;
 				}
+				$markup		=	$options->get( 'field_markup', '' );
 
-				if ( $field->markup == 'none' ) {
+				if ( $field->markup == 'none' || ( $field->markup == '' && $markup == 'none' ) ) {
 					// Label
 					$label	=	'';
 					if ( $options->get( 'field_label', $this->getStyleParam( 'field_label', 1 ) ) ) {
@@ -228,8 +239,6 @@ class CCK_Rendering_Item
 						$html	=	$label.$html;
 					}
 				} elseif ( $this->markup ) {
-					/* TODO#SEBLOD: */
-				} else {					
 					// Description
 					$desc	=	'';
 					if ( $this->getStyleParam( 'field_description', 0 ) ) {
@@ -246,6 +255,20 @@ class CCK_Rendering_Item
 					// Markup
 					$html	=	'<div id="'.$this->id.'_value_'.$fieldname.'" class="cck_value cck_value_'.$field->type.@$field->markup_class.'">'.$html.'</div>';
 					$html	=	'<div id="'.$this->id.'_'.$fieldname.'" class="cck_'.$this->mode.'s cck_list cck_'.$field->type.' cck_'.$fieldname.'">'.$label.$html.$desc.'</div>';
+				} else {
+					if ( $field->markup ) {
+						$markup	=	$field->markup;
+					}
+
+					$displayData	=	array(
+											'cck'=>$this,
+											'field'=>$field,
+											'html'=>$html,
+											'options'=>$options
+										);
+
+					$layout 		=	new JLayoutFile( 'cck.markup.'.$markup, null, array( 'component' => 'com_cck' ) );
+					$html			=	$layout->render( $displayData ); // $field->name.' = ['.$markup.']<br>'
 				}
 			}
 		}
@@ -297,18 +320,18 @@ class CCK_Rendering_Item
 	// renderPosition
 	public function renderPosition( $position, $variation = '', $height = '', $excluded = array(), $force = false )
 	{
-		$html		=	'';		
-		$legend		=	( isset( $this->positions_m[$position]->legend ) && $this->positions_m[$position]->legend ) ? trim( $this->positions_m[$position]->legend ) : '';
+		$html		=	'';
+		if ( ! $variation ) {
+			$variation	=	( isset( $this->positions_m[$position]->variation ) && $this->positions_m[$position]->variation ) ? $this->positions_m[$position]->variation : (string)$this->getStyleParam( 'variation_default', '' );
+		}		
 		if ( isset( $this->positions_m[$position]->variation_options ) && $this->positions_m[$position]->variation_options != '' ) {
 			$options	=	new JRegistry;
 			$options->loadString( $this->positions_m[$position]->variation_options );
 		} else {
-			$options	=	null;
-		}
-		if ( ! $variation ) {
-			$variation	=	( isset( $this->positions_m[$position]->variation ) && $this->positions_m[$position]->variation ) ? $this->positions_m[$position]->variation : (string)$this->getStyleParam( 'variation_default', '' );
+			$options	=	$this->loadDefaultOptions( $variation );
 		}
 
+		$legend		=	( isset( $this->positions_m[$position]->legend ) && $this->positions_m[$position]->legend ) ? trim( $this->positions_m[$position]->legend ) : '';
 		$pos2		=	$this->path.'/positions/'.$this->type.'/list/'.$position.'.php';
 		$pos1		=	$this->path.'/positions/'.$position.'.php';
 		
@@ -332,7 +355,7 @@ class CCK_Rendering_Item
 				$legend	=	'';
 			}
 		}
-		
+
 		if ( $html != '' && trim( $variation ) ) {
 			$html	=	$this->renderVariation( $variation, $legend, $html, $options, $position, $height );
 		}
@@ -364,6 +387,30 @@ class CCK_Rendering_Item
 
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Variations
 	
+	// loadVariationOptions
+	protected function loadDefaultOptions( $variation )
+	{
+		if ( !$variation ) {
+			return new JRegistry;
+		}
+		$file		=	'variations/'.$variation.'/default.json';
+		
+		if ( $this->isFile( $this->path.'/'.$file ) ) {
+			$file	=	$this->path.'/'.$file;
+		} elseif ( $this->isFile( $this->path_lib.'/'.$file ) ) {
+			$file	=	$this->path_lib.'/'.$file;
+		} else {
+			return new JRegistry;
+		}
+
+		$registry	=	new JRegistry;
+		$registry->loadFile( $file );
+
+		/* TODO#SEBLOD4: cache per variation */
+
+		return $registry;
+	}
+
 	// renderVariation
 	public function renderVariation( $variation, $legend, $content, $options, $position, $height = 0, $markup = true )
 	{
@@ -436,12 +483,12 @@ class CCK_Rendering_Item
 				$options2	=	$options;
 				$options	=	new JRegistry;
 				$options->loadString( $options2 );
-			} else {
+			} /*else {
 				$options				=	new JRegistry;
 				$orientation			=	'vertical';
 				$hasOptions				=	false;
 				$field_label_width		=	'145px';
-			}
+			} */
 			$field_description	=	$this->getStyleParam( 'field_description', 0 );
 			if ( $field_description == 3 ) {
 				$css	.=	'#'.$id.'.'.$variation.'.'.$orientation.' div.cck_'.$this->mode.'s div.cck_desc{ width: '.$field_label_width.'; }'."\n";
