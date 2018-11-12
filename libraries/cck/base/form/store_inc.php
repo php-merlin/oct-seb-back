@@ -84,6 +84,7 @@ $storages	=	array();
 $config		=	array( 'author'=>( is_object( $author ) ? $author->id : 0 ),
 					   'author_session'=>( is_object( $author ) ? $author->session : '' ),
 					   'client'=>$client,
+					   'client_form'=>$preconfig['client'],
 					   'copyfrom_id'=>@(int)$preconfig['copyfrom_id'],
 					   'doTranslation'=>JCck::getConfig_Param( 'language_jtext', 0 ),
 					   'doValidation'=>(int)JCck::getConfig_Param( 'validation', '3' ),
