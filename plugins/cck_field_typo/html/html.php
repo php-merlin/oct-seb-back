@@ -42,8 +42,10 @@ class plgCCK_Field_TypoHtml extends JCckPluginTypo
 	// _typo
 	protected static function _typo( $typo, $field, $value, &$config = array() )
 	{
-		$app	=	JFactory::getApplication();
-		$html	=	$typo->get( 'html', '' );
+		$app		=	JFactory::getApplication();
+		$html		=	$typo->get( 'html', '' );
+		$postpone	=	false;
+		$priority	=	$typo->get( 'priority', '' );
 
 		if ( !( strpos( $html, '<a href' ) !== false || strpos( $html, '*html*' ) !== false || strpos( $html, '*link*' ) !== false || strpos( $html, 'getLink' ) !== false ) ) {
 			$html		=	parent::g_hasLink( $field, $typo, $html );
@@ -69,7 +71,13 @@ class plgCCK_Field_TypoHtml extends JCckPluginTypo
 			$search		=	'#\$cck\->get([a-zA-Z0-9_]*)\( ?\'([a-zA-Z0-9_,\[\]]*)\' ?\)(;)?#';
 			preg_match_all( $search, $html, $matches );
 			if ( count( $matches[1] ) ) {
-				parent::g_addProcess( 'beforeRenderContent', self::$type, $config, array( 'name'=>$field->name, 'matches'=>$matches ) );
+				$postpone	=	true;
+
+				if ( $priority ) {
+					parent::g_addProcess( 'beforeRenderContent', self::$type, $config, array( 'name'=>$field->name, 'matches'=>$matches ), $priority );
+				} else {
+					parent::g_addProcess( 'beforeRenderContent', self::$type, $config, array( 'name'=>$field->name, 'matches'=>$matches ) );
+				}
 			}
 		}
 		if ( $html != '' && strpos( $html, '$uri->get' ) !== false ) {
@@ -89,13 +97,16 @@ class plgCCK_Field_TypoHtml extends JCckPluginTypo
 				}
 			}
 		}
-		if ( $html != '' && strpos( $html, 'J(' ) !== false ) {
-			$matches	=	'';
-			$search		=	'#J\((.*)\)#U';
-			preg_match_all( $search, $html, $matches );
-			if ( count( $matches[1] ) ) {
-				foreach ( $matches[1] as $text ) {
-					$html	=	str_replace( 'J('.$text.')', JText::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $text ) ) ), $html );
+
+		if ( !$postpone ) {
+			if ( $html != '' && strpos( $html, 'J(' ) !== false ) {
+				$matches	=	'';
+				$search		=	'#J\((.*)\)#U';
+				preg_match_all( $search, $html, $matches );
+				if ( count( $matches[1] ) ) {
+					foreach ( $matches[1] as $text ) {
+						$html	=	str_replace( 'J('.$text.')', JText::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $text ) ) ), $html );
+					}
 				}
 			}
 		}
@@ -109,7 +120,7 @@ class plgCCK_Field_TypoHtml extends JCckPluginTypo
 	public static function onCCK_Field_TypoBeforeRenderContent( $process, &$fields, &$storages, &$config = array() )
 	{
 		$name	=	$process['name'];
-		
+
 		if ( count( $process['matches'][1] ) ) {
 			foreach ( $process['matches'][1] as $k=>$v ) {
 				$fieldname		=	$process['matches'][2][$k];
@@ -162,6 +173,17 @@ class plgCCK_Field_TypoHtml extends JCckPluginTypo
 					$fields[$fieldname[0]]->typo	=	preg_replace( '/'.$search.'/', $value, $fields[$fieldname[0]]->typo, 1 );
 				} else {
 					$fields[$name]->typo			=	str_replace( $process['matches'][0][$k], $value, $fields[$name]->typo );
+				}
+
+				if ( $fields[$name]->typo != '' && strpos( $fields[$name]->typo, 'J(' ) !== false ) {
+					$matches	=	'';
+					$search		=	'#J\((.*)\)#U';
+					preg_match_all( $search, $fields[$name]->typo, $matches );
+					if ( count( $matches[1] ) ) {
+						foreach ( $matches[1] as $text ) {
+							$fields[$name]->typo	=	str_replace( 'J('.$text.')', JText::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $text ) ) ), $fields[$name]->typo );
+						}
+					}
 				}
 			}
 		}
