@@ -6,6 +6,7 @@
 		<field name="COM_CCK_CONFIG_LEGEND_CORE" type="spacer" hr="false" />
 		<field name="core_legacy" type="list" default="2012" label="COM_CCK_CONFIG_CORE_LEGACY_MODE" description="COM_CCK_CONFIG_CORE_LEGACY_MODE_DESC" class="inputbox">
 			<option value="0">COM_CCK_CONFIG_OPTION_NONE</option>
+			<option value="2018">2018</option>
 			<option value="2017">2017</option>
 			<option value="2012">2012</option>
 		</field>
