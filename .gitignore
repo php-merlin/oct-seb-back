@@ -2604,11 +2604,3 @@ Temporary Items
 /administrator/language/fr-FR/fr-FR.plg_content_cck_item.ini
 /administrator/language/fr-FR/fr-FR.plg_content_cck_item.sys.ini
 /plugins/content/cck_item/*
-
-######## SEBLOD Stuff >> Additional Editors-Xtd Plug-in
-
-/administrator/language/en-GB/en-GB.plg_editors-xtd_cck.ini
-/administrator/language/en-GB/en-GB.plg_editors-xtd_cck.sys.ini
-/administrator/language/fr-FR/fr-FR.plg_editors-xtd_cck.ini
-/administrator/language/fr-FR/fr-FR.plg_editors-xtd_cck.sys.ini
-/plugins/editors-xtd/cck/*

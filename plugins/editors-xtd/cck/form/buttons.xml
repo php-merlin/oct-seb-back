@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+	<fieldset>
+		<field
+			name="mode"
+			type="list"
+			label="PLG_EDITORS-XTD_CCK_MODE_LABEL"
+			description="PLG_EDITORS-XTD_CCK_MODE_DESC"
+			required="true"
+			>
+			<option value="0">PLG_EDITORS-XTD_CCK_OPTION_MODE_LIST</option>
+		</field>
+		<field
+			name="list"
+			type="sql"
+			label="PLG_EDITORS-XTD_CCK_SEARCH_TYPE_LABEL"
+			description="PLG_EDITORS-XTD_CCK_SEARCH_TYPE_DESC"
+			required="true"
+			key_field="name"
+			value_field="title"
+			query="SELECT title, name FROM #__cck_core_searchs WHERE published = 1 ORDER BY title ASC"
+			showon="mode:0"
+			>
+			<option value="">PLG_EDITORS-XTD_CCK_OPTION_SELECT</option>
+		</field>
+		<field
+			name="icon"
+			type="text"
+			label="PLG_EDITORS-XTD_CCK_ICON_LABEL"
+			description="PLG_EDITORS-XTD_CCK_ICON_DESC"
+		/>
+		<field
+			name="text"
+			type="text"
+			label="PLG_EDITORS-XTD_CCK_TEXT_LABEL"
+			description="PLG_EDITORS-XTD_CCK_TEXT_DESC"
+		/>
+		<field
+			name="location"
+			type="list"
+			label="PLG_EDITORS-XTD_CCK_LOCATION_LABEL"
+			description="PLG_EDITORS-XTD_CCK_LOCATION_DESC"
+			required="true"
+			>
+			<option value="0">PLG_EDITORS-XTD_CCK_OPTION_LOCATION_ALL_FIELDS</option>
+			<option value="1">PLG_EDITORS-XTD_CCK_OPTION_LOCATION_ONLY_SELECTED_FIELDS</option>
+		</field>
+		<field
+			name="fields"
+			type="sql"
+			label="PLG_EDITORS-XTD_CCK_FIELDS_LABEL"
+			description="PLG_EDITORS-XTD_CCK_FIELDS_DESC"
+			key_field="name"
+			value_field="title"
+			query="SELECT title, name FROM #__cck_core_fields WHERE published = 1 AND type='wysiwyg_editor' ORDER BY title ASC"
+			multiple="multiple"
+			showon="location:1"
+			>
+		</field>
+		<!--
+		<field
+			name="types"
+			type="sql"
+			label="PLG_EDITORS-XTD_CCK_CONTENT_TYPES_LABEL"
+			description="PLG_EDITORS-XTD_CCK_CONTENT_TYPES_DESC"
+			required="true"
+			key_field="name"
+			value_field="title"
+			query="SELECT title, name FROM #__cck_core_types WHERE published = 1 ORDER BY title ASC"
+			multiple="multiple"
+			>
+		</field>
+		-->
+	</fieldset>
+</form>
