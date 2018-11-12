@@ -262,14 +262,14 @@ $cck	=	JCckDev::preload( array( 'core_storage_table', 'core_storage_field',
 	<ul class="adminformlist adminformlist-2cols">
 		<?php
 		$required	=	JCckDev::get( $cck['core_required'], $config['item']->required, $config );
-		$class_css	=	JCckDev::get( $cck['core_dev_text'], $config['item']->css, $config, array( 'label'=>'Class CSS', 'storage_field'=>'css' ) );
+		$class_css	=	JCckDev::get( 'core_dev_textarea', $config['item']->css, $config, array( 'label'=>'Class CSS', 'cols'=>'92', 'rows'=>'1', 'storage_field'=>'css' ) );
 		$attributes	=	JCckDev::get( $cck['core_attributes'], $config['item']->attributes, $config, array( 'label'=>'Custom Attributes' ) );
 		$script		=	JCckDev::get( $cck['core_script'], $config['item']->script, $config );
 		?>
-		<li>
+		<li class="w100">
 			<label><?php echo $class_css->label; ?></label><?php echo $class_css->form; ?>
 		</li>
-		<li class="storage_more" <?php echo ( $value == 'dev' ) ? '' : 'style="display: none;"'?>>
+		<li class="storage_more w100" <?php echo ( $value == 'dev' ) ? '' : 'style="display: none;"'?>>
 			<label><?php echo $required->label; ?></label><?php echo $required->form; ?>
 		</li>
 		<li class="w100">

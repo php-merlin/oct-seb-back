@@ -15,6 +15,7 @@ $idx			=	( isset( $config_list['idx'] ) ) ? $config_list['idx'] : '_';
 $isInfinite		=	$config_list['infinite'];
 $P				=	'template_'.$client;
 $templateStyle	=	CCK_List::getTemplateStyle( $search->$P, array( 'rendering_css_core'=>$search->stylesheets ) );
+
 if ( ! $templateStyle ) {
 	$app->enqueueMessage( 'Oops! Template not found.. ; (', 'error' );
 	return;
@@ -22,6 +23,7 @@ if ( ! $templateStyle ) {
 
 // Template Override
 $tpl['home']	=	$app->getTemplate();
+
 if ( file_exists( JPATH_SITE.'/templates/'.$tpl['home'].'/html/tpl_'.$templateStyle->name ) ) {
 	$path		=	JPATH_SITE.'/templates/'.$tpl['home'].'/html/tpl_'.$templateStyle->name;
 	$path_root	=	JPATH_SITE.'/templates/'.$tpl['home'].'/html';
@@ -36,10 +38,11 @@ if ( file_exists( JPATH_SITE.'/templates/'.$tpl['home'].'/html/tpl_'.$templateSt
 jimport( 'cck.rendering.document.document' );
 $doc			=	CCK_Document::getInstance( 'html' );
 $dispatcher		=	JEventDispatcher::getInstance();
-$rparams		=	array( 'template' => $tmpl, 'file' => 'index.php', 'directory' => $path_root );
-
 $go_for_item	=	0;
 $go_for_both	=	0;
+$rparams		=	array( 'template' => $tmpl, 'file' => 'index.php', 'directory' => $path_root );
+$validation		=	'';
+
 if ( isset( $templateStyle->params['cck_client_item'] ) ) {
 	if ( $templateStyle->params['cck_client_item'] == '1' ) {
 		$go_for_item	=	1;
