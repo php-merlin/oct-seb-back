@@ -263,6 +263,10 @@ class plgContentCCK extends JPlugin
 	public function onContentPrepare( $context, &$article, &$params, $limitstart = 0 )
 	{
 		if ( strpos( $article->text, '/cck' ) === false ) {
+			if ( strpos( $article->text, '{cck_item:' ) !== false ) {
+				$article->text	=	$this->_replace( $article->text );
+			}
+
 			return true;
 		}
 		
@@ -650,7 +654,33 @@ class plgContentCCK extends JPlugin
 		$doc->finalize( 'content', $contentType, $client, $positions, $positions_more, $infos, $cck->id );
 		
 		$data					=	$doc->render( false, $params );
+
+		if ( strpos( $data, '{cck_item:' ) !== false ) {
+			$data	=	$this->_replace( $data );
+		}
+
 		$article->$property		=	str_replace( $article->$property, $data, $article->$property );
+	}
+
+	// _replace
+	protected function _replace( $text )
+	{
+		jimport( 'cck.base.item.item' );
+
+		$regex		=	'/{cck_item:(\d+)/';
+		$matches	=	array();
+
+		preg_match_all( $regex, $text, $matches );
+
+		if ( isset( $matches[1] ) && is_array( $matches[1] ) ) {
+			foreach ( $matches[1] as $id ) {
+				$data	=	CCK_Item::prepare( '::cck::'.$id.'::/cck::' );
+				$search	=	'{cck_item:'.$id.'}';
+				$text	=	str_replace( $search, $data, $text );
+			}
+		}
+		
+		return $text;
 	}
 
 	// _translate
