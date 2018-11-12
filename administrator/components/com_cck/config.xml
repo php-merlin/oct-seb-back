@@ -49,6 +49,7 @@
 		<field name="validation_color" type="cck" construction="core_dev_color" default="" label="COM_CCK_CONFIG_VALIDATION_COLOR" description="COM_CCK_CONFIG_VALIDATION_COLOR_DESC" class="inputbox" showon="validation:1,2,3" />
 		<field name="COM_CCK_CONFIG_LEGEND_LIST" type="spacer" hr="false" />
 		<field name="pagination" type="cck" construction="core_pagination" default="25" label="COM_CCK_CONFIG_PAGINATION" description="COM_CCK_CONFIG_PAGINATION_DESC" class="inputbox" cck_selectlabel="" />
+		<field name="pagination_show_pages_number" type="cck" construction="core_show_hide" default="1" label="COM_CCK_CONFIG_PAGINATION_SHOW_PAGE_NUMBER" description="COM_CCK_CONFIG_PAGINATION_SHOW_PAGE_NUMBER_DESC" class="inputbox" cck_selectlabel="" />
 		<field name="prepare_content" type="radio" default="1" label="COM_CCK_CONFIG_PREPARE_CONTENT" description="COM_CCK_CONFIG_PREPARE_CONTENT_DESC" class="btn-group btn-group-yesno">
 			<option value="1">JYES</option>
 			<option value="0">JNO</option>
