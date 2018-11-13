@@ -118,8 +118,10 @@ class plgCCK_FieldWysiwyg_editor extends JCckPluginField
 				$buttons		=	( $field->bool4 ) ? array( 'pagebreak', 'readmore' ) : false;
 				$editor			=	JFactory::getEditor( @$options2['editor'] ? $options2['editor'] : null );
 				$form			=	'<div>'.$editor->display( $name, $value, $width, $height, '60', '20', $buttons, $id, $asset ).'</div>';
-
-				JFactory::getDocument()->addStyleDeclaration('.mce-tinymce:not(.mce-fullscreen) #'.$id.'_ifr{min-height:'.((int)$height - 58).'px; max-height:'.((int)$height - 58).'px;}');
+				
+				if ( !( $config['client'] == 'admin' || $config['client'] == 'site' ) ) {
+					JFactory::getDocument()->addStyleDeclaration('.mce-tinymce:not(.mce-fullscreen) #'.$id.'_ifr{min-height:'.((int)$height - 58).'px; max-height:'.((int)$height - 58).'px;}');
+				}
 			} else {
 				// Modal Box
 				if ( trim( $field->selectlabel ) ) {
