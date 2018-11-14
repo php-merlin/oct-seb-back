@@ -19,20 +19,10 @@ if ( $hide && JCckDevHelper::matchUrlVars( $hide ) !== false ) {
 	return;
 }
 
-$app	=	JFactory::getApplication();
-$cache	=	true;
-$data	=	$params->get( 'id', '' );
-
 // Render
 jimport( 'cck.base.item.item' );
 
-if ( $cache ) {
-	$cache		=	JFactory::getCache( 'mod_cck_item@'.$data );
-	$cache->setCaching( 1 );
-	$data		=	$cache->call( array( 'CCK_Item', 'prepare' ), '::cck::'.$data.'::/cck::' );
-} else {
-	$data		=	CCK_Item::prepare( '::cck::'.$data.'::/cck::' );
-}
+$data	=	CCK_Item::render( $params->get( 'id', '' ) );
 
 $raw_rendering		=	$params->get( 'raw_rendering', JCck::getConfig_Param( 'raw_rendering', '0' ) );
 $moduleclass_sfx	=	htmlspecialchars( $params->get( 'moduleclass_sfx' ) );

@@ -40,17 +40,7 @@ class plgCCK_Field_TypoCck_Item extends JCckPluginTypo
 	{
 		jimport( 'cck.base.item.item' );
 		
-		$cache	=	false;
-		
-		if ( $cache ) {
-			$cache	=	JFactory::getCache( 'mod_cck_item@'.$value );
-			$cache->setCaching( 1 );
-			$html	=	$cache->call( array( 'CCK_Item', 'prepare' ), '::cck::'.$value.'::/cck::' );
-		} else {
-			$html	=	CCK_Item::prepare( '::cck::'.$value.'::/cck::' );
-		}
-		
-		return $html;
+		return CCK_Item::render( $value );
 	}
 }
 ?>

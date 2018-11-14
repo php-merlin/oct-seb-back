@@ -14,9 +14,26 @@ defined( '_JEXEC' ) or die;
 class CCK_Item
 {
 	// prepare
-	public static function prepare( $string )
+	public static function prepare( $str )
 	{
-		return JHtml::_( 'content.prepare', $string );
+		return JHtml::_( 'content.prepare', $str );
+	}
+
+	// render
+	public static function render( $id, $cache = true )
+	{
+		if ( !(int)$id ) {
+			return '';
+		}
+		
+		if ( $cache ) {
+			$cache		=	JFactory::getCache( 'cck_item@'.$id );
+			$cache->setCaching( 1 );
+
+			return $cache->call( array( 'CCK_Item', 'prepare' ), '::cck::'.$id.'::/cck::' );
+		} else {
+			return self::prepare( '::cck::'.$id.'::/cck::' );
+		}
 	}
 }
 ?>

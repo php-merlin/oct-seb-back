@@ -674,7 +674,7 @@ class plgContentCCK extends JPlugin
 
 		if ( isset( $matches[1] ) && is_array( $matches[1] ) ) {
 			foreach ( $matches[1] as $id ) {
-				$data	=	CCK_Item::prepare( '::cck::'.$id.'::/cck::' );
+				$data	=	CCK_Item::render( $id );
 				$search	=	'{cck_item:'.$id.'}';
 				$text	=	str_replace( $search, $data, $text );
 			}
