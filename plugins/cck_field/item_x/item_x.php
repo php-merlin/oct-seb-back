@@ -172,10 +172,11 @@ class plgCCK_FieldItem_X extends JCckPluginField
 										data: "format=raw&infinite="+infinite+"&pks="+pks,
 										type: "GET",
 										url: JCck.More.ItemX.instances[JCck.More.ItemX.active].link_list,
-										beforeSend:function(){
+										beforeSend:function() {
 											this.url = this.url.replace(\'"referrer":""\',\'"referrer":"\'+JCck.More.ItemX.form+\'.\'+JCck.More.ItemX.active+\'"\');
 										},
-										success: function(response){
+										success: function(response) {
+											JCck.More.ItemX.toggleRequired(false);
 											if (JCck.More.ItemX.instances[JCck.More.ItemX.active].behavior) {
 												if (infinite == -1) {
 													$("#"+JCck.More.ItemX.active+" .cck-loading-more").parent().html(response);
@@ -184,7 +185,6 @@ class plgCCK_FieldItem_X extends JCckPluginField
 												}
 												JCck.More.ItemX.toggleReorder();
 											} else {
-												JCck.More.ItemX.toggleRequired(false);
 												$("#"+JCck.More.ItemX.active+" > [class$=\"-toolbar\"]").hide();
 												$("#"+JCck.More.ItemX.active+" > [class$=\"-toolbar\"] + *").show();
 												$("#"+JCck.More.ItemX.active+" .cck-loading-more").html(response);
@@ -204,7 +204,7 @@ class plgCCK_FieldItem_X extends JCckPluginField
 									});
 								},
 								assignX: function() {
-									if (document.seblod_form_raw.boxchecked.value==0){
+									if (document.seblod_form_raw.boxchecked.value==0) {
 										alert("'.addslashes( JText::_( 'JLIB_HTML_PLEASE_MAKE_A_SELECTION_FROM_THE_LIST' ) ).'"); return;
 									} else {
 										var val = [];
@@ -252,7 +252,7 @@ class plgCCK_FieldItem_X extends JCckPluginField
 										type: "POST",
 										url: JCck.More.ItemX.instances[JCck.More.ItemX.active].link_process,
 										beforeSend:function(){},
-										success: function(response){
+										success: function(response) {
 											var resp = jQuery.parseJSON(response);
 											if(typeof resp == "object") {
 												if (resp.isNew && resp.pk) {
@@ -274,6 +274,12 @@ class plgCCK_FieldItem_X extends JCckPluginField
 											var $el_p = $("#"+id+"_"+JCck.More.ItemX.active).parents("tr");
 											$el_p.find(".hasTooltip").tooltip("destroy");
 											$el_p.remove();
+
+											if($("#"+JCck.More.ItemX.active+" .cck-loading-more").length) {
+												if($("#"+JCck.More.ItemX.active+" .cck-loading-more").html().length === 0) {
+													JCck.More.ItemX.toggleRequired(true);
+												}
+											}
 										}
 									} else {
 										$("#"+JCck.More.ItemX.active+" .cck-loading-more").find(".hasTooltip").tooltip("destroy");
@@ -323,7 +329,7 @@ class plgCCK_FieldItem_X extends JCckPluginField
 												type: "POST",
 												url: JCck.More.ItemX.instances[JCck.More.ItemX.active].link_save,
 												beforeSend:function(){},
-												success: function(response){
+												success: function(response) {
 													var resp = jQuery.parseJSON(response);
 													if(typeof resp == "object") {
 														if (resp.isNew && resp.pk) {
@@ -368,6 +374,11 @@ class plgCCK_FieldItem_X extends JCckPluginField
 									JCck.More.ItemX.instances[name] = data;
 
 									if(JCck.More.ItemX.instances[name].behavior) {
+										if($("#"+name+" .cck-loading-more").length) {
+											if($("#"+name+" .cck-loading-more").html().length === 0) {
+												JCck.More.ItemX.toggleRequired(true,name);
+											}
+										}
 										setTimeout(function() {
 											JCck.More.ItemX.toggleReorder();
 										}, 500);
