@@ -157,6 +157,12 @@ class plgCCK_Field_TypoJoomla_Jgrid extends JCckPluginTypo
 						$config['doValidation']	=	2;
 						$field->required		=	'required';
 						$field->required_alert	=	'';
+					} elseif ( $typo->get( 'required' ) == 'grouprequired' ) {
+						$config['doValidation']	=	2;
+						$field->required		=	'grouprequired['.$typo->get( 'required2' ).']';
+						$field->required_alert	=	'';
+
+						$config['validation']	=	array();
 					}
 				}
 				JEventDispatcher::getInstance()->trigger( 'onCCK_FieldPrepareForm', array( &$field, $field->value, &$config, $inherit ) );
@@ -166,13 +172,13 @@ class plgCCK_Field_TypoJoomla_Jgrid extends JCckPluginTypo
 				$config['formWrapper']	=	true;
 
 				if ( $config['doValidation'] ) {
-					// static $validation_loaded	=	0;
+					static $validation_loaded	=	0;
 					
-					// if ( !$validation_loaded )	{
-					// 	$validation_loaded		=	1;
-						
-					// 	JCckDev::addValidation( ( count( $config['validation'] ) ? implode( ',', $config['validation'] ) : '' ), '', '_' );
-					// }
+					if ( !$validation_loaded )	{
+						$validation_loaded		=	1;
+					} else {
+						$config['validation']	=	null;
+					}
 				}
 
 				if ( $unset_validation ) {
