@@ -140,14 +140,28 @@ abstract class JCck
 			$alias			=	'';
 			$context		=	'';
 			$host			=	JUri::getInstance()->getHost();
+			$host2			=	'';
+			$lang_sef		=	'';
 			$path			=	JUri::getInstance()->getPath();
 			$path_base		=	$path;
 			
-			$host2			=	'';
+			if ( JCckDevHelper::isMultilingual( true ) ) {
+				jimport( 'joomla.language.helper' ); /* TODO#SEBLOD4: remove */
+
+				$languages	=	JLanguageHelper::getLanguages( 'lang_code' );
+				$lang_tag	=	JFactory::getLanguage()->getTag();
+
+				if ( isset( $languages[$lang_tag] ) && $languages[$lang_tag]->sef != '' ) {
+					$lang_sef	=	'/'.strtolower( $languages[$lang_tag]->sef );
+				}
+			}
+
 			if ( $path ) {
 				$path		=	substr( $path, 1 );
 				$path		=	substr( $path, 0, strpos( $path, '/' ) );
 				$host2		=	$host.'/'.$path;
+
+				/* TODO#SEBLOD4: not quite sure that $host2 is right... check final "/" y/n? */
 			}
 			self::$_sites	=	JCckDatabase::loadObjectList( 'SELECT id, title, name, context, aliases, guest, guest_only_viewlevel, groups, public_viewlevel, viewlevels, configuration, options FROM #__cck_core_sites WHERE published = 1', 'name' );
 			
@@ -168,7 +182,7 @@ abstract class JCck
 
 					if ( $s->context != '' ) {
 						$hasContext	=	true;
-						$pos		=	strpos( $path_base, '/'.$s->context );
+						$pos		=	strpos( $path_base, $lang_sef.'/'.$s->context );
 
 						if ( $pos !== false && $pos == 0 ) {
 							$context	=	$s->context;

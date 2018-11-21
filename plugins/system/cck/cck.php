@@ -1074,6 +1074,7 @@ class plgSystemCCK extends JPlugin
 	protected function _setTemplateStyle( $style )
 	{
 		$style	=	JCckDatabase::loadObject( 'SELECT template, params FROM #__template_styles WHERE id = '.(int)$style );
+		
 		if ( is_object( $style ) ) {
 			JFactory::getApplication()->setTemplate( $style->template, $style->params );
 		}
