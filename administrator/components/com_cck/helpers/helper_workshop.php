@@ -386,6 +386,7 @@ class Helper_Workshop
 										);
 				$data['markup']		=	array_merge(
 											array(
+												'clear'=>JHtml::_( 'select.option', 'clear', JText::_( 'COM_CCK_CLEAR' ) ),
 												''=>JHtml::_( 'select.option', '', JText::_( 'COM_CCK_INHERITED' ) ),
 												'none'=>JHtml::_( 'select.option', 'none', JText::_( 'COM_CCK_RAW' ) ),
 												'-1'=>JHtml::_( 'select.option', '<OPTGROUP>', JText::_( 'COM_CCK_BASE' ) ),
@@ -428,6 +429,7 @@ class Helper_Workshop
 										);
 				$data['markup']		=	array_merge(
 											array(
+												'clear'=>JHtml::_( 'select.option', 'clear', JText::_( 'COM_CCK_CLEAR' ) ),
 												''=>JHtml::_( 'select.option', '', JText::_( 'COM_CCK_INHERITED' ) ), 
 												'none'=>JHtml::_( 'select.option', 'none', JText::_( 'COM_CCK_RAW' ) )
 											),
@@ -460,6 +462,7 @@ class Helper_Workshop
 										);
 				$data['markup']		=	array_merge(
 											array(
+												'clear'=>JHtml::_( 'select.option', 'clear', JText::_( 'COM_CCK_CLEAR' ) ),
 												''=>JHtml::_( 'select.option', '', JText::_( 'COM_CCK_INHERITED' ) ), 
 												'none'=>JHtml::_( 'select.option', 'none', JText::_( 'COM_CCK_RAW' ) ),
 											),
@@ -545,6 +548,7 @@ class Helper_Workshop
 										);
 				$data['markup']		=	array_merge(
 											array(
+												'clear'=>JHtml::_( 'select.option', 'clear', JText::_( 'COM_CCK_CLEAR' ) ),
 												''=>JHtml::_( 'select.option', '', JText::_( 'COM_CCK_INHERITED' ) ), 
 												'none'=>JHtml::_( 'select.option', 'none', JText::_( 'COM_CCK_RAW' ) )
 											),

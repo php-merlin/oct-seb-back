@@ -222,7 +222,7 @@ class CCK_Rendering_Item
 			return $html;
 		}
 		
-		if ( $field->display ) {
+		if ( $field->display && $field->markup != 'clear' ) {
 			$html	=	JCck::callFunc_Array( 'plgCCK_Field'.$field->type, $this->methodRender, array( &$field, &$this->config ) );
 			
 			if ( $field->display > 1 && $html != '' ) {

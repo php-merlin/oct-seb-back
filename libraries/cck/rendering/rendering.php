@@ -567,7 +567,7 @@ class CCK_Rendering
 
 			return '';
 		}
-		if ( $field->display ) {
+		if ( $field->display && $field->markup != 'clear' ) {
 			if ( ! $options ) {
 				$options	=	new JRegistry;
 			}
