@@ -152,7 +152,7 @@ class plgCCK_FieldGroup extends JCckPluginField
 					} else {
 						$f_value				=	$f->live_value;
 					}
-					$inherit					=	array();
+					$inherit					=	array( 'caller'=>$field->extended );
 					$clone						=	clone $f;
 
 					if ( $field->variation != '' && $clone->variation == '' ) {
@@ -240,7 +240,7 @@ class plgCCK_FieldGroup extends JCckPluginField
 	{
 		if ( $field->typo ) {
 			return $field->typo;
-		} else {			
+		} elseif ( $config['legacy'] && $config['legacy'] <= 2018 ) {
 			$doc	=	JFactory::getDocument();
 			$doc->addStyleSheet( self::$path.'assets/css/'.self::$type.'.css' );
 	
@@ -281,39 +281,166 @@ class plgCCK_FieldGroup extends JCckPluginField
 					}
 				}
 			}
+		} else {
+			$html	=	'';
 			
-			return $html;
+			if ( count( $field->value ) ) {
+				$html	=	self::_getHtmlOutput( 'content', $field, $field->value, $config );
+			}
 		}
+
+		return $html;
 	}
 	
 	// onCCK_FieldRenderForm
 	public static function onCCK_FieldRenderForm( $field, &$config = array() )
 	{
-		$doc	=	JFactory::getDocument();
-		$doc->addStyleSheet( self::$path.'assets/css/'.self::$type.'.css' );
-		
-		$orientation	=	'vertical_gx'; //vertical_gx horizontal_gx
-		$width			=	'';
+		if ( $config['legacy'] && $config['legacy'] <= 2018 ) {
+			$doc	=	JFactory::getDocument();
+			$doc->addStyleSheet( self::$path.'assets/css/'.self::$type.'.css' );
 
-		$count	=	count( $field->form );
-		$html	=	'';
-		
-		if ( $count ) {
-			if ( $field->markup != 'none' ) {
-				$html	.=	'<div id="cck1_sortable_'.$field->name.'" class="'.$orientation.' '.$width.'">';
-			}
-			$html	.=	self::_getHtml( $field, $field->form, 0, $count - 1, $config );
+			$orientation	=	'vertical_gx'; //vertical_gx horizontal_gx
+			$width			=	'';
+
+			$count	=	count( $field->form );
+			$html	=	'';
 			
-			if ( $field->markup != 'none' ) {
-				$html	.=	'</div>';
+			if ( $count ) {
+				if ( $field->markup != 'none' ) {
+					$html	.=	'<div id="cck1_sortable_'.$field->name.'" class="'.$orientation.' '.$width.'">';
+				}
+				$html	.=	self::_getHtml( $field, $field->form, 0, $count - 1, $config );
+				
+				if ( $field->markup != 'none' ) {
+					$html	.=	'</div>';
+				}
+			}	
+		} else {
+			$html	=	'';
+			
+			if ( count( $field->form ) ) {
+				$html	=	self::_getHtmlOutput( 'form', $field, $field->form, $config );
 			}
 		}
-		
+
 		return $html;
 	}
 	
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Stuff & Script
 	
+	// _getHtml2
+	protected static function _getHtmlOutput( $target, $field, $children, &$config )
+	{
+		$client	=	'cck_'.$config['client'];
+		$html	=	'';
+		$i		=	0;
+		$markup	=	$config['markup'];
+		$method	=	'onCCK_FieldRender'.ucfirst( $target );
+		$js		=	'';
+		$rId	=	$config['rendering_id'];
+		
+		foreach ( $children as $elem ) {
+			static $postpone		=	'';
+			static $postpone_after	=	'';
+
+			if ( !$elem->display || $elem->markup == 'clear' ) {
+				$postpone		=	'';
+				$postpone_after	=	'';
+
+				continue;
+			}
+
+			$elem_html	=	JCck::callFunc( 'plgCCK_Field'.$elem->type, $method, $elem );
+
+			if ( $elem->display > 1 && $elem_html != '' ) {
+				if ( $elem->markup == 'none_postpone' ) {
+					$elem_html			=	$postpone.$elem_html;
+					$postpone			=	$elem_html;
+
+					continue;
+				} elseif ( $elem->markup == 'none_postpone_after' ) {
+					$elem_html			=	$elem_html.$postpone_after;
+					$postpone_after		=	$elem_html;
+
+					continue;
+				} else {
+					$elem_html			=	$postpone.$elem_html.$postpone_after;
+					$postpone			=	'';
+					$postpone_after		=	'';
+
+					if ( $elem->markup == 'none' ) {
+						if ( $elem->label != '' ) {
+							$suffix	=	'';
+							if ( $elem->label != '&nbsp;' ) {
+								$suffix	=	( $elem->required ) ? '<span class="star"> *</span>' : '';
+							}
+							$elem_html	=	'<label for="'.$elem->name.'"><span>'.$elem->label.'</span>'.$suffix.'</label>'
+										.	$elem_html;
+						}
+					} elseif ( $config['legacy'] && $config['legacy'] <= 2018 ) {
+						$label	=	'';
+						
+						if ( $elem->label != '' ) {
+							$suffix	=	'';
+							if ( $elem->label != '&nbsp;' ) {
+								$suffix	=	( $elem->required ) ? '<span class="star"> *</span>' : '';
+							}
+							$label	=	'<div id="'.$rId.'_'.$field->name.'_'.$i.'_label_'.$elem->name.'" class="cck_label cck_label_'.$elem->type.'"><label for="'.$elem->name.'">'.$elem->label.$suffix.'</label></div>';
+						}
+						
+						$elem_html	=	'<div id="'.$rId.'_'.$field->name.'_'.$i.'_'.$elem->name.'" class="cck_forms '.$client.' cck_'.$elem->type.' cck_'.$elem->name.'">'
+									.	$label
+									.	'<div id="'.$rId.'_'.$field->name.'_'.$i.'_form_'.$elem->name.'" class="cck_form cck_form_'.$elem->type.@$elem->markup_class.'">'
+									.	'</div>'
+									.	'</div>'
+									;
+					} else {
+						if ( $elem->markup ) {
+							$markup	=	$elem->markup;
+						}
+
+						$displayData	=	array(
+												'cck'=>$config['cck'],
+												'field'=>$elem,
+												'html'=>$elem_html,
+												'options'=>$config['options']
+											);
+						$layout 		=	new JLayoutFile( 'cck.markup.'.$markup, null, array( 'component' => 'com_cck' ) );
+						$elem_html		=	$layout->render( $displayData );
+					}
+				}
+			} else {
+				$postpone		=	'';
+				$postpone_after	=	'';
+			}
+
+			$html	.=	$elem_html;
+		}
+		
+		if ( $target == 'form' ) {
+			if ( $field->markup != 'none' ) {
+				$html	=	'<div id="cck1_sortable_'.$field->name.'" class="vertical_gx">'
+						.	'<div id="'.$rId.'_forms_'.$field->name.'_'.$i.'" class="cck_form cck_form_group cck_form_group_first cck_form_group_last">'
+						.	'<div id="'.$rId.'_form_'.$field->name.'_'.$i.'" class="cck_cgx cck_cgx_form cck_cgx_form_first cck_cgx_form_last">'
+						.	$html
+						.	'</div>'
+						.	'</div>'
+						.	'</div>'
+						;
+			}
+		
+			if ( $js ) {
+				if ( JFactory::gsetApplication()->input->get( 'tmpl' ) == 'raw' ) {
+					echo '<script type="text/javascript">jQuery(document).ready(function($){'.$js.'});</script>';
+				} else {
+					JFactory::getDocument()->addScriptDeclaration( 'jQuery(document).ready(function($){'.$js.'});' );
+				}
+			}
+		}
+		
+		return $html;
+	}
+
 	// _getHtml
 	protected static function _getHtml( $field, $group, $i, $size_group, &$config )
 	{
@@ -443,6 +570,11 @@ class plgCCK_FieldGroup extends JCckPluginField
 		$access	=	implode( ',', $user->getAuthorisedViewLevels() );
 		
 		$client	=	( $config['client'] == 'list' || $config['client'] == 'item' ) ? 'intro' : $config['client'];
+
+		if ( isset( $config['client_form'] ) && $config['client_form'] ) {
+			$client	=	$config['client_form'];
+		}
+
 		$where	=	' WHERE c.client = "'.$client.'" AND b.name = "'.$parent->extended.'"'
 				.	' AND c.access IN ('.$access.')';
 		$order	=	' ORDER BY c.ordering ASC';
