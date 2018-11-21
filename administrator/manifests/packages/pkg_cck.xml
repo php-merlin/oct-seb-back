@@ -92,7 +92,6 @@
 			<file type="plugin" id="url_variable" group="cck_field_live">plg_cck_field_live_url_variable.zip</file>
 			<!-- Plugin // CCK Field Restriction -->
 			<file type="plugin" id="cck_workflow" group="cck_field_restriction">plg_cck_field_restriction_cck_workflow.zip</file>
-			<file type="plugin" id="clear" group="cck_field_restriction">plg_cck_field_restriction_clear.zip</file>
 			<file type="plugin" id="item_x" group="cck_field_restriction">plg_cck_field_restriction_item_x.zip</file>
 			<file type="plugin" id="search_total" group="cck_field_restriction">plg_cck_field_restriction_search_total.zip</file>
 			<file type="plugin" id="url_variable" group="cck_field_restriction">plg_cck_field_restriction_url_variable.zip</file>
@@ -100,7 +99,6 @@
 			<!-- Plugin // CCK Field Typo -->
 			<file type="plugin" id="bold" group="cck_field_typo">plg_cck_field_typo_bold.zip</file>
 			<file type="plugin" id="cck_item" group="cck_field_typo">plg_cck_field_typo_cck_item.zip</file>
-			<file type="plugin" id="clear" group="cck_field_typo">plg_cck_field_typo_clear.zip</file>
 			<file type="plugin" id="date" group="cck_field_typo">plg_cck_field_typo_date.zip</file>
 			<file type="plugin" id="heading" group="cck_field_typo">plg_cck_field_typo_heading.zip</file>
 			<file type="plugin" id="html" group="cck_field_typo">plg_cck_field_typo_html.zip</file>
