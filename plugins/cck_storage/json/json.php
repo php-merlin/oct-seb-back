@@ -154,7 +154,21 @@ class plgCCK_StorageJson extends JCckPluginStorage
 	// onCCK_StoragePrepareSearch
 	public static function onCCK_StoragePrepareSearch( &$field, $match, $value, $name, $name2, $target, $fields = array(), &$config = array() )
 	{
-		return;
+		$sql	=	'';
+		$target	=	'JSON_EXTRACT('.$target.', '.JCckDatabase::quote('$."'.$name.'"').')';
+		
+		switch ( $match ) { /* TODO#SEBLOD4: a few match modes may need to be overriden */
+			case 'none':
+				return;
+				break;
+			default:
+				require_once JPATH_PLUGINS.'/cck_storage/standard/standard.php';
+
+				$sql	=	JCck::callFunc_Array( 'plgCCK_StorageStandard', 'onCCK_StoragePrepareSearch', array( &$field, $match, $value, $name, $name2, $target, $fields, &$config ) );
+				break;
+		}
+		
+		return $sql;
 	}
 	
 	// onCCK_StoragePrepareStore
