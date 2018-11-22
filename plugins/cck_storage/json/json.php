@@ -40,8 +40,12 @@ class plgCCK_StorageJson extends JCckPluginStorage
 		} else {
 			if ( isset( $storage->values[$P][$field->storage_field2] ) ) {
 				$value	=	$storage->values[$P][$field->storage_field2];
+
 				if ( is_array( $value ) && isset( $field->storage_field3 ) ) {
 					$value	=	$value[$field->storage_field3];
+				}
+				if ( !is_array( $value ) ) {
+					$value	=	(string)$value;
 				}
 			}
 		}
@@ -106,8 +110,12 @@ class plgCCK_StorageJson extends JCckPluginStorage
 			}
 			if ( isset( $matches[$P] ) ) {
 				$value	=	$matches[$P];
+
 				if ( is_array( $value ) && isset( $field->storage_field3 ) ) {
 					$value	=	$value[$field->storage_field3];
+				}
+				if ( !is_array( $value ) ) {
+					$value	=	(string)$value;
 				}
 			}
 		}
@@ -135,8 +143,12 @@ class plgCCK_StorageJson extends JCckPluginStorage
 		} else {
 			if ( isset( $storage->values[$P][$field->storage_field2] ) ) {
 				$value	=	$storage->values[$P][$field->storage_field2];
+
 				if ( is_array( $value ) && isset( $field->storage_field3 ) ) {
 					$value	=	@$value[$field->storage_field3];
+				}
+				if ( !is_array( $value ) ) {
+					$value	=	(string)$value;
 				}
 			}
 		}
@@ -174,6 +186,10 @@ class plgCCK_StorageJson extends JCckPluginStorage
 	// onCCK_StoragePrepareStore
 	public static function onCCK_StoragePrepareStore( &$field, $value, &$config = array() )
 	{
+		if ( !isset( $value ) ) {
+			return;
+		}
+		
 		// Prepare
 		if ( strpos( $field->storage_field2, '|' ) !== false ) {
 			$levels	=	explode( '|', $field->storage_field2 );
