@@ -64,8 +64,6 @@ if ( $doDebug == 1 || ( $doDebug == 2 && $user->authorise( 'core.admin' ) ) ) {
 
 $options->set( 'debug', $doDebug );
 
-
-
 // ACL
 if ( !in_array( $search->access, $user->getAuthorisedViewLevels() ) ) {
 	$config			=	array( 'action'=>$preconfig['action'],
