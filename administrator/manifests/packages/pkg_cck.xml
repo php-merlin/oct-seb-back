@@ -86,6 +86,7 @@
 			<file type="plugin" id="cck_form" group="cck_field_link">plg_cck_field_link_cck_form.zip</file>
 			<file type="plugin" id="cck_list" group="cck_field_link">plg_cck_field_link_cck_list.zip</file>
 			<file type="plugin" id="item_x" group="cck_field_link">plg_cck_field_link_item_x.zip</file>
+			<file type="plugin" id="item_to_wysiwyg_editor" group="cck_field_link">plg_cck_field_link_item_to_wysiwyg_editor.zip</file>
 			<!-- Plugin // CCK Field Live -->
 			<file type="plugin" id="datetime" group="cck_field_live">plg_cck_field_live_datetime.zip</file>
 			<file type="plugin" id="joomla_user" group="cck_field_live">plg_cck_field_live_joomla_user.zip</file>
