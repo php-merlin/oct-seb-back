@@ -163,7 +163,8 @@ abstract class JCck
 
 				/* TODO#SEBLOD4: not quite sure that $host2 is right... check final "/" y/n? */
 			}
-			self::$_sites	=	JCckDatabase::loadObjectList( 'SELECT id, title, name, context, aliases, guest, guest_only_viewlevel, groups, public_viewlevel, viewlevels, configuration, options FROM #__cck_core_sites WHERE published = 1', 'name' );
+			
+			self::$_sites	=	JCckDatabase::loadObjectList( 'SELECT id, title, name, context, aliases, guest, guest_only_viewlevel, groups, public_viewlevel, viewlevels, configuration, options, parent_id FROM #__cck_core_sites WHERE published = 1', 'name' );
 			
 			if ( count( self::$_sites ) ) {
 				$break		=	0;
@@ -228,7 +229,37 @@ abstract class JCck
 			self::$_host	=	$host;
 
 			if ( isset( self::$_sites[$host] ) ) {
-				self::$_sites[$host]->host	=	( $alias ) ? $alias : self::$_sites[$host]->name;
+				self::$_sites[$host]->environment	=	1;
+				self::$_sites[$host]->host			=	( $alias ) ? $alias : self::$_sites[$host]->name;
+
+				if ( self::$_sites[$host]->parent_id ) {
+					$parent		=	self::getSiteById( self::$_sites[$host]->parent_id );
+					$properties	=	array(
+										'guest_only_viewlevel',
+										'groups',
+										'public_viewlevel',
+										'viewlevels'
+									);
+
+					if ( self::$_sites[$host]->guest ) {
+						if ( !( self::$_sites[$host]->name.'@$' == $parent->name ) ) {
+							self::$_sites[$host]->environment	=	0;
+						}
+					} else {
+						$properties[]	=	'guest';
+					}
+
+					/*
+					guest: used to load the user in session > should not be overriden as the user (fake) already got the right group assigned
+					guest_only_group: -
+					guest_only_viewlevel: appended on client=administrator
+					public_viewlevel: -
+					*/
+
+					foreach ( $properties as $property ) {
+						self::$_sites[$host]->$property	=	$parent->$property;
+					}
+				}
 			}
 
 			return true;
@@ -283,13 +314,22 @@ abstract class JCck
 	}
 
 	// isSite
-	public static function isSite( $master = false )
+	public static function isSite( $master = false, $status = '' )
 	{
 		if ( self::$_host != '' && isset( self::$_sites[self::$_host] ) ) {
 			if ( $master && self::$_sites[self::$_host]->name != self::$_sites[self::$_host]->host ) {
 				return false;
 			}
-
+			if ( $status ) {
+				if ( $status == 'production' || $status == 'prod' ) {
+					if ( !self::$_sites[self::$_host]->environment ) {
+						return false;
+					}
+				} elseif ( self::$_sites[self::$_host]->environment ) {
+					return false;
+				}
+			}
+			
 			return true;
 		} else {
 			return false;

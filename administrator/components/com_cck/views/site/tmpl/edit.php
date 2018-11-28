@@ -30,15 +30,21 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
             <?php echo JCckDev::renderForm( $cck['core_title_site'], $this->item->title, $config ); ?>
         </ul>
         <ul class="spe spe_folder">
+            <?php echo JCckDev::renderForm( 'core_parent_site', $this->item->parent_id, $config ); ?>
+        </ul>
+        <ul class="spe spe_state">
+            <?php echo JCckDev::renderForm( $cck['core_state'], $this->item->published, $config, array( 'label'=>'clear' ) ); ?>
+        </ul>
+        <ul class="spe spe_name">
             <li class="tweak-site"><label><?php echo JText::_( 'COM_CCK_URL' ); ?><span class="star"> *</span></label>
             <?php
-            echo JCckDev::getForm( $cck['core_name_site'], $this->item->name, $config, array(), array('after'=>'<span class="variation_value">/</span>' ) );
+            echo JCckDev::getForm( $cck['core_name_site'], $this->item->name, $config, array( 'css'=>'input-xxlarge' ), array( 'after'=>'<span class="variation_value">/</span>' ) );
             echo JCckDev::getForm( 'core_dev_text', $this->item->context, $config, array( 'css'=>'input-xxsmall', 'storage_field'=>'context' ) );
             ?>
             </li>
         </ul>
-        <ul class="spe spe_state spe_third">
-            <?php echo JCckDev::renderForm( $cck['core_state'], $this->item->published, $config, array( 'label'=>'clear' ) ); ?>
+        <ul class="spe spe_type">
+            <li></li>
         </ul>
         <ul class="spe spe_description">
             <?php echo JCckDev::renderForm( $cck['core_description'], $this->item->description, $config, array( 'label'=>'clear', 'selectlabel'=>'Description' ) ); ?>

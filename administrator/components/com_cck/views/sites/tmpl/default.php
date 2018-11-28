@@ -133,8 +133,9 @@ $js	=	'
 			JCck.Dev = {
 				count:'.count( $this->items ).',
 				status:0,
-				addNew: function() {
-					var grp = $("#site_grp").val();
+				addNew: function(skip) {
+					var skip = skip || "0";
+					var grp = (skip == "-1") ? -1 : $("#site_grp").val();
 					var url = "index.php?option=com_cck&task=site.add&type="+grp;
 					document.location.href = url;
 					return false;

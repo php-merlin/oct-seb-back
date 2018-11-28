@@ -47,6 +47,13 @@ if ( !$user->authorise( 'core.create', 'com_cck' ) ) {
         <button class="btn" type="button" onclick="" data-dismiss="modal"><?php echo JText::_( 'JCANCEL' ); ?></button>
         <div class="btn-group dropup pull-right">
             <button class="btn btn-primary" type="button" onclick="JCck.Dev.addNew();"><?php echo JText::_( 'COM_CCK_CREATE' ); ?></button>
+            <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
+                <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu">
+                <li><a href="javascript:void(0);" onclick="JCck.Dev.addNew('-1');"><span class="icon-arrow-right"></span>
+                <?php echo JText::_( 'COM_CCK_CREATE_BLANK' ); ?></a></li>
+            </ul>
         </div>
     </div>
     <?php } ?>

@@ -385,6 +385,16 @@ class plgContentCCK extends JPlugin
 				$fields	=	JCckDatabase::loadObjectList( $query, 'name' );	//#
 			}
 		}
+
+		// Versionning
+		/*
+		if ( JCck::isSite( true, 'production' ) ) {
+			echo 'prod';
+		} else {
+			echo 'dev';
+		}
+		*/
+
 		if ( !isset( $this->loaded[$contentType.'_'.$client.'_options'] ) ) {
 			$lang->load( 'pkg_app_cck_'.$cck->folder_app, JPATH_SITE, null, false, false );
 

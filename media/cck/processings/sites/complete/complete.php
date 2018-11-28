@@ -13,7 +13,13 @@ if ( !$isNew ) {
 $app			=	JFactory::getApplication();
 $mode			=	JCck::getConfig_Param( 'multisite_integration', '1' );
 $type			=	$app->input->getString( 'type', '2,7' ); /* '7' || '2,7' || 2,3,6,7 */
-$groups			=	explode( ',', $type );
+
+if ( $type == '-1' ) {
+	$groups		=	array();
+} else {
+	$groups		=	explode( ',', $type );	
+}
+
 $groups			=	ArrayHelper::toInteger( $groups );
 $guest_only		=	( count( $groups ) > 1 ) ? 1 : 0;
 $levels			=	array();
@@ -32,8 +38,10 @@ $users_bridge	=	array();
 $users_force	=	array();
 $users_more		=	array();
 
-if ( $item->parent_id ) {
-	$parent			=	JCckDatabase::loadObject( 'SELECT guest_only_group, groups FROM #__cck_core_sites WHERE id = '.(int)$item->parent_id );
+if ( $type == '-1' ) {
+	return;
+} elseif ( $item->parent_id ) {
+	$parent		=	JCckDatabase::loadObject( 'SELECT guest_only_group, groups FROM #__cck_core_sites WHERE id = '.(int)$item->parent_id );
 
 	if ( is_object( $parent ) ) {
 		$parent->groups		=	explode( ',', $parent->groups );
