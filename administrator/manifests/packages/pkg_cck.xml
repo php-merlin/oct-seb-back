@@ -93,6 +93,7 @@
 			<!-- Plugin // CCK Field Restriction -->
 			<file type="plugin" id="cck_workflow" group="cck_field_restriction">plg_cck_field_restriction_cck_workflow.zip</file>
 			<file type="plugin" id="item_x" group="cck_field_restriction">plg_cck_field_restriction_item_x.zip</file>
+			<file type="plugin" id="joomla_language" group="cck_field_restriction">plg_cck_field_restriction_joomla_language.zip</file>
 			<file type="plugin" id="search_total" group="cck_field_restriction">plg_cck_field_restriction_search_total.zip</file>
 			<file type="plugin" id="url_variable" group="cck_field_restriction">plg_cck_field_restriction_url_variable.zip</file>
 			<file type="plugin" id="x" group="cck_field_restriction">plg_cck_field_restriction_x.zip</file>
