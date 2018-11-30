@@ -399,14 +399,16 @@ class plgCCK_FieldGroup extends JCckPluginField
 							$markup	=	$elem->markup;
 						}
 
-						$displayData	=	array(
-												'cck'=>$config['cck'],
-												'field'=>$elem,
-												'html'=>$elem_html,
-												'options'=>$config['options']
-											);
-						$layout 		=	new JLayoutFile( 'cck.markup.'.$markup, null, array( 'component' => 'com_cck' ) );
-						$elem_html		=	$layout->render( $displayData );
+						if ( $markup ) {
+							$displayData	=	array(
+													'cck'=>$config['cck'],
+													'field'=>$elem,
+													'html'=>$elem_html,
+													'options'=>$config['options']
+												);
+							$layout 		=	new JLayoutFile( 'cck.markup.'.$markup, null, array( 'client'=>0, 'component'=>'com_cck' ) );
+							$elem_html		=	$layout->render( $displayData );
+						}
 					}
 				}
 			} else {

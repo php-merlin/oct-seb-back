@@ -654,15 +654,17 @@ class CCK_Rendering
 							$markup	=	$field->markup;
 						}
 
-						$displayData	=	array(
-												'cck'=>$this,
-												'field'=>$field,
-												'html'=>$html,
-												'options'=>$options
-											);
+						if ( $markup ) {
+							$displayData	=	array(
+													'cck'=>$this,
+													'field'=>$field,
+													'html'=>$html,
+													'options'=>$options
+												);
 
-						$layout 		=	new JLayoutFile( 'cck.markup.'.$markup, null, array( 'component' => 'com_cck' ) );
-						$html			=	$layout->render( $displayData ); // $field->name.' = ['.$markup.']<br>'
+							$layout 		=	new JLayoutFile( 'cck.markup.'.$markup, null, array( 'client'=>0, 'component'=>'com_cck' ) );
+							$html			=	$layout->render( $displayData ); // $field->name.' = ['.$markup.']<br>'
+						}
 					}
 				}
 			} else {
