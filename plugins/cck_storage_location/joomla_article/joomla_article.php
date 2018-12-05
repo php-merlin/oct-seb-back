@@ -552,9 +552,9 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 		if ( ! $table->{self::$key} ) {
 			$table->modified_by	=	0;
 			if ( isset( $config['params'] ) ) {
-				$ordering	=	( isset( $config['params']['ordering'] ) ) ? $config['params']['ordering'] : 0;
+				$ordering	=	( isset( $config['params']['ordering'] ) ) ? $config['params']['ordering'] : 1;
 			} else {
-				$ordering	=	$this->params->get( 'ordering', 0 );
+				$ordering	=	$this->params->get( 'ordering', 1 );
 			}
 			if ( $ordering == 1 ) {
 				$max				=	JCckDatabase::loadResult( 'SELECT MAX(ordering) FROM #__content WHERE catid = '.(int)$table->catid );

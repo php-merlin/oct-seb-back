@@ -380,7 +380,7 @@ class CCK_List
 		if ( isset( $config['formWrapper'] ) && $config['formWrapper'] ) {
 			$data['config']['formWrapper']	=	$config['formWrapper'];
 		}
-		if ( $options->get( 'prepare_content', JCck::getConfig_Param( 'prepare_content', 1 ) ) ) {
+		if ( $options->get( 'prepare_content', JCck::getConfig_Param( 'prepare_content', 0 ) ) ) {
 			JPluginHelper::importPlugin( 'content' );
 			$data['buffer']	=	JHtml::_( 'content.prepare', $data['buffer'] );
 		}
@@ -401,7 +401,7 @@ class CCK_List
 				$message	=	JText::_( 'COM_CCK_NO_ACCESS' );
 			}
 		} else {
-			if ( JCck::getConfig_Param( 'language_jtext', 0 ) ) {
+			if ( JCck::getConfig_Param( 'language_jtext', 1 ) ) {
 				$message	=	JText::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $message ) ) );
 			}
 			if ( $debug ) {

@@ -250,7 +250,7 @@ class plgContentCCK extends JPlugin
 	// onContentBeforeDisplay
 	public function onContentBeforeDisplay( $context, &$article, &$params, $limitstart = 0 )
 	{
-		if ( JCck::getConfig_Param( 'hide_edit_icon', 0 ) ) {
+		if ( JCck::getConfig_Param( 'hide_edit_icon', 1 ) ) {
 			if ( isset( $article->params ) && is_object( $article->params ) ) {
 				$article->params->set( 'access-edit', false );
 			}
@@ -406,7 +406,7 @@ class plgContentCCK extends JPlugin
 
 			if ( isset( $this->loaded[$contentType.'_'.$client.'_options']['sef'] ) ) {
 				if ( $this->loaded[$contentType.'_'.$client.'_options']['sef'] == '' ) {
-					$this->loaded[$contentType.'_'.$client.'_options']['sef']	=	JCck::getConfig_Param( 'sef', '2' );
+					$this->loaded[$contentType.'_'.$client.'_options']['sef']	=	JCck::getConfig_Param( 'sef', '23' );
 				}
 			}
 			if ( isset( $this->loaded[$contentType.'_'.$client.'_options']['metadesc'] ) ) {
@@ -513,7 +513,7 @@ class plgContentCCK extends JPlugin
 		$p_desc			=	isset( $this->loaded[$contentType.'_'.$client.'_options']['desc'] ) ? $this->loaded[$contentType.'_'.$client.'_options']['desc'] : '';
 		$p_metadesc		=	isset( $this->loaded[$contentType.'_'.$client.'_options']['metadesc'] ) ? $this->loaded[$contentType.'_'.$client.'_options']['metadesc'] : '';
 		$p_metatitle	=	isset( $this->loaded[$contentType.'_'.$client.'_options']['metatitle'] ) ? $this->loaded[$contentType.'_'.$client.'_options']['metatitle'] : '';
-		$p_sef			=	isset( $this->loaded[$contentType.'_'.$client.'_options']['sef'] ) ? $this->loaded[$contentType.'_'.$client.'_options']['sef'] : JCck::getConfig_Param( 'sef', '2' );
+		$p_sef			=	isset( $this->loaded[$contentType.'_'.$client.'_options']['sef'] ) ? $this->loaded[$contentType.'_'.$client.'_options']['sef'] : JCck::getConfig_Param( 'sef', '23' );
 		$p_title		=	isset( $this->loaded[$contentType.'_'.$client.'_options']['title'] ) ? $this->loaded[$contentType.'_'.$client.'_options']['title'] : '';
 
 		jimport( 'cck.rendering.document.document' );
@@ -540,7 +540,7 @@ class plgContentCCK extends JPlugin
 			$config	=	array( 'author'=>$cck->author,
 							   'client'=>$client,
    							   'doSEF'=>$p_sef,
-							   'doTranslation'=>JCck::getConfig_Param( 'language_jtext', 0 ),
+							   'doTranslation'=>JCck::getConfig_Param( 'language_jtext', 1 ),
 							   'error'=>0,
 							   'fields'=>array(),
 							   'id'=>$cck->id,

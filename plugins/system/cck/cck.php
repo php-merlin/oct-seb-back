@@ -656,7 +656,7 @@ class plgSystemCCK extends JPlugin
 										$search = '{}';
 									}
 									$search	=	new JRegistry( $search );
-									$sef	=	$search->get( 'sef', JCck::getConfig_Param( 'sef', '2' ) );
+									$sef	=	$search->get( 'sef', JCck::getConfig_Param( 'sef', '23' ) );
 									if ( $sef ) {
 										$itemId	=	$itemId2;
 									}

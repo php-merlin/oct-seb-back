@@ -160,7 +160,7 @@ class CCKModelType extends JCckBaseLegacyModelAdmin
 				}
 			}
 		} else {
-			$doVersion	=	JCck::getConfig_Param( 'version_auto', 2 );
+			$doVersion	=	JCck::getConfig_Param( 'version_auto', 1 );
 			if ( $doVersion == 1 || ( $doVersion == 2 && Helper_Version::checkLatest( 'type', $data['id'] ) === true ) ) {
 				Helper_Version::createVersion( 'type', $data['id'] );
 

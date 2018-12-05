@@ -344,7 +344,7 @@ class CCKController extends JControllerLegacy
 				$vars	=	JCckDatabase::loadResult( 'SELECT options FROM #__cck_core_searchs WHERE name = "'.(string)$target.'"' );
 				if ( $vars ) {
 					$vars	=	new JRegistry( $vars );
-					$sef	=	$vars->get( 'sef', JCck::getConfig_Param( 'sef', '2' ) );
+					$sef	=	$vars->get( 'sef', JCck::getConfig_Param( 'sef', '23' ) );
 				}
 			}
 		}
@@ -631,7 +631,7 @@ class CCKController extends JControllerLegacy
 							$vars	=	JCckDatabase::loadResult( 'SELECT options FROM #__cck_core_searchs WHERE name = "'.(string)$target.'"' );
 							if ( $vars ) {
 								$vars	=	new JRegistry( $vars );
-								$sef	=	$vars->get( 'sef', JCck::getConfig_Param( 'sef', '2' ) );
+								$sef	=	$vars->get( 'sef', JCck::getConfig_Param( 'sef', '23' ) );
 							}
 						}
 					}

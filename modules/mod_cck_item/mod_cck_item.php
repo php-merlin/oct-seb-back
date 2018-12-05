@@ -24,7 +24,7 @@ jimport( 'cck.base.item.item' );
 
 $data	=	CCK_Item::render( $params->get( 'id', '' ) );
 
-$raw_rendering		=	$params->get( 'raw_rendering', JCck::getConfig_Param( 'raw_rendering', '0' ) );
+$raw_rendering		=	$params->get( 'raw_rendering', JCck::getConfig_Param( 'raw_rendering', '1' ) );
 $moduleclass_sfx	=	htmlspecialchars( $params->get( 'moduleclass_sfx' ) );
 $class_sfx			=	( $params->get( 'force_moduleclass_sfx', 0 ) == 1 ) ? $moduleclass_sfx : '';
 require JModuleHelper::getLayoutPath( 'mod_cck_item', $params->get( 'layout', 'default' ) );

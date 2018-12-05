@@ -47,7 +47,7 @@ include JPATH_SITE.'/libraries/cck/base/form/form_inc.php';
 JFactory::getSession()->set( 'cck_hash_'.$formId, JApplication::getHash( '0|'.$preconfig['type'].'|0|0' ) );
 JFactory::getSession()->set( 'cck_hash_'.$formId.'_context', json_encode( $config['context'] ) );
 
-$raw_rendering		=	$params->get( 'raw_rendering', JCck::getConfig_Param( 'raw_rendering', '0' ) );
+$raw_rendering		=	$params->get( 'raw_rendering', JCck::getConfig_Param( 'raw_rendering', '1' ) );
 $moduleclass_sfx	=	htmlspecialchars( $params->get( 'moduleclass_sfx' ) );
 $class_sfx			=	( $params->get( 'force_moduleclass_sfx', 0 ) == 1 ) ? $moduleclass_sfx : '';
 require JModuleHelper::getLayoutPath( 'mod_cck_form', $params->get( 'layout', 'default' ) );

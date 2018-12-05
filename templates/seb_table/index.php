@@ -27,7 +27,7 @@ $class_table	=	trim( $cck->getStyleParam( 'class_table', 'category zebra table' 
 $class_table	=	( $isFixed ) ? $class_table.' fixed' : $class_table;
 $class_table	=	( $isResponsive ) ? $class_table.' responsive' : $class_table;
 $class_table	=	$class_table ? ' class="'.$class_table.'"' : '';
-$translate		=	JCck::getConfig_Param( 'language_jtext', 0 );
+$translate		=	JCck::getConfig_Param( 'language_jtext', 1 );
 
 $doc			=	JFactory::getDocument();
 $doc->addStyleSheet( JUri::root( true ).'/templates/'.$cck->template. '/css/'.'style.css' );

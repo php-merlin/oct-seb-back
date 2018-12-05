@@ -367,7 +367,7 @@ class plgCCK_FieldUpload_Image extends JCckPluginField
 		$params['image_colorbox']	=	'0';
 
 		if ( $options2['form_preview'] != -1 && $value['image_location'] ) {
-			if ( !(int)JCck::getConfig_Param( 'site_modal_box', '0' ) ) {
+			if ( !(int)JCck::getConfig_Param( 'site_modal_box', '1' ) ) {
 				$attr_preview				=	'id="colorBox'.$field->id.'" rel="colorBox'.$field->id.'"';
 				$params['image_colorbox']	=	'1';
 			} else {
@@ -611,7 +611,7 @@ class plgCCK_FieldUpload_Image extends JCckPluginField
 		}
 		$maxsize			=	floatval( $options2['max_size'] ) * $unit_prod;
 		$filename			=	JFile::stripExt( $userfile['name'] );
-		$userfile['name']	=	str_replace( $filename, JCckDev::toSafeSTRING( $filename, JCck::getConfig_Param( 'media_characters', '-' ), JCck::getConfig_Param( 'media_case', 0 ) ), $userfile['name'] );
+		$userfile['name']	=	str_replace( $filename, JCckDev::toSafeSTRING( $filename, JCck::getConfig_Param( 'media_characters', '-_' ), JCck::getConfig_Param( 'media_case', 0 ) ), $userfile['name'] );
 		if ( ! $maxsize || ( $maxsize && @$userfile['size'] < $maxsize ) ) {
 			if ( $userfile && $userfile['name'] && $userfile['tmp_name'] ) {
 				$ImageCustomName	=	$userfile['name'];

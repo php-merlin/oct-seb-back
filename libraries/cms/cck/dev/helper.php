@@ -465,7 +465,7 @@ abstract class JCckDevHelper
 			if ( $sef != '' ) {
 				$params[$name]['doSEF']		=	$sef;
 			} else {
-				$params[$name]['doSEF']		=	( isset( $object->options->sef ) && $object->options->sef != '' ) ? $object->options->sef : JCck::getConfig_Param( 'sef', '2' );
+				$params[$name]['doSEF']		=	( isset( $object->options->sef ) && $object->options->sef != '' ) ? $object->options->sef : JCck::getConfig_Param( 'sef', '23' );
 			}
 
 			$params[$name]['join_key']		=	'pk';

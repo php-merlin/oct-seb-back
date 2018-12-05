@@ -119,7 +119,7 @@ $show_more_class	=	( $show_more_class ) ? ' class="'.$show_more_class.'"' : '';
 $show_more_text		=	$params->get( 'link_more_text', '' );
 if ( $show_more_text == '' ) {
 	$show_more_text	=	JText::_( 'MOD_CCK_LIST_VIEW_ALL' );
-} elseif ( JCck::getConfig_Param( 'language_jtext', 0 ) ) {
+} elseif ( JCck::getConfig_Param( 'language_jtext', 1 ) ) {
 	$show_more_text	=	JText::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $show_more_text ) ) );
 }
 $show_more_link		=	'';
@@ -134,7 +134,7 @@ if ( ( $show_more == 1 || ( $show_more == 2 && $total ) || ( $show_more == 3 && 
 		}
 	}
 }
-$raw_rendering		=	$params->get( 'raw_rendering', JCck::getConfig_Param( 'raw_rendering', '0' ) );
+$raw_rendering		=	$params->get( 'raw_rendering', JCck::getConfig_Param( 'raw_rendering', '1' ) );
 $moduleclass_sfx	=	htmlspecialchars( $params->get( 'moduleclass_sfx' ) );
 $class_sfx			=	( $params->get( 'force_moduleclass_sfx', 0 ) == 1 ) ? $moduleclass_sfx : '';
 require JModuleHelper::getLayoutPath( 'mod_cck_list', $params->get( 'layout', 'default' ) );

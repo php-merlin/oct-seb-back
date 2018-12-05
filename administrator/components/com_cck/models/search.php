@@ -147,7 +147,7 @@ class CCKModelSearch extends JCckBaseLegacyModelAdmin
 				unset( $data['tpl_list'] );
 			}
 		} else {
-			$doVersion	=	JCck::getConfig_Param( 'version_auto', 2 );
+			$doVersion	=	JCck::getConfig_Param( 'version_auto', 1 );
 			if ( $doVersion == 1 || ( $doVersion == 2 && Helper_Version::checkLatest( 'search', $data['id'] ) === true ) ) {
 				Helper_Version::createVersion( 'search', $data['id'] );
 

@@ -114,7 +114,7 @@ if ( ! $count ) {
 
 // Init
 $hasAjax	=	false;
-$limitend	=	( isset( $preconfig['limitend'] ) && $preconfig['limitend'] != '' ) ? (int)$preconfig['limitend'] : (int)$options->get( 'pagination', JCck::getConfig_Param( 'pagination', 25 ) );
+$limitend	=	( isset( $preconfig['limitend'] ) && $preconfig['limitend'] != '' ) ? (int)$preconfig['limitend'] : (int)$options->get( 'pagination', JCck::getConfig_Param( 'pagination', 48 ) );
 $pagination	=	( isset( $pagination ) && $pagination != '' ) ? $pagination : $options->get( 'show_pagination', 0 );
 $isAltered	=	false;
 $isInfinite	=	( $pagination == 2 || $pagination == 8 ) ? true : false;
@@ -178,8 +178,8 @@ $config			=	array( 'action'=>$preconfig['action'],
 						   'core'=>true,
 						   'doPagination'=>true,
 						   'doQuery'=>true,
-						   'doSEF'=>$options->get( 'sef', JCck::getConfig_Param( 'sef', '2' ) ),
-						   'doTranslation'=>JCck::getConfig_Param( 'language_jtext', 0 ),
+						   'doSEF'=>$options->get( 'sef', JCck::getConfig_Param( 'sef', '23' ) ),
+						   'doTranslation'=>JCck::getConfig_Param( 'language_jtext', 1 ),
 						   'doValidation'=>(int)JCck::getConfig_Param( 'validation', '3' ),
 						   'formId'=>$preconfig['formId'],
 						   'formWrapper'=>false,
@@ -594,7 +594,7 @@ if ( $preconfig['task'] == 'search' ) {
 			if ( ! $no_message ) {
 				$no_message	=	JText::_( 'COM_CCK_NO_RESULT' );
 			} else {
-				if ( JCck::getConfig_Param( 'language_jtext', 0 ) ) {
+				if ( JCck::getConfig_Param( 'language_jtext', 1 ) ) {
 					$no_message	=	JText::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $no_message ) ) );
 				}
 			}
@@ -615,7 +615,7 @@ if ( $preconfig['task'] == 'search' ) {
 	if ( ! $no_message ) {
 		$no_message	=	JText::_( 'COM_CCK_NO_SEARCH' );
 	} else {
-		if ( JCck::getConfig_Param( 'language_jtext', 0 ) ) {
+		if ( JCck::getConfig_Param( 'language_jtext', 1 ) ) {
 			$no_message	=	JText::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $no_message ) ) );
 		}
 	}

@@ -147,7 +147,7 @@ Helper_Display::quickCopyright();
 <script type="text/javascript">
 (function ($){
 	JCck.Dev = {
-		doTranslation:"<?php echo JCck::getConfig_Param( 'language_jtext', 0 ); ?>",
+		doTranslation:"<?php echo JCck::getConfig_Param( 'language_jtext', 1 ); ?>",
 		mode:<?php echo (int)$mode; ?>,
 		name:"field",
 		token:Joomla.getOptions("csrf.token")+"=1",

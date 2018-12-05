@@ -54,7 +54,7 @@
 					<option value="2">PLG_CCK_STORAGE_LOCATION_JOOMLA_ARTICLE_AUTO_READMORE_LEGACY</option>
 					<option value="0">JNO</option>
 				</field>
-				<field name="ordering" type="list" default="0" label="LIB_CCK_STORAGE_LOCATION_ORDERING" description="LIB_CCK_STORAGE_LOCATION_ORDERING_DESC" class="inputbox">
+				<field name="ordering" type="list" default="1" label="LIB_CCK_STORAGE_LOCATION_ORDERING" description="LIB_CCK_STORAGE_LOCATION_ORDERING_DESC" class="inputbox">
 					<option value="0">LIB_CCK_STORAGE_LOCATION_OPTION_DEFAULT</option>
 					<option value="1">LIB_CCK_STORAGE_LOCATION_OPTION_LAST</option>
 				</field>

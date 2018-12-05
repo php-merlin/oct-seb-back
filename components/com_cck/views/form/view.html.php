@@ -92,7 +92,7 @@ class CCKViewForm extends JViewLegacy
 		}
 
 		$this->pageclass_sfx	=	htmlspecialchars( $params->get( 'pageclass_sfx' ) );
-		$this->raw_rendering	=	$params->get( 'raw_rendering', JCck::getConfig_Param( 'raw_rendering', '0' ) );
+		$this->raw_rendering	=	$params->get( 'raw_rendering', JCck::getConfig_Param( 'raw_rendering', '1' ) );
 
 		// Prepare
 		jimport( 'cck.base.form.form' );
