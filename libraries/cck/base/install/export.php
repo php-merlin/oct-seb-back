@@ -328,6 +328,16 @@ class CCK_Export
 		if ( isset( $data['elements'][$elemtype][$elem->id] ) || ( $elem->id < $protected ) ) {
 			return;
 		}
+		if ( $elemtype == 'template' ) {
+			$protected_templates	=	array(
+											'seb_list'=>true,
+											'seb_minima'=>true,
+											'seb_table'=>true
+										);
+			if ( isset( $protected_templates[$elem->name] ) ) {
+				return;
+			}
+		}
 		$data['elements'][$elemtype][$elem->id]	=	'';
 		
 		$file	=	array( '_'=>'', 'src', 'lang_src'=>'', 'lang_root'=>'', );
@@ -824,7 +834,7 @@ class CCK_Export
 	// exportJoomla_Category
 	public static function exportJoomla_Category( $elemtype, $elem, &$xml, &$data, &$extensions, &$file = null )
 	{
-		$null	=	array( 'asset_id', 'parent_id', 'level', 'lft', 'rgt', 'created_time', 'created_user_id', 'modified_time', 'modified_user_id' );
+		$null	=	array( 'asset_id', 'parent_id', 'description', 'level', 'lft', 'rgt', 'created_time', 'created_user_id', 'modified_time', 'modified_user_id', 'version' );
 		foreach ( $null as $n ) {
 			if ( isset( $xml->$elemtype->$n ) ) {
 				$xml->$elemtype->$n	=	'';
@@ -862,7 +872,7 @@ class CCK_Export
 	// exportJoomla_MenuItem
 	public static function exportJoomla_MenuItem( $elemtype, $elem, &$xml, &$data, &$extensions, &$file = null )
 	{
-		$null	=	array( 'lft', 'rgt' );
+		$null	=	array( 'lft', 'rgt', 'img' );
 		foreach ( $null as $n ) {
 			if ( isset( $xml->$elemtype->$n ) ) {
 				$xml->$elemtype->$n	=	'';
@@ -1034,12 +1044,22 @@ class CCK_Export
 		
 		foreach ( $data['elements']['tables'] as $name=>$fields ) {
 			if ( isset( $data['tables'][(str_replace( '#__', $data['db_prefix'], $name ))] ) ) {
-				if ( $name && $name != '#__cck_core' && !isset( $data['tables_excluded'][$name] ) ) {
+				if ( $name && $name != '#__cck_core' ) {
+					if ( isset( $data['tables_excluded'][$name] ) && $data['tables_excluded'][$name] === true ) {
+						continue;
+					}
+
+					$doCheck		=	false;
+					$doExport		=	false;
 					$table			=	JCckTable::getInstance( $name );
 					$table_fields	=	$table->getFields();
 					$table_keys		=	$db->getTableKeys( $name );
 					$table_pkeys	=	array();
 					
+					if ( strpos( $name, '#__cck_store_item_' ) !== false ) {
+						$doCheck	=	true;
+					}
+
 					$xml	=	new JCckDevXml( '<cck />' );
 					$xml->addAttribute( 'type', $plural );
 					$xml->addChild( 'author', 'Octopoos' );
@@ -1054,6 +1074,7 @@ class CCK_Export
 					
 					$xml3	=	$xml->addChild( 'indexes' );
 					$i		=	1;
+					
 					foreach ( $table_keys as $k=>$v ) {
 						if ( $v->Key_name == 'PRIMARY' ) {
 							$table_pkeys[]	=	$v->Column_name;
@@ -1067,19 +1088,34 @@ class CCK_Export
 					
 					$xml4	=	$xml->addChild( 'fields' );
 					$i		=	1;
+
 					foreach ( $table_fields as $k=>$v ) {
-						if ( isset( $fields[$k] ) || in_array( $k, $table_pkeys ) || $k == 'cck'  ) {
-							$field	=	$xml4->addChild( 'field'.$i, $k );
-							$field->addAttribute( 'type', $v->Type );
-							$field->addAttribute( 'default', $v->Default );
-							$i++;
+						if ( $doCheck ) {
+							if ( isset( $fields[$k] ) && !isset( $data['tables_excluded'][$name][$k] ) ) {
+								$doExport	=	true;
+								$field		=	$xml4->addChild( 'field'.$i, $k );
+								$field->addAttribute( 'type', $v->Type );
+								$field->addAttribute( 'default', $v->Default );
+								$i++;
+							}
+						} else {
+							$doExport	=	true;
+
+							if ( isset( $fields[$k] ) || in_array( $k, $table_pkeys ) ) {
+								$field	=	$xml4->addChild( 'field'.$i, $k );
+								$field->addAttribute( 'type', $v->Type );
+								$field->addAttribute( 'default', $v->Default );
+								$i++;
+							}
 						}
 					}
 					
 					// Set
-					$buffer	=	'<?xml version="1.0" encoding="utf-8"?>'.$xml->asIndentedXML();
-					$path	=	$dest.'/'.$elemtype.'_'.str_replace( '#__', '', $name ).'.xml';
-					JFile::write( $path, $buffer );
+					if ( $doExport ) {
+						$buffer	=	'<?xml version="1.0" encoding="utf-8"?>'.$xml->asIndentedXML();
+						$path	=	$dest.'/'.$elemtype.'_'.str_replace( '#__', '', $name ).'.xml';
+						JFile::write( $path, $buffer );
+					}
 				}
 			}
 		}
@@ -1253,15 +1289,29 @@ class CCK_Export
 			foreach ( $plugins as $plugin ) {
 				if ( $plugin != '' && is_file( JPATH_SITE.'/plugins/cck_storage_location/'.$plugin.'/'.$plugin.'.php' ) ) {
 					require_once JPATH_SITE.'/plugins/cck_storage_location/'.$plugin.'/'.$plugin.'.php';
+					
 					$properties	=	array( 'table' );
 					$properties = JCck::callFunc( 'plgCCK_Storage_Location'.$plugin, 'getStaticProperties', $properties );
+					
 					if ( $properties['table'] ) {
-						$core[$properties['table']]	=	'';
+						$core[$properties['table']]	=	true;
 					}
 				}
 			}
 		}
-		
+
+		$core['#__cck_store_item_content']	=	array(
+													'aliases'=>true,
+													'meta_desc'=>true,
+													'meta_desc_auto'=>true,
+													'page_title'=>true,
+													'page_title_auto'=>true,
+													'snippets'=>true,
+													'texts'=>true,
+													'titles'=>true
+												);
+		/* TODO#SEBLOD4 */
+
 		return $core;
 	}
 }

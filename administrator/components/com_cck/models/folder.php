@@ -109,6 +109,7 @@ class CCKModelFolder extends JCckBaseLegacyModelAdmin
 		// Core
 		jimport( 'joomla.filesystem.file' );
 		jimport( 'cck.base.install.export' );
+		
 		$data										=	array( 'root'=>$path,
 															   'root_content'=>$path.'/content',
 															   'root_elements'=>$path.'/elements',
@@ -118,7 +119,7 @@ class CCKModelFolder extends JCckBaseLegacyModelAdmin
 															   'elements'=>array(),
 															   'db_prefix'=>$config->get( 'dbprefix' )
 															);
-		$extensions									=	array( 0=>(object)array( 'type'=>'plugin', 'id'=>'plg_system_blank', 'group'=>'system', '_file'=>'plg_system_blank.zip' ) );
+		$extensions									=	array();
 		$data['folders']							=	JCckDatabase::loadObjectList( 'SELECT id, name, path FROM #__cck_core_folders WHERE lft', 'id' );
 		$data['folders2']							=	JCckDatabase::loadObjectList( 'SELECT id, name, path FROM #__cck_core_folders WHERE lft', 'name' );
 		$data['plugins']							=	CCK_Export::getCorePlugins();
@@ -130,6 +131,9 @@ class CCKModelFolder extends JCckBaseLegacyModelAdmin
 		$data['tables_excluded']					=	CCK_Export::getCoreTables();
 		$data['variations']							=	array(
 															'empty'=>true,
+															'octo_content'=>true,
+															'octo_form'=>true,
+															'octo_search'=>true,
 															'seb_css3'=>true,
 															'seb_css3b'=>true
 														);
@@ -371,7 +375,6 @@ class CCKModelFolder extends JCckBaseLegacyModelAdmin
 		}
 		
 		// Manifest
-		JFile::copy( JPATH_LIBRARIES.'/cck/base/install/_plg_system_blank.zip', $path.'/extensions/plg_system_blank.zip' );
 		if ( is_object( $manifest ) && isset( $manifest->updateservers ) ) {
 			$servers	=	$xml->addChild( 'updateservers' );
 			if ( count( $manifest->updateservers->server ) ) {
