@@ -10,8 +10,6 @@
 
 defined( '_JEXEC' ) or die;
 
-use Joomla\String\StringHelper;
-
 // Plugin
 class plgContentCCK extends JPlugin
 {
@@ -626,7 +624,7 @@ class plgContentCCK extends JPlugin
  		if ( $p_title == '' && $p_metatitle != '' && isset( $fields[$p_metatitle]->value ) && !empty( $fields[$p_metatitle]->value ) ) {
  			$p_title		=	$this->_translate( $fields[$p_metatitle]->value, $lang_tag );
  			$p_title		=	strip_tags( $p_title );
-			$p_title		=	$this->_truncate( $p_title, 70 );
+			$p_title		=	JCckDevHelper::truncate( $p_title, 70 );
  		}
  		if ( $p_title != '' ) {
  			if ( is_object( $article ) && isset( $article->title ) ) {
@@ -648,7 +646,7 @@ class plgContentCCK extends JPlugin
  		if ( $p_desc == '' && $p_metadesc != '' && isset( $fields[$p_metadesc]->value ) && !empty( $fields[$p_metadesc]->value ) ) {
  			$p_desc			=	$this->_translate( $fields[$p_metadesc]->value, $lang_tag );
  			$p_desc			=	strip_tags( $p_desc );
-			$p_desc			=	$this->_truncate( $p_desc, 200 );
+			$p_desc			=	JCckDevHelper::truncate( $p_desc, 200 );
 		}
 		if ( $p_desc != '' ) {
  			if ( is_object( $article ) && isset( $article->metadesc ) && $article->metadesc == '' ) {
@@ -703,36 +701,6 @@ class plgContentCCK extends JPlugin
 		if ( $str[0] == '{' ) {
 			$json	=	json_decode( $str );
 			$str	=	isset( $json->$lang_tag ) ? $json->$lang_tag : '';
-		}
-
-		return $str;
-	}
-
-	// _truncate
-	protected function _truncate( $str, $length )
-	{
-		if ( $str == '' ) {
-			return '';
-		}
-
-		/*
-		$str	=	str_replace( ' "', ' «', $str );
-		$str	=	str_replace( '"', '»', $str );
-		*/
-
-		if ( StringHelper::strlen( $str ) > $length ) {
-			$str2	=	StringHelper::substr( $str, $length );
-			$str	=	StringHelper::substr( $str, 0, $length );
-
-			if ( $str2[0] == ' ' ) {
-				return $str;
-			}
-
-			$pos	=	StringHelper::strrpos( $str, ' ' );
-
-			if ( $pos !== false ) {
-				$str	=	StringHelper::substr( $str, 0, $pos );
-			}
 		}
 
 		return $str;

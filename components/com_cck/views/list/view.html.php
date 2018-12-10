@@ -82,6 +82,8 @@ class CCKViewList extends JViewLegacy
 		} else {
 			$params->set( 'page_title', 'List' );
 		}
+
+		// Set Title
 		$title	=	$params->get( 'page_title' );
 		
 		if ( empty( $title ) ) {
@@ -93,16 +95,7 @@ class CCKViewList extends JViewLegacy
 		}
 		$config		=	null;
 		$this->document->setTitle( $title );
-		
-		if ( $params->get( 'menu-meta_description' ) ) {
-			$this->document->setDescription( $params->get( 'menu-meta_description' ) );
-		}
-		if ( $params->get( 'menu-meta_keywords' ) ) {
-			$this->document->setMetadata( 'keywords', $params->get('menu-meta_keywords' ) );
-		}
-		if ( $params->get( 'robots' ) ) {
-			$this->document->setMetadata( 'robots', $params->get( 'robots' ) );
-		}
+
 		$this->pageclass_sfx	=	htmlspecialchars( $params->get( 'pageclass_sfx' ) );
 		$this->raw_rendering	=	$params->get( 'raw_rendering', JCck::getConfig_Param( 'raw_rendering', '1' ) );
 
@@ -114,6 +107,25 @@ class CCKViewList extends JViewLegacy
 		include JPATH_SITE.'/libraries/cck/base/list/list_inc.php';
 		$pagination							=	$this->getModel()->_getPagination( $total_items );
 		$pagination->hideEmptyLimitstart	=	true;
+
+		// Set Meta
+		$description	=	$params->get( 'menu-meta_description' );
+		
+		if ( $description == '' ) {
+			$description	=	$params->get( 'list_desc', @$search->description );
+			$description	=	strip_tags( $description );
+			$description	=	JCckDevHelper::truncate( $description, 200 );
+		}
+
+		if ( $description ) {
+			$this->document->setDescription( $description );
+		}
+		if ( $params->get( 'menu-meta_keywords' ) ) {
+			$this->document->setMetadata( 'keywords', $params->get('menu-meta_keywords' ) );
+		}
+		if ( $params->get( 'robots' ) ) {
+			$this->document->setMetadata( 'robots', $params->get( 'robots' ) );
+		}
 
 		// Set
 		if ( !is_object( @$options ) ) {
