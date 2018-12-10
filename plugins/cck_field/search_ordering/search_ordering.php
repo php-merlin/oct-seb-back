@@ -93,6 +93,7 @@ class plgCCK_FieldSearch_Ordering extends JCckPluginField
 			$opts				=	$inherit['opts'];
 		} else {
 			$field->children	=	self::_getChildren( $field, $config );
+			
 			if ( count( $field->children ) ) {
 				foreach ( $field->children as $k=>$child ) {
 					$text		=	$child->label;
@@ -176,8 +177,14 @@ class plgCCK_FieldSearch_Ordering extends JCckPluginField
 			}
 		} else {
 			if ( count( $field->children ) ) {
+				$i						=	0;
+				$isMultiLanguage		=	JCckDevHelper::isMultilingual();
+				$lang					=	JFactory::getLanguage();
+				$options2				=	json_decode( $field->options2, true );
+
 				foreach ( $field->children as $k=>$child ) {
 					$text				=	$child->label;
+					
 					if ( $config['doTranslation'] && trim( $text ) ) {
 						$text			=	JText::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $text ) ) );
 					}
@@ -186,7 +193,17 @@ class plgCCK_FieldSearch_Ordering extends JCckPluginField
 					} else {
 						$val	=	(int)$k;
 					}
+
 					$opts[]				=	JHtml::_( 'select.option', $val, $text, 'value', 'text' );
+
+					if ( $isMultiLanguage ) {
+						if ( isset( $options2['options'][$i]['multilanguage'] ) && $options2['options'][$i]['multilanguage'] ) {
+							$child->storage			=	'json';
+							$child->storage_field2	=	$lang->getTag();
+						}
+					}
+
+					$i++;
 				}
 			}
 			$inherit['opts']	=	$opts;
@@ -293,7 +310,7 @@ class plgCCK_FieldSearch_Ordering extends JCckPluginField
 			$names2	=	'"'.str_replace( '||', '","', $parent->options ).'"';
 		}
 		
-		$query		= 	'SELECT a.name, a.label, a.type, a.storage_table, a.storage_field, a.storage_field2'
+		$query		= 	'SELECT a.name, a.label, a.type, a.storage, a.storage_table, a.storage_field, a.storage_field2'
 					.	' FROM #__cck_core_fields AS a'
 					.	' WHERE a.name IN ('.$names2.') ORDER BY FIELD(name, '.$names2.')'
 					;

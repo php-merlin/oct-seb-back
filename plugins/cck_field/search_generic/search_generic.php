@@ -118,6 +118,7 @@ class plgCCK_FieldSearch_Generic extends JCckPluginField
 		
 		// Prepare
 		$field->children	=	self::_getChildren( $field, $config );
+		
 		if ( $field->extended ) {
 			$form			=	JCckDevField::getForm( $field->extended, $value, $config, array( 'id'=>$field->id, 'name'=>$field->name, 'variation'=>$field->variation ) );
 			$field->form	=	$form;
@@ -126,9 +127,11 @@ class plgCCK_FieldSearch_Generic extends JCckPluginField
 			self::onCCK_FieldPrepareForm( $field, $value, $config, $inherit, $return );
 		}
 		if ( $field->children ) {
-			$i			=	0;
-			$akas		=	array();
-			$options2	=	json_decode( $field->options2, true );
+			$i					=	0;
+			$akas				=	array();
+			$isMultiLanguage	=	JCckDevHelper::isMultilingual();
+			$lang				=	JFactory::getLanguage();
+			$options2			=	json_decode( $field->options2, true );
 			
 			foreach ( $field->children as $child ) {
 				$child->aka	=	( isset( $options2['options'][$i]['aka'] ) && $options2['options'][$i]['aka'] ) ? $options2['options'][$i]['aka'] : '';
@@ -136,12 +139,20 @@ class plgCCK_FieldSearch_Generic extends JCckPluginField
 				if ( $child->aka !='' ) {
 					$akas[$child->aka]	=	true;
 				}
+
+				if ( $isMultiLanguage ) {
+					if ( isset( $options2['options'][$i]['multilanguage'] ) && $options2['options'][$i]['multilanguage'] ) {
+						$child->storage			=	'json';
+						$child->storage_field2	=	$lang->getTag();
+					}
+				}
+
 				$i++;
 			}
 
 			$field->children_akas	=	$akas;
 		}
-		
+
 		// Set
 		$field->type				=	self::$type;
 		$field->storage				=	'';

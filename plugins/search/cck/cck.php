@@ -303,7 +303,7 @@ class plgSearchCCK extends JPlugin
 				// unset( $fields[$field->name] );
 			}
 		}
-		
+
 		// Finalize
 		$where		=	implode( ' ', $where2 );
 
@@ -604,6 +604,7 @@ class plgSearchCCK extends JPlugin
 				$str		=	(string)$query;
 				$str		=	explode( 'FROM', $str );
 				$str		=	$str[0];
+
 				foreach ( $fields_order as $field ) {
 					$order		=	'';
 					$modifier	=	'';
@@ -631,6 +632,7 @@ class plgSearchCCK extends JPlugin
 							$modifier2		=	',';
 							$s_opts			=	array();
 							$s_options		=	explode( '||', ( ( $field->match_options->get( 'by_field' ) == '1' ) ? $field->match_options->get( 'by_field_values' ) : $field->options ) );
+							
 							foreach ( $s_options as $s_o ) {
 								$s_opt		=	explode( '=', $s_o );
 								$s_opts[]	=	( isset( $s_opt[1] ) && $s_opt[1] ) ? $s_opt[1] : $s_opt[0];
@@ -650,7 +652,12 @@ class plgSearchCCK extends JPlugin
 						
 						// Set
 						if ( isset( $tables[$s_table]['_'] ) && $tables[$s_table]['_'] != '' && $tables[$s_table]['_'] != '_' ) {
-							$order	.=	$modifier.$tables[$s_table]['_'].'.'.$s_field.$modifier2.$modifier3;
+							$target	=	$tables[$s_table]['_'].'.'.$s_field;
+
+							if ( isset( $field->storage ) && $field->storage == 'json' ) {
+								$target	=	'JSON_EXTRACT('.$target.', '.JCckDatabase::quote('$."'.$field->storage_field2.'"').')';
+							}
+							$order	.=	$modifier.$target.$modifier2.$modifier3;
 						} elseif ( strpos( $str, $s_field.'.' ) !== false || strpos( $str, 'AS '.$s_field ) !== false ) {
 							$order	.=	$modifier.$s_field.$modifier2.$modifier3;
 						}

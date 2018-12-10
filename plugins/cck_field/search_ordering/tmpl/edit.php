@@ -11,7 +11,7 @@
 defined( '_JEXEC' ) or die;
 
 JCckDev::initScript( 'field', $this->item, array( 'hasOptions'=>true,
-												  'customAttr'=>array( 'direction', 'prepend' ), 'customAttrLabel'=>JText::_( 'COM_CCK_DIRECTION_ASC_DESC' ),
+												  'customAttr'=>array( 'direction', 'prepend', 'multilanguage' ), 'customAttrLabel'=>JText::_( 'COM_CCK_DIRECTION_ASC_DESC' ),
 												  'fieldPicker'=>true ) );
 JCckDev::forceStorage();
 $options	=	JCckDev::fromSTRING( $this->item->options );
