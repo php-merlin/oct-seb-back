@@ -1584,14 +1584,6 @@ Temporary Items
 /administrator/language/fr-FR/fr-FR.plg_cck_field_search_variables.sys.ini
 /plugins/cck_field/search_variables/*
 
-######## SEBLOD Plug-ins >> Field >> SEBLOD Break
-
-/administrator/language/en-GB/en-GB.plg_cck_field_cck_break.ini
-/administrator/language/en-GB/en-GB.plg_cck_field_cck_break.sys.ini
-/administrator/language/fr-FR/fr-FR.plg_cck_field_cck_break.ini
-/administrator/language/fr-FR/fr-FR.plg_cck_field_cck_break.sys.ini
-/plugins/cck_field/cck_break/*
-
 ######## SEBLOD Plug-ins >> Field >> SEBLOD Canonical
 
 /administrator/language/en-GB/en-GB.plg_cck_field_cck_canonical.ini
