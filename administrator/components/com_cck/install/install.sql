@@ -354,7 +354,7 @@ INSERT INTO `#__cck_core_fields` (`id`, `title`, `name`, `folder`, `type`, `desc
 (270, 'Core Computation Recalc', 'core_computation_recalc', 3, 'select_simple', '', 0, 'Rule', ' ', 3, '', '', 'global', 'Global=global||Self=0', '', 0, 255, 32, 0, 0, 0, 0, '', 0, '', '', '', '', 0, 0, 0, 0, 0, 0, 1, '', '', 'dev', '', '', '', 'recalc', '', '', '', 0, '0000-00-00 00:00:00'),
 (271, 'Core JGrid Type', 'core_jgrid_type', 3, 'select_simple', '', 0, 'Type', 'Select', 3, 'required', '', '', 'Joomla=optgroup||Activation=activation||Block=block||Checkbox=selection||Checkbox Label For=selection_label||Dropdown Menu=dropdown||Featured=featured||Increment=increment||Reordering=sort||Reordering Grip=sort_grip||Status=state||SEBLOD=optgroup||Form=form||Hidden=form_hidden||Form Disabled=form_disabled', '{"options":[]}', 0, 255, 32, 0, 0, 0, 0, '', 0, '', '', '', '', 0, 0, 0, 0, 0, 0, 1, '', '', 'dev', '', '', '', 'type', '', '', '', 0, '0000-00-00 00:00:00'),
 (272, 'Core Rules (Type)', 'core_rules_type', 3, 'jform_rules', '', 0, 'Permissions', ' ', 3, '', '', '', '', '{"extension":"com_cck","section":"form"}', 0, 255, 32, 0, 0, 0, 0, '', 0, '', '', '', '', 0, 0, 0, 0, 0, 0, 0, '', '', 'dev', '', '', '', 'jform[rules]', '', '', '', 0, '0000-00-00 00:00:00'),
-(276, 'Core Location', 'core_location', 3, 'select_simple', '', 0, 'Content Creation', ' ', 3, '', '', '', 'Allowed=||Allowed Hidden=hidden||Not Allowed=none||location=optgroup||Administrator Only=admin||Site Only=site', '', 0, 255, 32, 0, 0, 0, 0, '', 0, '', '', '', '', 0, 0, 0, 0, 0, 0, 1, '', '', 'dev', '', '', '', 'location', '', '', '', 0, '0000-00-00 00:00:00'),
+(276, 'Core Location', 'core_location', 3, 'select_simple', '', 0, 'Content Creation', ' ', 3, '', '', '', 'Allowed=||Allowed Hidden=hidden||As Collection=collection||Not Allowed=none||Location=optgroup||Administrator Only=admin||Site Only=site', '', 0, 255, 32, 0, 0, 0, 0, '', 0, '', '', '', '', 0, 0, 0, 0, 0, 0, 1, '', '', 'dev', '', '', '', 'location', '', '', '', 0, '0000-00-00 00:00:00'),
 (277, 'Core Cache2', 'core_cache2', 3, 'select_simple', '', 0, 'Cache', ' ', 3, '', '', '0', 'OFF=0||ON=optgroup||Global=1||Self=2', '{"options":[]}', 0, 255, 32, 0, 0, 0, 0, '', 0, '', '', '', '', 0, 0, 0, 0, 0, 0, 1, '', '', 'dev', '', '', '', 'options[cache2]', '', '', '', 0, '0000-00-00 00:00:00'),
 (278, 'Core Stages', 'core_stages', 3, 'select_numeric', '', 0, 'Stages', ' ', 3, '', '', '1', '', '{"math":"0","start":"1","first":"","step":"1","last":"","end":"6","force_digits":"0"}', 0, 255, 32, 0, 0, 0, 0, '', 0, '', '', '', '', 0, 0, 0, 0, 0, 0, 0, '', '', 'dev', '', '', '', 'options[stages]', '', '', '', 0, '0000-00-00 00:00:00'),
 (279, 'Core Uri', 'core_uri', 3, 'select_simple', '', 0, 'Uri', ' ', 3, '', '', 'current', 'Custom=custom||Path=path||Presets=optgroup||Base=base||Current=current||Root=root', '{"options":[]}', 0, 255, 32, 0, 0, 0, 0, '', 0, '', '', '', '', 0, 0, 0, 0, 0, 0, 1, '', '', 'dev', '', '', '', 'uri', '', '', '', 0, '0000-00-00 00:00:00'),
@@ -598,12 +598,12 @@ INSERT INTO `#__cck_core_fields` (`id`, `title`, `name`, `folder`, `type`, `desc
 (533, 'Core Session Extension', 'core_session_extension', 3, 'select_simple', '', 0, 'Extension', 'Select', 3, 'required', '', '', 'Exporter=com_cck_exporter||Importer=com_cck_importer', '{"options":[]}', 0, 255, 32, 0, 0, 0, 0, '', 0, '', '', '', '', 0, 0, 0, 0, 0, 0, 1, 'max-width-150', '', 'dev', '', '', '', 'extension', '', '', '', 0, '0000-00-00 00:00:00'),
 (534, 'Core Session Location Filter', 'core_session_location_filter', 3, 'select_simple', '', 0, 'Location', ' ', 3, '', '', '', 'Title=title||Name=name||IDS=id', '{"options":[]}', 0, 255, 32, 0, 0, 0, 0, '', 0, '', '', '', '', 0, 0, 0, 0, 0, 0, 1, '', '', 'dev', '', '', '', 'filter_location', '', '', '', 0, '0000-00-00 00:00:00'),
 (535, 'Tab2 Details (Start)', 'tab2_details', 3, 'tabs', '', 1, 'Details', '', 3, '', '', '', '', '', 0, 255, 32, 0, 0, 0, 0, '', 0, 'cck_tabs2', '', '', '', 0, 1, 0, 0, 0, 0, 1, '', '', 'none', '', '', '', 'tab2_details', '', '', '', 0, '0000-00-00 00:00:00'),
-(536, 'Tab2 Publishing (Panel)', 'tab2_publishing', 3, 'tabs', '', 1, 'Publishing', '', 3, '', '', '', '', '', 0, 255, 32, 0, 0, 0, 0, '', 1, 'cck_tabs2', '', '', '', 0, 0, 0, 0, 0, 0, 1, '', '', 'none', 'seb_session', '', '', 'tab2_publishing', '', '', '', 0, '0000-00-00 00:00:00'),
-(537, 'Tab2 (End)', 'tab2_end', 3, 'tabs', '', 1, 'clear', '', 3, '', '', '', '', '', 0, 255, 32, 0, 0, 0, 0, '', 2, 'cck_tabs2', '', '', '', 0, 0, 0, 0, 0, 0, 1, '', '', 'none', 'seb_session', '', '', 'tab2_end', '', '', '', 0, '0000-00-00 00:00:00'),
-(538, 'Tab2 Metadata (Panel)', 'tab2_metadata', 3, 'tabs', '', 1, 'Metadata', '', 3, '', '', '', '', '', 0, 255, 32, 0, 0, 0, 0, '', 1, 'cck_tabs2', '', '', '', 0, 0, 0, 0, 0, 0, 1, '', '', 'none', 'seb_session', '', '', 'tab2_metadata', '', '', '', 0, '0000-00-00 00:00:00'),
-(539, 'Tab2 Options (Panel)', 'tab2_options', 3, 'tabs', '', 1, 'Options', '', 3, '', '', '', '', '', 0, 255, 32, 0, 0, 0, 0, '', 1, 'cck_tabs2', '', '', '', 0, 0, 0, 0, 0, 0, 1, '', '', 'none', 'seb_session', '', '', 'tab2_options', '', '', '', 0, '0000-00-00 00:00:00'),
-(540, 'Tab2 Media (Panel)', 'tab2_media', 3, 'tabs', '', 1, 'Media', '', 3, '', '', '', '', '', 0, 255, 32, 0, 0, 0, 0, '', 1, 'cck_tabs2', '', '', '', 0, 0, 0, 0, 0, 0, 1, '', '', 'none', 'seb_session', '', '', 'tab2_media', '', '', '', 0, '0000-00-00 00:00:00'),
-(541, 'Tab2 Permissions (Panel)', 'tab2_permissions', 3, 'tabs', '', 1, 'Permissions', '', 3, '', '', '', '', '', 0, 255, 32, 0, 0, 0, 0, '', 1, 'cck_tabs2', '', '', '', 0, 0, 0, 0, 0, 0, 1, '', '', 'none', 'seb_session', '', '', 'tab2_permissions', '', '', '', 0, '0000-00-00 00:00:00'),
+(536, 'Tab2 Publishing (Panel)', 'tab2_publishing', 3, 'tabs', '', 1, 'Publishing', '', 3, '', '', '', '', '', 0, 255, 32, 0, 0, 0, 0, '', 1, 'cck_tabs2', '', '', '', 0, 0, 0, 0, 0, 0, 1, '', '', 'none', '', '', '', 'tab2_publishing', '', '', '', 0, '0000-00-00 00:00:00'),
+(537, 'Tab2 (End)', 'tab2_end', 3, 'tabs', '', 1, 'clear', '', 3, '', '', '', '', '', 0, 255, 32, 0, 0, 0, 0, '', 2, 'cck_tabs2', '', '', '', 0, 0, 0, 0, 0, 0, 1, '', '', 'none', '', '', '', 'tab2_end', '', '', '', 0, '0000-00-00 00:00:00'),
+(538, 'Tab2 Metadata (Panel)', 'tab2_metadata', 3, 'tabs', '', 1, 'Metadata', '', 3, '', '', '', '', '', 0, 255, 32, 0, 0, 0, 0, '', 1, 'cck_tabs2', '', '', '', 0, 0, 0, 0, 0, 0, 1, '', '', 'none', '', '', '', 'tab2_metadata', '', '', '', 0, '0000-00-00 00:00:00'),
+(539, 'Tab2 Options (Panel)', 'tab2_options', 3, 'tabs', '', 1, 'Options', '', 3, '', '', '', '', '', 0, 255, 32, 0, 0, 0, 0, '', 1, 'cck_tabs2', '', '', '', 0, 0, 0, 0, 0, 0, 1, '', '', 'none', '', '', '', 'tab2_options', '', '', '', 0, '0000-00-00 00:00:00'),
+(540, 'Tab2 Media (Panel)', 'tab2_media', 3, 'tabs', '', 1, 'Media', '', 3, '', '', '', '', '', 0, 255, 32, 0, 0, 0, 0, '', 1, 'cck_tabs2', '', '', '', 0, 0, 0, 0, 0, 0, 1, '', '', 'none', '', '', '', 'tab2_media', '', '', '', 0, '0000-00-00 00:00:00'),
+(541, 'Tab2 Permissions (Panel)', 'tab2_permissions', 3, 'tabs', '', 1, 'Permissions', '', 3, '', '', '', '', '', 0, 255, 32, 0, 0, 0, 0, '', 1, 'cck_tabs2', '', '', '', 0, 0, 0, 0, 0, 0, 1, '', '', 'none', '', '', '', 'tab2_permissions', '', '', '', 0, '0000-00-00 00:00:00'),
 (542, 'Core List Display Alt', 'core_list_display_alt', 3, 'select_simple', '', 0, 'Display Alt', ' ', 3, '', '', '0', 'Yes=1||No=0', '{"options":[]}', 0, 255, 32, 0, 0, 0, 0, '', 0, '', '', '', '', 0, 0, 0, 0, 0, 0, 1, '', '', 'dev', '', '', '', 'display_alt', '', '', '', 0, '0000-00-00 00:00:00'),
 (543, 'User Company', 'user_company', 29, 'text', '', 1, 'Company', '', 3, '', '', '', '', '', 0, 255, 32, 0, 0, 0, 0, '', 0, '', '', '', '', 0, 0, 0, 0, 0, 0, 1, '', '', 'standard', '', 'joomla_user', '#__cck_store_item_users', 'company', '', '', '', 0, '0000-00-00 00:00:00'),
 (544, 'User Company VAT ID', 'user_company_vat_id', 29, 'text', '', 1, 'VAT ID', '', 3, '', '', '', '', '', 0, 255, 32, 0, 0, 0, 0, '', 0, '', '', '', '', 0, 0, 0, 0, 0, 0, 1, '', '', 'standard', '', 'joomla_user', '#__cck_store_item_users', 'company_vat_id', '', '', '', 0, '0000-00-00 00:00:00'),
@@ -863,7 +863,12 @@ INSERT INTO `#__cck_core_fields` (`id`, `title`, `name`, `folder`, `type`, `desc
 (867, 'Article Language (*)', 'art_language_2', 22, 'select_dynamic', '', 1, 'Language', ' ', 3, '', '', '', '', '{\"query\":\"\",\"table\":\"#__languages\",\"name\":\"title\",\"where\":\"access IN ($user->getAuthorisedViewLevels())\",\"value\":\"lang_code\",\"orderby\":\"title\",\"orderby_direction\":\"ASC\",\"limit\":\"\",\"language_detection\":\"joomla\",\"language_codes\":\"EN,GB,US,FR\",\"language_default\":\"EN\",\"attr1\":\"\",\"attr2\":\"\",\"attr3\":\"\",\"attr4\":\"\",\"attr5\":\"\",\"attr6\":\"\"}', 0, 255, 32, 0, 0, 0, 0, ',', 0, '', '', '', '', 0, 0, 1, 0, 0, 0, 1, '', '', 'standard', '', 'joomla_article', '#__content', 'language', '', '', '', 0, '0000-00-00 00:00:00'),
 (868, 'Category Language (*)', 'cat_language_2', 23, 'select_dynamic', '', 1, 'Language', ' ', 3, '', '', '', '', '{\"query\":\"\",\"table\":\"#__languages\",\"name\":\"title\",\"where\":\"access IN ($user->getAuthorisedViewLevels())\",\"value\":\"lang_code\",\"orderby\":\"title\",\"orderby_direction\":\"ASC\",\"limit\":\"\",\"language_detection\":\"joomla\",\"language_codes\":\"EN,GB,US,FR\",\"language_default\":\"EN\",\"attr1\":\"\",\"attr2\":\"\",\"attr3\":\"\",\"attr4\":\"\",\"attr5\":\"\",\"attr6\":\"\"}', 0, 255, 32, 0, 0, 0, 0, ',', 0, '', '', '', '', 0, 0, 1, 0, 0, 0, 1, '', '', 'standard', '', 'joomla_category', '#__categories', 'language', '', '', '', 0, '0000-00-00 00:00:00'),
 (869, 'Menu Item Language (*)', 'menu_item_language_2', 57, 'select_dynamic', '', 1, 'Language', ' ', 3, '', '', '', 'All=*', '{\"query\":\"\",\"table\":\"#__languages\",\"name\":\"title\",\"where\":\"access IN ($user->getAuthorisedViewLevels())\",\"value\":\"lang_code\",\"orderby\":\"title\",\"orderby_direction\":\"ASC\",\"limit\":\"\",\"language_detection\":\"joomla\",\"language_codes\":\"EN,GB,US,FR\",\"language_default\":\"EN\",\"attr1\":\"\",\"attr2\":\"\",\"attr3\":\"\",\"attr4\":\"\",\"attr5\":\"\",\"attr6\":\"\"}', 0, 255, 32, 0, 0, 0, 0, ',', 0, '', '', '', '', 0, 0, 1, 0, 0, 0, 1, '', '', 'standard', '', 'joomla_menu_item', '#__menu', 'language', '', '', '', 0, '0000-00-00 00:00:00'),
-(870, 'Module Language (2)', 'mod_language_2', 53, 'select_dynamic', '', 1, 'Language', ' ', 3, '', '', '', 'All=*', '{\"query\":\"\",\"table\":\"#__languages\",\"name\":\"title\",\"where\":\"access IN ($user->getAuthorisedViewLevels())\",\"value\":\"lang_code\",\"orderby\":\"title\",\"orderby_direction\":\"ASC\",\"limit\":\"\",\"language_detection\":\"joomla\",\"language_codes\":\"EN,GB,US,FR\",\"language_default\":\"EN\",\"attr1\":\"\",\"attr2\":\"\",\"attr3\":\"\",\"attr4\":\"\",\"attr5\":\"\",\"attr6\":\"\"}', 0, 255, 32, 0, 0, 0, 0, ',', 0, '', '', '', '', 0, 0, 1, 0, 0, 0, 1, '', '', 'standard', '', 'joomla_module', '#__modules', 'language', '', '', '', 0, '0000-00-00 00:00:00');
+(870, 'Module Language (2)', 'mod_language_2', 53, 'select_dynamic', '', 1, 'Language', ' ', 3, '', '', '', 'All=*', '{\"query\":\"\",\"table\":\"#__languages\",\"name\":\"title\",\"where\":\"access IN ($user->getAuthorisedViewLevels())\",\"value\":\"lang_code\",\"orderby\":\"title\",\"orderby_direction\":\"ASC\",\"limit\":\"\",\"language_detection\":\"joomla\",\"language_codes\":\"EN,GB,US,FR\",\"language_default\":\"EN\",\"attr1\":\"\",\"attr2\":\"\",\"attr3\":\"\",\"attr4\":\"\",\"attr5\":\"\",\"attr6\":\"\"}', 0, 255, 32, 0, 0, 0, 0, ',', 0, '', '', '', '', 0, 0, 1, 0, 0, 0, 1, '', '', 'standard', '', 'joomla_module', '#__modules', 'language', '', '', '', 0, '0000-00-00 00:00:00'),
+(871, 'Redirection (Archived Item)', 'redirection_archived_item', 3, 'message_redirection', '', 1, '', '', 3, '', '', '', '', '{\"itemid\":\"-1\",\"timeout\":\"0\",\"timeout_ms\":\"\"}', 0, 255, 32, 0, 0, 0, 0, '', 0, '', '', '', '', 0, 0, 0, 0, 0, 0, 1, '', '', 'none', '', '', '', 'redirection_archived_item', '', '', '', 0, '0000-00-00 00:00:00'),
+(872, 'Message (Archived Item)', 'message_archived_item', 3, 'message_redirection', '', 1, '', '', 3, '', '', '', '', '{\"itemid\":\"\",\"timeout\":\"0\",\"timeout_ms\":\"\",\"message_style\":\"warning\"}', 0, 255, 32, 0, 0, 0, 0, '', 0, '', '', '', '', 0, 0, 0, 0, 0, 0, 1, '', '', 'none', '', '', '', 'message_archived_item', '', '', '', 0, '0000-00-00 00:00:00'),
+(873, 'Break (Archived Item)', 'break_archived_item', 3, 'cck_break', '', 1, '', '', 3, '', '', '', '', '', 0, 255, 32, 0, 0, 0, 0, '', 0, '', '', '', '', 0, 0, 0, 0, 0, 0, 1, '', '', 'none', '', '', '', 'break_archived_item', '', '', '', 0, '0000-00-00 00:00:00'),
+(874, 'Article Archived Mode', 'art_archived_mode', 22, 'select_simple', '', 1, 'Status Archived Mode', ' ', 3, '', '', '0', 'An additional message is displayed=0||Only a message is visible=1||The page is redirected=2', '{\"options\":[]}', 0, 255, 32, 0, 0, 0, 0, '', 0, '', '', '', '', 0, 0, 0, 0, 0, 0, 1, '', '', 'standard', '', 'joomla_article', '#__cck_store_item_content', 'archived_mode', '', '', '', 0, '0000-00-00 00:00:00'),
+(875, '[Article] Grp (Content) Archived', 'art_grp_content_archived', 22, 'group', '', 1, 'clear', '', 3, '', '', '', '', '', 0, 255, 32, 0, 1, 0, 0, '', 0, '', 'article_grp_content_archived', '', '', 0, 0, 0, 0, 0, 0, 1, '', '', 'none', '', '', '', 'art_grp_content_archived', '', '', '', 0, '0000-00-00 00:00:00');
 
 
 -- --------------------------------------------------------
@@ -1482,9 +1487,10 @@ INSERT INTO `#__cck_core_types` (`id`, `asset_id`, `title`, `name`, `alias`, `fo
 (52, 0, 'Menu Item', 'menu_item', '', 56, 0, 0, 0, 0, '', 'none', 1, '', '', '', '', 0, '', 1, '', 0, '', 'joomla_menu_item', '', 229, 0, '0000-00-00 00:00:00', 3, '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0),
 (53, 0, 'Button Grp (Form) Item X', 'button_grp_form_item_x', '', 3, 0, 0, 0, 0, '', 'none', 0, '', '', '', '', 0, 'none', 1, '', 0, '', 'none', '', 1, 0, '0000-00-00 00:00:00', 3, '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0),
 (54, 0, 'Viewing Access Level', 'viewing_access_level', '', 50, 0, 0, 0, 0, '', 'none', 1, '', '', '', '', 0, '', 0, '', 0, '', 'joomla_viewlevel', '', 37, 0, '0000-00-00 00:00:00', 3, '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0),
-(55, 0, '[Article] Grp Content', 'article_grp_content', '', 10, 0, 0, 0, 0, '', 'none', 1, '', '', '', '', 0, 'none', 1, '', 0, '', 'joomla_article', '', 6, 0, '0000-00-00 00:00:00', 3, '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0),
-(56, 0, '[Article] Grp Snippet', 'article_grp_snippet', '', 10, 0, 0, 0, 0, '', 'none', 1, '', '', '', '', 0, 'none', 1, '', 0, '', 'joomla_article', '', 4, 0, '0000-00-00 00:00:00', 3, '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0),
-(57, 0, '[Article] Grp Text', 'article_grp_text', '', 10, 0, 0, 0, 0, '', 'none', 1, '', '', '', '', 0, 'none', 1, '', 0, '', 'joomla_article', '', 5, 0, '0000-00-00 00:00:00', 3, '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0);
+(55, 0, '[Article] Grp (Content)', 'article_grp_content', '', 10, 0, 0, 0, 0, '', 'none', 1, '', '', '', '', 0, 'collection', 1, '', 0, '', 'joomla_article', '', 6, 0, '0000-00-00 00:00:00', 3, '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0),
+(56, 0, '[Article] Grp Snippet', 'article_grp_snippet', '', 10, 0, 0, 0, 0, '', 'none', 1, '', '', '', '', 0, 'collection', 1, '', 0, '', 'joomla_article', '', 4, 0, '0000-00-00 00:00:00', 3, '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0),
+(57, 0, '[Article] Grp Text', 'article_grp_text', '', 10, 0, 0, 0, 0, '', 'none', 1, '', '', '', '', 0, 'collection', 1, '', 0, '', 'joomla_article', '', 5, 0, '0000-00-00 00:00:00', 3, '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0),
+(58, 0, '[Article] Grp (Content) Archived', 'article_grp_content_archived', '', 10, 0, 0, 0, 0, '', 'none', 1, '', '', '', '', 0, 'collection', 1, '', 0, '', 'joomla_article', '', 4, 0, '0000-00-00 00:00:00', 3, '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0);
 
 
 -- --------------------------------------------------------
@@ -1907,20 +1913,25 @@ INSERT INTO `#__cck_core_type_field` (`typeid`, `fieldid`, `client`, `ordering`,
 (54, 725, 'admin', 6, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 0, '', 0, 1, '', '', '', '', '', '', 'mainbody'),
 (54, 730, 'admin', 3, '&nbsp;', '', '', 'required', '', '', '', '', '', '', '', '-1', '', '', '', 0, '', 0, 1, '', '', '', '', '', '', 'mainbody'),
 (54, 732, 'admin', 1, '', '', '', 'required', '', '', '', '', '', '', '', '', '', '', '', 0, '', 0, 1, '', '', '', '', '', '', 'mainbody'),
-(55, 722, 'content', 2, 'clear', '', '', '', '', '', '', '', '', '', '', '', 'none', '', '', 0, '', 0, 1, '', '', '', '', '', '', 'mainbody'),
-(55, 749, 'content', 1, 'clear', '', '', '', '', '', '', '', '', '', '', '', 'none', '', '', 0, '', 0, 1, '', '', '', '', '', '', 'mainbody'),
-(55, 761, 'content', 3, '', '', '', '', '', '', '', '', '', '', '', '', 'none', '', '', 0, '', 0, 1, '', '', '', '', '', '', 'mainbody'),
-(55, 763, 'content', 4, '', '', '', '', '', '', '', '', '', '', '', '', 'none', '', '', 0, '', 0, 1, '', '', '', '', '', '', 'mainbody'),
-(56, 775, 'content', 2, 'clear', '', '', '', '', '', '', '', '', '', '', '', 'none', '', '', 0, '', 0, 1, 'joomla_language', '{\"languages\":\"en-GB\",\"do\":\"0\"}', '', '', '', '', 'mainbody'),
-(56, 777, 'content', 4, 'clear', '', '', '', '', '', '', '', '', '', '', '', 'none', '', '', 0, '', 0, 1, 'joomla_language', '{\"languages\":\"fr-FR\",\"do\":\"0\"}', '', '', '', '', 'mainbody'),
-(56, 779, 'content', 1, 'clear', '', '', '', '', '', '', '', '', '', '', '', 'none', '', '', 0, '', 0, 1, 'joomla_language', '{\"languages\":\"de-DE\",\"do\":\"0\"}', '', '', '', '', 'mainbody'),
-(56, 781, 'content', 3, 'clear', '', '', '', '', '', '', '', '', '', '', '', 'none', '', '', 0, '', 0, 1, 'joomla_language', '{\"languages\":\"es-ES\",\"do\":\"0\"}', '', '', '', '', 'mainbody'),
-(56, 783, 'content', 5, 'clear', '', '', '', '', '', '', '', '', '', '', '', 'none', '', '', 0, '', 0, 1, 'joomla_language', '{\"languages\":\"en-GB\",\"do\":\"0\"}', '', '', '', '', 'mainbody'),
-(57, 776, 'content', 2, '', '', '', '', '', '', '', '', '', '', '', '', 'none', '', '', 0, '', 0, 1, 'joomla_language', '{\"languages\":\"en-GB\",\"do\":\"0\"}', '', '', '', '', 'mainbody'),
-(57, 778, 'content', 4, '', '', '', '', '', '', '', '', '', '', '', '', 'none', '', '', 0, '', 0, 1, 'joomla_language', '{\"languages\":\"fr-FR\",\"do\":\"0\"}', '', '', '', '', 'mainbody'),
-(57, 780, 'content', 1, '', '', '', '', '', '', '', '', '', '', '', '', 'none', '', '', 0, '', 0, 1, 'joomla_language', '{\"languages\":\"de-DE\",\"do\":\"0\"}', '', '', '', '', 'mainbody'),
-(57, 782, 'content', 3, '', '', '', '', '', '', '', '', '', '', '', '', 'none', '', '', 0, '', 0, 1, 'joomla_language', '{\"languages\":\"es-ES\",\"do\":\"0\"}', '', '', '', '', 'mainbody'),
-(57, 784, 'content', 5, '', '', '', '', '', '', '', '', '', '', '', '', 'none', '', '', 0, '', 0, 1, 'joomla_language', '{\"languages\":\"it-IT\",\"do\":\"0\"}', '', '', '', '', 'mainbody');
+(55, 722, 'content', 2, '', '', '', '', '', '', '', '', '', '', '', '', 'clear', '', '', 0, '', 0, 1, '', '', '', '', '', '', '_pre_'),
+(55, 749, 'content', 1, '', '', '', '', '', '', '', '', '', '', '', '', 'clear', '', '', 0, '', 0, 1, '', '', '', '', '', '', '_pre_'),
+(55, 761, 'content', 3, '', '', '', '', '', '', '', '', '', '', '', '', 'clear', '', '', 0, '', 0, 1, '', '', '', '', '', '', '_pre_'),
+(55, 763, 'content', 4, '', '', '', '', '', '', '', '', '', '', '', '', 'clear', '', '', 0, '', 0, 1, '', '', '', '', '', '', '_pre_'),
+(56, 775, 'content', 2, 'clear', '', '', '', '', '', '', '', '', '', '', '', 'none', '', '', 0, '', 0, 1, 'joomla_language', '{\"languages\":\"en-GB\",\"do\":\"0\"}', '', '', '', '', '_pre_'),
+(56, 777, 'content', 4, 'clear', '', '', '', '', '', '', '', '', '', '', '', 'none', '', '', 0, '', 0, 1, 'joomla_language', '{\"languages\":\"fr-FR\",\"do\":\"0\"}', '', '', '', '', '_pre_'),
+(56, 779, 'content', 1, 'clear', '', '', '', '', '', '', '', '', '', '', '', 'none', '', '', 0, '', 0, 1, 'joomla_language', '{\"languages\":\"de-DE\",\"do\":\"0\"}', '', '', '', '', '_pre_'),
+(56, 781, 'content', 3, 'clear', '', '', '', '', '', '', '', '', '', '', '', 'none', '', '', 0, '', 0, 1, 'joomla_language', '{\"languages\":\"es-ES\",\"do\":\"0\"}', '', '', '', '', '_pre_'),
+(56, 783, 'content', 5, 'clear', '', '', '', '', '', '', '', '', '', '', '', 'none', '', '', 0, '', 0, 1, 'joomla_language', '{\"languages\":\"en-GB\",\"do\":\"0\"}', '', '', '', '', '_pre_'),
+(57, 776, 'content', 2, '', '', '', '', '', '', '', '', '', '', '', '', 'none', '', '', 0, '', 0, 1, 'joomla_language', '{\"languages\":\"en-GB\",\"do\":\"0\"}', '', '', '', '', '_pre_'),
+(57, 778, 'content', 4, '', '', '', '', '', '', '', '', '', '', '', '', 'none', '', '', 0, '', 0, 1, 'joomla_language', '{\"languages\":\"fr-FR\",\"do\":\"0\"}', '', '', '', '', '_pre_'),
+(57, 780, 'content', 1, '', '', '', '', '', '', '', '', '', '', '', '', 'none', '', '', 0, '', 0, 1, 'joomla_language', '{\"languages\":\"de-DE\",\"do\":\"0\"}', '', '', '', '', '_pre_'),
+(57, 782, 'content', 3, '', '', '', '', '', '', '', '', '', '', '', '', 'none', '', '', 0, '', 0, 1, 'joomla_language', '{\"languages\":\"es-ES\",\"do\":\"0\"}', '', '', '', '', '_pre_'),
+(57, 784, 'content', 5, '', '', '', '', '', '', '', '', '', '', '', '', 'none', '', '', 0, '', 0, 1, 'joomla_language', '{\"languages\":\"it-IT\",\"do\":\"0\"}', '', '', '', '', '_pre_'),
+(58, 301, 'content', 2, 'clear', '', '', '', '', '', '', '', '', '', '', '', 'clear', '', '', 0, '', 0, 1, '', '', '', '', '', '', '_pre_'),
+(58, 871, 'content', 4, 'clear', '', '', '', '', '', '', '', '', '', '', '', 'clear', '', '', 0, '', 0, 1, 'x', '{\"conditions\":[{\"trigger\":\"cck_fields\",\"options\":{\"property\":\"value\",\"property_custom\":\"\",\"do\":\"0\",\"trigger\":\"art_state\",\"match\":\"isEqual\",\"values\":\"2\",\"live\":\"\"}},{\"trigger\":\"cck_fields\",\"options\":{\"property\":\"value\",\"property_custom\":\"\",\"do\":\"0\",\"trigger\":\"art_archived_mode\",\"match\":\"isEqual\",\"values\":\"2\",\"live\":\"\"}}]}', '', '', '', '', '_pre_'),
+(58, 872, 'content', 3, 'clear', '', '', '', '', '', '', '', '', '', '', '', 'clear', '', '', 0, '', 0, 1, 'cck_fields', '{\"property\":\"value\",\"property_custom\":\"\",\"do\":\"0\",\"trigger\":\"art_state\",\"match\":\"isEqual\",\"values\":\"2\",\"live\":\"\"}', '', '', '', '', '_pre_'),
+(58, 873, 'content', 5, 'clear', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 0, '', 0, 1, 'x', '{\"conditions\":[{\"trigger\":\"cck_fields\",\"options\":{\"property\":\"value\",\"property_custom\":\"\",\"do\":\"0\",\"trigger\":\"art_state\",\"match\":\"isEqual\",\"values\":\"2\",\"live\":\"\"}},{\"trigger\":\"cck_fields\",\"options\":{\"property\":\"value\",\"property_custom\":\"\",\"do\":\"0\",\"trigger\":\"art_archived_mode\",\"match\":\"isEqual\",\"values\":\"1\",\"live\":\"\"}}]}', '', '', '', '', '_pre_'),
+(58, 874, 'content', 1, 'clear', '', '', '', '', '', '', '', '', '', '', '', 'clear', '', '', 0, '', 0, 1, '', '', '', '', '', '', '_pre_');
 
 
 -- --------------------------------------------------------
@@ -2026,14 +2037,17 @@ INSERT IGNORE INTO `#__cck_core_type_position` (`typeid`, `position`, `client`, 
 (54, 'clear', 'site', '', '', '', '', '', ''),
 (54, 'mainbody', 'admin', '', '', '', '', '', ''),
 (55, 'clear', 'admin', '', '', '', '', '', ''),
-(55, 'clear', 'content', '', '', '', '', '', ''),
-(55, 'mainbody', 'content', '', '', '', '', '', ''),
+(55, '_post_', 'content', '', '', '', '', '', ''),
+(55, '_pre_', 'content', '', '', '', '', '', ''),
 (56, 'clear', 'admin', '', '', '', '', '', ''),
-(56, 'clear', 'content', '', '', '', '', '', ''),
-(56, 'mainbody', 'content', '', '', '', '', '', ''),
+(56, '_post_', 'content', '', '', '', '', '', ''),
+(56, '_pre_', 'content', '', '', '', '', '', ''),
 (57, 'clear', 'admin', '', '', '', '', '', ''),
-(57, 'clear', 'content', '', '', '', '', '', ''),
-(57, 'mainbody', 'content', '', '', '', '', '', '');
+(57, '_post_', 'content', '', '', '', '', '', ''),
+(57, '_pre_', 'content', '', '', '', '', '', ''),
+(58, '_post_', 'admin', '', '', '', '', '', ''),
+(58, '_post_', 'content', '', '', '', '', '', ''),
+(58, '_pre_', 'content', '', '', '', '', '', '');
 
 
 -- --------------------------------------------------------
@@ -2079,6 +2093,7 @@ INSERT IGNORE INTO `#__cck_core_versions` (`id`, `e_id`, `e_title`, `e_name`, `e
 
 CREATE TABLE IF NOT EXISTS `#__cck_store_item_content` (
   `id` int(10) unsigned NOT NULL,
+  `archived_mode` tinyint(3) NOT NULL DEFAULT '0',
   `alias_de` varchar(400) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT '',
   `alias_en` varchar(400) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT '',
   `alias_es` varchar(400) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT '',
