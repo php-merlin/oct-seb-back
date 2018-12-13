@@ -40,6 +40,7 @@
 			<!-- Plugin // CCK Field -->
 			<file type="plugin" id="button_free" group="cck_field">plg_cck_field_button_free.zip</file>
 			<file type="plugin" id="button_submit" group="cck_field">plg_cck_field_button_submit.zip</file>
+			<file type="plugin" id="cck_break" group="cck_field">plg_cck_field_cck_break.zip</file>
 			<file type="plugin" id="checkbox" group="cck_field">plg_cck_field_checkbox.zip</file>
 			<file type="plugin" id="colorpicker" group="cck_field">plg_cck_field_colorpicker.zip</file>
 			<file type="plugin" id="div" group="cck_field">plg_cck_field_div.zip</file>
