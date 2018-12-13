@@ -33,6 +33,7 @@ $attr       =   array( 'class'=>' b', 'span'=>'<span class="icon-pencil-2"></spa
         <div class="seblod">
             <div class="legend top left"><?php echo JText::_( 'COM_CCK_CONSTRUCTION_'.$this->uix ) . '<span class="mini">('.JText::_( 'COM_CCK_FOR_VIEW_'.$this->item->client ).')</span>'; ?></div>
             <?php
+            $ijk    =   0;
 			$style	=	array( '1'=>'', '2'=>' hide', '3'=>' hide', '4'=>' hide', '5'=>' hide', '6'=>' hide', '7'=>' hide' );
             Helper_Workshop::displayHeader( 'search', $this->item->master );
             echo '<ul class="sortable connected" id="sortable1" myid="1">';
@@ -54,6 +55,19 @@ $attr       =   array( 'class'=>' b', 'span'=>'<span class="icon-pencil-2"></spa
                     echo '<li class="position ui-state-disabled" id="pos-1"><span class="title capitalize"># '.JText::_( 'COM_CCK_SELECT_LIST_TEMPLATE' ).'</span></li>';
 					Helper_Workshop::displayPositionEnd();
                 } else {
+                    echo '<li class="position ui-state-disabled boundary" id="pos-0"><input class="selector" type="radio" id="position0" name="positions" gofirst="#pos-0" golast="#pos-1"><span class="title"></span><input type="hidden" name="ff[pos-_pre_]" value="position" /></li>';
+
+                    if ( isset( $this->fields['_pre_'] ) ) {
+                        foreach ( $this->fields['_pre_'] as $field ) {
+                            $type_field     =   '';
+                            if ( isset( $this->type_fields[$field->id] ) ) {
+                                $type_field =   ' c-'.$this->type_fields[$field->id]->cc;
+                            }
+                            JCck::callFunc_Array( 'plgCCK_Field'.$field->type, 'onCCK_FieldConstruct_Search'.$this->item->master, array( &$field, $style, $data, &$data2 ) );
+                            Helper_Workshop::displayField( $field, $type_field, $attr );
+                        }
+                    }
+
 					if ( $this->positions_nb ) {
 						foreach ( $this->positions as $pos ) {
 							if ( isset( $this->fields[$pos->name] ) ) {
@@ -69,11 +83,28 @@ $attr       =   array( 'class'=>' b', 'span'=>'<span class="icon-pencil-2"></spa
 							} else {
 								$positions[] =   array( 'name'=>$pos->name, 'title'=>$pos->title );
 							}
+                            $ijk++;
 						}
 						foreach ( $positions as $pos ) {
 							$this->setPosition( $pos['name'], $pos['title'] );
 						}
-						Helper_Workshop::displayPositionEnd( $this->positions_nb );
+
+                        $ijk++;
+
+                        echo '<li class="position ui-state-disabled boundary" id="pos-'.$ijk.'"><input class="selector" type="radio" id="position0" name="positions" gofirst="#pos-'.$ijk.'" golast="#pos-'.( $ijk + 1 ).'"><span class="title"></span><input type="hidden" name="ff[pos-_post_]" value="position" /></li>';
+
+                        if ( isset( $this->fields['_post_'] ) ) {
+                            foreach ( $this->fields['_post_'] as $field ) {
+                                $type_field     =   '';
+                                if ( isset( $this->type_fields[$field->id] ) ) {
+                                    $type_field =   ' c-'.$this->type_fields[$field->id]->cc;
+                                }
+                                JCck::callFunc_Array( 'plgCCK_Field'.$field->type, 'onCCK_FieldConstruct_Search'.$this->item->master, array( &$field, $style, $data, &$data2 ) );
+                                Helper_Workshop::displayField( $field, $type_field, $attr );
+                            }
+                        }
+
+						Helper_Workshop::displayPositionEnd( ++$this->positions_nb );
 					} else {
 						echo '<li class="position ui-state-disabled" id="pos-1"><span class="title capitalize"># '.JText::_( 'COM_CCK_NO_POSITION_AVAILABLE' ).'</span></li>';
 						Helper_Workshop::displayPositionEnd();
