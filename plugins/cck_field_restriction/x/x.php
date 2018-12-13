@@ -154,6 +154,10 @@ class plgCCK_Field_RestrictionX extends JCckPluginRestriction
 				$fields[$name]->display	=	0;
 				$fields[$name]->state	=	0;	
 			}
+
+			return false;
+		} else {
+			return true;
 		}
 	}
 
