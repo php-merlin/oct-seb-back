@@ -66,6 +66,7 @@ class plgCCK_FieldGroup extends JCckPluginField
 		$name		=	$field->name;
 		$dispatcher	=	JEventDispatcher::getInstance();
 		$fields		=	self::_getChildren( $field, $config );
+
 		$xn			=	1;
 		$content	=	array();
 		for ( $xi = 0; $xi < $xn; $xi++ ) {
@@ -97,6 +98,18 @@ class plgCCK_FieldGroup extends JCckPluginField
 						$content[$f_name]->typo	=	'';
 					}
 					$config['fields'][$f->name]	=	$content[$f_name];
+
+					// Was it the last one?
+					if ( $content[$f_name]->type == 'cck_break' && isset( $content[$f_name]->process ) ) {
+						if ( $content[$f_name]->process->type ) {
+							if ( !JCck::callFunc_Array( 'plg'.$content[$f_name]->process->group.$content[$f_name]->process->type, 'on'.$content[$f_name]->process->group.'BeforeRenderContent', array( $content[$f_name]->process->params, &$config['fields'], &$config['storages'], &$config ) ) ) {
+								$config['error']	=	0;
+							}
+						}
+					}
+					if ( $config['error'] ) {
+						break;
+					}
 				}
 			}
 		}

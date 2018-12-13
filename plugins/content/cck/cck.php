@@ -588,6 +588,13 @@ class plgContentCCK extends JPlugin
 					$positions[$position][]		=	$fieldName;
 
 					// Was it the last one?
+					if ( $field->type == 'cck_break' && isset( $field->process ) ) {
+						if ( $field->process->type ) {
+							if ( !JCck::callFunc_Array( 'plg'.$field->process->group.$field->process->type, 'on'.$field->process->group.'BeforeRenderContent', array( $field->process->params, &$fields, &$config['storages'], &$config ) ) ) {
+								$config['error']	=	0;
+							}
+						}
+					}
 					if ( $config['error'] ) {
 						break;
 					}
