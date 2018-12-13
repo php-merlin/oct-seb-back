@@ -125,6 +125,10 @@ class plgCCK_FieldSearch_Generic extends JCckPluginField
 			$field->value	=	$value;
 		} else {
 			self::onCCK_FieldPrepareForm( $field, $value, $config, $inherit, $return );
+			
+			if ( strpos( $field->value, '&' ) !== false ) {
+				$field->value	=	str_replace( array( '&amp;', '&quot;' ), array( '&', '\"' ), $field->value );
+			}
 		}
 		if ( $field->children ) {
 			$i					=	0;
