@@ -272,6 +272,7 @@ class CCK_Rendering
 				return false;
 				break;
 		}
+		$this->config['cck']			=	$this;
 		$this->config['client']			=	$this->client;
 		$this->config['computation']	=	array();
 		$this->config['rendering_id']	=	$this->id;
@@ -572,7 +573,6 @@ class CCK_Rendering
 				$options	=	new JRegistry;
 			}
 			$markup						=	$options->get( 'field_markup', '' );
-			$this->config['cck']		=	$this;
 			$this->config['markup']		=	$markup;
 			$this->config['options']	=	$options;
 

@@ -131,6 +131,15 @@ class CCK_Rendering_Item
 		} else {
 			$this->markup	=	'';
 		}
+
+		$this->config		=	array(
+									'cck'=>$this,
+									'client'=>'list',
+									'legacy'=>$legacy,
+									'markup'=>'',
+									'mode'=>$this->mode,
+									'rendering_id'=>$this->id
+								);
 	}
 
 	// finalize
@@ -218,18 +227,29 @@ class CCK_Rendering_Item
 	{
 		$field	=	$this->get( $fieldname );
 		$html	=	'';
+		
 		if ( !$field ) {
 			return $html;
 		}
 		
 		if ( $field->display && $field->markup != 'clear' ) {
+			if ( ! $options ) {
+				$hasOptions	=	false;
+				$options	=	new JRegistry;
+			} else {
+				$hasOptions	=	true;
+			}
+			$markup						=	$options->get( 'field_markup', '' );
+
+			$this->config['markup']		=	$markup;
+			$this->config['options']	=	$options;
+
 			$html	=	JCck::callFunc_Array( 'plgCCK_Field'.$field->type, $this->methodRender, array( &$field, &$this->config ) );
 			
 			if ( $field->display > 1 && $html != '' ) {
-				if ( ! $options ) {
+				if ( ! $hasOptions ) {
 					return $html;
 				}
-				$markup		=	$options->get( 'field_markup', '' );
 
 				if ( $field->markup == 'none' || ( $field->markup == '' && $markup == 'none' ) ) {
 					// Label
