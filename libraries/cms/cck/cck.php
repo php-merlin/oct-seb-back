@@ -138,13 +138,14 @@ abstract class JCck
 	{
 		if ( (int)self::getConfig_Param( 'multisite', 0 ) ) {
 			$alias			=	'';
+			$base			=	JUri::base( true );
 			$context		=	'';
 			$host			=	JUri::getInstance()->getHost();
 			$host2			=	'';
 			$lang_sef		=	'';
 			$path			=	JUri::getInstance()->getPath();
 			$path_base		=	$path;
-			
+
 			if ( JCckDevHelper::isMultilingual( true ) ) {
 				jimport( 'joomla.language.helper' ); /* TODO#SEBLOD4: remove */
 
@@ -183,7 +184,7 @@ abstract class JCck
 
 					if ( $s->context != '' ) {
 						$hasContext	=	true;
-						$pos		=	strpos( $path_base, $lang_sef.'/'.$s->context );
+						$pos		=	strpos( $path_base, $base.$lang_sef.'/'.$s->context );
 
 						if ( $pos !== false && $pos == 0 ) {
 							$context	=	$s->context;
@@ -285,6 +286,16 @@ abstract class JCck
 	// getSite
 	public static function getSite()
 	{
+		if ( !isset( self::$_sites[self::$_host] ) ) {
+			return (object)array(
+							'context'=>'',
+							'id'=>0,
+							'name'=>'',
+							'parent_id'=>0,
+							'title'=>''
+						   );
+		}
+		
 		if ( is_object( self::$_sites[self::$_host] ) && is_string( self::$_sites[self::$_host]->configuration ) ) {
 			self::$_sites[self::$_host]->configuration	=	new JRegistry( self::$_sites[self::$_host]->configuration );
 		}
