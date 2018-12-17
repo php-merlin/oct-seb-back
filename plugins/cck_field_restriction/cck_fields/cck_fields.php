@@ -103,6 +103,7 @@ class plgCCK_Field_RestrictionCck_Fields extends JCckPluginRestriction
 			$field			=	(object)array(
 									'live'=>$condition_live,
 									'live_options'=>$condition_values,
+									'name'=>$name
 								);
 			$value			=	'';
 

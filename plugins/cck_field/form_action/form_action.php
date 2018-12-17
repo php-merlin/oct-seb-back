@@ -181,7 +181,8 @@ class plgCCK_FieldForm_Action extends JCckPluginField
 		if ( count( $opts ) ) {
 			foreach ( $opts as $opt ) {
 				$o	=	explode( '=', $opt );
-				if ( $fields[$o[0]] ) {
+				
+				if ( isset( $fields[$o[0]] ) ) {
 					$fields[$o[0]]->form	=	str_replace( 'name="'.$o[0].'"', 'name="'.$o[1].'"', $fields[$o[0]]->form );
 					$fields[$o[0]]->form	=	str_replace( 'name="'.$o[0].'[]"', 'name="'.$o[1].'"', $fields[$o[0]]->form );
 				}
