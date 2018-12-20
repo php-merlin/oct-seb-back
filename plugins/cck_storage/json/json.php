@@ -204,7 +204,9 @@ class plgCCK_StorageJson extends JCckPluginStorage
 			if ( $value != '' ) {
 				$value	=	addcslashes( $value, "\"\n\r\\" );
 			}
-			$value	=	'"'.$value.'"';
+			if ( is_string( $value ) ) {
+				$value	=	'"'.$value.'"';
+			}
 		}
 		$store	=	'"'.$field->storage_field2.'":'.$value.',';
 		
