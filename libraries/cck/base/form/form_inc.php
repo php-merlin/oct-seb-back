@@ -116,6 +116,7 @@ $config	=	array( 'action'=>$preconfig['action'],
 				   'storages'=>array(),
 				   'type'=>$type->name,
 				   'type_id'=>$type->id,
+				   'type_parent'=>'',
 				   'url'=>( ( @$preconfig['url'] ) ? $preconfig['url'] : $current ),
 				   'validate'=>array(),
 				   'validation'=>array(),
@@ -198,9 +199,11 @@ foreach ( $variation as $var ) {
 $positions		=	array();
 $positions_w	=	'a.typeid = '.(int)$type->id;
 if ( $type->parent_inherit && $type->parent != '' ) {
-	$parent_id		=	(int)JCckDatabase::loadResult( 'SELECT id FROM #__cck_core_types WHERE name = "'.$type->parent.'"' );
+	$config['type_parent']	=	$type->parent;
+	$parent_id				=	(int)JCckDatabase::loadResult( 'SELECT id FROM #__cck_core_types WHERE name = "'.$type->parent.'"' );
+	
 	if ( $parent_id ) {
-		$positions_w	=	'('.$positions_w.' OR a.typeid = '.$parent_id.')';
+		$positions_w		=	'('.$positions_w.' OR a.typeid = '.$parent_id.')';
 	}
 }
 $positions_more	=	JCckDatabase::loadObjectList( 'SELECT * FROM #__cck_core_type_position AS a WHERE '.$positions_w.' AND a.client ="'.(string)$preconfig['client'].'"', 'position' );
