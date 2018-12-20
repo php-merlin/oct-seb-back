@@ -72,9 +72,9 @@ class plgCCK_FieldItem_X extends JCckPluginField
 		if ( isset( $inherit['caller'] ) && $inherit['caller'] ) {
 			$referrer	=	$inherit['caller'].'.'.$config['client_form'];
 		} else {
-			$referrer	=	$config['type'].'.'.$config['client_form'];
+			$parent		=	( isset( $config['type_parent'] ) && $config['type_parent'] ) ? $config['type_parent'].'-' : '';
+			$referrer	=	$parent.$config['type'].'.'.$config['client_form'];
 		}
-		
 		if ( $field->bool && $field->label ) {
 			$field->markup_class	.=	' o-input-top';
 		}
@@ -83,7 +83,7 @@ class plgCCK_FieldItem_X extends JCckPluginField
 		if ( $config['doValidation'] > 1 ) {
 			plgCCK_Field_ValidationRequired::onCCK_Field_ValidationPrepareForm( $field, $id, $config );
 		}
-
+		
 		// Prepare
 		$app		=	JFactory::getApplication();
 		$form		=	$field->location;
@@ -760,7 +760,12 @@ class plgCCK_FieldItem_X extends JCckPluginField
 			$query	.=	' WHERE a.name = "'.$parts[2].'"';
 
 			if ( $parts[0] ) {
-				$query	.=	' AND c.name="'.$parts[0].'" AND b.client = "'.$parts[1].'"';
+				if ( strpos( $parts[0], '-' ) !== false ) {
+					$types	=	explode( '-', $parts[0] );
+					$query	.=	' AND (c.name="'.$types[0].'" OR c.name="'.$types[1].'") AND b.client = "'.$parts[1].'"';
+				} else {
+					$query	.=	' AND c.name="'.$parts[0].'" AND b.client = "'.$parts[1].'"';
+				}
 			}
 
 			$field	=	JCckDatabaseCache::loadObject( $query );
@@ -794,7 +799,6 @@ class plgCCK_FieldItem_X extends JCckPluginField
 				}
 			}
 		}
-
 
 		if ( isset( self::$properties[$referrer][$property] ) ) {
 			return self::$properties[$referrer][$property];
