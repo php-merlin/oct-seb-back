@@ -26,9 +26,10 @@ class CCKController extends JControllerLegacy
 		$lang		=	JFactory::getLanguage();
 
 		if ( is_object( $field ) ) {
-			$return		=	true;
-			$element	=	'type';
-			$master		=	( $client == 'content' || $client == 'intro' ) ? 'content' : 'form';
+			$element		=	'type';
+			$field->markup	=	'none';
+			$master			=	( $client == 'content' || $client == 'intro' ) ? 'content' : 'form';
+			$return			=	true;
 			
 			require_once JPATH_COMPONENT.'/helpers/helper_admin.php';
 		} else {
@@ -150,7 +151,7 @@ class CCKController extends JControllerLegacy
 		$table->published			=	1;
 		$table->access				=	3;
 		$table->indexed				=	'intro';
-		$table->location			=	'none';
+		$table->location			=	'collection';
 		$table->storage_location	=	JCckDatabase::loadResult( 'SELECT storage_location FROM #__cck_core_types WHERE id = '.(int)$type_id );
 		
 		if ( !$table->storage_location ) {
