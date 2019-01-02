@@ -150,7 +150,7 @@ class CCKController extends JControllerLegacy
 		$table->template_intro		=	$style->id;
 		$table->published			=	1;
 		$table->access				=	3;
-		$table->indexed				=	'intro';
+		$table->indexed				=	'none';
 		$table->location			=	'collection';
 		$table->storage_location	=	JCckDatabase::loadResult( 'SELECT storage_location FROM #__cck_core_types WHERE id = '.(int)$type_id );
 		
@@ -202,7 +202,7 @@ class CCKController extends JControllerLegacy
 				return;
 			} else {
 				$query	=	'UPDATE #__cck_core_type_field'
-						.	' SET typeid = '.(int)$table->id.', computation = "", computation_options = "", conditional = "", conditional_options = ""'
+						.	' SET typeid = '.(int)$table->id.', position = "_main_", computation = "", computation_options = "", conditional = "", conditional_options = ""'
 						.	' WHERE typeid = '.$type_id.' AND client = "'.$client.'" AND fieldid IN ('.$fields.')';
 				JCckDatabase::execute( $query );
 			}
