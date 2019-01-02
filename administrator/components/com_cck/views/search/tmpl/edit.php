@@ -75,14 +75,14 @@ if ( $this->item->client == 'list' ) {
 	</div>
 	<div class="seblod first" id="more" style="<?php echo $this->panel_style; ?>height:<?php echo $this->css['panel_height']; ?>;">
     	<div>
-            <ul class="spe spe_title">
-				<?php echo JCckDev::renderForm( $cck['core_alias'], $this->item->alias, $config ); ?>
+            <ul class="spe spe_title">				
+				<?php echo JCckDev::renderForm( $cck['core_access'], $this->item->access, $config ); ?>
             </ul>
             <ul class="spe spe_folder">
 				<?php echo JCckDev::renderFormFromHelper( array( 'component'=>'com_cck', 'function'=>'getStorageLocation2', 'name'=>'core_storage_location2' ), $this->item->storage_location, $config, array( 'selectlabel'=>'Select', 'attributes'=>'style="width:140px;"', 'storage_field'=>'storage_location' ) ); ?>
             </ul>
             <ul class="spe spe_third">
-				<?php echo JCckDev::renderForm( $cck['core_access'], $this->item->access, $config, array( 'css'=>'max-width-180' ) ); ?>
+				<?php echo JCckDev::renderForm( $cck['core_alias'], $this->item->alias, $config, array( 'css'=>'max-width-150' ) ); ?>
             </ul>
 			<ul class="spe spe_name">
 				<?php

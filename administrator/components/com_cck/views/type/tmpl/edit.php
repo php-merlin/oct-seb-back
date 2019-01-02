@@ -65,15 +65,19 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 	<div class="seblod first" id="more" style="<?php echo $this->panel_style; ?>height:<?php echo $this->css['panel_height']; ?>;">
     	<div>
             <ul class="spe spe_title">
-            	<?php echo JCckDev::renderForm( $cck['core_alias'], $this->item->alias, $config ); ?>
+            	<?php echo JCckDev::renderForm( $cck['core_access'], $this->item->access, $config, array( 'defaultvalue'=>'3' ) ); ?>
             </ul>
             <ul class="spe spe_folder">
             	<?php echo JCckDev::renderFormFromHelper( array( 'component'=>'com_cck', 'function'=>'getStorageLocation2', 'name'=>'core_storage_location2' ), $this->item->storage_location, $config, array( 'attributes'=>'style="width:140px;"', 'storage_field'=>'storage_location' ) ); ?>
             </ul>
             <ul class="spe spe_third">
             	<?php
-				$html	=	JCckDev::getForm( 'core_description', $this->item->permissions, $config, array( 'selectlabel'=>'Button Icon Edit', 'options2'=>'{"editor":"none"}', 'bool8'=>false, 'storage_field'=>'permissions', 'attributes'=>'style="margin:0 0 0 2px;"' ) );
-            	echo JCckDev::renderForm( $cck['core_rules_type'], $this->item->asset_id, $config, array(), array( 'after'=>$html ) );
+            	if ( $this->item->location == 'collection' ) {
+            		echo '<li>&nbsp;</li>';
+            	} else {
+					$html	=	JCckDev::getForm( 'core_description', $this->item->permissions, $config, array( 'selectlabel'=>'Button Icon Edit', 'options2'=>'{"editor":"none"}', 'bool8'=>false, 'storage_field'=>'permissions', 'attributes'=>'style="margin:0 0 0 2px;"' ) );
+            		echo JCckDev::renderForm( $cck['core_rules_type'], $this->item->asset_id, $config, array(), array( 'after'=>$html ) );
+            	}
             	?>            	
             </ul>
 			<ul class="spe spe_name">
@@ -92,23 +96,25 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
             <ul class="spe spe_type">
             	<?php echo JCckDev::renderForm( $cck['core_location'], $this->item->location, $config, array( 'attributes'=>'style="width:140px;"' ) ); ?>
             </ul>
-			<ul class="spe spe_sixth">
-				<?php echo JCckDev::renderForm( 'core_css_core', $this->item->stylesheets, $config, array( 'label'=>'Stylesheets', 'css'=>'max-width-180', 'storage_field'=>'stylesheets' ) ); ?>
-            </ul>
-            <ul class="spe spe_name">
-            	<li><label><?php echo JText::_( 'COM_CCK_PARENT' ); ?></label>
-            	<?php
-            	echo JCckDev::getForm( $cck['core_parent_type'], $this->item->parent, $config, array( 'css'=>'max-width-180' ) );
-            	echo JCckDev::getForm( 'core_dev_bool', $this->item->parent_inherit, $config, array( 'css'=>'input-xsmall', 'storage_field'=>'parent_inherit' ) );
-            	?>
-            	</li>
-            </ul>
-            <ul class="spe spe_type">
-            	<?php echo JCckDev::renderForm( $cck['core_access'], $this->item->access, $config, array( 'defaultvalue'=>'3', 'css'=>'max-width-180' ) ); ?>
-            </ul>
-            <ul class="spe spe_sixth">
-            	<?php echo JCckDev::renderForm( $cck['core_indexing'], $this->item->indexed, $config, array( 'attributes'=>'style="width:130px;"' ) ); ?>
-            </ul>
+            <?php if ( $this->item->location != 'collection' ) { ?>
+				<ul class="spe spe_sixth">
+					<?php echo JCckDev::renderForm( 'core_css_core', $this->item->stylesheets, $config, array( 'label'=>'Stylesheets', 'css'=>'max-width-180', 'storage_field'=>'stylesheets' ) ); ?>
+	            </ul>
+	            <ul class="spe spe_name">
+	            	<li><label><?php echo JText::_( 'COM_CCK_PARENT' ); ?></label>
+	            	<?php
+	            	echo JCckDev::getForm( $cck['core_parent_type'], $this->item->parent, $config, array( 'css'=>'max-width-180' ) );
+	            	echo JCckDev::getForm( 'core_dev_bool', $this->item->parent_inherit, $config, array( 'css'=>'input-xsmall', 'storage_field'=>'parent_inherit' ) );
+	            	?>
+	            	</li>
+	            </ul>
+	            <ul class="spe spe_type">
+	            	<?php echo JCckDev::renderForm( $cck['core_alias'], $this->item->alias, $config, array( 'css'=>'max-width-150' ) ); ?>
+	            </ul>
+	            <ul class="spe spe_sixth">
+	            	<?php echo JCckDev::renderForm( $cck['core_indexing'], $this->item->indexed, $config, array( 'attributes'=>'style="width:130px;"' ) ); ?>
+	            </ul>
+            <?php } ?>
         </div>
 	</div>
 </div>

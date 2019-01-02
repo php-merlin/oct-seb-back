@@ -80,6 +80,10 @@ class CCK_TableType extends JTable
 			}
 		}
 
+		if ( $this->location == 'collection' ) {
+			$this->_trackAssets	=	false;
+		}
+
 		return true;
 	}
 	
