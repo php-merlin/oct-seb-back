@@ -14,6 +14,7 @@ defined( '_JEXEC' ) or die;
 class plgCCK_Storage_LocationJoomla_Menu extends JCckPluginLocation
 {
 	protected static $type			=	'joomla_menu';
+	protected static $type_alias	=	'Menu';
 	protected static $table			=	'#__menu_types';
 	protected static $table_object	=	array( 'MenuType', 'JTable' );
 	protected static $key			=	'id';
@@ -21,6 +22,8 @@ class plgCCK_Storage_LocationJoomla_Menu extends JCckPluginLocation
 	protected static $access		=	'access';
 	protected static $author		=	'';
 	protected static $author_object	=	'';
+	protected static $bridge_object	=	'';
+	protected static $child_object	=	'';
 	protected static $created_at	=	'';
 	protected static $custom		=	'';
 	protected static $modified_at	=	'';
@@ -30,8 +33,15 @@ class plgCCK_Storage_LocationJoomla_Menu extends JCckPluginLocation
 	protected static $to_route		=	'';
 	
 	protected static $context		=	''; /* TODO */
+	protected static $context2		=	'';
 	protected static $contexts		=	array(); /* TODO */
 	protected static $error			=	false;
+	protected static $events		=	array(
+											'afterDelete'=>'onContentAfterDelete',
+											'afterSave'=>'onContentAfterSave',
+											'beforeDelete'=>'onContentBeforeDelete',
+											'beforeSave'=>'onContentBeforeSave'
+										);
 	protected static $ordering		=	array( 'alpha'=>'title ASC' ); /* TODO */
 	protected static $ordering2		=	array();
 	protected static $pk			=	0;
