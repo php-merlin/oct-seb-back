@@ -139,16 +139,16 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
                 ?>
 			</td>
 			<td class="center hidden-phone"><?php
-				$client	=	JText::_( 'COM_CCK_EDIT_VIEW' ).' ('.$item->adminTemplate.')';
+				$client	=	JText::_( 'COM_CCK_EDIT_VIEW' ).( $item->adminTemplate ? ' ('.$item->adminTemplate.')' : '' );
                 echo ( !$item->adminFields ) ? '-' : ( ( $canEdit && !$checkedOut ) ? '<a class="btn btn-micro btn-count hasTooltip" data-edit-trigger="1" href="'.$link.'&client=admin" title="'.htmlspecialchars( $client ).'">'.$item->adminFields.'</a>' : $item->adminFields ); ?></td>
 			<td class="center hidden-phone"><?php
-				$client	=	JText::_( 'COM_CCK_EDIT_VIEW' ).' ('.$item->siteTemplate.')';
+				$client	=	JText::_( 'COM_CCK_EDIT_VIEW' ).( $item->siteTemplate ? ' ('.$item->siteTemplate.')' : '' );
                 echo ( !$item->siteFields ) ? '-' : ( ( $canEdit && !$checkedOut ) ? '<a class="btn btn-micro btn-count hasTooltip" data-edit-trigger="2" href="'.$link.'&client=site" title="'.htmlspecialchars( $client ).'">'.$item->siteFields.'</a>' : $item->siteFields ); ?></td>
 			<td class="center hidden-phone"><?php
-				$client	=	JText::_( 'COM_CCK_EDIT_VIEW' ).' ('.$item->introTemplate.')';
+				$client	=	JText::_( 'COM_CCK_EDIT_VIEW' ).( $item->introTemplate ? ' ('.$item->introTemplate.')' : '' );
                 echo ( !$item->introFields ) ? '-' : ( ( $canEdit && !$checkedOut ) ? '<a class="btn btn-micro btn-count hasTooltip" data-edit-trigger="3" href="'.$link.'&client=intro" title="'.htmlspecialchars( $client ).'">'.$item->introFields.'</a>' : $item->introFields ); ?></td>
 			<td class="center hidden-phone"><?php
-				$client	=	JText::_( 'COM_CCK_EDIT_VIEW' ).' ('.$item->contentTemplate.')';
+				$client	=	JText::_( 'COM_CCK_EDIT_VIEW' ).( $item->contentTemplate ? ' ('.$item->contentTemplate.')' : '' );
                 echo ( !$item->contentFields ) ? '-' : ( ( $canEdit && !$checkedOut ) ? '<a class="btn btn-micro btn-count hasTooltip" data-edit-trigger="4" href="'.$link.'&client=content" title="'.htmlspecialchars( $client ).'">'.$item->contentFields.'</a>' : $item->contentFields ); ?></td>
 			<td class="center">
 				<div class="btn-group">
