@@ -229,7 +229,7 @@ class CommonHelper_Admin
 			if ( $component == 'com_cck' && $element && $element != 'session' ) {
 				$where	.=	' AND s.elements LIKE "%'.$element.'%"';
 			}
-			$query		= 'SELECT CONCAT( REPEAT("- ", COUNT(parent.title) - '.$n.'), s.title) AS text, s.id AS value'
+			$query		= 'SELECT CONCAT( REPEAT("–", COUNT(parent.title) - '.$n.'), " ", s.title) AS text, s.id AS value'
 							. ' FROM #__cck_core'.$more.'_folders AS s, #__cck_core'.$more.'_folders AS parent'
 						. $where
 						. $orderby
