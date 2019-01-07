@@ -23,12 +23,25 @@ require_once JPATH_ADMINISTRATOR.'/components/'.CCK_COM.'/helpers/helper_folder.
 // Import
 class CCK_Import
 {
+	// _fromXML
+	protected static function _fromXML( $path, $config )
+	{
+		$buffer	=	file_get_contents( $path );
+		$buffer	=	str_replace( '%target_user_group%', $config['params']['data']->get( 'user_group', '-1' ), $buffer );
+		$buffer	=	str_replace( '%target_viewing_access_level%', $config['params']['data']->get( 'viewing_access_level', '-1' ), $buffer );
+
+		return $buffer;
+	}
+
 	// importContent
 	public static function importContent( $type, $base, $items, &$data, $config = array() )
 	{
 		foreach ( $items as $name ) {
 			$path	=	$base.$name;
-			$xml	=	JCckDev::fromXML( $path );
+
+			$buffer	=	self::_fromXML( $path, $config );
+			$xml	=	JCckDev::fromXML( $buffer, false );
+			
 			if ( !$xml || (string)$xml->attributes()->type != $type ) {
 				return;
 			}
@@ -52,6 +65,7 @@ class CCK_Import
 			// Store
 			$call	=	'beforeImport'.$type;
 			$pk		=	self::$call( $type, $item, $data, $config );
+			
 			if ( $pk ) {
 				continue;
 			}
@@ -66,6 +80,7 @@ class CCK_Import
 	public static function importElements( $elemtype, $path, $items, &$data, $config = array() )
 	{
 		require_once JPATH_ADMINISTRATOR.'/components/'.CCK_COM.'/tables/'.$elemtype.'.php';
+		
 		if ( count( $items ) ) {
 			foreach ( $items as $item ) {
 				CCK_Import::importElement( $elemtype, $path.$item, $data, $config );
@@ -76,7 +91,9 @@ class CCK_Import
 	// importElement
 	public static function importElement( $elemtype, $path, &$data, $config = array() )
 	{
-		$xml	=	JCckDev::fromXML( $path );
+		$buffer	=	self::_fromXML( $path, $config );
+		$xml	=	JCckDev::fromXML( $buffer, false );
+		
 		if ( !$xml || (string)$xml->attributes()->type != $elemtype.'s' ) {
 			return;
 		}
@@ -120,6 +137,9 @@ class CCK_Import
 	// beforeImportFolder
 	public static function beforeImportFolder( $elemtype, &$item, $data, $config = array() )
 	{
+		if ( isset( $item->params ) ) {
+			unset( $item->params );
+		}
 		if ( isset( $item->parent_id ) ) {
 			$idx	=	$item->parent_id;
 			if ( isset( $item->path ) && isset( $data['folders2'][$idx] ) ) {
@@ -375,6 +395,16 @@ class CCK_Import
 			return -1;
 		}
 
+		if ( !is_numeric( $table->parent_id ) ) {
+			if ( $table->parent_id == '%target_joomla_menu_item%' ) {
+				$item_id			=	$config['params']['data']->get( 'menu_item', '-1' );
+
+				if ( $item_id == '-1' ) {
+					return -1;
+				}
+				$table->parent_id	=	$item_id;
+			}
+		}
 		if ( $table->type == 'component' ) {
 			$table->component_id	=	JCckDatabase::loadResult( 'SELECT extension_id FROM #__extensions WHERE type = "component" AND element = "'.$table->component_id.'"' );
 		}

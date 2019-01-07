@@ -434,6 +434,9 @@ class CCK_Export
 			}
 		}
 
+		/* TODO#SEBLOD4: "params" may be used to change back to %...% but how to be sure where to? */
+		$xml->$elemtype->params	=	'';
+
 		if ( isset( $data['processings2'][$elem->id] ) ) {
 			$data['elements']['processings'][$elem->id]	=	'';
 		}
