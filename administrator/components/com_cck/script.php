@@ -16,11 +16,6 @@ jimport( 'joomla.filesystem.folder' );
 // Script
 class com_cckInstallerScript
 {
-	// install
-	public function install( $parent )
-	{
-	}
-	
 	// uninstall
 	public function uninstall( $parent )
 	{
@@ -104,8 +99,6 @@ class com_cckInstallerScript
 		
 		$app->cck_core				=	true;
 		$app->cck_core_version_old	=	self::_getVersion();
-
-		set_time_limit( 0 );
 	}
 	
 	// postflight
@@ -116,32 +109,26 @@ class com_cckInstallerScript
 		
 		$app->cck_core_version		=	self::_getVersion();
 		
-		if ( $type == 'update' ) {
-			$params	=	JComponentHelper::getParams( 'com_cck' );
-			$uix	=	$params->get( 'uix', '' );
-			if ( $uix == 'nano' ) {
-				$params->set( 'uix', '' );
-				$db	=	JFactory::getDbo();
-				$db->setQuery( 'UPDATE #__extensions SET params = "'.$db->escape( $params->toString() ).'" WHERE element = "com_cck"' );
-				$db->execute();
-			}
-		} elseif ( 'install' ) {
+		if ( $type == 'install' ) {
 			$rule	=	'{"core.admin":{"7":1},"core.manage":{"6":1},"core.delete.own":{"6":1},"core.addto.cart":{"7":1},"core.admin.form":{"7":1},"core.export":{"7":1},"core.process":{"7":1}}';
 			$query	=	'UPDATE #__assets SET rules = "'.$db->escape( $rule ).'" WHERE name = "com_cck"';
 			$db->setQuery( $query );
 			$db->execute();
 		}
 		
-		// Additional stuff
+		// Additional stuff: /cli
 		$src	=	JPATH_ADMINISTRATOR.'/components/com_cck/install/cli/cck_job.php';
+
 		if ( JFile::exists( $src ) ) {
 			JFile::delete( JPATH_SITE.'/cli/cck_job.php' );
 			JFile::copy( $src, JPATH_SITE.'/cli/cck_job.php' );
 			JFolder::delete( JPATH_ADMINISTRATOR.'/components/com_cck/install/cli/' );
 		}
 
+		// Additional stuff: raw.php
 		$src	=	JPATH_ADMINISTRATOR.'/components/com_cck/install/tmpl/raw.php';
 		$dest	=	JPATH_ADMINISTRATOR.'/templates/'.$app->getTemplate().'/raw.php';
+
 		if ( JFile::exists( $src ) ) {
 			if ( !JFile::exists( $dest ) ) {
 				JFile::copy( $src, $dest );
@@ -161,17 +148,26 @@ class com_cckInstallerScript
 			}
 			JFolder::delete( JPATH_ADMINISTRATOR.'/components/com_cck/install/tmpl/' );
 		}
-		
+
+		// Additional stuff: /cms
 		$src	=	JPATH_ADMINISTRATOR.'/components/com_cck/install/cms';
 		
 		if ( JFolder::exists( $src ) ) {
 			JFolder::copy( $src, JPATH_SITE.'/libraries/cms/cck', '', true );
 			JFolder::delete( $src );
 		}
+
+		// Additional stuff: /sql
+		$src	=	JPATH_ADMINISTRATOR.'/components/com_cck/install/sql/updates';
+		
+		if ( JFolder::exists( $src ) ) {
+			JFolder::copy( $src, JPATH_ADMINISTRATOR.'/manifests/packages/cck/updates', '', true );
+			JFolder::delete( $src );
+		}
 	}
 	
 	// _getVersion
-	public function _getVersion( $default = '2.0.0' )
+	protected static function _getVersion( $default = '2.0.0' )
 	{
 		$db		=	JFactory::getDbo();
 		

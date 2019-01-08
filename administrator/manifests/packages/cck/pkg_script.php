@@ -19,16 +19,6 @@ class pkg_cckInstallerScript
 		JFactory::getLanguage()->load( 'com_cck.sys', JPATH_ADMINISTRATOR, null, true );
 	}
 
-	// uninstall
-	public function uninstall( $parent )
-	{
-	}
-
-	// update
-	public function update( $parent )
-	{
-	}
-
 	// preflight
 	public function preflight( $type, $parent )
 	{
@@ -42,32 +32,208 @@ class pkg_cckInstallerScript
 	public function postflight( $type, $parent )
 	{
 		if ( $type == 'install' ) {
+			self::_autoLoad();
+			self::_completeInstall();
+		} elseif ( $type == 'update' ) {
+			/*
 			$db			=	JFactory::getDbo();
-			$new_module	=	JTable::getInstance( 'Module', 'JTable' );
-			
-			if ( $new_module->save( array(
-										'access'=>3,
-										'client_id'=>1,
-										'language'=>'*',
-										'module'=>'mod_menu',
-										'ordering'=>2,
-										'params'=>'{"menutype":"*","preset":"cck","check":"1","shownew":"1","showhelp":"1"}',
-										'position'=>'menu',
-										'published'=>1,
-										'showtitle'=>0,
-										'title'=>'Admin Menu - SEBLOD'
-									   ) ) ) {
-				try {
-					$query	=	'INSERT INTO #__modules_menu (moduleid, menuid) VALUES ('.$new_module->id.', 0)';
-					$db->setQuery( $query );
-					$db->execute();
-				} catch ( Exception $e ) {
-					// Do nothing
-				}
+
+			$component	=	'com_cck';
+			$params 	=	JComponentHelper::getParams( $component );
+			$path		=	JPATH_ADMINISTRATOR.'/components/'.$component.'/install/upgrades';
+
+			require_once JPATH_SITE.'/libraries/cms/cck/installer/helper.php';
+
+			$latest	=	JCckInstallerHelper::runSql( $path, $params );
+
+			if ( $latest !== false ) {
+				$params->set( 'latest_update', JFactory::getDate( $now )->format( 'Y-m-d' ) );
+
+				$db->setQuery( 'UPDATE #__extensions SET params = "'.$db->escape( $params ).'" WHERE name = "'.$component.'"' );
+				$db->execute();
 			}
+			*/
 		}
 
-		$php	=	( version_compare( PHP_VERSION, '5.3', 'lt' ) ) ? 'warning' : 'success';
+		self::_outputHTML();
+	}
+
+	// _autoLoad
+	protected static function _autoLoad()
+	{
+		JLoader::register( 'JCckContent', JPATH_SITE.'/libraries/cms/cck/cck.php' );
+
+		$objects	=	array(
+							'joomla_menu'=>'Joomla_Menu',
+							'joomla_menu_item'=>'Joomla_Menu_Item',
+							'joomla_user_group'=>'Joomla_User_Group',
+							'joomla_viewlevel'=>'Joomla_Viewlevel'
+						);
+
+		foreach ( $objects as $k=>$v ) {
+			JLoader::register( 'plgCCK_Storage_Location'.$v, JPATH_SITE.'/plugins/cck_storage_location/'.$k.'/'.$k.'.php' );
+			JLoader::register( 'JCckContent'.$v, JPATH_SITE.'/plugins/cck_storage_location/'.$k.'/classes/content.php' );	
+		}
+
+		/*
+		JLoader::register( 'JCckPluginLocation', JPATH_SITE.'/libraries/cms/cck/plugin/location.php' );
+		JPluginHelper::importPlugin( 'cck_storage_location' );
+		*/
+	}
+
+	// _completeInstall
+	protected static function _completeInstall()
+	{
+
+
+		// $content	=	new JCckContentJoomla_User_Group;
+
+		// $user_group	=	$content->create( 'user_group', array( 'title'=>'Front-end Manager', 'parent_id'=>2 ) )->getPk();
+
+
+		// JLoader::register( 'JCckPluginLocation', JPATH_SITE.'/libraries/cms/cck/plugin/location.php' );
+		// JPluginHelper::importPlugin( 'cck_storage_location' );
+		// $content	=	new JCckContentUserGroup;
+
+
+		
+		// $user_group	=	$content->create( 'user_group', array( 'title'=>'Front-end Manager', 'parent_id'=>2 ) )->getPk();
+
+		// echo $user_group;
+		// $items = array(
+		// 			0=>(object)array( 'class'=>'JCckContentUserGroup', 'content_type'=>'user_group', 'data'=>array( 'title'=>'Classification', 'parent_id'=>10 ) )
+		// 		);
+
+		// foreach ( $items as $item ) {
+		// 	$classname = $item->class;
+		// 	$content = new $classname;
+
+		// 	if ( $content->create( $item->content_type, $item->data )->isSuccessful() ) {
+		// 		echo $content->getPk();
+		// 	}
+		// }
+
+		$db			=	JFactory::getDbo();
+		$query		=	$db->getQuery( true );
+
+		$query->select( $db->quoteName( array( 'id', 'title' ) ) )
+			  ->from( $db->quoteName( '#__cck_core_folders' ) )
+			  ->where( $db->quoteName( 'parent_id' ) . '= 60' );
+		$db->setQuery( $query );
+		$folders			=	$db->loadObjectList();
+
+		$query->clear()
+			  ->select( $db->quoteName( array( 'extension_id' ) ) )
+			  ->from( $db->quoteName( '#__extensions' ) )
+			  ->where( $db->quoteName( 'type' ) . '=' . $db->quote( 'component' ) )
+			  ->where( $db->quoteName( 'element' ) . '=' . $db->quote( 'com_cck' ) );
+		$db->setQuery( $query );
+		$component_id		=	$db->loadResult();
+
+		$content_menu		=	new JCckContentJoomla_Menu;
+		$content_menu_item	=	new JCckContentJoomla_Menu_Item;
+		$content_user_group	=	new JCckContentJoomla_User_Group;
+		$content_viewlevel	=	new JCckContentJoomla_Viewlevel;
+
+		$content_menu->create( 'menu', array(
+										'client_id'=>'0',
+										'description'=>'The admin menu for the site',
+										'menutype'=>'adminmenu',
+										'title'=>'Admin Menu'
+									   )
+							 );
+
+		$parents			=	array(
+									'menu_item'=>(int)$content_menu_item->create( 'menu_item', array(
+																								'access'=>1,
+																								'component_id'=>$component_id,
+																								'client_id'=>0,
+																								'language'=>'*',
+																								'link'=>'index.php?option=com_cck&view=form&layout=edit&type=user_login_form',
+																								'menutype'=>'adminmenu',
+																								'parent_id'=>1,
+																								'params'=>'{}',
+																								'published'=>1,
+																								'title'=>'Admin',
+																								'type'=>'component'
+																							   ) )->getPk(),
+									'user_group'=>(int)$content_user_group->create( 'user_group', array(
+																									'parent_id'=>2,
+																									'title'=>'Front-end Manager'
+																								  ) )->getPk(),
+									'viewing_access_level'=>0
+								);
+		$table_folder		=	JCckTable::getInstance( '#__cck_core_folders' );
+
+		foreach ( $folders as $folder ) {
+			$params		=	array(
+								'menu_item'=>0,
+								'user_group'=>0,
+								'viewing_access_level'=>0
+							);
+			$title		=	ucwords( strtolower( $folder->title ) );
+
+			// Add User Group
+			$params['user_group']			=	(int)$content_user_group->create( 'user_group', array(
+																									'parent_id'=>$parents['user_group'],
+																									'title'=>$title
+																								) )->getPk();
+
+			// Add View Access Level
+			$params['viewing_access_level']	=	(int)$content_viewlevel->create( 'viewing_access_level', array(
+																											'title'=>'Front-end Manager - '.$title,
+																											'rules'=>array( 0=>8, 1=>$params['user_group'] )
+																										 ) )->getPk();
+
+			// Add Menu Item
+			$params['menu_item']			=	(int)$content_menu_item->create( 'menu_item', array(
+																								'access'=>$params['viewing_access_level'],
+																								'client_id'=>0,
+																								'language'=>'*',
+																								'menutype'=>'adminmenu',
+																								'parent_id'=>$parents['menu_item'],
+																								'published'=>1,
+																								'title'=>$title,
+																								'type'=>'heading'
+																							  ) )->getPk();
+
+			// Save for later
+			$table_folder->load( $folder->id );
+			$table_folder->save( array( 'params'=>json_encode( $params ) ) );
+		}
+
+
+
+
+		// Module
+		$new_module	=	JTable::getInstance( 'Module', 'JTable' );
+		
+		if ( $new_module->save( array(
+									'access'=>3,
+									'client_id'=>1,
+									'language'=>'*',
+									'module'=>'mod_menu',
+									'ordering'=>2,
+									'params'=>'{"menutype":"*","preset":"cck","check":"1","shownew":"1","showhelp":"1"}',
+									'position'=>'menu',
+									'published'=>1,
+									'showtitle'=>0,
+									'title'=>'Admin Menu - SEBLOD'
+								   ) ) ) {
+			try {
+				$query	=	'INSERT INTO #__modules_menu (moduleid, menuid) VALUES ('.$new_module->id.', 0)';
+				$db->setQuery( $query );
+				$db->execute();
+			} catch ( Exception $e ) {
+				// Do nothing
+			}
+		}
+	}
+
+	// _outputHTML
+	protected static function _outputHTML()
+	{
+		$php	=	( version_compare( PHP_VERSION, '7.2', 'lt' ) ) ? 'warning' : 'success';
 		?>
 		<style type="text/css">
 			.hero-unit{border:1px solid #dedede; -webkit-border-radius: 3px; -moz-border-radius: 3px; border-radius: 3px;} .table{margin-bottom:30px;}
@@ -90,29 +256,29 @@ class pkg_cckInstallerScript
 				<tr>
 			        <th class="span6"><?php echo JText::_( 'LIB_CCK_INSTALLATION_CHECK_DIRECTIVE' ); ?></th>
 					<th class="span3 center"><?php echo JText::_( 'LIB_CCK_INSTALLATION_CHECK_RECOMMENDED' ); ?></th>
+					<th class="span3 center"><?php echo JText::_( 'LIB_CCK_INSTALLATION_CHECK_MINIMUM' ); ?></th>
 					<th class="span3 center"><?php echo JText::_( 'LIB_CCK_INSTALLATION_CHECK_ACTUAL' ); ?></th>
 			    </tr>
 		    </thead>
 		    <tbody>
-		    	<?php if ( $php == 'warning') { ?>
 				<tr>
-					<td><?php echo JText::_( 'LIB_CCK_INSTALLATION_PHP_VERSION' ); ?></td>
-					<td class="center"><span class="badge badge-success">5.3.1+</span></td>
+					<td><code><?php echo JText::_( 'LIB_CCK_INSTALLATION_PHP_VERSION' ); ?></code></td>
+					<td class="center"><span class="badge badge-success">7.2+</span></td>
+					<td class="center"><span class="badge badge-danger">5.4</span></td>
 					<td class="center"><span class="badge badge-<?php echo $php; ?>"><?php echo PHP_VERSION; ?></span></td>
 				</tr>
-				<?php } ?>
 			    <?php
 				$php	=	array(
-								array( 'property'=>'max_file_uploads', 'value'=>'50' ),
-								array( 'property'=>'max_input_vars', 'value'=>'3000' )
+								array( 'property'=>'max_input_vars', 'm_value'=>'2000', 'r_value'=>'3000' )
 							);
 			    foreach ( $php as $p ) {
 			    	$current	=	ini_get( $p['property'] );
-			    	$status		=	( (int)$current < (int)$p['value'] ) ? 'warning' : 'success';
+			    	$status		=	( (int)$current < (int)$p['r_value'] ) ? 'warning' : 'success';
 			    ?>
 				<tr>
 		        	<td><code><?php echo $p['property']; ?></code></td>
-		        	<td class="center"><span class="badge badge-success"><?php echo $p['value']; ?></span></td>
+		        	<td class="center"><span class="badge badge-success"><?php echo $p['r_value']; ?></span></td>
+		        	<td class="center"><span class="badge badge-danger"><?php echo $p['m_value']; ?></span></td>
 		        	<td class="center"><span class="badge badge-<?php echo $status; ?>"><?php echo $current ?></span></td>
 		    	</tr>
 			    <?php } ?>

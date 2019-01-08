@@ -68,11 +68,6 @@ class plgContentCCKInstallerScript
 		}
 	}
 	
-	// update
-	public function update( $parent )
-	{		
-	}
-	
 	// preflight
 	public function preflight( $type, $parent )
 	{
@@ -226,7 +221,7 @@ class plgContentCCKInstallerScript
 			$db->execute();
 			
 			// - Content Types
-			$query	=	'UPDATE #__cck_core_types SET template_admin = '.$style->id.', template_site = '.$style->id.', template_content = '.$style->id.', template_intro = '.$style->id;
+			$query	=	'UPDATE #__cck_core_types SET template_admin = '.$style->id.', template_site = '.$style->id.', template_content = '.$style->id.', template_intro = '.$style->id.' WHERE location != "collection"';
 			$db->setQuery( $query );
 			$db->execute();
 
@@ -358,8 +353,6 @@ class plgContentCCKInstallerScript
 		} else {
 			$new		=	$app->cck_core_version;
 			$old		=	$app->cck_core_version_old;
-
-			/* TODO#SEBLOD4 */
 
 			// Set User Actions Log
 			self::_setUserActionsLog();
