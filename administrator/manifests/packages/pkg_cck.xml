@@ -12,6 +12,12 @@
 	<version>3.17.1</version>
 	
 	<scriptfile>pkg_script.php</scriptfile>
+
+	<update>
+		<schemas>
+			<schemapath type="mysql">updates/mysql</schemapath>
+		</schemas>
+	</update>
 	
 	<!-- EXTENSIONS -->
 	<files folder="extensions">
