@@ -24,6 +24,7 @@ $options2	=	JCckDev::fromJSON( $this->item->options2 );
 			. JCckDev::getForm( 'core_dev_text', @$options2['timeout_ms'], $config, array( 'size'=>12, 'storage_field'=>'json[options2][timeout_ms]' ) )
 		 	.'</li>';
 		echo JCckDev::renderForm( 'core_dev_select', @$options2['message_style'], $config, array( 'label'=>'Message', 'defaultvalue'=>'', 'selectlabel'=>'None', 'options'=>'Error=error||Message=message||Notice=notice||Warning=warning', 'storage_field'=>'json[options2][message_style]' ) );
+		echo JCckDev::renderForm( 'core_message', @$options2['message'], $config, array( 'label'=>'Message', 'defaultvalue'=>'', 'storage_field'=>'json[options2][message]' ) );
 
 		echo JCckDev::renderSpacer( JText::_( 'COM_CCK_STORAGE' ), JText::_( 'COM_CCK_STORAGE_DESC' ) );
 		echo JCckDev::getForm( 'core_storage', $this->item->storage, $config );

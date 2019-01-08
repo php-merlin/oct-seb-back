@@ -160,7 +160,6 @@ class plgCCK_FieldMessage_Redirection extends JCckPluginField
 	// _process
 	protected static function _process( $process, &$fields )
 	{
-
 		$options2	=	json_decode( $process['options2'] );
 
 		if ( !is_object( $options2 ) ) {
@@ -168,7 +167,11 @@ class plgCCK_FieldMessage_Redirection extends JCckPluginField
 		}
 
 		if ( isset( $options2->message_style ) && $options2->message_style ) {
-			$message	=	'Message';
+			$message	=	$options2->message;
+
+			if ( JCck::getConfig_Param( 'language_jtext', 1 ) ) {
+				$message	=	JText::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $message ) ) );
+			}
 		}
 		if ( isset( $options2->itemid ) && $options2->itemid ) {
 			$itemId	=	$options2->itemid;
@@ -177,14 +180,16 @@ class plgCCK_FieldMessage_Redirection extends JCckPluginField
 				$itemId	=	JFactory::getApplication()->input->getInt( 'Itemid' );
 			}
 			if ( isset( $options2->timeout ) && $options2->timeout == 0 ) {
-				JFactory::getApplication()->redirect( JCckDevHelper::getAbsoluteUrl( $itemId ) );
+				$app	=	JFactory::getApplication();
+
+				$app->enqueueMessage( $message, $options2->message_style );
+				$app->redirect( JCckDevHelper::getAbsoluteUrl( $itemId ) );
 			} else {
 				$redirection	=	'document.location.href=\''.JCckDevHelper::getAbsoluteUrl( $itemId ).'\'';
 			
 				JFactory::getDocument()->addScriptDeclaration( 'setTimeout("'.$redirection.'",'.$options2->timeout_ms.');' );
 			}
-		}
-		if ( $message ) {
+		} elseif ( $message ) {
 			JFactory::getApplication()->enqueueMessage( $message, $options2->message_style );
 		}
 	}
