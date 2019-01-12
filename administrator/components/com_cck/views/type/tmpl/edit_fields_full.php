@@ -41,7 +41,7 @@ $attr       =   array( 'class'=>' b', 'span'=>'<span class="icon-pencil-2"></spa
             echo '<ul class="sortable connected" id="sortable1" myid="1">';
 
             if ( $this->item->location == 'collection' ) {
-                echo '<li class="position ui-state-disabled boundary" id="pos-1"><input class="selector" type="radio" id="position0" name="positions" gofirst="#pos-1" golast="#pos-1"><span class="title"></span><input type="hidden" name="ff[pos-_main_]" value="position" /></li>';
+                echo '<li class="position ui-state-disabled boundary" id="pos-1"><input class="selector" type="radio" id="position0" name="positions" gofirst="#pos-1" golast="#pos-2"><span class="title"></span><input type="hidden" name="ff[pos-_main_]" value="position" /></li>';
 
                 if ( isset( $this->fields['_main_'] ) ) {
                     foreach ( $this->fields['_main_'] as $field ) {
@@ -53,6 +53,7 @@ $attr       =   array( 'class'=>' b', 'span'=>'<span class="icon-pencil-2"></spa
                         Helper_Workshop::displayField( $field, $type_field, $attr );
                     }
                 }
+                $this->positions_nb =   0;
             } else {
                 echo '<li class="position ui-state-disabled boundary" id="pos-0"><input class="selector" type="radio" id="position0" name="positions" gofirst="#pos-0" golast="#pos-1"><span class="title"></span><input type="hidden" name="ff[pos-_pre_]" value="position" /></li>';
 
