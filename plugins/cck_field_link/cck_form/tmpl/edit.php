@@ -17,7 +17,7 @@ JCckDev::initScript( 'link', $this->item );
 	<?php echo JCckDev::renderLegend( JText::_( 'COM_CCK_CONSTRUCTION' ), JText::_( 'PLG_CCK_FIELD_LINK_'.$this->item->name.'_DESC' ) ); ?>
     <ul class="adminformlist adminformlist-2cols">
         <?php
-		echo JCckDev::renderForm( 'core_form', '', $config, array( 'selectlabel'=>'Inherited', 'options'=>'Use Value=optgroup||Field=-2||Forms=optgroup', 'bool4'=>1, 'required'=>'' ) );
+		echo JCckDev::renderForm( 'core_form', '', $config, array( 'selectlabel'=>'Inherited', 'options'=>'Use Value=optgroup||Field=-2||Forms=optgroup', 'options2'=>'{"query":"","table":"#__cck_core_types","name":"title","where":"published=1 AND location != \"collection\"","value":"name","orderby":"title","orderby_direction":"ASC"}', 'bool4'=>1, 'required'=>'' ) );
 		echo JCckDev::renderForm( 'core_menuitem', '', $config, array( 'selectlabel'=>'Inherited' ) );
 		echo '<li><label>'.JText::_( 'COM_CCK_EDITION' ).'</label>'
 			. JCckDev::getForm( 'core_dev_bool', '', $config, array( 'label'=>'Edition', 'options'=>'No=0||Yes=1||Yes as copy=2', 'storage_field'=>'form_edition' ) )
