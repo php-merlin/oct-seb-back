@@ -154,15 +154,19 @@ class plgCCK_Storage_LocationJoomla_Category extends JCckPluginLocation
 				$select				=	'';
 
 				if ( JCckDevHelper::isMultilingual() ) {
-					$lang			=	JFactory::getLanguage();
 					$lang_tag		=	JFactory::getLanguage()->getTag();
 
 					if ( isset( $config['sef_aliases'] ) && ( $config['sef_aliases'] == 2 || $config['sef_aliases'] == 1 && $lang_tag != JComponentHelper::getParams( 'com_languages' )->get( 'site', 'en-GB' ) ) ) {
-						$languages	=	JLanguageHelper::getLanguages( 'lang_code' );
-						$lang_sef	=	isset( $languages[$lang_tag] ) ? strtolower( $languages[$lang_tag]->sef ) : substr( $lang_tag, 0, 2 );
-						
+						$legacy		=	(int)JCck::getConfig_Param( 'core_legacy_routing', '2018' );
 						$sef_slug	=	true;
-						$select		.=	', f.alias_'.$lang_sef.' AS alias_slug';
+
+						if ( $legacy == 2018 ) {
+							$languages	=	JLanguageHelper::getLanguages( 'lang_code' );
+							$lang_sef	=	isset( $languages[$lang_tag] ) ? strtolower( $languages[$lang_tag]->sef ) : substr( $lang_tag, 0, 2 );
+							$select		.=	', f.alias_'.$lang_sef.' AS alias_slug';
+						} else {
+							$select		.=	', JSON_UNQUOTE(JSON_EXTRACT(f.aliases, '.JCckDatabase::quote('$."'.$lang_tag.'"').')) AS alias_slug';
+						}
 					}
 				}
 
@@ -178,8 +182,10 @@ class plgCCK_Storage_LocationJoomla_Category extends JCckPluginLocation
 				try {
 					$storages[$table]	=	JCckDatabase::loadObjectList( $query, self::$key );
 				} catch ( Exception $e ) {
-					if ( $sef_slug && strpos( $e->getMessage(), 'Unknown column' ) !== false ) {
-						throw new Exception( JText::sprintf( 'COM_CCK_SEF_ALIASES_EXCEPTION', 'alias_'.$lang_sef, '#__cck_store_item_categories' ), 500 );
+					if ( $legacy == 2018 ) {
+						if ( $sef_slug && strpos( $e->getMessage(), 'Unknown column' ) !== false ) {
+							throw new Exception( JText::sprintf( 'COM_CCK_SEF_ALIASES_EXCEPTION', 'alias_'.$lang_sef, '#__cck_store_item_categories' ), 500 );
+						}
 					}
 
 					$config['error']	=	true;
@@ -453,16 +459,21 @@ class plgCCK_Storage_LocationJoomla_Category extends JCckPluginLocation
 					$sef_slug	=	false;
 
 					if ( JCckDevHelper::isMultilingual() ) {
-						$lang			=	JFactory::getLanguage();
 						$lang_tag		=	JFactory::getLanguage()->getTag();
 
 						if ( self::$sef_aliases == 2 || ( self::$sef_aliases == 1 && $lang_tag != JComponentHelper::getParams( 'com_languages' )->get( 'site', 'en-GB' ) ) ) {
-							$languages	=	JLanguageHelper::getLanguages( 'lang_code' );
-							$lang_sef	=	isset( $languages[$lang_tag] ) ? $languages[$lang_tag]->sef : substr( $lang_tag, 0, 2 );
-							
+							$legacy		=	(int)JCck::getConfig_Param( 'core_legacy_routing', '2018' );
 							$sef_slug	=	true;
 
-							$select		.=	' , c.alias_'.$lang_sef.' AS alias_slug, d.alias_'.$lang_sef.' AS parent_alias_slug';
+							if ( $legacy == 2018 ) {
+								$languages	=	JLanguageHelper::getLanguages( 'lang_code' );
+								$lang_sef	=	isset( $languages[$lang_tag] ) ? $languages[$lang_tag]->sef : substr( $lang_tag, 0, 2 );
+								$select		.=	' , c.alias_'.$lang_sef.' AS alias_slug, d.alias_'.$lang_sef.' AS parent_alias_slug';
+							} else {
+								$select		.=	', JSON_UNQUOTE(JSON_EXTRACT(c.aliases, '.JCckDatabase::quote('$."'.$lang_tag.'"').')) AS alias_slug'
+											.	', JSON_UNQUOTE(JSON_EXTRACT(d.aliases, '.JCckDatabase::quote('$."'.$lang_tag.'"').')) AS parent_alias_slug';
+							}
+							
 							$join		.=	' LEFT JOIN #__cck_store_item_categories AS c ON c.id = a.id'
 										.	' LEFT JOIN #__cck_store_item_categories AS d ON d.id = a.parent_id';
 						}
@@ -767,15 +778,21 @@ class plgCCK_Storage_LocationJoomla_Category extends JCckPluginLocation
 		$where				=	'';
 
 		if ( $isMultiLanguage ) {
-			$lang		=	JFactory::getLanguage();
 			$lang_tag	=	JFactory::getLanguage()->getTag();
 
 			if ( isset( $config['sef_aliases'] ) && ( $config['sef_aliases'] == 2 || $config['sef_aliases'] == 1 && $lang_tag != JComponentHelper::getParams( 'com_languages' )->get( 'site', 'en-GB' ) ) ) {
 				self::$sef_aliases	=	$config['sef_aliases'];
 
-				$isMultiAlias	=	true;
-				$languages		=	JLanguageHelper::getLanguages( 'lang_code' );
-				$lang_sef		=	isset( $languages[$lang_tag] ) ? $languages[$lang_tag]->sef : substr( $lang_tag, 0, 2 );
+				$isMultiAlias		=	true;
+				$legacy				=	(int)JCck::getConfig_Param( 'core_legacy_routing', '2018' );
+
+				if ( $legacy == 2018 ) {
+					$languages		=	JLanguageHelper::getLanguages( 'lang_code' );
+					$lang_sef		=	isset( $languages[$lang_tag] ) ? $languages[$lang_tag]->sef : substr( $lang_tag, 0, 2 );
+					$legacy			=	1;
+				} else {
+					$legacy			=	0;
+				}
 			}
 		}
 
@@ -835,7 +852,12 @@ class plgCCK_Storage_LocationJoomla_Category extends JCckPluginLocation
 
 			if ( $isMultiLanguage && $isMultiAlias ) {
 				$join			.=	' LEFT JOIN #__cck_store_item_categories AS f on f.id = a.id';
-				$where			=	' WHERE f.alias_'.$lang_sef.' = '.JCckDatabase::quote( $segments[$n - 1] ).$where;
+
+				if ( $legacy ) {	
+					$where			=	' WHERE f.alias_'.$lang_sef.' = '.JCckDatabase::quote( $segments[$n - 1] ).$where;
+				} else {
+					$where			=	' WHERE JSON_EXTRACT(f.aliases, '.JCckDatabase::quote('$."'.$lang_tag.'"').') = '.JCckDatabase::quote( $segments[$n - 1] ).$where;
+				}
 			} else {
 				$where			=	' WHERE a.alias = '.JCckDatabase::quote( $segments[$n - 1] ).$where;
 			}

@@ -10,6 +10,10 @@
 			<option value="2017">2017</option>
 			<option value="2012">2012</option>
 		</field>
+		<field name="core_legacy_routing" type="list" default="2018" label="COM_CCK_CONFIG_CORE_LEGACY_ROUTING" description="COM_CCK_CONFIG_CORE_LEGACY_ROUTING_DESC" class="inputbox">
+			<option value="0">COM_CCK_CONFIG_OPTION_NONE</option>
+			<option value="2018">2018</option>
+		</field>
 		<field name="COM_CCK_CONFIG_LEGEND_FORM" type="spacer" hr="false" />
 		<field name="autosave" type="radio" default="0" label="COM_CCK_CONFIG_AUTOSAVE" description="COM_CCK_CONFIG_AUTOSAVE_DESC" class="btn-group btn-group-yesno">
 			<option value="1">JYES</option>
