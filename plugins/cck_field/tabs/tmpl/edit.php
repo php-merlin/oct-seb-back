@@ -18,7 +18,7 @@ JCckDev::forceStorage();
     <ul class="adminformlist adminformlist-2cols">
         <?php
         echo JCckDev::renderForm( 'core_label', $this->item->label, $config );
-        echo JCckDev::renderBlank();
+        echo JCckDev::renderForm( 'core_extended', $this->item->extended, $config, array( 'required'=>'' ) );
         echo '<li><label>'.JText::_( 'COM_CCK_BEHAVIOR' ).'</label>'
          .   JCckDev::getForm( 'core_pane_behavior', $this->item->bool, $config )
          .   JCckDev::getForm( 'core_defaultvalue', $this->item->defaultvalue, $config, array( 'size'=>3, 'attributes'=>'style="text-align:center;"' ) )
