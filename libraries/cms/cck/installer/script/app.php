@@ -47,8 +47,13 @@ class JCckInstallerScriptApp
 		$this->cck->isApp		=	true;
 		$this->cck->appParams	=	array();
 
-		foreach ( $this->cck->xml->cck_app->children() as $k=>$v ) {
-			$this->cck->appParams[$k]	=	(string)$v;
+		if ( isset( $this->cck->xml->cck_app ) ) {
+			foreach ( $this->cck->xml->cck_app->children() as $k=>$v ) {
+				$this->cck->appParams[$k]	=	(string)$v;
+			}
+		}
+		if ( !isset( $this->cck->appParams['target'] ) ) {
+			$this->cck->appParams['target']	=	'content';
 		}
 		
 		if ( is_file( JPATH_ADMINISTRATOR.'/manifests/packages/'.$this->cck->xml->name.'.xml' ) ) {
