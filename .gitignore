@@ -2585,5 +2585,6 @@ Temporary Items
 /administrator/modules/mod_cck_menu/*
 /plugins/cck_field/jform_accesslevel/*
 /plugins/cck_field/jform_contentlanguage/*
+/plugins/cck_field/link/*
 /templates/seb_blog/*
 /templates/seb_one/*
