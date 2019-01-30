@@ -411,7 +411,11 @@ if ( $preconfig['task'] == 'search' ) {
 			}
 		}
 	}
-	$countStages	=	count( $stages );
+	if ( $preconfig['show_form'] ) {
+		$doc->fields	=	$fields['search'];
+	}
+	
+	$countStages		=	count( $stages );
 
 	if ( $countStages ) {		
 		for( $stage =  1; $stage <= $countStages; $stage++ ) {
@@ -716,7 +720,7 @@ if ( $preconfig['show_form'] > 0 ) {
 	$infos			=	array( 'context'=>'', 'params'=>$templateStyle->params, 'path'=>$path, 'root'=>JUri::root( true ), 'template'=>$templateStyle->name, 'theme'=>$tpl['home'] );
 	$doc->finalize( 'form', $search->name, $config['client'], $positions, $positions_more, $infos );
 	$form			=	$doc->render( false, $rparams );
-} elseif ( $preconfig['show_form'] ) {
+} elseif ( $preconfig['show_form'] && $preconfig['task'] != 'search' ) {
 	$doc->fields	=	&$fields['search'];
 }
 
