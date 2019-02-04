@@ -958,11 +958,22 @@ class plgSystemCCK extends JPlugin
 		if ( JCckWebservice::getConfig()->params->def( 'KO' ) ) {
 		 	return false;
 		} else {
-			$apis	=	JCckDatabase::loadObjectList( 'SELECT path'
-													. ' FROM #__menu WHERE'
-													. ' link = "index.php?option=com_cck_webservices&view=api" AND published = 1', 'path' );
-			$path	=	JUri::getInstance()->getPath();
-			$prefix	=	( !JFactory::getConfig()->get( 'sef_rewrite' ) ) ? '/index.php' : '';
+			$apis		=	JCckDatabase::loadObjectList( 'SELECT path'
+														. ' FROM #__menu WHERE'
+														. ' link = "index.php?option=com_cck_webservices&view=api" AND published = 1', 'path' );
+			$path		=	JUri::getInstance()->getPath();
+			$prefix		=	( !JFactory::getConfig()->get( 'sef_rewrite' ) ) ? '/index.php' : '';
+
+			if ( JCckDevHelper::isMultilingual( true ) ) {
+				jimport( 'joomla.language.helper' ); /* TODO#SEBLOD4: remove */
+
+				$languages	=	JLanguageHelper::getLanguages( 'lang_code' );
+				$lang_tag	=	JFactory::getLanguage()->getTag();
+
+				if ( isset( $languages[$lang_tag] ) && $languages[$lang_tag]->sef != '' ) {
+					$prefix	.=	'/'.strtolower( $languages[$lang_tag]->sef );
+				}
+			}
 
 			if ( count( $apis ) ) {
 				foreach ( $apis as $api ) {
