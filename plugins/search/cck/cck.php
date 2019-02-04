@@ -551,7 +551,7 @@ class plgSearchCCK extends JPlugin
 				}
 				$key		=	( isset( $tables[$tk]['key'] ) ) ? $tables[$tk]['key'] : 'id';
 				$join_type	=	( isset( $tables[$tk]['join_type'] ) ) ? $tables[$tk]['join_type'] : 'LEFT';
-				$join_table	=	( isset( $tables[$tk]['join_table'] ) && $tables[$tables[$tk]['join_table']]['_'] ) ? $tables[$tables[$tk]['join_table']]['_'] : 't0';
+				$join_table	=	( isset( $tables[$tk]['join_table'] ) && isset( $tables[$tables[$tk]['join_table']]['_'] ) && $tables[$tables[$tk]['join_table']]['_'] ) ? $tables[$tables[$tk]['join_table']]['_'] : 't0';
 				$join_key	=	( isset( $tables[$tk]['join_key'] ) ) ? $tables[$tk]['join_key'] : ( ( $tk == $inherit['bridge'] ) ? 'pkb' : 'pk' );
 				$join_and	=	( isset( $tables[$tk]['join_and'] ) ) ? $tables[$tk]['join_and'] : '';
 				$join_mode	=	( isset( $tables[$tk]['join_mode'] ) ) ? $tables[$tk]['join_mode'] : 0;
