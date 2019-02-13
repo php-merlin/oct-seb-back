@@ -276,6 +276,7 @@ class plgContentCCK extends JPlugin
 	{
 		$property	=	'text';
 		preg_match( '#::cck::(\d+)::/cck::#U', $article->$property, $matches );
+	  	
 	  	if ( ! @$matches[1] ) {
 			return;
 		}
@@ -304,6 +305,7 @@ class plgContentCCK extends JPlugin
 		}
 		
 		JPluginHelper::importPlugin( 'cck_storage_location' );
+
 		if ( $context == 'text' ) {
 			$client	=	'intro';
 		} elseif ( $context == 'com_finder.indexer' ) {
@@ -442,6 +444,7 @@ class plgContentCCK extends JPlugin
 		$tpl['folder']							=	$cck->{$client.'_template'};
 		$tpl['params']							=	json_decode( $cck->{$client.'_params'}, true );
 		$tpl['params']['rendering_css_core']	=	$cck->stylesheets;
+		
 		if ( file_exists( JPATH_SITE.'/templates/'.$tpl['home'].'/html/tpl_'.$tpl['folder'] ) ) {
 			$tpl['folder']	=	'tpl_'.$tpl['folder'];
 			$tpl['root']	=	JPATH_SITE.'/templates/'.$tpl['home'].'/html';
@@ -449,6 +452,7 @@ class plgContentCCK extends JPlugin
 			$tpl['root']	=	JPATH_SITE.'/templates';
 		}
 		$tpl['path']		=	$tpl['root'].'/'.$tpl['folder'];
+		
 		if ( ! $tpl['folder'] || ! file_exists( $tpl['path'].'/index.php' ) ) {
 			$article->$property		=	str_replace( $article->$property, 'Template Style does not exist. Open the Content Type & save it again. (Intro + Content views)', $article->$property );
 
@@ -535,8 +539,10 @@ class plgContentCCK extends JPlugin
 		// Fields
 		if ( count( $fields ) ) {
 			JPluginHelper::importPlugin( 'cck_storage' );
+
 			$config	=	array( 'author'=>$cck->author,
 							   'client'=>$client,
+							   'context'=>array(),
    							   'doSEF'=>$p_sef,
 							   'doTranslation'=>JCck::getConfig_Param( 'language_jtext', 1 ),
 							   'error'=>0,
@@ -553,7 +559,11 @@ class plgContentCCK extends JPlugin
 							   'type_id'=>(int)$cck->type_id,
 							   'type_alias'=>( $cck->type_alias ? $cck->type_alias : $cck->cck )
 							);
-			
+
+			if ( is_array( $article_params ) ) {
+				$config['context']	=	$article_params;
+			}
+
 			foreach ( $fields as $field ) {
 				$field->typo_target	=	'value';
 				$fieldName			=	$field->name;
@@ -682,19 +692,25 @@ class plgContentCCK extends JPlugin
 	{
 		jimport( 'cck.base.item.item' );
 
-		$regex		=	'/{cck_item:(\d+)/';
 		$matches	=	array();
+		$regex		=	'/{cck_item:(\d+)( {(.*)})?}/';
 
 		preg_match_all( $regex, $text, $matches );
-
+		
 		if ( isset( $matches[1] ) && is_array( $matches[1] ) ) {
-			foreach ( $matches[1] as $id ) {
-				$data	=	CCK_Item::render( $id );
-				$search	=	'{cck_item:'.$id.'}';
-				$text	=	str_replace( $search, $data, $text );
+			foreach ( $matches[1] as $k=>$id ) {
+				if ( isset( $matches[2][$k] ) && $matches[2][$k] ) {
+					$params	=	$matches[2][$k];
+				} else {
+					$params	=	'{}';
+				}
+
+				$params	=	new JRegistry( $params );
+				$data	=	CCK_Item::render( $id, $params->toArray() );
+				$text	=	str_replace( $matches[0][$k], $data, $text );
 			}
 		}
-		
+
 		return $text;
 	}
 
