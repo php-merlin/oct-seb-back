@@ -20,7 +20,7 @@ class plgSystemCCK extends JPlugin
 	protected $default_lang		=	null;
 	protected $filter_lang		=	false;
 	protected $multisite		=	null;
-	protected $restapi			=	null;
+	protected $rest_api			=	null;
 	protected $site				=	null;
 	protected $site_context		=	null;
 	protected $site_exclusion	=	false;
@@ -43,88 +43,10 @@ class plgSystemCCK extends JPlugin
 
 		$this->_setLegacyMode();
 
-		$this->multisite	=	JCck::_setMultisite(); /* TODO#SEBLOD: _isMultiSite() */
-		$this->restapi		=	$this->_isRestApi();
+		$this->multisite	=	$this->_isMultiSite();
+		$this->rest_api		=	$this->_isRestApi();
 
 		JPluginHelper::importPlugin( 'cck_storage_location' );
-		
-		if ( $this->multisite === true ) {
-			$this->site		=	null;
-
-			if ( JCck::isSite() ) {
-				$this->default_lang =	JComponentHelper::getParams( 'com_languages' )->get( 'site', 'en-GB' );
-				$this->filter_lang	=	JPluginHelper::isEnabled( 'system', 'languagefilter' );
-				$this->site			=	JCck::getSite();
-				$this->site_context	=	(int)JCck::getConfig_Param( 'multisite_context', '1' );
-
-				if ( $app->isClient( 'site' ) && $this->site ) {
-					// --- Redirect to Homepage
-					$homepage	=	$this->site->configuration->get( 'homepage', 0 );
-
-					if ( $homepage > 0 ) {
-						$current	=	JUri::current( true );
-						$len		=	strlen( $current );
-
-						if ( $current[$len - 1] == '/' ) {
-							$current	=	substr( $current, 0, -1 );
-						}
-						$current	=	str_replace( array( 'http://', 'https://' ), '', $current );
-
-						if ( $current == $this->site->host ) {
-							$redirect_url	=	JRoute::_( 'index.php?Itemid='.$homepage );
-
-							if ( $redirect_url != JUri::root(true).'/' ) {
-								JFactory::getApplication()->redirect( $redirect_url );
-							}
-						}
-					}
-					// ---
-					$forced	=	false;
-					$path	=	JUri::getInstance()->getPath();
-					$length	=	strlen( $path );
-
-					if ( $path[$length - 1 ] != '/' ) {
-						$path	.=	'/';
-					}
-					if ( $path[0] != '/' ) {
-						$path	=	'/'.$path;
-					}
-					if ( isset( $this->site->exclusions ) && count( $this->site->exclusions ) ) {
-						foreach ( $this->site->exclusions as $excl ) {
-							$length	=	strlen( $excl );
-
-							if ( $excl[$length - 1 ] != '/' ) {
-								$excl	.=	'/';
-							}
-							if ( $excl[0] != '/' ) {
-								$excl	=	'/'.$excl;
-							}
-							if ( $this->site->context != '' ) {
-								$excl	=	'/' . $this->site->context . $excl;
-							}
-							$pos	=	strpos( $path, $excl );
-
-							if ( $pos !== false && $pos == 0 ) {
-								$forced					=	true;
-								$this->site_exclusion	=	true;
-								break;
-							}
-						}
-					}
-					if ( $forced == true ) {
-						$tag	=	JFactory::getLanguage()->getDefault();
-					} else {
-						$tag	=	$this->site->configuration->get( 'language' );
-					}
-
-					if ( $tag ) {
-						JCckDevHelper::setLanguage( $tag );
-					}
-
-					$this->current_lang	=	JFactory::getLanguage()->getTag();
-				}
-			}
-		}
 	}
 
 	// buildRule
@@ -206,22 +128,8 @@ class plgSystemCCK extends JPlugin
 			JFactory::getSession()->set( 'cck_task', '' );
 		}
 
-		if ( $this->restapi ) {
-			$format		=	JCckWebservice::getConfig_Param( 'resources_format', 'json' );
-			$path		=	JUri::getInstance()->getPath();
-			$segment	=	substr( $path, strrpos( $path, '/' ) + 1 );
-
-			if ( $segment != '' ) {
-				if ( ( $pos = strpos( $segment, '.' ) ) !== false ) {
-					$format	=	substr( $segment, $pos + 1 );
-
-					if ( $format[0] == 'w' ) {
-						$format	=	substr( $format, 1 );
-					}
-				}
-			}
-
-			$app->input->set( 'format', $format );
+		if ( $this->rest_api ) {
+			$this->_setRestApi();
 		}
 
 		$router	=	$app::getRouter();
@@ -236,6 +144,7 @@ class plgSystemCCK extends JPlugin
 				JFactory::getLanguage()->load( 'com_cck_core' );
 			}
 			$group	=	(int)JCck::getConfig_Param( 'development_group' );
+
 			if ( $group && $app->input->get( 'option' ) == 'com_cck'
 			  && $app->input->get( 'view' ) != 'form' && $app->input->get( 'view' ) != 'list' ) {
 				if ( ( $user_id = (int)JFactory::getUser()->id ) > 0 ) {
@@ -251,169 +160,17 @@ class plgSystemCCK extends JPlugin
 			}
 		}
 
-		if ( $this->multisite !== true ) {
-			if ( JCckToolbox::getConfig()->get( 'processing', 0 ) ) {
-				JCckToolbox::process( 'onAfterInitialise' );
-			}
-
-			return;
-		}
-		$user	=	JFactory::getUser();
-
-		if ( JCck::getMultisiteInfo( 'hasContext' ) ) {
-			$guests	=	JCck::getMultisiteInfo( 'guests' );
-			$isUser	=	!isset( $guests[(string)$user->id] );
-		} else {
-			if ( !is_object( $this->site ) ) {
-				$isUser	=	false;
-			} else {
-				$isUser	=	$user->id != $this->site->guest;
-			}
-		}
-		if ( $user->id > 0 && is_object( $this->site ) && $isUser ) {
-			if ( $app->isClient( 'site' ) ) {
-				$this->_setHomepage( $this->site->configuration->get( 'homepage', 0 ) );
-
-				$style	=	$this->site->configuration->get( 'template_style', '' );
-
-				if ( $style != '' ) {
-					$this->site->configuration->set( 'set_template_style', true );
-					$this->_setTemplateStyle( $style );
-				}
-			}
-
-			if ( ! $this->site ) {
-				JFactory::getSession()->set( 'user', JFactory::getUser( $user->id ) );
-
-				if ( JCckToolbox::getConfig()->get( 'processing', 0 ) ) {
-					JCckToolbox::process( 'onAfterInitialise' );
-				}
-				return;
-			}
-
-			if ( !(int)JCck::getConfig_Param( 'multisite_login', '1' ) ) {
-				if ( !$user->authorise( 'core.admin' ) ) {
-					$groups		=	explode( ',', $this->site->groups );
-					$hasGroups	=	0;
-
-					if ( count( $groups ) ) {
-						foreach ( $groups as $group_id ) {
-							if ( isset( $user->groups[$group_id] ) ) {
-								$hasGroups++;
-							}
-						}
-
-						if ( !$hasGroups ) {
-							$options	=	array( 'clientid'=>0 );
-							$result		=	$app->logout( $user->id, $options );
-
-							if ( !( $result instanceof Exception ) ) {
-								$app->redirect( JUri::getInstance()->getPath() );
-							}
-						}
-					}
-				}
-			}
-
-			// Groups
-			$authgroups	=	$user->getAuthorisedGroups();
-			$nogroups	=	JCckDatabase::loadColumn( 'SELECT groups FROM #__cck_core_sites WHERE id != '.$this->site->id );
-			$nogroups	=	( is_null( $nogroups ) ) ? '' : ','.implode( ',', $nogroups ).',';
-			$multisite	=	false;
-
-			if ( count( $user->groups ) ) {
-				foreach ( $user->groups as $g ) {
-					if ( strpos( $nogroups, ','.$g.',' ) !== false ) {
-						$multisite	=	true;
-						break;
-					}
-				}
-			}
-			$nogroups	=	str_replace( ',,',',', $nogroups );
-      
-			// Viewlevels
-			$authlevels	=	$user->getAuthorisedViewLevels();
-			$nolevels	=	JCckDatabase::loadColumn( 'SELECT viewlevels FROM #__cck_core_sites WHERE id != '.$this->site->id );
-			$nolevels	=	( is_null( $nolevels ) ) ? array() : explode( ',', implode( ',', $nolevels ) );
-
-			if ( $multisite ) {
-				if ( count( $nolevels) ) {
-					foreach ( $nolevels as $k=>$v ) {
-						$nolevels[$k]	=	(int)$v;
-					}
-				}
-				$viewlevels		=	array_diff( $authlevels, $nolevels );
-				$otherlevels	=	array_diff( explode( ',', $this->site->viewlevels ), $viewlevels );
-				$otherlevels	=	array_intersect( $otherlevels, $authlevels );
-				$otherlevels	=	ArrayHelper::toInteger( $otherlevels );
-
-				if ( count( $otherlevels ) ) {
-					$viewlevels	=	array_merge( $viewlevels, $otherlevels );
-				}
-			} else {
-				$viewlevels		=	$authlevels;
-			}
-
-			if ( $app->isClient( 'administrator' ) && (int)$this->site->guest_only_viewlevel > 0 ) {
-				$viewlevels[]	=	(int)$this->site->guest_only_viewlevel;
-			}
-
-			if( ( count( array_diff( $authlevels, $viewlevels ) ) ) || ( count( array_diff( $viewlevels, $authlevels ) ) ) ) {
-				jimport( 'cck.joomla.user.user' );
-				$userShadow		=	new CCKUser( $user->id );
-				$userShadow->setAuthorisedViewLevels( $viewlevels );
-				$userShadow->makeHimLive();
-			}
-
-			if ( JCck::on( '3.5' ) ) {
-				jimport( 'cck.joomla.menu.menu' );
-				$menuShadow		=	new CCKMenu( array( 'user_id'=>$user->id ) );
-				$menuShadow->makeHimLive();
-			}
-		} else {
-			if ( $app->isClient( 'administrator' ) ) {
-				return;
-			}
-
-			if ( ! $this->site ) {
-				if ( JCckToolbox::getConfig()->get( 'processing', 0 ) ) {
-					JCckToolbox::process( 'onAfterInitialise' );
-				}
-				return;
-			}
-
-			$session	=	JFactory::getSession();
-			$session->set( 'user', JFactory::getUser( 0 ) );
-
-			if ( strpos( JUri::getInstance()->toString(), 'task=registration.activate' ) !== false ) {
-				if ( JCckToolbox::getConfig()->get( 'processing', 0 ) ) {
-					JCckToolbox::process( 'onAfterInitialise' );
-				}
-				return;
-			}
-
-			$user			=	new JUser( $this->site->guest );
-			$user->guest	=	1;
-
-			$session->set( 'user', $user );
-
-			if ( JCck::on( '3.5' ) ) {
-				jimport( 'cck.joomla.menu.menu' );
-				$menuShadow		=	new CCKMenu( array( 'user_id'=>$this->site->guest ) );
-				$menuShadow->makeHimLive();
-			}
-			$this->_setHomepage( $this->site->configuration->get( 'homepage', 0 ) );
-
-			$style	=	$this->site->configuration->get( 'template_style', '' );
-
-			if ( $style != '' ) {
-				$this->site->configuration->set( 'set_template_style', true );
-				$this->_setTemplateStyle( $style );
-			}
-		}
-
 		if ( JCckToolbox::getConfig()->get( 'processing', 0 ) ) {
 			JCckToolbox::process( 'onAfterInitialise' );
+		}
+	}
+
+	// onAfterRoute
+	public function onAfterRoute()
+	{
+		if ( $this->multisite ) {
+			$this->_setMultisite();
+			$this->_runMultisite();
 		}
 	}
 
@@ -952,6 +709,12 @@ class plgSystemCCK extends JPlugin
 		}
 	}
 
+	// _isMultiSite
+	protected function _isMultiSite()
+	{
+		return (bool)JCck::getConfig_Param( 'multisite', 0 );
+	}
+
 	// _isRestApi
 	protected function _isRestApi()
 	{
@@ -1004,6 +767,162 @@ class plgSystemCCK extends JPlugin
 		}
 
 		return $buffer;
+	}
+
+	// _runMultisite
+	protected function _runMultisite()
+	{
+		$app	=	JFactory::getApplication();
+		$user	=	JFactory::getUser();
+
+		if ( JCck::getMultisiteInfo( 'hasContext' ) ) {
+			$guests	=	JCck::getMultisiteInfo( 'guests' );
+			$isUser	=	!isset( $guests[(string)$user->id] );
+		} else {
+			if ( !is_object( $this->site ) ) {
+				$isUser	=	false;
+			} else {
+				$isUser	=	$user->id != $this->site->guest;
+			}
+		}
+		if ( $user->id > 0 && is_object( $this->site ) && $isUser ) {
+			if ( $app->isClient( 'site' ) ) {
+				$this->_setHomepage( $this->site->configuration->get( 'homepage', 0 ) );
+
+				$style	=	$this->site->configuration->get( 'template_style', '' );
+
+				if ( $style != '' ) {
+					$this->site->configuration->set( 'set_template_style', true );
+					$this->_setTemplateStyle( $style );
+				}
+			}
+
+			if ( ! $this->site ) {
+				JFactory::getSession()->set( 'user', JFactory::getUser( $user->id ) );
+
+				return;
+			}
+
+			if ( !(int)JCck::getConfig_Param( 'multisite_login', '1' ) ) {
+				if ( !$user->authorise( 'core.admin' ) ) {
+					$groups		=	explode( ',', $this->site->groups );
+					$hasGroups	=	0;
+
+					if ( count( $groups ) ) {
+						foreach ( $groups as $group_id ) {
+							if ( isset( $user->groups[$group_id] ) ) {
+								$hasGroups++;
+							}
+						}
+
+						if ( !$hasGroups ) {
+							$options	=	array( 'clientid'=>0 );
+							$result		=	$app->logout( $user->id, $options );
+
+							if ( !( $result instanceof Exception ) ) {
+								$app->redirect( JUri::getInstance()->getPath() );
+							}
+						}
+					}
+				}
+			}
+
+			// Groups
+			$authgroups	=	$user->getAuthorisedGroups();
+			$nogroups	=	JCckDatabase::loadColumn( 'SELECT groups FROM #__cck_core_sites WHERE id != '.$this->site->id );
+			$nogroups	=	( is_null( $nogroups ) ) ? '' : ','.implode( ',', $nogroups ).',';
+			$multisite	=	false;
+
+			if ( count( $user->groups ) ) {
+				foreach ( $user->groups as $g ) {
+					if ( strpos( $nogroups, ','.$g.',' ) !== false ) {
+						$multisite	=	true;
+						break;
+					}
+				}
+			}
+			$nogroups	=	str_replace( ',,',',', $nogroups );
+      
+			// Viewlevels
+			$authlevels	=	$user->getAuthorisedViewLevels();
+			$nolevels	=	JCckDatabase::loadColumn( 'SELECT viewlevels FROM #__cck_core_sites WHERE id != '.$this->site->id );
+			$nolevels	=	( is_null( $nolevels ) ) ? array() : explode( ',', implode( ',', $nolevels ) );
+
+			if ( $multisite ) {
+				if ( count( $nolevels) ) {
+					foreach ( $nolevels as $k=>$v ) {
+						$nolevels[$k]	=	(int)$v;
+					}
+				}
+				$viewlevels		=	array_diff( $authlevels, $nolevels );
+				$otherlevels	=	array_diff( explode( ',', $this->site->viewlevels ), $viewlevels );
+				$otherlevels	=	array_intersect( $otherlevels, $authlevels );
+				$otherlevels	=	ArrayHelper::toInteger( $otherlevels );
+
+				if ( count( $otherlevels ) ) {
+					$viewlevels	=	array_merge( $viewlevels, $otherlevels );
+				}
+			} else {
+				$viewlevels		=	$authlevels;
+			}
+
+			if ( $app->isClient( 'administrator' ) && (int)$this->site->guest_only_viewlevel > 0 ) {
+				$viewlevels[]	=	(int)$this->site->guest_only_viewlevel;
+			}
+
+			if( ( count( array_diff( $authlevels, $viewlevels ) ) ) || ( count( array_diff( $viewlevels, $authlevels ) ) ) ) {
+				jimport( 'cck.joomla.user.user' );
+				$userShadow		=	new CCKUser( $user->id );
+				$userShadow->setAuthorisedViewLevels( $viewlevels );
+				$userShadow->makeHimLive();
+			}
+
+			if ( JCck::on( '3.5' ) ) {
+				jimport( 'cck.joomla.menu.menu' );
+				$menuShadow		=	new CCKMenu( array( 'user_id'=>$user->id ) );
+				$menuShadow->makeHimLive();
+			}
+		} else {
+			if ( $app->isClient( 'administrator' ) ) {
+				return;
+			}
+
+			if ( ! $this->site ) {
+				if ( JCckToolbox::getConfig()->get( 'processing', 0 ) ) {
+					JCckToolbox::process( 'onAfterInitialise' );
+				}
+				return;
+			}
+
+			$session	=	JFactory::getSession();
+			$session->set( 'user', JFactory::getUser( 0 ) );
+
+			if ( strpos( JUri::getInstance()->toString(), 'task=registration.activate' ) !== false ) {
+				if ( JCckToolbox::getConfig()->get( 'processing', 0 ) ) {
+					JCckToolbox::process( 'onAfterInitialise' );
+				}
+				return;
+			}
+
+			$user			=	new JUser( $this->site->guest );
+			$user->guest	=	1;
+
+			$session->set( 'user', $user );
+
+			if ( JCck::on( '3.5' ) ) {
+				jimport( 'cck.joomla.menu.menu' );
+				$menuShadow		=	new CCKMenu( array( 'user_id'=>$this->site->guest ) );
+				$menuShadow->makeHimLive();
+			}
+			$this->_setHomepage( $this->site->configuration->get( 'homepage', 0 ) );
+
+			$style	=	$this->site->configuration->get( 'template_style', '' );
+
+			if ( $style != '' ) {
+				$this->site->configuration->set( 'set_template_style', true );
+				$this->_setTemplateStyle( $style );
+			}
+		}
 	}
 
 	// _setBasics
@@ -1082,6 +1001,110 @@ class plgSystemCCK extends JPlugin
 			jimport( 'cck.content.content' );
 			jimport( 'cck.content.user' );
 		}
+	}
+
+	// _setMultisite
+	protected function _setMultisite()
+	{
+		$app	=	JFactory::getApplication();
+
+		JCck::_setMultisite();
+		
+		$this->site		=	null;
+
+		if ( JCck::isSite() ) {
+			$this->default_lang =	JComponentHelper::getParams( 'com_languages' )->get( 'site', 'en-GB' );
+			$this->filter_lang	=	JPluginHelper::isEnabled( 'system', 'languagefilter' );
+			$this->site			=	JCck::getSite();
+			$this->site_context	=	(int)JCck::getConfig_Param( 'multisite_context', '1' );
+
+			if ( $app->isClient( 'site' ) && $this->site ) {
+				// --- Redirect to Homepage
+				$homepage	=	$this->site->configuration->get( 'homepage', 0 );
+
+				if ( $homepage > 0 ) {
+					$current	=	JUri::current( true );
+					$len		=	strlen( $current );
+
+					if ( $current[$len - 1] == '/' ) {
+						$current	=	substr( $current, 0, -1 );
+					}
+					$current	=	str_replace( array( 'http://', 'https://' ), '', $current );
+
+					if ( $current == $this->site->host ) {
+						$redirect_url	=	JRoute::_( 'index.php?Itemid='.$homepage );
+
+						if ( $redirect_url != JUri::root(true).'/' ) {
+							JFactory::getApplication()->redirect( $redirect_url );
+						}
+					}
+				}
+				// ---
+				$forced	=	false;
+				$path	=	JUri::getInstance()->getPath();
+				$length	=	strlen( $path );
+
+				if ( $path[$length - 1 ] != '/' ) {
+					$path	.=	'/';
+				}
+				if ( $path[0] != '/' ) {
+					$path	=	'/'.$path;
+				}
+				if ( isset( $this->site->exclusions ) && count( $this->site->exclusions ) ) {
+					foreach ( $this->site->exclusions as $excl ) {
+						$length	=	strlen( $excl );
+
+						if ( $excl[$length - 1 ] != '/' ) {
+							$excl	.=	'/';
+						}
+						if ( $excl[0] != '/' ) {
+							$excl	=	'/'.$excl;
+						}
+						if ( $this->site->context != '' ) {
+							$excl	=	'/' . $this->site->context . $excl;
+						}
+						$pos	=	strpos( $path, $excl );
+
+						if ( $pos !== false && $pos == 0 ) {
+							$forced					=	true;
+							$this->site_exclusion	=	true;
+							break;
+						}
+					}
+				}
+				if ( $forced == true ) {
+					$tag	=	JFactory::getLanguage()->getDefault();
+				} else {
+					$tag	=	$this->site->configuration->get( 'language' );
+				}
+
+				if ( $tag ) {
+					JCckDevHelper::setLanguage( $tag );
+				}
+
+				$this->current_lang	=	JFactory::getLanguage()->getTag();
+			}
+		}
+	}
+
+	// _setRestApi
+	protected function _setRestApi()
+	{
+		$format		=	JCckWebservice::getConfig_Param( 'resources_format', 'json' );
+		$path		=	JUri::getInstance()->getPath();
+		$segment	=	substr( $path, strrpos( $path, '/' ) + 1 );
+
+		if ( $segment != '' ) {
+			if ( ( $pos = strpos( $segment, '.' ) ) !== false ) {
+				$format	=	substr( $segment, $pos + 1 );
+
+				if ( $format[0] == 'w' ) {
+					$format	=	substr( $format, 1 );
+				}
+			}
+		}
+
+		JFactory::getApplication()->input->set( 'format', $format );
 	}
 
 	// _setTemplateStyle
