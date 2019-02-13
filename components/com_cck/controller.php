@@ -316,45 +316,6 @@ class CCKController extends JControllerLegacy
 		echo json_encode( $return );
 	}
 
-	// getRoute (deprecated)
-	public function getRoute()
-	{
-		$app		=	JFactory::getApplication();
-		$location	=	$app->input->get( 'location', 'joomla_article' );
-		$type		=	$app->input->get( 'type', '' );
-		$pk			=	$app->input->getInt( 'pk', 0 );
-		$itemId		=	$app->input->getInt( 'Itemid', 0 );
-		$sef		=	0;
-		
-		if ( !$pk ) {
-			return JUri::root();
-		}
-		
-		if ( $itemId > 0 ) {
-			$target	=	JCckDatabase::loadResult( 'SELECT link FROM #__menu WHERE id = '.(int)$itemId );
-			if ( $target ) {
-				$vars	=	explode( '&', $target );
-				foreach ( $vars as $var ) {
-					$v	=	explode( '=', $var );
-					if ( $v[0] == 'search' ) {
-						$target	=	$v[1];
-						break;
-					}
-				}
-				$vars	=	JCckDatabase::loadResult( 'SELECT options FROM #__cck_core_searchs WHERE name = "'.(string)$target.'"' );
-				if ( $vars ) {
-					$vars	=	new JRegistry( $vars );
-					$sef	=	$vars->get( 'sef', JCck::getConfig_Param( 'sef', '23' ) );
-				}
-			}
-		}
-		if ( !$location || !is_file( JPATH_SITE.'/plugins/cck_storage_location/'.$location.'/'.$location.'.php' ) ) {
-			return JUri::root();
-		}
-		require_once JPATH_SITE.'/plugins/cck_storage_location/'.$location.'/'.$location.'.php';
-		echo JCck::callFunc_Array( 'plgCCK_Storage_Location'.$location, 'getRoute', array( $pk, $sef, $itemId, array( 'type'=>$type ) ) );
-	}
-
 	// outputMessage
 	public function outputMessage()
 	{
