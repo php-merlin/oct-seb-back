@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <extension type="plugin" group="cck_field" version="2.5" method="upgrade">
-	<name>plg_cck_field_jform_menuitem</name>
+	<name>plg_cck_field_jform_accesslevel</name>
 	<author>Octopoos</author>
 	<authorEmail>contact@seblod.com</authorEmail>
 	<authorUrl>https://www.seblod.com</authorUrl>
@@ -11,22 +11,22 @@
 	<version>3.17.3</version>
 	
 	<scriptfile>install/script.php</scriptfile>
-	
+		
 	<files>
 		<folder>assets</folder>
 		<folder>classes</folder>
 		<folder>install</folder>
 		<folder>tmpl</folder>
 		
-		<filename plugin="jform_menuitem">jform_menuitem.php</filename>
+		<filename plugin="jform_accesslevel">jform_accesslevel.php</filename>
 		<filename>index.html</filename>
 	</files>
 	
 	<languages folder="languages">
-		<language tag="en-GB">en-GB/en-GB.plg_cck_field_jform_menuitem.ini</language>
-		<language tag="en-GB">en-GB/en-GB.plg_cck_field_jform_menuitem.sys.ini</language>
-		<language tag="fr-FR">fr-FR/fr-FR.plg_cck_field_jform_menuitem.ini</language>
-		<language tag="fr-FR">fr-FR/fr-FR.plg_cck_field_jform_menuitem.sys.ini</language>
+		<language tag="en-GB">en-GB/en-GB.plg_cck_field_jform_accesslevel.ini</language>
+		<language tag="en-GB">en-GB/en-GB.plg_cck_field_jform_accesslevel.sys.ini</language>
+		<language tag="fr-FR">fr-FR/fr-FR.plg_cck_field_jform_accesslevel.ini</language>
+		<language tag="fr-FR">fr-FR/fr-FR.plg_cck_field_jform_accesslevel.sys.ini</language>
 	</languages>
 	
 	<config>
