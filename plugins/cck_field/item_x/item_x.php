@@ -320,7 +320,7 @@ class plgCCK_FieldItem_X extends JCckPluginField
 												} else {
 													JCck.More.ItemX.modal.hide();
 												}
-											}
+											};
 											xhr.send(formData);
 										} else {
 											$.ajax({
@@ -448,7 +448,7 @@ class plgCCK_FieldItem_X extends JCckPluginField
 								"link_select":"'.htmlspecialchars_decode( $link2 ).'",
 								"link_save":\''.$link6.'\',
 								"required":'.( $field->required ? 1 : 0 ).'
-							}
+							};
 							JCck.More.ItemX.setInstance("'.$field->name.'", data);					
 						});
 					})(jQuery);
