@@ -374,6 +374,8 @@ class Helper_Workshop
 		$data['label']			=	true;
 		$data['markup_class']	=	true;
 
+		$query_access			=	'SELECT a.id AS value, a.title AS text FROM #__viewlevels AS a GROUP BY a.id ORDER BY ordering ASC, title ASC';
+
 		if ( $element == 'type' ) {
 			if ( $master == 'content' ) {
 				$data['link']		=	array_merge(
@@ -396,7 +398,7 @@ class Helper_Workshop
 											self::getLayouts()
 										);
 
-				$data['access']		=	array( 0=>(object)array( 'text'=>JText::_( 'COM_CCK_CLEAR' ), 'value'=>0 ) ) + JCckDatabase::loadObjectList( 'SELECT a.id AS value, a.title AS text FROM #__viewlevels AS a GROUP BY a.id ORDER BY title ASC', 'value' );
+				$data['access']		=	array( 0=>(object)array( 'text'=>JText::_( 'COM_CCK_CLEAR' ), 'value'=>0 ) ) + JCckDatabase::loadObjectList( $query_access, 'value' );
 				$data['restriction']=	array_merge(
 											array( ''=>JHtml::_( 'select.option', '', JText::_( 'COM_CCK_NONE' ) ) ),
 											Helper_Admin::getPluginOptions( 'field_restriction', 'cck_', false, false, true )
@@ -435,7 +437,7 @@ class Helper_Workshop
 											),
 											self::getLayouts()
 										);
-				$data['access']		=	array( 0=>(object)array( 'text'=>JText::_( 'COM_CCK_CLEAR' ), 'value'=>0 ) ) + JCckDatabase::loadObjectList( 'SELECT a.id AS value, a.title AS text FROM #__viewlevels AS a GROUP BY a.id ORDER BY title ASC', 'value' );
+				$data['access']		=	array( 0=>(object)array( 'text'=>JText::_( 'COM_CCK_CLEAR' ), 'value'=>0 ) ) + JCckDatabase::loadObjectList( $query_access, 'value' );
 				$data['validation']	=	true;
 				$data['restriction']=	array_merge(
 											array( ''=>JHtml::_( 'select.option', '', JText::_( 'COM_CCK_NONE' ) ) ),
@@ -468,7 +470,7 @@ class Helper_Workshop
 											),
 											self::getLayouts()
 										);
-				$data['access']		=	array( 0=>(object)array( 'text'=>JText::_( 'COM_CCK_CLEAR' ), 'value'=>0 ) ) + JCckDatabase::loadObjectList( 'SELECT a.id AS value, a.title AS text FROM #__viewlevels AS a GROUP BY a.id ORDER BY title ASC', 'value' );
+				$data['access']		=	array( 0=>(object)array( 'text'=>JText::_( 'COM_CCK_CLEAR' ), 'value'=>0 ) ) + JCckDatabase::loadObjectList( $query_access, 'value' );
 				$data['restriction']=	array_merge(
 											array( ''=>JHtml::_( 'select.option', '', JText::_( 'COM_CCK_NONE' ) ) ),
 											Helper_Admin::getPluginOptions( 'field_restriction', 'cck_', false, false, true )
@@ -555,7 +557,7 @@ class Helper_Workshop
 											),
 											self::getLayouts()
 										);
-				$data['access']		=	array( 0=>(object)array( 'text'=>JText::_( 'COM_CCK_CLEAR' ), 'value'=>0 ) ) + JCckDatabase::loadObjectList( 'SELECT a.id AS value, a.title AS text FROM #__viewlevels AS a GROUP BY a.id ORDER BY title ASC', 'value' );
+				$data['access']		=	array( 0=>(object)array( 'text'=>JText::_( 'COM_CCK_CLEAR' ), 'value'=>0 ) ) + JCckDatabase::loadObjectList( $query_access, 'value' );
 				$data['validation']	=	true;
 				$data['restriction']=	array_merge(
 											array( ''=>JHtml::_( 'select.option', '', JText::_( 'COM_CCK_NONE' ) ) ),
