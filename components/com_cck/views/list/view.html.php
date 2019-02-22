@@ -127,10 +127,6 @@ class CCKViewList extends JViewLegacy
 			$this->document->setMetadata( 'robots', $params->get( 'robots' ) );
 		}
 
-		if ( JCck::on( '3.9' ) ) {
-			$pagination->hideEmptyLimitstart	=	true;
-		}
-
 		// Set
 		if ( !is_object( @$options ) ) {
 			$options	=	new JRegistry;
