@@ -114,11 +114,7 @@ if ( ! $count ) {
 
 // Init
 $hasAjax		=	false;
-<<<<<<< HEAD
 $limitend		=	( isset( $preconfig['limitend'] ) && $preconfig['limitend'] != '' ) ? (int)$preconfig['limitend'] : (int)$options->get( 'pagination', JCck::getConfig_Param( 'pagination', 48 ) );
-=======
-$limitend		=	( isset( $preconfig['limitend'] ) && $preconfig['limitend'] != '' ) ? (int)$preconfig['limitend'] : (int)$options->get( 'pagination', JCck::getConfig_Param( 'pagination', 25 ) );
->>>>>>> master
 $list_context	=	'com_cck.'.$search->name;
 $pagination		=	( isset( $pagination ) && $pagination != '' ) ? $pagination : $options->get( 'show_pagination', 0 );
 
@@ -231,11 +227,7 @@ if ( $context != '' ) {
 						'limit'=>'',
 						'option'=>'',
 						'pk'=>'',
-<<<<<<< HEAD
-						'referrer'=>'',
-=======
 						/* 'referrer'=>'', we should keep this one as well */
->>>>>>> master
 						'return'=>'',
 						'search'=>'',
 						'skip'=>'',
