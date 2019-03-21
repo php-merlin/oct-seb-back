@@ -706,7 +706,7 @@ class plgContentCCK extends JPlugin
 				}
 
 				$params	=	new JRegistry( $params );
-				$data	=	CCK_Item::render( $id, $params->toArray() );
+				$data	=	CCK_Item::render( $id, $params->toArray(), false );
 				$text	=	str_replace( $matches[0][$k], $data, $text );
 			}
 		}
