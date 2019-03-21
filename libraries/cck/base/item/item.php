@@ -25,11 +25,23 @@ class CCK_Item
 		if ( !(int)$id ) {
 			return '';
 		}
-		
-		$cache	=	false;
-		
+
+		$user	=	JFactory::getUser();
+
+		if ( $user->id && !$user->guest ) {
+			$cache	=	false;
+		}
+
 		if ( $cache ) {
-			$cache		=	JFactory::getCache( 'cck_item@'.$id );
+			$suffix	=	'';
+
+			/*
+			if ( !is_null( $params ) ) {
+				$suffix	=	'_'.md5( json_encode( $params ) );
+			}
+			*/
+
+			$cache		=	JFactory::getCache( 'cck_item@'.$id.$suffix );
 			$cache->setCaching( 1 );
 
 			return $cache->call( array( 'CCK_Item', 'prepare' ), '::cck::'.$id.'::/cck::' );
