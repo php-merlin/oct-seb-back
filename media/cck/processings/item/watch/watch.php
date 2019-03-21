@@ -5,7 +5,7 @@ if ( !( $config['id'] && !$config['isNew'] ) ) {
 	return;
 }
 
-$path	=	JPATH_SITE.'/cache/cck_item@'.$config['id'];
+$path	=	JPATH_SITE.'/cache/cck_item@'.(int)$config['id'];
 
 if ( is_dir( $path ) ) {
 	JFolder::delete( $path );
