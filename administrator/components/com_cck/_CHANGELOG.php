@@ -22,11 +22,125 @@ $ -> Language fix or change
 - -> Removed
 ! -> Note
 
--------------------- 3.17.4 Upgrade Release [..-Mar-2019] -----------
+-------------------- 4.0.0 Upgrade Release [xx-xxx-xxxx] -----------
+
+! Joomla! 4.0 ready.
+  >> work in progress...
+
++ Ability to set default parameters (default.json) added for Positions Variations.
++ AJAX filtering capabilities enabled.
++ Multilanguage support highly enhanced:
+  >> ...
+  >> Support added on "Search Generic", "Search Ordering" plug-ins.
++ Multi-sites system improved:
+  >> Multi-environment capabilities added.
+  >> Site Inheritance implemented.
++ Rendering (Content, Form, List) greatly improved:
+  >> Field Output with custom Markup (via Layouts) implemented.
+  >> Postponed (Above|Below) Output implemented.
++ Search within JSON storage (some match modes may need to be checked/fixed).
+
++ Group plug-in improved:
+  >> a content type can now be defined as "Collection".
+  >> back-end UI cleaner for "Collections".
+  >> nested groups are allowed.
++ "Sync" process added for Menu Item addition/upgrade from native UI.
++ Syntax {cck_item:[id]} applied to render Intro view of any content item.
++ "Watch" processed added for Content Item .
+
+NEW EXTENSIONS
+--------------
++ Plug-ins added:
+  [*** TODO ***]
+
++ New Templates added:
+  >> List (seb_list)
+  >> Minima (seb_minima)
+--------------
+
++ Auto "Meta Desc" added on Form/List views.
++ Component Form/List views updated.
++ "Group Required" added to JGrid >> useful for Item X fields.
++ J(...) support added for the description of Fields.
++ Modal Target added on Form Link plug-ins >> only the new modal is supported.
++ "Override Meta Desc" parameter added on Content Types (Content View > Configuration).
++ "Page Number" parameter added to SEBLOD Options
++ "Raw Rendering" parameter added to SEBLOD Options
+
+NEW INSTALL.SQL
+---------------
+  [*** TODO ***]
+---------------
+
+^ "CCK_Item" class renamed to "CCK_Rendering_Item"
+^ hideEmptyLimitstart applied >> no more ?start=0 in Lists, yeah! :)
+^ Tabs Field plug-in updated
+^ Various default values/behaviors updated (here & there)
+
+REMOVED EXTENSIONS
+------------------
+- Field Plug-ins removed, but available on SEBLOD Store:
+  >> Calendar
+  >> JForm Access Level
+  >> JForm Category
+  >> JForm Content Language
+  >> JForm Editors
+  >> JForm Group Parent
+  >> JForm Help Site
+  >> JForm User
+  >> Hidden
+  >> Joomla! Module
+  >> Link
+
+- Typography Plug-ins removed, but available on SEBLOD Store:
+  >> Clear
+
+- Validation Plug-ins removed, but available on SEBLOD Store:
+  >> Letter Number Only
+
+- Modules removed:
+  >> SEBLOD Admin Menu (mod_cck_menu)
+
+- Templates removed, but available on SEBLOD Store:
+  >> Blog (seb_blog)
+  >> One (seb_one)
+
+- Variations removed:
+  >> "joomla"
+  >> "seb_css3"
+  >> "seb_css3b"
+------------------
+
++ "Core Legacy" 2018 added:
+  [*** TODO ***]
+
+! "Break" process improved (Group Field, SEBLOD Field Restriction, ...)
+! Export/Import of Apps enhanced.
+! Extensive cleaning performed:
+  >> Deprecated stuff removed
+  >> Install/Upgrade scripts reworked
+  >> Legacy patchs (i.e. upgrade from older versions) removed
+
+- "cck" column on #__cck_store_item_... tables removed.
+- Hardcoded height removed from Wysiwyg Editor Field plug-in.
+- History / PostInstallLog removed
+- List rendering without template removed.
+- Permissions on App Folders removed >> no more dependency from App Folders to #__assets
+
+# App Folder export issues fixed.
+# Break field (partial) support added for "SEBLOD Fields" restriction.
+# Sites (with context) fixed when site is reached from a subfolder.
+# Sites (with context) fixed when multi-language is on.
+# Various improvements or issues fixed.
+
+-------------------- 3.17.4 Upgrade Release [27-Mar-2019] -----------
 
 + Infinite pagination improved with context-based live values.
 
+# Article Title issue (with Page Title Override) fixed. @SEBLOD/issues/544
+# Date Format (German, ...) fixed on Date Typography plug-in. @SEBLOD/pull/555
 # Notice removed. @SEBLOD/pull/524
+# Site Name in Page Titles issue (with Page Title Override) fixed. @SEBLOD/issues/550
 
 -------------------- 3.17.3 Upgrade Release [21-Feb-2019] -----------
 
