@@ -472,7 +472,7 @@ abstract class JCckDevHelper
 
 			$params[$name]['join_key']		=	'pk';
 			$params[$name]['location']		=	( $object->storage_location ) ? $object->storage_location : 'joomla_article';
-			$params[$name]['sef_aliases']	=	$object->sef_route_aliases;
+			$params[$name]['sef_aliases']	=	(int)( (int)$object->sef_route_aliases != -1 ? $object->sef_route_aliases : JCck::getConfig_Param( 'sef_aliases', '0' ) );
 			$params[$name]['sef_types']		=	$object->sef_route;
 		}
 		
