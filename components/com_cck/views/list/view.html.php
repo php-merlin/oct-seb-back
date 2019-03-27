@@ -235,7 +235,7 @@ class CCKViewList extends JViewLegacy
 		}
 
 		// Canonical
-		if ( $sef_canonical = $options->get( 'sef_canonical', JCck::getConfig_Param( 'sef_canonical_list', 0 ) ) ) {
+		if ( $sef_canonical = (int)$options->get( 'sef_canonical', JCck::getConfig_Param( 'sef_canonical_list', 3 ) ) ) {
 			$current	=	JUri::getInstance()->current();
 
 			if ( ( $sef_canonical == 2 || $sef_canonical == 3 ) && $start ) {

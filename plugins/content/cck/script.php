@@ -323,9 +323,11 @@ class plgContentCCKInstallerScript
 			
 			// Init Default Config
 			$params->set( 'core_legacy', '0' );
+			$params->set( 'core_legacy_routing', '0' );
+			$params->set( 'sef_aliases', '2' );
 			$params->set( 'site_variation', 'seb_css3b' );
 			$params->set( 'site_variation_form', 'seb_css3b' );
-			$params->set( 'optimize_memory', '1' );
+			$params->set( 'optimize_memory', '11' );
 			
 			// Init ACL
 			require_once JPATH_ADMINISTRATOR.'/components/com_cck/helpers/helper_admin.php';
