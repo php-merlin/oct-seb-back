@@ -237,9 +237,10 @@ class CommonHelper_Admin
 		}
 		
 		$options2	=	JCckDatabase::loadObjectList( $query );
+		
 		if ( count( $options2 ) ) {
 			if ( $top && $options2[0]->value == '2' ) {
-				$options2[0]->text	=	JText::_( 'COM_CCK_'.$options2[0]->text );
+				$options2[0]->text	=	JText::_( 'COM_CCK_'.trim( $options2[0]->text ) );
 			}
 			$optgroup			=	( defined( '_C0_TEXT' ) ) ? 'COM_CCK_'._C0_TEXT.'S' : 'COM_CCK_APP_FOLDERS';
 			$options[]		 	=	JHtml::_( 'select.option', '<OPTGROUP>', JText::_( $optgroup ) );
