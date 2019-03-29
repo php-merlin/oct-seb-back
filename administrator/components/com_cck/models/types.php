@@ -155,6 +155,8 @@ class CCKModelTypes extends JModelList
 		$client	=	$this->getState( 'filter.client' );
 		if ( $client == 'both' ) {
 			$query->where( 'a.location = ""' );
+		} elseif ( $client == 'no_collection' ) {
+			$query->where( 'a.location != "collection"' );
 		} elseif ( $client ) {
 			if ( strpos( $client, '_both') !== false ) {
 				$query->where( '( a.location = "'.(string)str_replace( '_both', '', $client ).'" OR a.location = "" )' );

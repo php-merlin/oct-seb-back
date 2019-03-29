@@ -176,6 +176,9 @@ class CommonHelper_Admin
 			$selectlabel	=	( is_string( $selectlabel ) ) ? $selectlabel : '- '.JText::_( 'COM_CCK_ALL_LOCATIONS' ).' -';
 			$options[]		=	JHtml::_( 'select.option', '', $selectlabel, 'value', 'text' );
 		}
+		if ( $view == 'types' ) {
+			$options[]		=	JHtml::_( 'select.option', 'no_collection', JText::_( 'COM_CCK_ALL_BUT_COLLECTIONS' ), 'value', 'text' );
+		}
 		if ( ( $view == 'type' || $view == 'types' ) ) {
 			$options[]		=	JHtml::_( 'select.option', 'collection', JText::_( 'COM_CCK_AS_COLLECTION' ), 'value', 'text' );
 		}
