@@ -183,8 +183,9 @@ class plgCCK_FieldButton_Submit extends JCckPluginField
 		$field->label	=	'';
 
 		// Prepare
-		$pre_task	=	'';
+		$canDo		=	true;
 		$options2	=	JCckDev::fromJSON( $field->options2 );
+		$pre_task	=	'';
 		$task		=	( isset( $options2['task'] ) && $options2['task'] ) ? $options2['task'] : 'save';
 		$task_auto	=	( isset( $options2['task_auto'] ) && $options2['task_auto'] == '0' ) ? 0 : 1;
 		$task_id	=	( isset( $options2['task_id'] ) && $options2['task_id'] ) ? $options2['task_id'] : 0;
@@ -243,57 +244,70 @@ class plgCCK_FieldButton_Submit extends JCckPluginField
 				$click		=	isset( $config['submit'] ) ? ' onclick="'.$pre_task.$config['submit'].'(\''.$task.'\');return false;"' : '';			
 			} else {
 				$click		=	isset( $config['submit'] ) ? ' onclick="'.$pre_task.$config['submit'].'(\''.$task.'\');return false;"' : '';
-			}
-		}
-		if ( $field->attributes && strpos( $field->attributes, 'onclick="' ) !== false ) {
-			$matches	=	array();
-			$search		=	'#onclick\=\"([a-zA-Z0-9_\(\)\\\'\;\.]*)"#';
-			preg_match( $search, $field->attributes, $matches );
-			if ( count( $matches ) && $matches[0] ) {
-				if ( $matches[0] == $field->attributes ) {
-					$field->attributes	=	substr( trim( $field->attributes ), 0, -1 );
-					$click				=	' '.$field->attributes.'"';
-					$field->attributes	=	'';
-				} else {
-					$click				=	' onclick="'.$matches[1].'"';
-					$field->attributes	=	trim( str_replace( $matches[0], '', $field->attributes ) );
+
+				if ( $task == 'save2new' ) {
+					$user	=	JCck::getUser();
+					
+					if ( !$user->authorise( 'core.create', 'com_cck.form.'.$config['type_id'] ) ) {
+						$canDo	=	false;	
+					}
 				}
 			}
 		}
-		$attr		=	'class="'.$class.'"'.$click . ( $field->attributes ? ' '.$field->attributes : '' );
-		if ( $field->bool ) {
-			$label	=	$value;
-			
-			if ( $field->bool6 == 3 ) {
-				$label		=	'<span class="icon-'.$options2['icon'].'"></span>';
-				$attr		.=	' title="'.$value.'"';
-			} elseif ( $field->bool6 == 2 ) {
-				$label		=	$value."\n".'<span class="icon-'.$options2['icon'].'"></span>';
-			} elseif ( $field->bool6 == 1 ) {
-				$label		=	'<span class="icon-'.$options2['icon'].'"></span>'."\n".$value;
+
+		if ( $canDo ) {
+			if ( $field->attributes && strpos( $field->attributes, 'onclick="' ) !== false ) {
+				$matches	=	array();
+				$search		=	'#onclick\=\"([a-zA-Z0-9_\(\)\\\'\;\.]*)"#';
+				preg_match( $search, $field->attributes, $matches );
+				if ( count( $matches ) && $matches[0] ) {
+					if ( $matches[0] == $field->attributes ) {
+						$field->attributes	=	substr( trim( $field->attributes ), 0, -1 );
+						$click				=	' '.$field->attributes.'"';
+						$field->attributes	=	'';
+					} else {
+						$click				=	' onclick="'.$matches[1].'"';
+						$field->attributes	=	trim( str_replace( $matches[0], '', $field->attributes ) );
+					}
+				}
 			}
-			$type	=	( $field->bool7 == 1 ) ? 'submit' : 'button';
-			$form	=	'<button type="'.$type.'" id="'.$id.'" name="'.$name.'" '.$attr.'>'.$label.'</button>';
-			$tag	=	'button';
-		} else {
-			$form	=	'<input type="submit" id="'.$id.'" name="'.$name.'" value="'.$value.'" '.$attr.' />';
-			$tag	=	'input';
-		}
-		if ( $field->bool2 == 1 ) {
-			$alt	=	$field->bool3 ? ' '.JText::_( 'COM_CCK_OR' ).' ' : "\n";
-			if ( $config['client'] == 'search' ) {
-				$onclick	=	'onclick="jQuery(\'#'.$config['formId'].'\').clearForm();"';
-				$form		.=	$alt.'<a href="javascript: void(0);" '.$onclick.' title="'.JText::_( 'COM_CCK_RESET' ).'">'.JText::_( 'COM_CCK_RESET' ).'</a>';				
+			$attr		=	'class="'.$class.'"'.$click . ( $field->attributes ? ' '.$field->attributes : '' );
+			if ( $field->bool ) {
+				$label	=	$value;
+				
+				if ( $field->bool6 == 3 ) {
+					$label		=	'<span class="icon-'.$options2['icon'].'"></span>';
+					$attr		.=	' title="'.$value.'"';
+				} elseif ( $field->bool6 == 2 ) {
+					$label		=	$value."\n".'<span class="icon-'.$options2['icon'].'"></span>';
+				} elseif ( $field->bool6 == 1 ) {
+					$label		=	'<span class="icon-'.$options2['icon'].'"></span>'."\n".$value;
+				}
+				$type	=	( $field->bool7 == 1 ) ? 'submit' : 'button';
+				$form	=	'<button type="'.$type.'" id="'.$id.'" name="'.$name.'" '.$attr.'>'.$label.'</button>';
+				$tag	=	'button';
 			} else {
-				$onclick	=	'onclick="JCck.Core.submitForm(\'cancel\', document.getElementById(\'seblod_form\'));"';
-				$form		.=	$alt.'<a href="javascript: void(0);" '.$onclick.' title="'.JText::_( 'COM_CCK_CANCEL' ).'">'.JText::_( 'COM_CCK_CANCEL' ).'</a>';
+				$form	=	'<input type="submit" id="'.$id.'" name="'.$name.'" value="'.$value.'" '.$attr.' />';
+				$tag	=	'input';
 			}
-		} elseif ( $field->bool2 == 2 ) {
-			$alt		=	$field->bool3 ? ' '.JText::_( 'COM_CCK_OR' ).' ' : "\n";
-			$field2		=	(object)array( 'link'=>$options2['alt_link'], 'link_options'=>$options2['alt_link_options'], 'id'=>$id, 'name'=>$name, 'text'=>htmlspecialchars( $options2['alt_link_text'] ), 'value'=>'' );
-			JCckPluginLink::g_setLink( $field2, $config );
-			JCckPluginLink::g_setHtml( $field2, 'text' );
-			$form		.=	$alt.$field2->html;
+			if ( $field->bool2 == 1 ) {
+				$alt	=	$field->bool3 ? ' '.JText::_( 'COM_CCK_OR' ).' ' : "\n";
+				if ( $config['client'] == 'search' ) {
+					$onclick	=	'onclick="jQuery(\'#'.$config['formId'].'\').clearForm();"';
+					$form		.=	$alt.'<a href="javascript: void(0);" '.$onclick.' title="'.JText::_( 'COM_CCK_RESET' ).'">'.JText::_( 'COM_CCK_RESET' ).'</a>';				
+				} else {
+					$onclick	=	'onclick="JCck.Core.submitForm(\'cancel\', document.getElementById(\'seblod_form\'));"';
+					$form		.=	$alt.'<a href="javascript: void(0);" '.$onclick.' title="'.JText::_( 'COM_CCK_CANCEL' ).'">'.JText::_( 'COM_CCK_CANCEL' ).'</a>';
+				}
+			} elseif ( $field->bool2 == 2 ) {
+				$alt		=	$field->bool3 ? ' '.JText::_( 'COM_CCK_OR' ).' ' : "\n";
+				$field2		=	(object)array( 'link'=>$options2['alt_link'], 'link_options'=>$options2['alt_link_options'], 'id'=>$id, 'name'=>$name, 'text'=>htmlspecialchars( $options2['alt_link_text'] ), 'value'=>'' );
+				JCckPluginLink::g_setLink( $field2, $config );
+				JCckPluginLink::g_setHtml( $field2, 'text' );
+				$form		.=	$alt.$field2->html;
+			}
+		} else {
+			$form	=	'';
 		}
 		
 		// Set
