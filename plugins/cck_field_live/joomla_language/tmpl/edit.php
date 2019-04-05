@@ -17,8 +17,8 @@ JCckDev::initScript( 'live', $this->item );
 	<?php echo JCckDev::renderLegend( JText::_( 'COM_CCK_CONSTRUCTION' ), JText::_( 'PLG_CCK_FIELD_LIVE_'.$this->item->name.'_DESC' ) ); ?>
     <ul class="adminformlist adminformlist-2cols">
         <?php
-		echo JCckDev::renderForm( 'core_languages', '', $config, array( 'label'=>'Language' ), 'storage_field'=>'language' );
-		echo JCckDev::renderForm( 'core_bool', '', $config, array( 'label'=>'Invert', 'defaultvalue'=>'0', 'options'=>'Yes=1||No=0', 'storage_field'=>'all' ) );
+		echo JCckDev::renderForm( 'core_languages', '', $config, array( 'label'=>'Language', 'selectlabel'=>'Current', 'storage_field'=>'language' ) );
+		echo JCckDev::renderForm( 'core_bool', '', $config, array( 'label'=>'All Languages', 'defaultvalue'=>'0', 'options'=>'Yes=1||No=0', 'storage_field'=>'all' ) );
 		?>
     </ul>
 </div>

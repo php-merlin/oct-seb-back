@@ -25,16 +25,22 @@ class plgCCK_Field_LiveJoomla_Language extends JCckPluginLive
 		}
 		
 		// Init
-		$live		=	'#';
+		$live		=	'';
 		$options	=	parent::g_getLive( $field->live_options );
 		
 		// Prepare
-		$variable	=	$options->get( 'variable' );
-		
+		$variable	=	$options->get( 'language' );
+				
 		if ( $variable ) {
-			/* TODO */
+			$live	=	$variable;
+		} else {
+			$live	=	JFactory::getLanguage()->getTag();
 		}
 		
+		if ( (int)$options->get( 'all', '0' ) ) {
+			$live	.=	',*';
+		}
+
 		// Set
 		$value	=	$live;
 	}
