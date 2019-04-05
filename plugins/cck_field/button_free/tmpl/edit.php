@@ -25,7 +25,7 @@ $options2	=	JCckDev::fromJSON( $this->item->options2 );
 		 																			  'options'=>'Hide=0||Show=optgroup||Prepend=1||Append=2||Replace=3', 'storage_field'=>'bool6' ) )
 		 .	 JCckDev::getForm( 'core_icons', @$options2['icon'], $config, array( 'css'=>'max-width-150' ) )
 		 .	 '</li>';
-		echo '<li><label>'.JText::_( 'COM_CCK_BUTTON' ).'</label>'
+		echo '<li><label>'.JText::_( 'COM_CCK_TYPE' ).'</label>'
 		 .	 JCckDev::getForm( 'core_bool', $this->item->bool, $config, array( 'label'=>'Button', 'defaultvalue'=>'1', 'options'=>'Hide=-1||Show=optgroup||Input=0||Button=1' ) )
 		 .	 JCckDev::getForm( 'core_bool', $this->item->bool7, $config, array( 'label'=>'Type', 'defaultvalue'=>'0', 'options'=>'Button=0||Submit=1', 'storage_field'=>'bool7' ) )
 		 .	 '</li>';

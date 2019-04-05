@@ -19,8 +19,8 @@ JCckDev::forceStorage();
         <?php
         echo JCckDev::renderForm( 'core_label', $this->item->label, $config );
         echo JCckDev::renderForm( 'core_extended', $this->item->extended, $config, array( 'required'=>'' ) );
-        echo '<li><label>'.JText::_( 'COM_CCK_BEHAVIOR' ).'</label>'
-         .   JCckDev::getForm( 'core_pane_behavior', $this->item->bool, $config )
+        echo '<li><label>'.JText::_( 'COM_CCK_BEHAVIOR' ).'<span class="star"> *</span></label>'
+         .   JCckDev::getForm( 'core_pane_behavior', $this->item->bool, $config, array( 'required'=>'required' ) )
          .   JCckDev::getForm( 'core_defaultvalue', $this->item->defaultvalue, $config, array( 'size'=>3, 'attributes'=>'style="text-align:center;"' ) )
          .   '</li>';
         echo JCckDev::renderForm( 'core_dev_text', $this->item->location, $config, array( 'label'=>'GROUP_IDENTIFIER', 'storage_field'=>'location' ) );
