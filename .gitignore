@@ -1975,14 +1975,6 @@ Temporary Items
 /administrator/language/fr-FR/fr-FR.plg_cck_field_live_url.sys.ini
 /plugins/cck_field_live/url/*
 
-######## SEBLOD Plug-ins >> Live >> X
-
-/administrator/language/en-GB/en-GB.plg_cck_field_live_x.ini
-/administrator/language/en-GB/en-GB.plg_cck_field_live_x.sys.ini
-/administrator/language/fr-FR/fr-FR.plg_cck_field_live_x.ini
-/administrator/language/fr-FR/fr-FR.plg_cck_field_live_x.sys.ini
-/plugins/cck_field_live/x/*
-
 ######## SEBLOD Plug-ins >> Object >> Joomla! Message
 
 /administrator/language/en-GB/en-GB.plg_cck_storage_location_joomla_message.ini
