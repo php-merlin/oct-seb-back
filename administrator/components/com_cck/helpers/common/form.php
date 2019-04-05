@@ -406,8 +406,17 @@ class CommonHelper_Form
 	// getStorageMode
 	public static function getStorageMode( &$field, $value, $name, $id, $config )
 	{
-		$value		=	( $value ) ? $value : 'custom';
 		$options	=	array();
+		$view		=	JFactory::getApplication()->input->get( 'view', '' );
+		
+		if ( $view == 'fields' ) {
+			if ( trim( $field->selectlabel ) ) {
+				$options[]	=	JHtml::_( 'select.option',  '', '- '.$field->selectlabel.' -' );
+			}
+		} else {
+			$value		=	( $value ) ? $value : 'custom';
+		}
+
 		$options[]	=	JHtml::_( 'select.option', 'none', '- '.JText::_( 'COM_CCK_NONE' ).' -', 'value', 'text' );
 		
 		if ( ( JCck::getConfig_Param( 'storage_dev', '0' ) == 3 ) || ( $value == 'dev' ) ) {
