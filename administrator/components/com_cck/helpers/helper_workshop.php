@@ -322,7 +322,7 @@ class Helper_Workshop
 
 		$folder		=	JPATH_SITE.'/components/com_cck/layouts/cck/markup';
 		$groups		=	array();
-		$items		=	JFolder::files( $folder, '.', true, true );
+		$items		=	JFolder::files( $folder, '\.php$', true, true );
 		$len		=	strlen( $folder ) + 1;
 		$layouts	=	array();
 		$open		=	false;
