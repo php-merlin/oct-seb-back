@@ -22,6 +22,7 @@ $ -> Language fix or change
 - -> Removed
 ! -> Note
 
+<<<<<<< HEAD
 -------------------- 4.0.0 Upgrade Release [xx-xxx-xxxx] -----------
 
 ! Joomla! 4.0 ready.
@@ -134,11 +135,18 @@ REMOVED EXTENSIONS
 # Various improvements or issues fixed.
 
 -------------------- 3.17.4 Upgrade Release [27-Mar-2019] -----------
+=======
+-------------------- 3.17.4 Upgrade Release [29-Mar-2019] -----------
+>>>>>>> master
 
 + Infinite pagination improved with context-based live values.
 
 # Article Title issue (with Page Title Override) fixed. @SEBLOD/issues/544
 # Date Format (German, ...) fixed on Date Typography plug-in. @SEBLOD/pull/555
+<<<<<<< HEAD
+=======
+# Export issue fixed on Joomla! Articles/Categories.
+>>>>>>> master
 # Notice removed. @SEBLOD/pull/524
 # Site Name in Page Titles issue (with Page Title Override) fixed. @SEBLOD/issues/550
 

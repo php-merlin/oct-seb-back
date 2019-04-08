@@ -644,16 +644,7 @@ class plgContentCCK extends JPlugin
 			$p_title		=	JCckDevHelper::truncate( $p_title, 70 );
  		}
  		if ( $p_title != '' ) {
- 			if ( is_object( $article ) && isset( $article->title ) ) {
-				$article->title		=	$p_title;
-				
-				// if ( is_object( $article_params ) ) {
-				// 	$article_params->set( 'page_title', $p_title );
-				// }
-				$app->cck_page_title	=	$p_title;
-			} else {
-				JFactory::getDocument()->setTitle( $p_title );
-			}
+ 			$app->cck_page_title	=	$p_title;
  		}
 
  		// Set Description
