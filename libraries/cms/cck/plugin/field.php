@@ -995,6 +995,10 @@ class JCckPluginField extends JPlugin
 			if ( ! $field->storage_field2 ) {
 				$field->storage_field2	=	$field->name;
 			}
+			if ( $field->storage_filter ) {
+				$value	=	JFilterInput::getInstance()->clean( $value, $field->storage_filter );
+			}
+
 			require_once JPATH_PLUGINS.'/cck_storage/'.$storage.'/'.$storage.'.php';
 			JCck::callFunc_Array( 'plgCCK_Storage'.$storage, 'onCCK_StoragePrepareStore', array( &$field, $value, &$config ) );
 		}
