@@ -659,9 +659,9 @@ class plgContentCCK extends JPlugin
 		if ( $p_desc != '' ) {
  			if ( is_object( $article ) && isset( $article->metadesc ) && $article->metadesc == '' ) {
 				$article->metadesc	=	$p_desc;
-			} else {
-				JFactory::getDocument()->setDescription( $p_desc );
 			}
+
+			JFactory::getDocument()->setDescription( $p_desc );
  		}
 
 		// Finalize
