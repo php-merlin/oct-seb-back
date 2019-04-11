@@ -348,7 +348,7 @@ class CCK_Rendering
 			if ( !$format  ) {
 				$format	=	JText::_( 'COM_CCK_COMPUTATION_FORMAT_AUTO' );
 			}
-			$doc->addScript( $this->base.'/media/cck/js/cck.calculation.min.js', array( 'version'=>self::getMediaVersion() ) );
+			$doc->addScript( $this->base.'/media/cck/js/cck.calculation.min.js', array( 'version'=>JCckDev::getMediaVersion() ) );
 
 			if ( !( $format == '1,234,567.89' || $format == 'COM_CCK_COMPUTATION_FORMAT_AUTO' ) ) {
 				if ( $format == '1 234 567.89' ) {
