@@ -63,9 +63,11 @@ NEW EXTENSIONS
 + "Group Required" added to JGrid >> useful for Item X fields.
 + J(...) support added for the description of Fields.
 + Modal Target added on Form Link plug-ins >> only the new modal is supported.
++ "Multilanguage Aliases" parameter added to SEBLOD Options.
 + "Override Meta Desc" parameter added on Content Types (Content View > Configuration).
-+ "Page Number" parameter added to SEBLOD Options
-+ "Raw Rendering" parameter added to SEBLOD Options
++ "Page Number" parameter added to SEBLOD Options.
++ "Raw Rendering" parameter added to SEBLOD Options.
++ Storage filter added on Field Manager.
 
 NEW INSTALL.SQL
 ---------------
@@ -114,12 +116,14 @@ REMOVED EXTENSIONS
 + "Core Legacy" 2018 added:
   [*** TODO ***]
 
+! Articles not loaded anymore on native Category List View.
 ! "Break" process improved (Group Field, SEBLOD Field Restriction, ...)
 ! Export/Import of Apps enhanced.
 ! Extensive cleaning performed:
   >> Deprecated stuff removed
   >> Install/Upgrade scripts reworked
   >> Legacy patchs (i.e. upgrade from older versions) removed
+! Scripts/Stylesheets loaded with a "Media Version" query parameter.
 
 - "cck" column on #__cck_store_item_... tables removed.
 - Hardcoded height removed from Wysiwyg Editor Field plug-in.
@@ -129,6 +133,8 @@ REMOVED EXTENSIONS
 
 # App Folder export issues fixed.
 # Break field (partial) support added for "SEBLOD Fields" restriction.
+# "Override Meta Desc" fixed for Categories.
+# Permissions now applied for "Save & New" task on Submit Button.
 # Sites (with context) fixed when site is reached from a subfolder.
 # Sites (with context) fixed when multi-language is on.
 # Various improvements or issues fixed.
