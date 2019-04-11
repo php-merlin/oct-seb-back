@@ -52,13 +52,11 @@ class plgSystemCCK extends JPlugin
 	// buildRule
 	public function buildRule( &$router, &$uri )
 	{
-		if ( JCck::isSite() ) {
+		if ( $this->site ) {
 			if ( $this->site_context ) {
-				$context	=	JCck::getSite()->context;
-
-				if ( $context != '' ) {
+				if ( $this->site->context != '' ) {
 					if ( !$this->filter_lang || ( $this->filter_lang && $this->current_lang == $this->default_lang ) ) {
-						$uri->setPath( $uri->getPath() . '/' . $context . '/' );
+						$uri->setPath( $uri->getPath() . '/' . $this->site->context . '/' );
 					}
 				}
 			}
@@ -90,17 +88,15 @@ class plgSystemCCK extends JPlugin
 	// parseRule
 	public function parseRule( &$router, &$uri )
 	{
-		if ( JCck::isSite() ) {
+		if ( $this->site ) {
 			if ( $this->site_context || ( !$this->site_context && $this->site_exclusion ) ) {
-				$context	=	JCck::getSite()->context;
-
-				if ( $context != '' ) {
+				if ( $this->site->context != '' ) {
 					if ( !$this->filter_lang || ( $this->filter_lang && $this->current_lang == $this->default_lang ) ) {
 						$path	=	$uri->getPath();
-						$pos	=	strpos( $path, $context );
+						$pos	=	strpos( $path, $this->site->context );
 
 						if ( $pos !== false && $pos == 0 ) {
-							$path	=	substr( $path, strlen( $context ) + 1 );
+							$path	=	substr( $path, strlen( $this->site->context ) + 1 );
 							$uri->setPath( $path );
 						}
 					}
@@ -168,6 +164,20 @@ class plgSystemCCK extends JPlugin
 	// onAfterRoute
 	public function onAfterRoute()
 	{
+		$app	=	JFactory::getApplication();
+		$id		=	$app->input->getInt( 'id', 0 );
+		$itemId	=	$app->input->getInt( 'Itemid', 0 );
+		$option	=	$app->input->get( 'option', '' );
+		$view	=	$app->input->get( 'view', '' );
+
+		if ( $app->isClient( 'site' ) ) {
+			if ( $option == 'com_content' && $view == 'category' ) {
+				/* TODO#SEBLOD4: We may need another condition but it can't be with $app->getMenu()->getActive()->query['option'] */
+				$app->setUserState( 'com_content.category.list.'.(int)$id.':'.(int)$itemId.'.limit', -1 );
+			}
+		}
+
+		// Multi-sites
 		if ( $this->multisite ) {
 			$this->_setMultisite();
 			$this->_runMultisite();
@@ -547,18 +557,16 @@ class plgSystemCCK extends JPlugin
 			if ( $this->multisite === true ) {
 				if ( $this->site ) {
 					if ( !$this->site_context ) {
-						$context	=	JCck::getSite()->context;
-
-						if ( $context != '' ) {
+						if ( $this->site->context != '' ) {
 							$buffer		=	$app->getBody();
 
 							foreach ( $this->site->exclusions as $excl ) {
-								$buffer	=	str_replace( 'href="'.$excl.'/', 'href="'.'/'.$context.$excl.'/', $buffer );
-								$buffer	=	str_replace( 'href="'.$excl.'"', 'href="'.'/'.$context.$excl.'"', $buffer );
-								$buffer	=	str_replace( 'document.location.href=\''.$excl.'/', 'document.location.href=\'/'.$context.$excl.'/', $buffer );
-								$buffer	=	str_replace( 'document.location.href=\''.$excl.'\'', 'document.location.href=\'/'.$context.$excl.'\'', $buffer );
-								$buffer	=	str_replace( 'action="'.$excl.'/', 'action="'.'/'.$context.$excl.'/', $buffer );
-								$buffer	=	str_replace( 'action="'.$excl.'"', 'action="'.'/'.$context.$excl.'"', $buffer );
+								$buffer	=	str_replace( 'href="'.$excl.'/', 'href="'.'/'.$this->site->context.$excl.'/', $buffer );
+								$buffer	=	str_replace( 'href="'.$excl.'"', 'href="'.'/'.$this->site->context.$excl.'"', $buffer );
+								$buffer	=	str_replace( 'document.location.href=\''.$excl.'/', 'document.location.href=\'/'.$this->site->context.$excl.'/', $buffer );
+								$buffer	=	str_replace( 'document.location.href=\''.$excl.'\'', 'document.location.href=\'/'.$this->site->context.$excl.'\'', $buffer );
+								$buffer	=	str_replace( 'action="'.$excl.'/', 'action="'.'/'.$this->site->context.$excl.'/', $buffer );
+								$buffer	=	str_replace( 'action="'.$excl.'"', 'action="'.'/'.$this->site->context.$excl.'"', $buffer );
 							}
 
 							$app->setBody( $buffer );
