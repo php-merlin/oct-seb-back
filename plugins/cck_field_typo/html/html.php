@@ -163,10 +163,15 @@ class plgCCK_Field_TypoHtml extends JCckPluginTypo
 					$pos						=	strpos( $target, 'safe' );
 					if ( $pos !== false && $pos == 0 ) {
 						$target					=	substr( $target, 4 );
-						$value					=	$fields[$fieldname]->$target;
-						$value					=	JCckDev::toSafeID( $value );
+
+						if ( isset( $fields[$fieldname]->$target ) ) {
+							$value				=	$fields[$fieldname]->$target;
+							$value				=	JCckDev::toSafeID( $value );
+						} else {
+							$value				=	'';
+						}
 					} else {
-						$value					=	$fields[$fieldname]->$target;
+						$value					=	isset( $fields[$fieldname]->$target ) ? $fields[$fieldname]->$target : '';
 					}
 				}
 				if ( $idx != '' && $search != '' ) {
@@ -174,7 +179,6 @@ class plgCCK_Field_TypoHtml extends JCckPluginTypo
 				} else {
 					$fields[$name]->typo			=	str_replace( $process['matches'][0][$k], $value, $fields[$name]->typo );
 				}
-
 				if ( $fields[$name]->typo != '' && strpos( $fields[$name]->typo, 'J(' ) !== false ) {
 					$matches	=	'';
 					$search		=	'#J\((.*)\)#U';
