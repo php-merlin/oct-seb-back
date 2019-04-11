@@ -140,6 +140,8 @@ class plgContentCCKInstallerScript
 			}
 		}	
 		
+		$params =	JComponentHelper::getParams( 'com_cck' );
+
 		// Reorder Plugins
 		$i		=	2;
 		$ids	=	'';
@@ -308,15 +310,13 @@ class plgContentCCKInstallerScript
 				$query			=	'SELECT extension_id as id, params FROM #__extensions WHERE type="plugin" AND folder="cck_storage_location" AND element="'.$category['plg_name'].'"';
 				$db->setQuery( $query );
 				$plugin			=	$db->loadObject();
-				$params			=	str_replace( '"bridge_default-catid":"2"', '"bridge_default-catid":"'.$table->id.'"', $plugin->params );
-				$query			=	'UPDATE #__extensions SET params = "'.$db->escape( $params ).'" WHERE extension_id = '.(int)$plugin->id;
+				$query			=	'UPDATE #__extensions SET params = "'.$db->escape( str_replace( '"bridge_default-catid":"2"', '"bridge_default-catid":"'.$table->id.'"', $plugin->params ) ).'" WHERE extension_id = '.(int)$plugin->id;
 				$db->setQuery( $query );
 				$db->execute();
 			}
 			
 			// Init Default Author
 			$res	=	JCckDatabase::loadResult( 'SELECT id FROM #__users ORDER BY id ASC' );
-			$params =	JComponentHelper::getParams( 'com_cck' );
 			$params->set( 'integration_user_default_author', (int)$res );
 			$db->setQuery( 'UPDATE #__extensions SET params = "'.$db->escape( $params ).'" WHERE name = "com_cck"' );
 			$db->execute();
@@ -343,9 +343,6 @@ class plgContentCCKInstallerScript
 
 			// Set Initial Version
 			$params->set( 'initial_version', $app->cck_core_version );
-			$db->setQuery( 'UPDATE #__extensions SET params = "'.$db->escape( $params ).'" WHERE name = "com_cck"' );
-			$db->execute();
-
 			
 			// Set User Actions Log
 			self::_setUserActionsLog();
@@ -367,6 +364,12 @@ class plgContentCCKInstallerScript
 
 			Helper_Folder::rebuildTree( 2, 1 );
 		}
+
+		$params->set( 'media_version', md5( $app->cck_core_version . JFactory::getConfig()->get( 'secret' ) ) );
+
+		// Update Params
+		$db->setQuery( 'UPDATE #__extensions SET params = "'.$db->escape( $params ).'" WHERE name = "com_cck"' );
+		$db->execute();
 		
 		// Force Auto Increments
 		self::_forceAutoIncrements();
