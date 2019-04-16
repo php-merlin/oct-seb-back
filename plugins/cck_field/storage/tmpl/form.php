@@ -125,7 +125,7 @@ $js		=	'
 						$(".storage-cck-core").remove();
 					} else if (parent.jQuery("#element").length && parent.jQuery("#element").val() == "type") {
 						$(".storage-desc.search-type").remove();
-						if (parent.jQuery("#storage_location").val()!="none" && parent.jQuery("#location").val()=="none") {
+						if (parent.jQuery("#storage_location").val()!="none" && (parent.jQuery("#location").val()=="none" || parent.jQuery("#location").val()=="collection")) {
 							$(".storage-cck-core").remove();
 						} else {
 							$(".storage-cck-more").parents(".object-params").remove();	
