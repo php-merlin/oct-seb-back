@@ -43,9 +43,10 @@ $attr       =   array( 'class'=>' b', 'span'=>'<span class="icon-pencil-2"></spa
             if ( $this->item->location == 'collection' ) {
                 echo '<li class="position ui-state-disabled boundary" id="pos-1"><input class="selector" type="radio" id="position0" name="positions" gofirst="#pos-1" golast="#pos-2"><span class="title"></span><input type="hidden" name="ff[pos-_main_]" value="position" /></li>';
 
-                if ( isset( $this->fields['_main_'] ) ) {
-                    foreach ( $this->fields['_main_'] as $field ) {
-                        $type_field     =   '';
+                foreach ( $this->fields as $pos ) {
+                    foreach ( $pos as $field ) {
+                        $field->position    =   '_main_';
+                        $type_field         =   '';
                         if ( isset( $this->type_fields[$field->id] ) ) {
                             $type_field =   ' c-'.$this->type_fields[$field->id]->cc;
                         }

@@ -147,18 +147,30 @@ class CCKModelType extends JCckBaseLegacyModelAdmin
 		$data					=	JRequest::get( 'post' );
 		$data['description']	=	JRequest::getVar( 'description', '', '', 'string', JREQUEST_ALLOWRAW );
 		$client					=	$data['client'];
-		$P						=	'template_'.$client;
-		$data[$P]				=	Helper_Workshop::getTemplateStyleInstance( $data[$P], $data['template'], $data['template2'], $data['params'], $data['name'].' ('.$client.')' );
-		$P						=	'options_'.$client;
-		$data[$P]				=	JCckDev::toJSON( @$data['options'] );
+		
+		if ( $data['location'] != 'collection' ) {
+			$P						=	'template_'.$client;
+			$data[$P]				=	Helper_Workshop::getTemplateStyleInstance( $data[$P], $data['template'], $data['template2'], $data['params'], $data['name'].' ('.$client.')' );
+		
+			$P						=	'options_'.$client;
+			$data[$P]				=	JCckDev::toJSON( @$data['options'] );
+		} else {
+			$P						=	'template_'.$client;
+			$data[$P]				=	0;
+		
+			$P						=	'options_'.$client;
+			$data[$P]				=	'';
+		}
 		
 		if ( ! $data['id'] ) {
-			$clients			=	array( 'admin', 'site', 'content', 'intro' );
-			foreach ( $clients as $client ) {
-				$P	=	'template_'.$client;
-				if ( ! $data[$P] ) {
-					$default	=	Helper_Workshop::getDefaultStyle();
-					$data[$P]	=	$default->id;
+			if ( $data['location'] != 'collection' ) {
+				$clients			=	array( 'admin', 'site', 'content', 'intro' );
+				foreach ( $clients as $client ) {
+					$P	=	'template_'.$client;
+					if ( ! $data[$P] ) {
+						$default	=	Helper_Workshop::getDefaultStyle();
+						$data[$P]	=	$default->id;
+					}
 				}
 			}
 		} else {

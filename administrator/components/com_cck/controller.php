@@ -139,15 +139,14 @@ class CCKController extends JControllerLegacy
 		require_once JPATH_ADMINISTRATOR.'/components/com_cck/helpers/helper_workshop.php';
 		
 		$prefix						=	JCck::getConfig_Param( 'development_prefix', '' );
-		$style						=	Helper_Workshop::getDefaultStyle();
 		
 		$table						=	JTable::getInstance( 'Type', 'CCK_Table' );
 		$table->title				=	$title;
         $table->folder				=	$folder;
-		$table->template_admin		=	$style->id;
-		$table->template_site		=	$style->id;
-		$table->template_content	=	$style->id;
-		$table->template_intro		=	$style->id;
+		$table->template_admin		=	0;
+		$table->template_site		=	0;
+		$table->template_content	=	0;
+		$table->template_intro		=	0;
 		$table->published			=	1;
 		$table->access				=	3;
 		$table->indexed				=	'none';

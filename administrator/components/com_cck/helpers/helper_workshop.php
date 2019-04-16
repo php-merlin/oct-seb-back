@@ -282,7 +282,7 @@ class Helper_Workshop
 		if ( $and != '' ) {
 			$where	.=	' AND '.$and;
 		}
-		if ( $element == 'type' && $item->storage_location != 'none' && $item->location == 'none' ) {
+		if ( $element == 'type' && $item->storage_location != 'none' && ( $item->location == 'none' || $item->location == 'collection' ) ) {
 			// Should we append something here?
 		} elseif ( $element == 'type' && $item->storage_location != 'none' ) {
 			if ( $or != '' ) {
