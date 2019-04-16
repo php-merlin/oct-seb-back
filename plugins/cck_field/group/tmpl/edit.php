@@ -17,7 +17,7 @@ JCckDev::forceStorage();
     <?php echo JCckDev::renderLegend( JText::_( 'COM_CCK_CONSTRUCTION' ), JText::_( 'PLG_CCK_FIELD_'.$this->item->type.'_DESCC' ) ); ?>
     <ul class="adminformlist adminformlist-2cols">
         <?php
-        echo JCckDev::renderForm( 'core_label', $this->item->label, $config );
+        echo JCckDev::renderForm( 'core_label', ( $this->isNew ? 'clear' : $this->item->label ), $config );
 		echo JCckDev::renderForm( 'core_form', $this->item->extended, $config, array( 'label'=>'CONTENT_TYPE_FORM', 'selectlabel'=>'Select',
 							'options2'=>'{"query":"","table":"#__cck_core_types","name":"title","where":"published!=-44","value":"name","orderby":"title","orderby_direction":"ASC","limit":""}',
 							'required'=>'required', 'storage_field'=>'extended' ) );
