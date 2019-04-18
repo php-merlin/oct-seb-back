@@ -1847,14 +1847,6 @@ Temporary Items
 /administrator/language/fr-FR/fr-FR.plg_cck_field_link_cck_ecommerce_reorder.sys.ini
 /plugins/cck_field_link/cck_ecommerce_reorder/*
 
-######## SEBLOD Plug-ins >> Link >> SEBLOD Route
-
-/administrator/language/en-GB/en-GB.plg_cck_field_link_cck_route.ini
-/administrator/language/en-GB/en-GB.plg_cck_field_link_cck_route.sys.ini
-/administrator/language/fr-FR/fr-FR.plg_cck_field_link_cck_route.ini
-/administrator/language/fr-FR/fr-FR.plg_cck_field_link_cck_route.sys.ini
-/plugins/cck_field_link/cck_route/*
-
 ######## SEBLOD Plug-ins >> Link >> SEBLOD Search (JS)
 
 /administrator/language/en-GB/en-GB.plg_cck_field_link_cck_search_js.ini

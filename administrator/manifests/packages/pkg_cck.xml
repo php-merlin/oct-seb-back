@@ -91,6 +91,7 @@
 			<file type="plugin" id="content_delete" group="cck_field_link">plg_cck_field_link_content_delete.zip</file>
 			<file type="plugin" id="cck_form" group="cck_field_link">plg_cck_field_link_cck_form.zip</file>
 			<file type="plugin" id="cck_list" group="cck_field_link">plg_cck_field_link_cck_list.zip</file>
+			<file type="plugin" id="cck_route" group="cck_field_link">plg_cck_field_link_cck_route.zip</file>
 			<file type="plugin" id="item_x" group="cck_field_link">plg_cck_field_link_item_x.zip</file>
 			<file type="plugin" id="item_to_wysiwyg_editor" group="cck_field_link">plg_cck_field_link_item_to_wysiwyg_editor.zip</file>
 			<!-- Plugin // CCK Field Live -->
