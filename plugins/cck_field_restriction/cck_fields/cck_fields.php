@@ -138,7 +138,7 @@ class plgCCK_Field_RestrictionCck_Fields extends JCckPluginRestriction
 						$isFilled	=	false;
 						foreach ( $fields[$condition_field]->$property as $field ) {
 							if ( is_object( $field ) ) {
-								if ( $field->$property != '' ) {
+								if ( $field->state && $field->$property != '' ) {
 									$isFilled	=	 true;
 									break;
 								}
