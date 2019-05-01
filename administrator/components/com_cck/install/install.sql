@@ -2092,6 +2092,7 @@ CREATE TABLE IF NOT EXISTS `#__cck_store_item_menu` (
   `id` int(10) unsigned NOT NULL,
   `item_type` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `item_request` varchar(512) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `children_type` tinyint(3) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
