@@ -109,13 +109,6 @@ class com_cckInstallerScript
 		
 		$app->cck_core_version		=	self::_getVersion();
 		
-		if ( $type == 'install' ) {
-			$rule	=	'{"core.admin":{"7":1},"core.manage":{"6":1},"core.delete.own":{"6":1},"core.addto.cart":{"7":1},"core.admin.form":{"7":1},"core.export":{"7":1},"core.process":{"7":1}}';
-			$query	=	'UPDATE #__assets SET rules = "'.$db->escape( $rule ).'" WHERE name = "com_cck"';
-			$db->setQuery( $query );
-			$db->execute();
-		}
-		
 		// Additional stuff: /cli
 		$src	=	JPATH_ADMINISTRATOR.'/components/com_cck/install/cli/cck_job.php';
 

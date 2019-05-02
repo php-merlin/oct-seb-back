@@ -32,6 +32,7 @@ class pkg_cckInstallerScript
 	public function postflight( $type, $parent )
 	{
 		if ( $type == 'install' ) {
+			/* TODO#SEBLOD4: we cannot really trust the above. After a failed update, package won't be there and so it will behave as an install which is NOT great.. :( */
 			self::_autoLoad();
 			self::_completeInstall();
 		} elseif ( $type == 'update' ) {
@@ -66,6 +67,7 @@ class pkg_cckInstallerScript
 		$objects	=	array(
 							'joomla_menu'=>'Joomla_Menu',
 							'joomla_menu_item'=>'Joomla_Menu_Item',
+							'joomla_module'=>'Joomla_Module',
 							'joomla_user_group'=>'Joomla_User_Group',
 							'joomla_viewlevel'=>'Joomla_Viewlevel'
 						);
@@ -132,10 +134,11 @@ class pkg_cckInstallerScript
 
 		$content_menu		=	new JCckContentJoomla_Menu;
 		$content_menu_item	=	new JCckContentJoomla_Menu_Item;
+		$content_module		=	new JCckContentJoomla_Module;
 		$content_user_group	=	new JCckContentJoomla_User_Group;
 		$content_viewlevel	=	new JCckContentJoomla_Viewlevel;
 
-		$content_menu->create( 'menu', array(
+		$content_menu->create( 'nav', array(
 										'client_id'=>'0',
 										'description'=>'The admin menu for the site',
 										'menutype'=>'adminmenu',
@@ -143,27 +146,44 @@ class pkg_cckInstallerScript
 									   )
 							 );
 
-		$parents			=	array(
-									'menu_item'=>(int)$content_menu_item->create( 'menu_item', array(
-																								'access'=>1,
-																								'component_id'=>$component_id,
-																								'client_id'=>0,
-																								'language'=>'*',
-																								'link'=>'index.php?option=com_cck&view=form&layout=edit&type=user_login_form',
-																								'menutype'=>'adminmenu',
-																								'parent_id'=>1,
-																								'params'=>'{}',
-																								'published'=>1,
-																								'title'=>'Admin',
-																								'type'=>'component'
-																							   ) )->getPk(),
-									'user_group'=>(int)$content_user_group->create( 'user_group', array(
-																									'parent_id'=>2,
-																									'title'=>'Front-end Manager'
-																								  ) )->getPk(),
-									'viewing_access_level'=>0
-								);
-		$table_folder		=	JCckTable::getInstance( '#__cck_core_folders' );
+		$parent_params			=	array(
+										'viewing_access_level'=>array(
+																	'Admin'=>(int)$content_viewlevel->create( 'viewing_access_level', array(
+																																		'ordering'=>5,
+																																		'title'=>'Admin',
+																																		'rules'=>array( 0=>8, 1=>7 )
+																										 							  ) )->getPk()
+																)
+									);
+		$parents				=	array(
+										'menu_item'=>(int)$content_menu_item->create( 'nav_item', array(
+																									'access'=>1,
+																									'component_id'=>$component_id,
+																									'client_id'=>0,
+																									'language'=>'*',
+																									'link'=>'index.php?option=com_cck&view=form&layout=edit&type=user_login_form',
+																									'menutype'=>'adminmenu',
+																									'parent_id'=>1,
+																									'params'=>'{}',
+																									'published'=>1,
+																									'title'=>'Admin',
+																									'type'=>'component'
+																								   ) )->getPk(),
+										'user_group'=>(int)$content_user_group->create( 'user_group', array(
+																										'parent_id'=>2,
+																										'title'=>'Front-end Manager'
+																									  ) )->getPk(),
+										'user_group_alt'=>(int)$content_user_group->create( 'user_group', array(
+																											'parent_id'=>2,
+																											'title'=>'Other Roles'
+																									  	  ) )->getPk(),
+										'viewing_access_level'=>0
+									);
+		$table_folder			=	JCckTable::getInstance( '#__cck_core_folders' );
+
+		// Save parent for later
+		$table_folder->load( 60 );
+		$table_folder->save( array( 'params'=>json_encode( $parent_params ) ) );
 
 		foreach ( $folders as $folder ) {
 			$params		=	array(
@@ -179,15 +199,22 @@ class pkg_cckInstallerScript
 																									'title'=>$title
 																								) )->getPk();
 
-			// Add View Access Level
+			// Add View Access Levels
 			$params['viewing_access_level']	=	(int)$content_viewlevel->create( 'viewing_access_level', array(
+																											'ordering'=>4,
 																											'title'=>'Front-end Manager - '.$title,
 																											'rules'=>array( 0=>8, 1=>$params['user_group'] )
 																										 ) )->getPk();
 
+			$own_viewing_access_level		=	(int)$content_viewlevel->create( 'viewing_access_level', array(
+																											'ordering'=>4,
+																											'title'=>'Front-end Manager - '.$title.'+',
+																											'rules'=>array( 0=>8, 1=>$params['user_group'] )
+																										 ) )->getPk();
+
 			// Add Menu Item
-			$params['menu_item']			=	(int)$content_menu_item->create( 'menu_item', array(
-																								'access'=>$params['viewing_access_level'],
+			$params['menu_item']			=	(int)$content_menu_item->create( 'nav_item', array(
+																								'access'=>$own_viewing_access_level,
 																								'client_id'=>0,
 																								'language'=>'*',
 																								'menutype'=>'adminmenu',
@@ -197,13 +224,10 @@ class pkg_cckInstallerScript
 																								'type'=>'heading'
 																							  ) )->getPk();
 
-			// Save for later
+			// Save childs for later
 			$table_folder->load( $folder->id );
 			$table_folder->save( array( 'params'=>json_encode( $params ) ) );
 		}
-
-
-
 
 		// Module
 		$new_module	=	JTable::getInstance( 'Module', 'JTable' );
@@ -228,6 +252,26 @@ class pkg_cckInstallerScript
 				// Do nothing
 			}
 		}
+
+		// User Groups
+		$user_groups	=	array(
+								'admin'=>'Admin (+)',
+								'owner'=>'Owner (-)',
+								'translator'=>'Translator (-)'
+							);
+
+		foreach ( $user_groups as $k=>$user_group ) {
+			$user_groups[$k]	=	$content_user_group->create( 'user_group', array(
+																				'parent_id'=>$parents['user_group_alt'],
+																				'title'=>$user_group
+																			   ) )->getPk();
+		}
+
+		// Set Permissions
+		$rule	=	'{"core.delete.own":{"6":1},"core.addto.cart":{"7":1},"core.admin.form":{"7":1,"'.$parents['user_group'].'":1},"core.export":{"7":1},"core.process":{"7":1}}';
+		$query	=	'UPDATE #__assets SET rules = "'.$db->escape( $rule ).'" WHERE name = "com_cck"';
+		$db->setQuery( $query );
+		$db->execute();
 	}
 
 	// _outputHTML
