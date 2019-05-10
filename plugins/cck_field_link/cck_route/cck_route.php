@@ -37,9 +37,12 @@ class plgCCK_Field_LinkCck_Route extends JCckPluginLink
 	{
 		$app			=	JFactory::getApplication();
 		$fieldnames		=	array();
+		$link_url		=	'';
 		$mode			=	(int)$link->get( 'mode', '0' );
 
-		if ( $mode ) {
+		if ( $mode == -1 ) {
+			$link_url	=	JCck::callFunc_Array( 'plgCCK_Storage_Location'.$config['location'], 'getRouteById', array( $config['pk'] ) );
+		} elseif ( $mode ) {
 			$group_name	=	$link->get( 'routes_fieldname', '' );
 			
 			if ( $group_name ) {
@@ -54,7 +57,6 @@ class plgCCK_Field_LinkCck_Route extends JCckPluginLink
 						.	' LEFT JOIN #__cck_core_type_field AS c ON c.fieldid = a.id'
 						.	' LEFT JOIN #__cck_core_types AS b ON b.id = c.typeid'
 						.	' WHERE b.name = "'.$group_name.'" AND c.client = "'.$client.'"'
-						.	$order
 						;
 				$fieldnames	=	JCckDatabaseCache::loadColumn( $query );
 			}
@@ -69,16 +71,27 @@ class plgCCK_Field_LinkCck_Route extends JCckPluginLink
 		$link_rel		=	$link->get( 'rel', '' );
 		$link_target	=	$link->get( 'target', '' );
 		
+		if ( $link_target == 'modal' ) {
+			if ( strpos( $link_attr, 'data-cck-modal' ) === false ) {
+				$modal_json	=	$link->get( 'target_params', '' );
+
+				if ( $modal_json != '' ) {
+					$modal_json	=	'=\''.$modal_json.'\'';
+				}
+				$link_attr	=	trim( $link_attr.' data-cck-modal'.$modal_json );				
+			}
+		}
+
 		if ( count( $fieldnames ) ) {
 			parent::g_addProcess( 'beforeRenderContent', self::$type, $config, array( 'name'=>$field->name, 'fieldnames'=>$fieldnames ), 5 );
 		}
 		
-		$field->link			=	'';
+		$field->link			=	$link_url;
 		$field->link_attributes	=	$link_attr ? $link_attr : ( isset( $field->link_attributes ) ? $field->link_attributes : '' );
 		$field->link_class		=	$link_class ? $link_class : ( isset( $field->link_class ) ? $field->link_class : '' );
 		$field->link_rel		=	$link_rel ? $link_rel : ( isset( $field->link_rel ) ? $field->link_rel : '' );
 		$field->link_state		=	$link->get( 'state', 1 );
-		$field->link_target		=	$link_target ? $link_target : ( isset( $field->link_target ) ? $field->link_target : '' );
+		$field->link_target		=	$link_target ? ( $link_target == 'modal' ? '' : $link_target ) : ( isset( $field->link_target ) ? $field->link_target : '' );
 	}
 	
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Special Events
@@ -106,8 +119,11 @@ class plgCCK_Field_LinkCck_Route extends JCckPluginLink
 			if ( is_array( $fields[$name]->$target ) ) {
 				foreach ( $fields[$name]->$target as $k=>$v ) {
 					if ( is_object( $v ) && $v->state ) {
-						$fields[$name]->{$target}[$k]->link			=	$fields[$name]->link;
-						$fields[$name]->{$target}[$k]->link_state	=	1;
+						$fields[$name]->{$target}[$k]->link_attributes	=	$fields[$name]->link_attributes;
+						$fields[$name]->{$target}[$k]->link_class		=	$fields[$name]->link_class;
+						$fields[$name]->{$target}[$k]->link				=	$fields[$name]->link;
+						$fields[$name]->{$target}[$k]->link_state		=	1;
+						$fields[$name]->{$target}[$k]->link_target		=	$fields[$name]->link_target;
 					}
 				}
 			}
