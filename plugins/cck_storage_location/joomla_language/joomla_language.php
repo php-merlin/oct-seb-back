@@ -14,6 +14,7 @@ defined( '_JEXEC' ) or die;
 class plgCCK_Storage_LocationJoomla_Language extends JCckPluginLocation
 {
 	protected static $type			=	'joomla_language';
+	protected static $type_alias	=	'Language';
 	protected static $table			=	'#__languages';
 	protected static $table_object	=	array( 'Language', 'JTable' );
 	protected static $key			=	'lang_id';
@@ -21,6 +22,8 @@ class plgCCK_Storage_LocationJoomla_Language extends JCckPluginLocation
 	protected static $access		=	'access';
 	protected static $author		=	''; /* TODO */
 	protected static $author_object	=	''; /* TODO */
+	protected static $bridge_object	=	'';
+	protected static $child_object	=	'';
 	protected static $created_at	=	''; /* TODO */
 	protected static $custom		=	''; /* TODO */
 	protected static $modified_at	=	''; /* TODO */
@@ -30,8 +33,15 @@ class plgCCK_Storage_LocationJoomla_Language extends JCckPluginLocation
 	protected static $to_route		=	'';
 	
 	protected static $context		=	''; /* TODO */
+	protected static $context2		=	'';
 	protected static $contexts		=	array(); /* TODO */
 	protected static $error			=	false;
+	protected static $events		=	array(
+											'afterDelete'=>'',
+											'afterSave'=>'',
+											'beforeDelete'=>'',
+											'beforeSave'=>''
+										);
 	protected static $ordering		=	array( 'alpha'=>'title ASC' ); /* TODO */
 	protected static $ordering2		=	array();
 	protected static $pk			=	0;
@@ -134,7 +144,7 @@ class plgCCK_Storage_LocationJoomla_Language extends JCckPluginLocation
 				}
 			}
 		}
-		$config['author']	=	$storages[self::$table][$config['pk']]->{self::$author};
+		// $config['author']	=	$storages[self::$table][$config['pk']]->{self::$author};
 	}
 
 	// onCCK_Storage_LocationPrepareList
@@ -161,10 +171,24 @@ class plgCCK_Storage_LocationJoomla_Language extends JCckPluginLocation
 		}
 		
 		// Prepare
-		/* TODO */
+		if ( ! isset( $tables[self::$table] ) ) {
+			$tables[self::$table]	=	array( '_'=>'t'.$t++,
+											'fields'=>array(),
+											'join'=>1,
+											'key'=>self::$key,
+											'location'=>self::$type
+										);
+		}
 		
 		// Set
-		/* TODO */
+		$t_pk	=	$tables[self::$table]['_'];
+		if ( ! isset( $tables[self::$table]['fields']['published'] ) ) {
+			$query->where( $t_pk.'.published = 1' );
+		}
+		if ( ! isset( $tables[self::$table]['fields']['access'] ) ) {
+			$access	=	implode( ',', $user->getAuthorisedViewLevels() );
+			$query->where( $t_pk.'.access IN ('.$access.')' );
+		}
 	}
 
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Store
@@ -242,7 +266,7 @@ class plgCCK_Storage_LocationJoomla_Language extends JCckPluginLocation
 	// _getTable
 	protected static function _getTable( $pk = 0 )
 	{
-		$table	=	JTable::getInstance( /* TODO */ );
+		$table	=	JTable::getInstance( 'Language' );
 		
 		if ( $pk > 0 ) {
 			$table->load( $pk );
@@ -323,19 +347,7 @@ class plgCCK_Storage_LocationJoomla_Language extends JCckPluginLocation
 	// _getRoute
 	public static function _getRoute( $itemId, $id, $option = '' )
 	{
-		$link	=	'';
-		
-		/* TODO */
-		
-		return $link;
-	}
-
-	// -------- -------- -------- -------- -------- -------- -------- -------- // Stuff
-	
-	// checkIn
-	public static function checkIn( $pk = 0 )
-	{
-		return true; /* TODO */
+		return '';
 	}
 }
 ?>
