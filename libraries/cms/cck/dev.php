@@ -212,8 +212,8 @@ abstract class JCckDev
 		$js				=	'jQuery(document).ready(function($){ $.validationEngineLanguage.newLang({'.$rules.'});'.$js.' });';
 		
 		if ( $app->input->get( 'tmpl' ) == 'raw' ) {
-			echo '<link rel="stylesheet" href="'.$root.'/media/cck/css/cck.validation.css'.self::getMediaVersion().'" type="text/css" />';
-			echo '<script src="'.$root.'/media/cck/js/cck.validation.js'.self::getMediaVersion().'" type="text/javascript"></script>';
+			echo '<link rel="stylesheet" href="'.$root.'/media/cck/css/cck.validation.css?'.self::getMediaVersion().'" type="text/css" />';
+			echo '<script src="'.$root.'/media/cck/js/cck.validation.min.js?'.self::getMediaVersion().'" type="text/javascript"></script>';
 			echo '<script type="text/javascript">'.$js.'</script>';
 		} else {
 			$doc->addStyleSheet( $root.'/media/cck/css/cck.validation.css', array( 'version'=>self::getMediaVersion() ) );
