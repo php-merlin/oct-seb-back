@@ -38,8 +38,14 @@ class plgCCK_Field_TypoCck_Item extends JCckPluginTypo
 	// _typo
 	protected static function _typo( $typo, $field, $value, &$config = array() )
 	{
+		if ( !(int)$value ) {
+			return '';
+		}
+
 		jimport( 'cck.base.item.item' );
-		
+
+		$value	=	CCK_Item::getAssociation( $value );
+
 		return CCK_Item::render( $value );
 	}
 }
