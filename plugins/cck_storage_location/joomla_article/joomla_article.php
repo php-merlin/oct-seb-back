@@ -809,6 +809,26 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 		return JRoute::_( $route, false );
 	}
 	
+	// getRouteById
+	public static function getRouteById( $pk )
+	{
+		$route	=	'';
+
+		if ( $pk ) {
+			$query	=	'SELECT id'
+					.	' FROM #__menu'
+					.	' WHERE link = "index.php?option=com_content&view=article&id='.(int)$pk.'"'
+					.	' AND (language = "*" OR language = "'.JFactory::getLanguage()->getTag().'")'
+					;
+
+			if ( $itemId = (int)JCckDatabase::loadResult( $query ) ) {
+				$route	=	JRoute::_( 'index.php?Itemid='.$itemId, false );
+			}
+		}
+
+		return $route;
+	}
+
 	// getRouteByStorage
 	public static function getRouteByStorage( &$storage, $sef, $itemId, $config = array(), $lang_tag = '' )
 	{

@@ -88,6 +88,12 @@ class JCckPluginLocation extends JPlugin
 		return JCckDatabase::loadResult( 'SELECT id FROM #__cck_core WHERE storage_location="'.static::$type.'" AND pk='.(int)$config['pk'] );
 	}
 
+	// getRouteById
+	public static function getRouteById( $pk )
+	{
+		return '';
+	}
+
 	// getStaticParams
 	public static function getStaticParams()
 	{
