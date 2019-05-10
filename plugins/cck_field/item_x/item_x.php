@@ -85,232 +85,181 @@ class plgCCK_FieldItem_X extends JCckPluginField
 		}
 		
 		// Prepare
-		$app		=	JFactory::getApplication();
-		$form		=	$field->location;
-		$list		=	'';
-		
-		if ( strpos( $form, '||' ) !== false ) {
-			$form	=	explode( '||', $form );
-			$list	=	$form[1];
-			$form	=	$form[0];
-		}
-		$tmpl		=	'raw';
-		$itemId		=	JFactory::getApplication()->input->getInt( 'Itemid' );
-		$options2	=	JCckDev::fromJSON( $field->options2 );
 
-		if ( !isset( $options2['add_custom'] ) ) {
-			$options2['add_custom']		=	'';
-		}
-		$options2['add_custom']			=	JCckDevHelper::replaceLive( $options2['add_custom'] );
-		$options2['add_custom']		=	( $options2['add_custom'] != '' ) ? '&'.$options2['add_custom'] : '';
-
-		if ( !isset( $options2['select_custom'] ) ) {
-			$options2['select_custom']	=	'';
-		}
-		$options2['select_custom']		=	JCckDevHelper::replaceLive( $options2['select_custom'] );
-		$options2['select_custom']		=	( $options2['select_custom'] != '' ) ? '&'.$options2['select_custom'] : '';
-
-		if ( isset( $options2['select_task'] ) && $options2['select_task'] == 'no' ) {
-			$options2['select_custom']	.=	'&task=no';
-		}
-		if ( $app->isClient( 'administrator' ) ) {
-			$layout	=	'default';
-			$task	=	'form.saveAjax';
-			$task2	=	'form.processAjax';
+		if ( $field->variation == 'hidden' ) {
+			$html			=	'';
+			$field->text	=	'';
+			parent::g_getDisplayVariation( $field, $field->variation, $value, $field->text, $html, $id, $name, '<input', '', '', $config );
 		} else {
-			$layout	=	'edit';
-			$task	=	'saveAjax';
-			$task2	=	'processAjax';
-		}
-		$context	=	'&context={"view":"form","referrer":""}';
-		$doc		=	JFactory::getDocument();
-		$html		=	'';
-		$link		=	'index.php?option=com_cck&view=form&layout='.$layout.'&type='.$form.'&tmpl='.$tmpl.$options2['add_custom'];
-		$link		=	( $app->isClient( 'administrator' ) ) ? $link : JRoute::_( $link.'&Itemid='.$itemId );
-		$link2		=	JCckDevHelper::getAbsoluteUrl( 'auto', 'view=list&search='.$list.'&tmpl='.$tmpl.'&referrer='.$referrer.'.'.$name.$options2['select_custom'] );
+			$app		=	JFactory::getApplication();
+			$form		=	$field->location;
+			$list		=	'';
+			
+			if ( strpos( $form, '||' ) !== false ) {
+				$form	=	explode( '||', $form );
+				$list	=	$form[1];
+				$form	=	$form[0];
+			}
+			$tmpl		=	'raw';
+			$itemId		=	JFactory::getApplication()->input->getInt( 'Itemid' );
+			$options2	=	JCckDev::fromJSON( $field->options2 );
 
-		if ( strpos( $link, '$cck-' ) !== false ) {
-			$link 	=	str_replace( '&gt;', '>', $link );
-			parent::g_addProcess( 'beforeRenderForm', self::$type, $config, array( 'name'=>$field->name, 'target'=>'link_add', 'link'=>$link, 'itemId'=>0 ), 5 );
-		}
-		if ( strpos( $link2, '$cck->' ) !== false ) {
-			parent::g_addProcess( 'beforeRenderForm', self::$type, $config, array( 'name'=>$field->name, 'target'=>'link_select', 'link'=>$link2, 'itemId'=>$itemId ), 5 );
-		}
+			if ( !isset( $options2['add_custom'] ) ) {
+				$options2['add_custom']		=	'';
+			}
+			$options2['add_custom']			=	JCckDevHelper::replaceLive( $options2['add_custom'] );
+			$options2['add_custom']		=	( $options2['add_custom'] != '' ) ? '&'.$options2['add_custom'] : '';
 
-		$link2		=	( $app->isClient( 'administrator' ) ) ? $link2 : JRoute::_( $link2.'&Itemid='.$itemId );
-		$link5		=	JCckDevHelper::getAbsoluteUrl( 'auto', 'format=raw&view=list&layout=default&search='.$field->extended ).$context;
-		$link6		=	JCckDevHelper::getAbsoluteUrl( 'auto', 'format=raw&task='.$task );
-		$link7		=	JCckDevHelper::getAbsoluteUrl( 'auto', 'format=raw&task='.$task2 );
+			if ( !isset( $options2['select_custom'] ) ) {
+				$options2['select_custom']	=	'';
+			}
+			$options2['select_custom']		=	JCckDevHelper::replaceLive( $options2['select_custom'] );
+			$options2['select_custom']		=	( $options2['select_custom'] != '' ) ? '&'.$options2['select_custom'] : '';
 
-		static $loaded	=	0;
+			if ( isset( $options2['select_task'] ) && $options2['select_task'] == 'no' ) {
+				$options2['select_custom']	.=	'&task=no';
+			}
+			if ( $app->isClient( 'administrator' ) ) {
+				$layout	=	'default';
+				$task	=	'form.saveAjax';
+				$task2	=	'form.processAjax';
+			} else {
+				$layout	=	'edit';
+				$task	=	'saveAjax';
+				$task2	=	'processAjax';
+			}
+			$context	=	'&context={"view":"form","referrer":""}';
+			$doc		=	JFactory::getDocument();
+			$html		=	'';
+			$link		=	'index.php?option=com_cck&view=form&layout='.$layout.'&type='.$form.'&tmpl='.$tmpl.$options2['add_custom'];
+			$link		=	( $app->isClient( 'administrator' ) ) ? $link : JRoute::_( $link.'&Itemid='.$itemId );
+			$link2		=	JCckDevHelper::getAbsoluteUrl( 'auto', 'view=list&search='.$list.'&tmpl='.$tmpl.'&referrer='.$referrer.'.'.$name.$options2['select_custom'] );
 
-		if ( !$loaded ) {
-			$js		=	'
-						if("undefined"===typeof JCck.More){JCck.More={}};
-						(function ($){
-							JCck.More.ItemX = {
-								active: "",
-								form:"'.$referrer.'",
-								instances: [],
-								modal: JCck.Core.getModal({"backclose":false,"class":"modal-backend","title":"'.JText::_( 'COM_CCK_ADD' ).' / '.JText::_( 'COM_CCK_EDIT' ).'"}),
-								modal_preview: JCck.Core.getModal({"backclose":false,"backdrop":false,"title":"'.JText::_( 'COM_CCK_PREVIEW' ).'"}),
-								modal_form_id:"'.$config['formId'].'_'.$tmpl.'",
-								token:"'.JSession::getFormToken().'=1",
-								add: function() {
-									JCck.More.ItemX.modal.loadUrl(JCck.More.ItemX.instances[JCck.More.ItemX.active].link_add);
-								},
-								assign: function(pks,close) {
-									var close = close || false;
-									var infinite = -1;
-									if (JCck.More.ItemX.instances[JCck.More.ItemX.active].behavior) {
-										if ($("#"+JCck.More.ItemX.active+" table > tbody").children().length) {
-											infinite = 1;
+			if ( strpos( $link, '$cck-' ) !== false ) {
+				$link 	=	str_replace( '&gt;', '>', $link );
+				parent::g_addProcess( 'beforeRenderForm', self::$type, $config, array( 'name'=>$field->name, 'target'=>'link_add', 'link'=>$link, 'itemId'=>0 ), 5 );
+			}
+			if ( strpos( $link2, '$cck->' ) !== false ) {
+				parent::g_addProcess( 'beforeRenderForm', self::$type, $config, array( 'name'=>$field->name, 'target'=>'link_select', 'link'=>$link2, 'itemId'=>$itemId ), 5 );
+			}
+
+			$link2		=	( $app->isClient( 'administrator' ) ) ? $link2 : JRoute::_( $link2.'&Itemid='.$itemId );
+			$link5		=	JCckDevHelper::getAbsoluteUrl( 'auto', 'format=raw&view=list&layout=default&search='.$field->extended ).$context;
+			$link6		=	JCckDevHelper::getAbsoluteUrl( 'auto', 'format=raw&task='.$task );
+			$link7		=	JCckDevHelper::getAbsoluteUrl( 'auto', 'format=raw&task='.$task2 );
+
+			static $loaded	=	0;
+
+			if ( !$loaded ) {
+				$js		=	'
+							if("undefined"===typeof JCck.More){JCck.More={}};
+							(function ($){
+								JCck.More.ItemX = {
+									active: "",
+									form:"'.$referrer.'",
+									instances: [],
+									modal: JCck.Core.getModal({"backclose":false,"class":"modal-backend","title":"'.JText::_( 'COM_CCK_ADD' ).' / '.JText::_( 'COM_CCK_EDIT' ).'"}),
+									modal_preview: JCck.Core.getModal({"backclose":false,"backdrop":false,"title":"'.JText::_( 'COM_CCK_PREVIEW' ).'"}),
+									modal_form_id:"'.$config['formId'].'_'.$tmpl.'",
+									token:"'.JSession::getFormToken().'=1",
+									add: function() {
+										JCck.More.ItemX.modal.loadUrl(JCck.More.ItemX.instances[JCck.More.ItemX.active].link_add);
+									},
+									assign: function(pks,close) {
+										var close = close || false;
+										var infinite = -1;
+										if (JCck.More.ItemX.instances[JCck.More.ItemX.active].behavior) {
+											if ($("#"+JCck.More.ItemX.active+" table > tbody").children().length) {
+												infinite = 1;
+											}
 										}
-									}
-									$.ajax({
-										cache: false,
-										data: "format=raw&infinite="+infinite+"&pks="+pks,
-										type: "GET",
-										url: JCck.More.ItemX.instances[JCck.More.ItemX.active].link_list,
-										beforeSend:function() {
-											this.url = this.url.replace(\'"referrer":""\',\'"referrer":"\'+JCck.More.ItemX.form+\'.\'+JCck.More.ItemX.active+\'"\');
-										},
-										success: function(response) {
-											JCck.More.ItemX.toggleRequired(false);
-											if (JCck.More.ItemX.instances[JCck.More.ItemX.active].behavior) {
-												if (infinite == -1) {
-													$("#"+JCck.More.ItemX.active+" .cck-loading-more").parent().html(response);
+										$.ajax({
+											cache: false,
+											data: "format=raw&infinite="+infinite+"&pks="+pks,
+											type: "GET",
+											url: JCck.More.ItemX.instances[JCck.More.ItemX.active].link_list,
+											beforeSend:function() {
+												this.url = this.url.replace(\'"referrer":""\',\'"referrer":"\'+JCck.More.ItemX.form+\'.\'+JCck.More.ItemX.active+\'"\');
+											},
+											success: function(response) {
+												JCck.More.ItemX.toggleRequired(false);
+												if (JCck.More.ItemX.instances[JCck.More.ItemX.active].behavior) {
+													if (infinite == -1) {
+														$("#"+JCck.More.ItemX.active+" .cck-loading-more").parent().html(response);
+													} else {
+														$("#"+JCck.More.ItemX.active+" .cck-loading-more").append(response);
+													}
+													JCck.More.ItemX.toggleReorder();
 												} else {
-													$("#"+JCck.More.ItemX.active+" .cck-loading-more").append(response);
+													$("#"+JCck.More.ItemX.active+" > [class$=\"-toolbar\"]").hide();
+													$("#"+JCck.More.ItemX.active+" > [class$=\"-toolbar\"] + *").show();
+													$("#"+JCck.More.ItemX.active+" .cck-loading-more").html(response);
 												}
-												JCck.More.ItemX.toggleReorder();
-											} else {
-												$("#"+JCck.More.ItemX.active+" > [class$=\"-toolbar\"]").hide();
-												$("#"+JCck.More.ItemX.active+" > [class$=\"-toolbar\"] + *").show();
-												$("#"+JCck.More.ItemX.active+" .cck-loading-more").html(response);
-											}
-	    									$(".hasTooltip").tooltip({"html": true,"container": "body"});
+		    									$(".hasTooltip").tooltip({"html": true,"container": "body"});
 
-											if (close !== false) {
-												JCck.More.ItemX.modal.hide();
-												JCck.More.ItemX.modal.groups.ajax	=	[];
-												$("a[data-cck-modal]").each(function(i, e) {
-													JCck.More.ItemX.modal.groups.ajax.push($(e));
-												});
-	    										JCck.More.ItemX.modal.init();
-											}
-										},
-										error:function(){}
-									});
-								},
-								assignX: function() {
-									if (document.seblod_form_raw.boxchecked.value==0) {
-										alert("'.addslashes( JText::_( 'JLIB_HTML_PLEASE_MAKE_A_SELECTION_FROM_THE_LIST' ) ).'"); return;
-									} else {
-										var val = [];
-										$("input:checkbox[name=\'cid[]\']:checked").each(function(i) {
-											var v = $(this).val();
-											if (!JCck.More.ItemX.check(v)) {
-												val[i] = v;
-											}
-										});
-										val = (val.length) ? val.join(",") : "";
-										JCck.More.ItemX.assign(val,true);
-									}
-								},
-								callback: function() {
-									JCck.More.ItemX.dispatch();
-								},
-								check: function(id) {
-									if ($("#"+id+"_"+JCck.More.ItemX.active).length) {
-										return true;
-									} else {
-										return false;
-									}
-								},
-								dispatch: function() {
-									$(".hasTooltip").tooltip({"html": true,"container": "#modal-cck"}).on("hidden", function (e) {
-									   e.stopPropagation();
-									});
-									$("#"+JCck.More.ItemX.modal_form_id+" a[data-cck-modal]").CckModal();
-
-									if ($("#"+JCck.More.ItemX.modal_form_id+" .cck-loading-more").length) {
-										$("#"+JCck.More.ItemX.modal_form_id+" .cck-loading-more input:checkbox[name=\'cid[]\']").each(function(i) {
-											var v = $(this).val();
-											if (JCck.More.ItemX.check(v)) {
-												$(this).parents("tr").find(".item_x-assign").hide();
-											} else {
-												$(this).parents("tr").find(".item_x-remove").hide();
-											}
-										});
-									}
-								},
-								process: function(id,tid) {
-									$.ajax({
-										cache: false,
-										data: "cid[]="+id+"&tid="+tid,
-										type: "POST",
-										url: JCck.More.ItemX.instances[JCck.More.ItemX.active].link_process,
-										beforeSend:function(){},
-										success: function(response) {
-											var resp = jQuery.parseJSON(response);
-											if(typeof resp == "object") {
-												if (resp.isNew && resp.pk) {
-													JCck.More.ItemX.assign(resp.pk,true);
-												} else {
+												if (close !== false) {
 													JCck.More.ItemX.modal.hide();
+													JCck.More.ItemX.modal.groups.ajax	=	[];
+													$("a[data-cck-modal]").each(function(i, e) {
+														JCck.More.ItemX.modal.groups.ajax.push($(e));
+													});
+		    										JCck.More.ItemX.modal.init();
 												}
-											} else {
-												JCck.More.ItemX.modal.hide();
-											}
-										},
-										error:function(){}
-									});
-								},
-								remove: function(id,close) {
-									var close = close || false;
-									if (JCck.More.ItemX.instances[JCck.More.ItemX.active].behavior) {
+											},
+											error:function(){}
+										});
+									},
+									assignX: function() {
+										if (document.seblod_form_raw.boxchecked.value==0) {
+											alert("'.addslashes( JText::_( 'JLIB_HTML_PLEASE_MAKE_A_SELECTION_FROM_THE_LIST' ) ).'"); return;
+										} else {
+											var val = [];
+											$("input:checkbox[name=\'cid[]\']:checked").each(function(i) {
+												var v = $(this).val();
+												if (!JCck.More.ItemX.check(v)) {
+													val[i] = v;
+												}
+											});
+											val = (val.length) ? val.join(",") : "";
+											JCck.More.ItemX.assign(val,true);
+										}
+									},
+									callback: function() {
+										JCck.More.ItemX.dispatch();
+									},
+									check: function(id) {
 										if ($("#"+id+"_"+JCck.More.ItemX.active).length) {
-											var $el_p = $("#"+id+"_"+JCck.More.ItemX.active).parents("tr");
-											$el_p.find(".hasTooltip").tooltip("destroy");
-											$el_p.remove();
+											return true;
+										} else {
+											return false;
+										}
+									},
+									dispatch: function() {
+										$(".hasTooltip").tooltip({"html": true,"container": "#modal-cck"}).on("hidden", function (e) {
+										   e.stopPropagation();
+										});
+										$("#"+JCck.More.ItemX.modal_form_id+" a[data-cck-modal]").CckModal();
 
-											if($("#"+JCck.More.ItemX.active+" .cck-loading-more").length) {
-												if($("#"+JCck.More.ItemX.active+" .cck-loading-more").html().length === 0) {
-													JCck.More.ItemX.toggleRequired(true);
+										if ($("#"+JCck.More.ItemX.modal_form_id+" .cck-loading-more").length) {
+											$("#"+JCck.More.ItemX.modal_form_id+" .cck-loading-more input:checkbox[name=\'cid[]\']").each(function(i) {
+												var v = $(this).val();
+												if (JCck.More.ItemX.check(v)) {
+													$(this).parents("tr").find(".item_x-assign").hide();
+												} else {
+													$(this).parents("tr").find(".item_x-remove").hide();
 												}
-											}
+											});
 										}
-									} else {
-										$("#"+JCck.More.ItemX.active+" .cck-loading-more").find(".hasTooltip").tooltip("destroy");
-										$("#"+JCck.More.ItemX.active+" .cck-loading-more").html("");
-										JCck.More.ItemX.toggleRequired(true);
-										$("#"+JCck.More.ItemX.active+" > [class$=\"-toolbar\"]").show();
-										$("#"+JCck.More.ItemX.active+" > [class$=\"-toolbar\"] + *").hide();
-									}
-									if (close !== false) {
-										JCck.More.ItemX.modal.hide();
-									} else {
-										if (JCck.More.ItemX.active && $("#"+JCck.More.ItemX.active).length) {
-											JCck.More.ItemX.active = "";
-										}
-									}
-								},
-								save: function() {
-									if ($("#"+JCck.More.ItemX.modal_form_id).validationEngine("validate","JCck.More.ItemX.save") === true) {
-										$("#"+JCck.More.ItemX.modal_form_id+" #task").remove();
-										$("#"+JCck.More.ItemX.modal_form_id+" input[name=\'config[unique]\']").val("seblod_form_seb_field");
-										
-										var method = "formdata"; /* formdata || jquery */
-										
-										if (method == "formdata" && window.File && window.FileList && window.Blob && window.FileReader && window.FormData) {
-											var $formElem = $("#"+JCck.More.ItemX.modal_form_id);
-											var formData = new FormData($formElem[0]);
-											
-											var xhr = new XMLHttpRequest();
-											xhr.open("POST", JCck.More.ItemX.instances[JCck.More.ItemX.active].link_save, true);
-											xhr.onload = function(e) {
-												var resp = JSON.parse(this.response);
+									},
+									process: function(id,tid) {
+										$.ajax({
+											cache: false,
+											data: "cid[]="+id+"&tid="+tid,
+											type: "POST",
+											url: JCck.More.ItemX.instances[JCck.More.ItemX.active].link_process,
+											beforeSend:function(){},
+											success: function(response) {
+												var resp = jQuery.parseJSON(response);
 												if(typeof resp == "object") {
 													if (resp.isNew && resp.pk) {
 														JCck.More.ItemX.assign(resp.pk,true);
@@ -320,17 +269,54 @@ class plgCCK_FieldItem_X extends JCckPluginField
 												} else {
 													JCck.More.ItemX.modal.hide();
 												}
-											};
-											xhr.send(formData);
+											},
+											error:function(){}
+										});
+									},
+									remove: function(id,close) {
+										var close = close || false;
+										if (JCck.More.ItemX.instances[JCck.More.ItemX.active].behavior) {
+											if ($("#"+id+"_"+JCck.More.ItemX.active).length) {
+												var $el_p = $("#"+id+"_"+JCck.More.ItemX.active).parents("tr");
+												$el_p.find(".hasTooltip").tooltip("destroy");
+												$el_p.remove();
+
+												if($("#"+JCck.More.ItemX.active+" .cck-loading-more").length) {
+													if($("#"+JCck.More.ItemX.active+" .cck-loading-more").html().length === 0) {
+														JCck.More.ItemX.toggleRequired(true);
+													}
+												}
+											}
 										} else {
-											$.ajax({
-												cache: false,
-												data: $("#"+JCck.More.ItemX.modal_form_id).serialize(),
-												type: "POST",
-												url: JCck.More.ItemX.instances[JCck.More.ItemX.active].link_save,
-												beforeSend:function(){},
-												success: function(response) {
-													var resp = jQuery.parseJSON(response);
+											$("#"+JCck.More.ItemX.active+" .cck-loading-more").find(".hasTooltip").tooltip("destroy");
+											$("#"+JCck.More.ItemX.active+" .cck-loading-more").html("");
+											JCck.More.ItemX.toggleRequired(true);
+											$("#"+JCck.More.ItemX.active+" > [class$=\"-toolbar\"]").show();
+											$("#"+JCck.More.ItemX.active+" > [class$=\"-toolbar\"] + *").hide();
+										}
+										if (close !== false) {
+											JCck.More.ItemX.modal.hide();
+										} else {
+											if (JCck.More.ItemX.active && $("#"+JCck.More.ItemX.active).length) {
+												JCck.More.ItemX.active = "";
+											}
+										}
+									},
+									save: function() {
+										if ($("#"+JCck.More.ItemX.modal_form_id).validationEngine("validate","JCck.More.ItemX.save") === true) {
+											$("#"+JCck.More.ItemX.modal_form_id+" #task").remove();
+											$("#"+JCck.More.ItemX.modal_form_id+" input[name=\'config[unique]\']").val("seblod_form_seb_field");
+											
+											var method = "formdata"; /* formdata || jquery */
+											
+											if (method == "formdata" && window.File && window.FileList && window.Blob && window.FileReader && window.FormData) {
+												var $formElem = $("#"+JCck.More.ItemX.modal_form_id);
+												var formData = new FormData($formElem[0]);
+												
+												var xhr = new XMLHttpRequest();
+												xhr.open("POST", JCck.More.ItemX.instances[JCck.More.ItemX.active].link_save, true);
+												xhr.onload = function(e) {
+													var resp = JSON.parse(this.response);
 													if(typeof resp == "object") {
 														if (resp.isNew && resp.pk) {
 															JCck.More.ItemX.assign(resp.pk,true);
@@ -340,154 +326,175 @@ class plgCCK_FieldItem_X extends JCckPluginField
 													} else {
 														JCck.More.ItemX.modal.hide();
 													}
-												},
-												error:function(){}
-											});
-										}
-									}
-								},
-								select: function() {
-									var selection = "";
-									if (!JCck.More.ItemX.instances[JCck.More.ItemX.active].behavior) {
-										selection = $("#"+JCck.More.ItemX.active+" [name=\'"+JCck.More.ItemX.active+"[]\']").val();
-										if (selection===undefined) {
-											selection = "";
-										}
-										if (selection) {
-											selection = "&pks="+selection;
-										}
-									}
-									JCck.More.ItemX.modal.loadUrl(JCck.More.ItemX.instances[JCck.More.ItemX.active].link_select+selection);
-								},
-								set: function(name) {
-									JCck.More.ItemX.active = name;
-									return this;
-								},
-								setFromClick: function(el,always) {
-									var always = (always !== undefined) ? always : true;
-									if (always || !JCck.More.ItemX.active) {
-										JCck.More.ItemX.set($(el).parents(".item_x").attr("id"));
-									}
-									return this;
-								},
-								setInstance: function(name, data) {
-									JCck.More.ItemX.instances[name] = data;
-
-									if(JCck.More.ItemX.instances[name].behavior) {
-										if($("#"+name+" .cck-loading-more").length) {
-											if($("#"+name+" .cck-loading-more").html().length === 0) {
-												JCck.More.ItemX.toggleRequired(true,name);
-											}
-										}
-										setTimeout(function() {
-											JCck.More.ItemX.toggleReorder();
-										}, 500);
-									} else {
-										if($("#"+name+" .cck-loading-more").length) {
-											if($("#"+name+" .cck-loading-more").html().length > 1) {
-												$("#"+name+" > [class$=\"-toolbar\"]").hide();
-												$("#"+name+" > [class$=\"-toolbar\"] + *").show();
+												};
+												xhr.send(formData);
 											} else {
-												JCck.More.ItemX.toggleRequired(true,name);
-												$("#"+name+" > [class$=\"-toolbar\"] + *").hide();
+												$.ajax({
+													cache: false,
+													data: $("#"+JCck.More.ItemX.modal_form_id).serialize(),
+													type: "POST",
+													url: JCck.More.ItemX.instances[JCck.More.ItemX.active].link_save,
+													beforeSend:function(){},
+													success: function(response) {
+														var resp = jQuery.parseJSON(response);
+														if(typeof resp == "object") {
+															if (resp.isNew && resp.pk) {
+																JCck.More.ItemX.assign(resp.pk,true);
+															} else {
+																JCck.More.ItemX.modal.hide();
+															}
+														} else {
+															JCck.More.ItemX.modal.hide();
+														}
+													},
+													error:function(){}
+												});
+											}
+										}
+									},
+									select: function() {
+										var selection = "";
+										if (!JCck.More.ItemX.instances[JCck.More.ItemX.active].behavior) {
+											selection = $("#"+JCck.More.ItemX.active+" [name=\'"+JCck.More.ItemX.active+"[]\']").val();
+											if (selection===undefined) {
+												selection = "";
+											}
+											if (selection) {
+												selection = "&pks="+selection;
+											}
+										}
+										JCck.More.ItemX.modal.loadUrl(JCck.More.ItemX.instances[JCck.More.ItemX.active].link_select+selection);
+									},
+									set: function(name) {
+										JCck.More.ItemX.active = name;
+										return this;
+									},
+									setFromClick: function(el,always) {
+										var always = (always !== undefined) ? always : true;
+										if (always || !JCck.More.ItemX.active) {
+											JCck.More.ItemX.set($(el).parents(".item_x").attr("id"));
+										}
+										return this;
+									},
+									setInstance: function(name, data) {
+										JCck.More.ItemX.instances[name] = data;
+
+										if(JCck.More.ItemX.instances[name].behavior) {
+											if($("#"+name+" .cck-loading-more").length) {
+												if($("#"+name+" .cck-loading-more").html().length === 0) {
+													JCck.More.ItemX.toggleRequired(true,name);
+												}
+											}
+											setTimeout(function() {
+												JCck.More.ItemX.toggleReorder();
+											}, 500);
+										} else {
+											if($("#"+name+" .cck-loading-more").length) {
+												if($("#"+name+" .cck-loading-more").html().length > 1) {
+													$("#"+name+" > [class$=\"-toolbar\"]").hide();
+													$("#"+name+" > [class$=\"-toolbar\"] + *").show();
+												} else {
+													JCck.More.ItemX.toggleRequired(true,name);
+													$("#"+name+" > [class$=\"-toolbar\"] + *").hide();
+												}
+											}
+										}
+									},
+									toggleReorder: function() {
+										var sortableList = new $.JSortableList("#seblod_form table.table tbody","seblod_form","asc" , "index.php?option=com_cck&task=ajax&format=raw&"+Joomla.getOptions("csrf.token")+"=1","","1");
+									},
+									toggleRequired: function(state,name) {
+										name = name || JCck.More.ItemX.active;
+										if (JCck.More.ItemX.instances[name].required) {
+											if (state) {
+												$("#"+name+" > [class$=\"-toolbar\"] > button:last-child").addClass("validate[required]");
+											} else {
+												$("#"+name+" > [class$=\"-toolbar\"] > button:last-child").removeClass("validate[required]").validationEngine("hide");
 											}
 										}
 									}
-								},
-								toggleReorder: function() {
-									var sortableList = new $.JSortableList("#seblod_form table.table tbody","seblod_form","asc" , "index.php?option=com_cck&task=ajax&format=raw&"+Joomla.getOptions("csrf.token")+"=1","","1");
-								},
-								toggleRequired: function(state,name) {
-									name = name || JCck.More.ItemX.active;
-									if (JCck.More.ItemX.instances[name].required) {
-										if (state) {
-											$("#"+name+" > [class$=\"-toolbar\"] > button:last-child").addClass("validate[required]");
-										} else {
-											$("#"+name+" > [class$=\"-toolbar\"] > button:last-child").removeClass("validate[required]").validationEngine("hide");
-										}
-									}
-								}
-							};
+								};
+								$(document).ready(function() {
+									JCck.More.ItemX.modal.settings.callbacks.load = function() {
+										JCck.More.ItemX.setFromClick(JCck.More.ItemX.modal.referrer,false);
+									};
+									JCck.More.ItemX.modal.settings.callbacks.loaded = function() {
+										/* TODO: hide checkboxes */
+										JCck.More.ItemX.dispatch();
+									};
+									JCck.More.ItemX.modal.settings.callbacks.hide = function() {
+										JCck.More.ItemX.active = "";
+									};
+									JCck.More.ItemX.modal.settings.callbacks.hidden = function() {
+										JCck.More.ItemX.modal.settings.backdrop = true;
+										$(".modal-backdrop").fadeOut(300);
+									};
+									JCck.More.ItemX.modal_preview.settings.callbacks.hidden = function() {
+										JCck.More.ItemX.set(JCck.More.ItemX.active);
+										JCck.More.ItemX.modal.settings.backdrop = false;
+										JCck.More.ItemX.select();
+									};
+								});
+							})(jQuery);
+							';
+				$loaded	=	1;
+
+				$doc->addStyleSheet( self::$path.'assets/css/style.css' );
+				$doc->addScriptDeclaration( $js );
+			}
+
+			$js 	=	'
+						(function ($){
 							$(document).ready(function() {
-								JCck.More.ItemX.modal.settings.callbacks.load = function() {
-									JCck.More.ItemX.setFromClick(JCck.More.ItemX.modal.referrer,false);
+								var data = {
+									"behavior":'.$field->bool.',
+									"link_add":"'.htmlspecialchars_decode( $link ).'",
+									"link_list":\''.$link5.'\',
+									"link_process":\''.$link7.'\',
+									"link_select":"'.htmlspecialchars_decode( $link2 ).'",
+									"link_save":\''.$link6.'\',
+									"required":'.( $field->required ? 1 : 0 ).'
 								};
-								JCck.More.ItemX.modal.settings.callbacks.loaded = function() {
-									/* TODO: hide checkboxes */
-									JCck.More.ItemX.dispatch();
-								};
-								JCck.More.ItemX.modal.settings.callbacks.hide = function() {
-									JCck.More.ItemX.active = "";
-								};
-								JCck.More.ItemX.modal.settings.callbacks.hidden = function() {
-									JCck.More.ItemX.modal.settings.backdrop = true;
-									$(".modal-backdrop").fadeOut(300);
-								};
-								JCck.More.ItemX.modal_preview.settings.callbacks.hidden = function() {
-									JCck.More.ItemX.set(JCck.More.ItemX.active);
-									JCck.More.ItemX.modal.settings.backdrop = false;
-									JCck.More.ItemX.select();
-								};
+								JCck.More.ItemX.setInstance("'.$field->name.'", data);					
 							});
 						})(jQuery);
 						';
-			$loaded	=	1;
-
-			$doc->addStyleSheet( self::$path.'assets/css/style.css' );
 			$doc->addScriptDeclaration( $js );
-		}
+			
+			self::$properties[$field->name]	=	array(
+													'mode'=>( $field->bool ? true : false ),
+													'required'=>( $field->required ? true : false ),
+													'task_add'=>( $field->bool2 > -2 ? true : false ),
+													'task_batch'=>( (int)$field->bool4 > 0 ? true : false ),
+													'task_select'=>( $field->bool3 > -2 ? true : false )
+												);
 
-		$js 	=	'
-					(function ($){
-						$(document).ready(function() {
-							var data = {
-								"behavior":'.$field->bool.',
-								"link_add":"'.htmlspecialchars_decode( $link ).'",
-								"link_list":\''.$link5.'\',
-								"link_process":\''.$link7.'\',
-								"link_select":"'.htmlspecialchars_decode( $link2 ).'",
-								"link_save":\''.$link6.'\',
-								"required":'.( $field->required ? 1 : 0 ).'
-							};
-							JCck.More.ItemX.setInstance("'.$field->name.'", data);					
-						});
-					})(jQuery);
-					';
-		$doc->addScriptDeclaration( $js );
-		
-		self::$properties[$field->name]	=	array(
-												'mode'=>( $field->bool ? true : false ),
-												'required'=>( $field->required ? true : false ),
-												'task_add'=>( $field->bool2 > -2 ? true : false ),
-												'task_batch'=>( (int)$field->bool4 > 0 ? true : false ),
-												'task_select'=>( $field->bool3 > -2 ? true : false )
-											);
+			// Check Permissions
+			if ( self::$properties[$field->name]['task_add'] ) {
+				$type_id	=	(int)JCckDatabase::loadResult( 'SELECT id FROM #__cck_core_types WHERE name = "'.$form.'"' );
+				$canCreate	=	( $type_id ) ? JFactory::getUser()->authorise( 'core.create', 'com_cck.form.'.$type_id ) : false;
+					
+				if ( !$canCreate ) {
+					self::$properties[$field->name]['task_add']	=	false;
+				}
+			}
 
-		// Check Permissions
-		if ( self::$properties[$field->name]['task_add'] ) {
-			$type_id	=	(int)JCckDatabase::loadResult( 'SELECT id FROM #__cck_core_types WHERE name = "'.$form.'"' );
-			$canCreate	=	( $type_id ) ? JFactory::getUser()->authorise( 'core.create', 'com_cck.form.'.$type_id ) : false;
-				
-			if ( !$canCreate ) {
-				self::$properties[$field->name]['task_add']	=	false;
+			$buffer		=	self::_render( $field, $value, array(), $config, $referrer );
+			$html		.=	$buffer['form'];
+			$html		.=	$buffer['list'];
+			$html		=	'<div id="'.$field->name.'" class="item_x">'.$html.'</div>';
+
+			if ( $buffer['validation'] ) {
+				$config['validation']	=	array_merge( $config['validation'], $buffer['validation'] );
+			}
+
+			if ( $field->bool ) {
+				JHtml::_( 'jquery.ui', array( 'core', 'sortable' ) );
+				JHtml::_( 'script', 'jui/sortablelist.js', false, true );
+				JHtml::_( 'stylesheet', 'jui/sortablelist.css', false, true, false );
 			}
 		}
 
-		$buffer		=	self::_render( $field, $value, array(), $config, $referrer );
-		$html		.=	$buffer['form'];
-		$html		.=	$buffer['list'];
-		$html		=	'<div id="'.$field->name.'" class="item_x">'.$html.'</div>';
-
-		if ( $buffer['validation'] ) {
-			$config['validation']	=	array_merge( $config['validation'], $buffer['validation'] );
-		}
-
-		if ( $field->bool ) {
-			JHtml::_( 'jquery.ui', array( 'core', 'sortable' ) );
-			JHtml::_( 'script', 'jui/sortablelist.js', false, true );
-			JHtml::_( 'stylesheet', 'jui/sortablelist.css', false, true, false );
-		}
-		
 		// Set
 		$field->form	=	$html;
 		$field->value	=	'';
@@ -506,7 +513,15 @@ class plgCCK_FieldItem_X extends JCckPluginField
 		}
 		
 		// Prepare
-		self::onCCK_FieldPrepareForm( $field, $value, $config, $inherit, $return );
+		if ( $field->variation == 'hidden' ) {
+			parent::g_onCCK_FieldPrepareSearch( $field, $config );
+
+			if ( $value != '' ) {
+				$field->value	=	(int)$value;
+			}
+		} else {
+			self::onCCK_FieldPrepareForm( $field, $value, $config, $inherit, $return );
+		}
 		
 		// Return
 		if ( $return === true ) {
