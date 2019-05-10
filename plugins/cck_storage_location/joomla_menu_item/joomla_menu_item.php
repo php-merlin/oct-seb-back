@@ -296,6 +296,10 @@ class plgCCK_Storage_LocationJoomla_Menu_Item extends JCckPluginLocation
 													$item_request->id
 												);
 							break;
+						case 'com_cck.custom':
+							$component		=	'com_cck_toolbox';
+							$table->link	=	'index.php?option=com_cck_toolbox&view=processing';
+							break;
 						case 'com_cck.form':
 							$component		=	'com_cck';
 							$table->link	= 	sprintf(

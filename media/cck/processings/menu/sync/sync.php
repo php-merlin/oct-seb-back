@@ -36,6 +36,8 @@ if ( !isset( $item_types[$article->type] ) ) {
 				}
 			}
 			$item_type	=	'com_cck.form';
+		} elseif ( strpos( $article->link, '?option=com_cck_toolbox&view=processing' ) !== false ) {
+			$item_type	=	'com_cck.custom';
 		} elseif ( strpos( $article->link, '?option=com_content&view=article' ) !== false ) {
 			foreach ( $request as $k=>$v ) {
 				if ( strpos( $v, 'id=' ) !== false ) {
