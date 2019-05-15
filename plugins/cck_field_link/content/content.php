@@ -97,7 +97,7 @@ class plgCCK_Field_LinkContent extends JCckPluginLink
 				$pk			=	$config['pk'];
 			}
 			if ( $content != '-2' ) {
-				parent::g_addProcess( 'beforeRenderContent', self::$type, $config, array( 'name'=>$field->name, 'fieldname'=>$link->get( 'content_fieldname', '' ), 'fieldname2'=>$link->get( 'itemid_fieldname', '' ), 'fieldnames'=>$link->get( 'itemid_mapping', '' ), 'itemId'=>$itemId, 'location'=>$location, 'pk'=>$pk, 'sef'=>$sef, 'vars'=>$vars, 'custom'=>$custom ) );
+				parent::g_addProcess( 'beforeRenderContent', self::$type, $config, array( 'name'=>$field->name, 'fieldname'=>$link->get( 'content_fieldname', '' ), 'fieldname2'=>$link->get( 'itemid_fieldname', '' ), 'fieldnames'=>$link->get( 'itemid_mapping', '' ), 'itemId'=>$itemId, 'location'=>$location, 'pk'=>$pk, 'sef'=>$sef, 'vars'=>$vars, 'custom'=>$custom, 'lang_tag'=>$lang_tag ) );
 			}
 		}
 		$custom				=	parent::g_getCustomVars( self::$type, $field, $custom, $config );
@@ -251,10 +251,13 @@ class plgCCK_Field_LinkContent extends JCckPluginLink
 		$name		=	$process['name'];
 		$fieldname	=	$process['fieldname'];
 		$location	=	$process['location'];
+		
 		if ( isset( $process['pk'] ) && $process['pk'] ) {
-			$pk		=	$process['pk'];
+			$isCurrent	=	true;
+			$pk			=	$process['pk'];
 		} else {
-			$pk		=	isset( $fields[$fieldname] ) ? (int)$fields[$fieldname]->value : 0;
+			$isCurrent	=	false;
+			$pk			=	isset( $fields[$fieldname] ) ? (int)$fields[$fieldname]->value : 0;
 		}
 
 		if ( !$pk ) {
@@ -299,7 +302,12 @@ class plgCCK_Field_LinkContent extends JCckPluginLink
 			}
 		}
 
-		$fields[$name]->link	=	JCck::callFunc_Array( 'plgCCK_Storage_Location'.$location, 'getRoute', array( $pk, $process['sef'], $itemId, $config ) );
+		if ( $isCurrent ) {
+			$fields[$name]->link	=	JCck::callFunc_Array( 'plgCCK_Storage_Location'.$location, 'getRouteByStorage', array( &$config['storages'], $process['sef'], $itemId, $config, $process['lang_tag'] ) );
+		} else {
+			$fields[$name]->link	=	JCck::callFunc_Array( 'plgCCK_Storage_Location'.$location, 'getRoute', array( $pk, $process['sef'], $itemId, $config ) );
+		}
+		
 		$target					=	 $fields[$name]->typo_target;
 
 		if ( isset( $fields[$name]->typo_mode ) && $fields[$name]->typo_mode ) {
