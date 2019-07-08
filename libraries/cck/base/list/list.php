@@ -109,7 +109,7 @@ class CCK_List
 							'storage_table',
 							'storage_field',
 							'storage_field2',
-							'storage_params'
+							'storage_mode'
 						);
 
 		return $t.'.'.implode( ', '.$t.'.', $columns );
@@ -273,7 +273,7 @@ class CCK_List
 							'storage_table',
 							'storage_field',
 							'storage_field2',
-							'storage_params',
+							'storage_mode',
 							'typo_label',
 							'typo_options',
 							'validation',
