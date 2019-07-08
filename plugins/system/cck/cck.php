@@ -701,8 +701,23 @@ class plgSystemCCK extends JPlugin
 	}
 
 	// onExtensionAfterSave
-	public function onExtensionAfterSave( $context, $table, $flag )
+	public function onExtensionAfterSave( $context, $table, $isNew )
 	{
+		if ( JCckToolbox::getConfig()->get( 'processing', 0 ) ) {
+			$event		=	'onExtensionAfterSave';
+			$processing	=	JCckDatabaseCache::loadObjectListArray( 'SELECT type, scriptfile, options FROM #__cck_more_processings WHERE published = 1 ORDER BY ordering', 'type' );
+
+			if ( isset( $processing[$event] ) ) {
+				foreach ( $processing[$event] as $p ) {
+					if ( is_file( JPATH_SITE.$p->scriptfile ) ) {
+						$options	=	new JRegistry( $p->options );
+
+						include_once JPATH_SITE.$p->scriptfile;
+					}
+				}
+			}
+		}
+
 		if ( $context != 'com_config.component' ) {
 			return;
 		}
@@ -726,6 +741,25 @@ class plgSystemCCK extends JPlugin
 			$proxy	=	Helper_Admin::getProxy( $params, 'proxy_segment' );
 
 			JCckDatabase::execute( 'UPDATE #__update_sites SET location = REPLACE(location, "'.$proxy.'", "update.seblod.com") WHERE location LIKE "%'.$proxy.'%"' );
+		}
+	}
+
+	// onInstallerAfterInstaller
+	public function onInstallerAfterInstaller( $package, $installer, &$result, &$msg )
+	{
+		if ( JCckToolbox::getConfig()->get( 'processing', 0 ) ) {
+			$event		=	'onInstallerAfterInstaller';
+			$processing	=	JCckDatabaseCache::loadObjectListArray( 'SELECT type, scriptfile, options FROM #__cck_more_processings WHERE published = 1 ORDER BY ordering', 'type' );
+
+			if ( isset( $processing[$event] ) ) {
+				foreach ( $processing[$event] as $p ) {
+					if ( is_file( JPATH_SITE.$p->scriptfile ) ) {
+						$options	=	new JRegistry( $p->options );
+
+						include_once JPATH_SITE.$p->scriptfile;
+					}
+				}
+			}
 		}
 	}
 
