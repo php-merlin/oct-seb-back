@@ -172,12 +172,15 @@ class plgCCK_Storage_LocationJoomla_Language extends JCckPluginLocation
 		
 		// Prepare
 		if ( ! isset( $tables[self::$table] ) ) {
-			$tables[self::$table]	=	array( '_'=>'t'.$t++,
-											'fields'=>array(),
-											'join'=>1,
-											'key'=>self::$key,
-											'location'=>self::$type
-										);
+			$tables[self::$table]			=	array(
+													'_'=>'t'.$t++,
+													'fields'=>array(),
+													'join'=>1,
+													'key'=>self::$key,
+													'location'=>self::$type
+												);
+		} else {
+			$tables[self::$table]['key']	=	self::$key;
 		}
 		
 		// Set
