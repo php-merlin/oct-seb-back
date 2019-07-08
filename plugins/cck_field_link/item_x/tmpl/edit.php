@@ -22,6 +22,7 @@ JCckDev::initScript( 'link', $this->item );
         echo JCckDev::renderForm( 'core_dev_bool', '', $config, array( 'defaultvalue'=>'0', 'label'=>'Close', 'storage_field'=>'close' ) );
         echo JCckDev::renderForm( 'core_dev_bool', '', $config, array( 'defaultvalue'=>'0', 'label'=>'Confirm', 'storage_field'=>'confirm' ) );
 		echo JCckDev::renderForm( 'core_dev_text', '', $config, array( 'label'=>'Alert', 'defaultvalue'=>'Please Confirm', 'size'=>32, 'storage_field'=>'confirm_alert' ) );
+        echo JCckDev::renderForm( 'core_dev_bool', '', $config, array( 'label'=>'Identifier', 'defaultvalue'=>'pk', 'options'=>'ID=id||Primary Key=pk', 'storage_field'=>'identifier' ) );
 
 		echo JCckDev::renderSpacer( JText::_( 'COM_CCK_CONSTRUCTION' ) . '<span class="mini">('.JText::_( 'COM_CCK_GENERIC' ).')</span>' );
 		echo JCckDev::renderForm( 'core_dev_text', '', $config, array( 'label'=>'Class', 'size'=>24, 'storage_field'=>'class' ) );

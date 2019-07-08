@@ -35,12 +35,13 @@ class plgCCK_Field_LinkItem_X extends JCckPluginLink
 	// _link
 	protected static function _link( $link, &$field, &$config )
 	{
-		$parent					=	$link->get( 'fieldname', '' );
-		$type					=	$link->get( 'type', 'add' );
+		$identifier				=	$link->get( 'identifier', 'pk' );
 		$link_class				=	$link->get( 'class', '' );
 		$link_onclick			=	'';
 		$link_title				=	$link->get( 'title', '' );
 		$link_title2			=	$link->get( 'title_custom', '' );
+		$parent					=	$link->get( 'fieldname', '' );
+		$type					=	$link->get( 'type', 'add' );
 
 		// Prepare
 		if ( $type == 'save' ) {
@@ -53,7 +54,7 @@ class plgCCK_Field_LinkItem_X extends JCckPluginLink
 			$close				=	(int)$link->get( 'close', '0' );
 			$close				=	$close ? ',true' : '';
 			$link_class			.=	' item_x-remove';
-			$link_onclick		=	'JCck.More.ItemX.setFromClick(this,false).remove('.$config['pk'].$close.');';
+			$link_onclick		=	'JCck.More.ItemX.setFromClick(this,false).remove('.$config[$identifier].$close.');';
 		} elseif ( $type == 'process' ) {
 			$processing			=	$link->get( 'processing', '' );
 			$link_class			.=	' item_x-assign';
@@ -62,7 +63,7 @@ class plgCCK_Field_LinkItem_X extends JCckPluginLink
 			$link_onclick		=	'JCck.More.ItemX.assignX();';
 		} else {
 			$link_class			.=	' item_x-assign';
-			$link_onclick		=	'JCck.More.ItemX.assign('.$config['pk'].',true);';
+			$link_onclick		=	'JCck.More.ItemX.assign('.$config[$identifier].',true);';
 		}
 		$link_class				=	trim( $link_class );
 		
