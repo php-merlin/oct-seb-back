@@ -391,6 +391,7 @@ class Helper_Workshop
 												'clear'=>JHtml::_( 'select.option', 'clear', JText::_( 'COM_CCK_CLEAR' ) ),
 												''=>JHtml::_( 'select.option', '', JText::_( 'COM_CCK_INHERITED' ) ),
 												'none'=>JHtml::_( 'select.option', 'none', JText::_( 'COM_CCK_RAW' ) ),
+												'unset'=>JHtml::_( 'select.option', 'unset', JText::_( 'COM_CCK_UNSET' ) ),
 												'-1'=>JHtml::_( 'select.option', '<OPTGROUP>', JText::_( 'COM_CCK_BASE' ) ),
 												'none_postpone'=>JHtml::_( 'select.option', 'none_postpone', JText::_( 'COM_CCK_NONE_POSTPONED_ABOVE' ) ),
 												'none_postpone_after'=>JHtml::_( 'select.option', 'none_postpone_after', JText::_( 'COM_CCK_NONE_POSTPONED_BELOW' ) )
@@ -433,7 +434,8 @@ class Helper_Workshop
 											array(
 												'clear'=>JHtml::_( 'select.option', 'clear', JText::_( 'COM_CCK_CLEAR' ) ),
 												''=>JHtml::_( 'select.option', '', JText::_( 'COM_CCK_INHERITED' ) ), 
-												'none'=>JHtml::_( 'select.option', 'none', JText::_( 'COM_CCK_RAW' ) )
+												'none'=>JHtml::_( 'select.option', 'none', JText::_( 'COM_CCK_RAW' ) ),
+												'unset'=>JHtml::_( 'select.option', 'unset', JText::_( 'COM_CCK_UNSET' ) )
 											),
 											self::getLayouts()
 										);
@@ -467,6 +469,7 @@ class Helper_Workshop
 												'clear'=>JHtml::_( 'select.option', 'clear', JText::_( 'COM_CCK_CLEAR' ) ),
 												''=>JHtml::_( 'select.option', '', JText::_( 'COM_CCK_INHERITED' ) ), 
 												'none'=>JHtml::_( 'select.option', 'none', JText::_( 'COM_CCK_RAW' ) ),
+												'unset'=>JHtml::_( 'select.option', 'unset', JText::_( 'COM_CCK_UNSET' ) )
 											),
 											self::getLayouts()
 										);
@@ -553,7 +556,8 @@ class Helper_Workshop
 											array(
 												'clear'=>JHtml::_( 'select.option', 'clear', JText::_( 'COM_CCK_CLEAR' ) ),
 												''=>JHtml::_( 'select.option', '', JText::_( 'COM_CCK_INHERITED' ) ), 
-												'none'=>JHtml::_( 'select.option', 'none', JText::_( 'COM_CCK_RAW' ) )
+												'none'=>JHtml::_( 'select.option', 'none', JText::_( 'COM_CCK_RAW' ) ),
+												'unset'=>JHtml::_( 'select.option', 'unset', JText::_( 'COM_CCK_UNSET' ) )
 											),
 											self::getLayouts()
 										);
