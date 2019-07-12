@@ -11,6 +11,13 @@
 defined( '_JEXEC' ) or die;
 
 JCckDev::initScript( 'link', $this->item );
+JCck::loadModalBox();
+
+require_once JPATH_COMPONENT.'/helpers/helper_admin.php';
+$lives	=	Helper_Admin::getPluginOptions( 'field_live', 'cck_', false, false, true );
+$lives	=	array_merge( array( JHtml::_( 'select.option', '', JText::_( 'COM_CCK_SELECT_SL' ) ) ), Helper_Admin::getPluginOptions( 'field_live', 'cck_', false, false, true ) );
+$html	=	JHtml::_( 'select.genericlist', $lives, 'live', 'class="input select"', 'value', 'text', '', 'live' );
+
 $hide	=	$this->item->alt ? 'hide' : '';
 if ( $this->item->alt ) {
 	$hide		=	'hide';
@@ -26,7 +33,9 @@ if ( $this->item->alt ) {
     <ul class="adminformlist adminformlist-2cols">
         <?php
 		echo JCckDev::renderForm( 'core_list', '', $config, array(), array(), $hide );
-		echo JCckDev::renderForm( 'core_menuitem', '', $config, array( 'required'=>$required ) );
+		echo JCckDev::renderForm( 'core_menuitem', '', $config, array( 'options'=>'Use Live=-4', 'required'=>$required ) );
+		echo JCckDev::renderBlank( '<input type="hidden" id="blank_li" value="" />' );
+		echo '<li><label></label>'.JCckDev::getForm( 'core_dev_text', '', $config, array( 'label'=>'', 'defaultvalue'=>'', 'css'=>'input-small', 'storage_field'=>'values' ) ).$html.'<span class="c_link" id="live_button" name="live_button">+</span></li>';
 		echo JCckDev::renderForm( 'core_dev_select', '', $config, array( 'defaultvalue'=>0, 'label'=>'Field', 'options'=>'None=-1||Field=optgroup||Inherited=0||Custom=1',
 																		 'selectlabel'=>'', 'storage_field'=>'search_field' ), array(), $hide );
 		echo JCckDev::renderForm( 'core_dev_text', '', $config, array( 'label'=>'Field name', 'required'=>'required', 'storage_field'=>'search_fieldname' ), array(), $hide );
@@ -49,10 +58,36 @@ if ( $this->item->alt ) {
     </ul>
 </div>
 
+<?php
+JCckDev::addField( 'live', $config );
+?>
+
 <script type="text/javascript">
 jQuery(document).ready(function($) {
 	$('#search_fieldname').isVisibleWhen('search_field','1');
 	$('#target_params').isVisibleWhen('target','modal');
 	$('#title_custom').isVisibleWhen('title','2,3',false);
+	$("#values").hide();
+
+	if ($("#live").val()) {
+		$("#live_button").show();
+	} else {
+		$("#live_button").hide();
+	}
+	$("div#layout").on("change", "#live", function() {
+		$("#values").val("");
+		if ($(this).val()) {
+			$("#live_button").show();
+		} else {
+			$("#live_button").hide();
+		}
+	});
+	$("div#layout").on("click", "span.c_link", function() {
+		var type = $("#live").val();
+		if (type) {
+			var url = "index.php?option=com_cck&task=box.add&tmpl=component&file=plugins/cck_field_live/"+type+"/tmpl/edit.php&id=values&name="+type+"&validation=1";
+			$.colorbox({href:url, iframe:true, innerWidth:930, innerHeight:550, overlayClose:false, fixed:true, onLoad: function(){ $('#cboxClose').remove();}});
+		}
+	});
 });
 </script>

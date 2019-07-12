@@ -46,6 +46,26 @@ class plgCCK_Field_LinkCCK_List extends JCckPluginLink
 			return;
 		}
 		
+		if ( $itemId == -4 ) {
+			$itemId			=	0;
+			$live			=	$link->get( 'live' );
+
+			if ( $live != '' ) {
+				JPluginHelper::importPlugin( 'cck_field_live' );
+
+				$field2			=	(object)array(
+										'live'=>$live,
+										'live_options'=>$link->get( 'values' ),
+										'name'=>$field->name
+									);
+				$value			=	'';
+
+				JEventDispatcher::getInstance()->trigger( 'onCCK_Field_LivePrepareForm', array( &$field2, &$value, &$config ) );
+
+				$itemId			=	(int)$value;
+			}
+		}
+
 		// Prepare
 		$link_attr		=	'';
 		$link_class		=	$link->get( 'class', '' );
