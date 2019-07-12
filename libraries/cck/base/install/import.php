@@ -24,11 +24,30 @@ require_once JPATH_ADMINISTRATOR.'/components/'.CCK_COM.'/helpers/helper_folder.
 class CCK_Import
 {
 	// _fromXML
-	protected static function _fromXML( $path, $config )
+	protected static function _fromXML( $path, $config, $data )
 	{
 		$buffer	=	file_get_contents( $path );
-		$buffer	=	str_replace( '%target_user_group%', $config['params']['data']->get( 'user_group', '-1' ), $buffer );
-		$buffer	=	str_replace( '%target_viewing_access_level%', $config['params']['data']->get( 'viewing_access_level', '-1' ), $buffer );
+		$buffer	=	str_replace( '%core_user_group%', $config['params']['more']->get( 'user_group', '-1' ), $buffer );
+		$buffer	=	str_replace( '%core_viewing_access_level%', $config['params']['more']->get( 'viewing_access_level', '-1' ), $buffer );
+
+		if ( strpos( $buffer, '%core_viewing_access_level:' ) !== false ) {
+			if ( isset( $config['params']['core']['viewing_access_level'] )
+			  && is_array( $config['params']['core']['viewing_access_level'] ) ) {
+				foreach ( $config['params']['core']['viewing_access_level'] as $k=>$v ) {
+					$buffer	=	str_replace( '%core_viewing_access_level:'.$k.'%', $v, $buffer );
+				}
+			}
+		}
+
+		if ( strpos( $buffer, '%more_category:' ) !== false ) {
+			$target	=	$data['elements']['category'];
+
+			if ( isset( $data[$target] ) && is_array( $data[$target] ) ) {
+				foreach ( $data[$target] as $k=>$v ) {
+					$buffer	=	str_replace( '%more_category:'.$k.'%', $v, $buffer );
+				}
+			}
+		}
 
 		return $buffer;
 	}
@@ -39,7 +58,7 @@ class CCK_Import
 		foreach ( $items as $name ) {
 			$path	=	$base.$name;
 
-			$buffer	=	self::_fromXML( $path, $config );
+			$buffer	=	self::_fromXML( $path, $config, $data );
 			$xml	=	JCckDev::fromXML( $buffer, false );
 			
 			if ( !$xml || (string)$xml->attributes()->type != $type ) {
@@ -91,7 +110,7 @@ class CCK_Import
 	// importElement
 	public static function importElement( $elemtype, $path, &$data, $config = array() )
 	{
-		$buffer	=	self::_fromXML( $path, $config );
+		$buffer	=	self::_fromXML( $path, $config, $data );
 		$xml	=	JCckDev::fromXML( $buffer, false );
 		
 		if ( !$xml || (string)$xml->attributes()->type != $elemtype.'s' ) {
@@ -338,10 +357,15 @@ class CCK_Import
 	// _setStyle
 	protected static function _setStyle( $views, &$item, $data )
 	{
+		if ( $item->location == 'collection' ) {
+			return;
+		}
+		
 		foreach ( $views as $v ) {
 			$e	=	'template_'.$v;
 			$t	=	$item->$e;
 			$s	=	0;
+			
 			if ( strpos( $t, '('.$v.')' ) !== false ) {
 				if ( isset( $data['styles']['custom'][$t] ) ) {
 					$s	=	$data['styles']['custom'][$t]->id;
@@ -396,8 +420,8 @@ class CCK_Import
 		}
 
 		if ( !is_numeric( $table->parent_id ) ) {
-			if ( $table->parent_id == '%target_joomla_menu_item%' ) {
-				$item_id			=	$config['params']['data']->get( 'menu_item', '-1' );
+			if ( $table->parent_id == '%core_menu_item%' ) {
+				$item_id			=	$config['params']['more']->get( 'menu_item', '-1' );
 
 				if ( $item_id == '-1' ) {
 					return -1;

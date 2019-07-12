@@ -60,19 +60,25 @@ class CCK_Install
 		
 		// Core
 		jimport( 'cck.base.install.import' );
-		$config				=	array( 'isApp'=>false, 'isUpgrade'=>false, 'params'=>array( 'data'=>'', 'target'=>'content' ) );
+		$config		=	array( 'isApp'=>false, 'isUpgrade'=>false, 'params'=>array( 'core'=>'', 'more'=>'', 'target'=>'content' ) );
 
 		if ( isset( $extension->isApp ) && $extension->isApp ) {
-			$config['isApp']		=	true;
-			$config['isUpgrade']	=	$extension->isUpgrade;
-			$config['params']		=	$extension->appParams;
+			$config['isApp']			=	true;
+			$config['isUpgrade']		=	$extension->isUpgrade;
+			$config['params']			=	$extension->appParams;
+			$config['params']['more']	=	(string)JCckDatabase::loadResult( 'SELECT params FROM #__cck_core_folders WHERE parent_id = 60 AND name = "'.$config['params']['target'].'"' );
+		}
+		$config['params']['core']		=	(string)JCckDatabase::loadResult( 'SELECT params FROM #__cck_core_folders WHERE id = 60' );
 
-			$config['params']['data']	=	(string)JCckDatabase::loadResult( 'SELECT params FROM #__cck_core_folders WHERE parent_id = 60 AND name = "'.$config['params']['target'].'"' );
+		if ( !( isset( $config['params']['core'] ) && $config['params']['core'] != '' ) ) {
+			$config['params']['core']	=	'{}';
 		}
-		if ( $config['params']['data'] == '' ) {
-			$config['params']['data']	=	'{}';
+		if ( !( isset( $config['params']['more'] ) && $config['params']['more'] != '' ) ) {
+			$config['params']['more']	=	'{}';
 		}
-		$config['params']['data']	=	new Registry( $config['params']['data'] );
+		$config['params']['core']	=	new Registry( $config['params']['core'] );
+		$config['params']['core']	=	$config['params']['core']->toArray();
+		$config['params']['more']	=	new Registry( $config['params']['more'] );
 
 		$data				=	array( 'base'=>$root, 'root'=>$path, 'root_category'=>0, 'categories'=>array(), 'fields'=>array(), 'styles'=>array() );
 		$data['elements']	=	array( 'folder'=>'folders', 'field'=>'fields', 'type'=>'types', 'search'=>'searchs', 'template'=>'templates', 'template_style'=>'template_styles', 'category'=>'categories' );
