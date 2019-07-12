@@ -22,6 +22,7 @@ $ -> Language fix or change
 - -> Removed
 ! -> Note
 
+<<<<<<< HEAD
 -------------------- 4.0.0 Upgrade Release [xx-xxx-xxxx] -----------
 
 ! Joomla! 4.0 ready.
@@ -138,6 +139,31 @@ REMOVED EXTENSIONS
 # Sites (with context) fixed when site is reached from a subfolder.
 # Sites (with context) fixed when multi-language is on.
 # Various improvements or issues fixed.
+=======
+-------------------- 3.18.0 Upgrade Release [xx-Jul-2019] -----------
+
++ "Preview Form" permission added.
+
++ JCckContent class updated & improved! :)
+  >> "extend" method added for callable/mixins (cf manuals).
+  >> "in" operator support added on find/search methods.
+  >> "limit" methods added (cf manuals).
+
++ "Page Title" (Home Page) parameter added to Sites. (Multi-sites)
++ "PrepareImport" method added >> SEBLOD Importer Add-on required.
+  >> applied on Checkbox, Radio, Select Multiple/Simple plug-ins.
+  >> applied on JForm Category/Tag/User plug-ins.
+
++ Free Object plug-in improved.
+  >> Import support added.
+  >> Various issues fixed.
+
+! Permissions applied on Tasks in Submit Button plug-in. 
+! Priority added on Process stack.
+  >> "beforeStore" support added.
+
+# Minor issues fixed.
+>>>>>>> master
 
 -------------------- 3.17.4 Upgrade Release [29-Mar-2019] -----------
 

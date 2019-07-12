@@ -13,9 +13,10 @@ defined( '_JEXEC' ) or die;
 // Plugin
 class JCckPluginField extends JPlugin
 {
-	protected static $construction	=	'cck_field';
-	protected static $convertible	=	0;
-	protected static $friendly		=	0;
+	protected static $construction		=	'cck_field';
+	protected static $convertible		=	0;
+	protected static $friendly			=	0;
+	protected static $prepared_input	=	0;
 
 	// onCCK_FieldPrepareContentDebug
 	public function onCCK_FieldPrepareContentDebug( &$field, $value = '', &$config = array() )
@@ -49,6 +50,16 @@ class JCckPluginField extends JPlugin
 		$field->output	=	$value;
 	}
 
+	// onCCK_FieldPrepareImport
+	public function onCCK_FieldPrepareImport( &$field, $value = '', &$config = array() )
+	{
+		if ( static::$type != $field->type ) {
+			return;
+		}
+
+		$field->value	=	$value;
+	}
+
 	// onCCK_FieldPrepareResource
 	public function onCCK_FieldPrepareResource( &$field, $value = '', &$config = array() )
 	{
@@ -68,7 +79,7 @@ class JCckPluginField extends JPlugin
 	}
 
 	// getValueFromOptions
-	public static function getValueFromOptions( $field, $value, $config = array() )
+	public static function getValueFromOptions( $field, $value, $config = array(), $strict = false )
 	{
 		$opts	=	explode( '||', $field->options );
 		
@@ -90,9 +101,15 @@ class JCckPluginField extends JPlugin
 			}
 		}
 
-		return $value;
+		return $strict === true ? '' : $value;
 	}
 	
+	// has
+	public static function has( $property )
+	{
+		return (int)static::${$property};
+	}
+
 	// isConvertible
 	public static function isConvertible()
 	{
