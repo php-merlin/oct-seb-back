@@ -64,21 +64,26 @@ class plgCCK_Field_TypoJoomla_Jgrid extends JCckPluginTypo
 				static $dropdown		=	array();
 				static $dropdown_css	=	false;
 
+				$class	=	$typo->get( 'class1', '' );
+
 				if ( !isset( $dropdown[$pk] ) ) {
-					$class	=	$typo->get( 'class1', '' );
 					$class	=	$class ? ' '.$class : '';
 					$value	=	'<button type="button" data-toggle="dropdown" class="dropdown-toggle btn'.$class.'"><span class="caret"></span></button>'
 							.	'<ul class="dropdown-menu flex-column-reverse"></ul>';
-
+					
 					$dropdown[$pk]		=	array( 'parent'=>$field->name, 'html'=>'' );
-
+					
 					if ( !$dropdown_css ) {
 						$dropdown_css	=	true;
 
 						JFactory::getDocument()->addStyleDeclaration( '.btn-group.open > .dropdown-menu{display: -webkit-box; display: -ms-flexbox; display: flex; -webkit-box-orient:vertical; -webkit-box-direction:reverse; -ms-flex-direction:column-reverse; flex-direction:column-reverse;}' );
 					}
+					
+					$class	=	'';
+				} else {
+					$class	=	$class ? ' class="'.$class.'"' : '';
 				}
-				$dropdown[$pk]['html']	=	'<li>'.( ( isset( $field->html ) && $field->html ) ? $field->html : $value ).'</li>';
+				$dropdown[$pk]['html']	=	'<li'.$class.'>'.( ( isset( $field->html ) && $field->html ) ? $field->html : $value ).'</li>';
 
 				parent::g_addProcess( 'beforeRenderContent', self::$type, $config, array( 'name'=>$dropdown[$pk]['parent'], 'target'=>$field->name, 'type'=>$type, 'html'=>$dropdown[$pk]['html'] ) );
 				break;
