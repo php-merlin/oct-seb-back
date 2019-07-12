@@ -275,6 +275,20 @@ class plgContentCCK extends JPlugin
 		
 		$this->_prepare( $context, $article, $params, $limitstart );
 	}
+
+	// _getValue
+	protected function _getValue( $name, $target, $target2 )
+	{
+		if ( $name != '' ) {
+			if ( isset( $target[$name] ) ) {
+				return $target[$name]->value;
+			} elseif ( isset( $target2[$name] ) ) {
+				return $target2[$name]->value;
+			}
+		}
+
+		return '';
+	}
 	
 	// _prepare
 	protected function _prepare( $context, &$article, &$params, $page = 0 )
@@ -616,6 +630,11 @@ class plgContentCCK extends JPlugin
 				}
 			}
 			
+			$v_desc			=	$this->_getValue( $p_desc, $fields, $config['fields'] );
+			$v_metadesc		=	$this->_getValue( $p_metadesc, $fields, $config['fields'] );
+			$v_metatitle	=	$this->_getValue( $p_metatitle, $fields, $config['fields'] );
+			$v_title		=	$this->_getValue( $p_title, $fields, $config['fields'] );
+
 			// Merge
 			if ( count( $config['fields'] ) ) {
 				foreach ( $config['fields'] as $k=>$v ) {
@@ -640,11 +659,11 @@ class plgContentCCK extends JPlugin
 		}
 
 		// Set Title
-		if ( $p_title != '' && isset( $fields[$p_title]->value ) && !empty( $fields[$p_title]->value ) ) {
- 			$p_title		=	$this->_translate( $fields[$p_title]->value, $lang_tag );
+		if ( !empty( $v_title ) ) {
+ 			$p_title		=	$this->_translate( $v_title, $lang_tag );
  		}
- 		if ( $p_title == '' && $p_metatitle != '' && isset( $fields[$p_metatitle]->value ) && !empty( $fields[$p_metatitle]->value ) ) {
- 			$p_title		=	$this->_translate( $fields[$p_metatitle]->value, $lang_tag );
+ 		if ( $p_title == '' && !empty( $v_metatitle ) ) {
+ 			$p_title		=	$this->_translate( $v_metatitle, $lang_tag );
  			$p_title		=	strip_tags( $p_title );
 			$p_title		=	JCckDevHelper::truncate( $p_title, 70 );
  		}
@@ -653,11 +672,11 @@ class plgContentCCK extends JPlugin
  		}
 
  		// Set Description
-		if ( $p_desc != '' && isset( $fields[$p_desc]->value ) && !empty( $fields[$p_desc]->value ) ) {
- 			$p_desc			=	$this->_translate( $fields[$p_desc]->value, $lang_tag );
+		if ( !empty( $v_desc ) ) {
+ 			$p_desc			=	$this->_translate( $v_desc, $lang_tag );
  		}
- 		if ( $p_desc == '' && $p_metadesc != '' && isset( $fields[$p_metadesc]->value ) && !empty( $fields[$p_metadesc]->value ) ) {
- 			$p_desc			=	$this->_translate( $fields[$p_metadesc]->value, $lang_tag );
+ 		if ( $p_desc == '' && !empty( $v_metadesc ) ) {
+ 			$p_desc			=	$this->_translate( $v_metadesc, $lang_tag );
  			$p_desc			=	strip_tags( $p_desc );
 			$p_desc			=	JCckDevHelper::truncate( $p_desc, 200 );
 		}
