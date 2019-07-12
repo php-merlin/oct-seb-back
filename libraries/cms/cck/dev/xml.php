@@ -13,60 +13,77 @@ defined( '_JEXEC' ) or die;
 // JCckDevXml
 class JCckDevXml extends SimpleXMLElement
 {
-	// asIndentedXML
-	public function asIndentedXML($compressed = false, $indent = "\t", $level = 0)
+	// asHtml
+	public function asHtml()
 	{
-		$out = '';
+		return html_entity_decode( $this->asIndentedXML( false, '', 0, -1 ), ENT_NOQUOTES, 'UTF-8' );
+	}
 
-		// Start a new line, indent by the number indicated in $level
-		$out .= ($compressed) ? '' : "\n" . str_repeat($indent, $level);
+	// asHtmlIndentedXML
+	public function asHtmlIndentedXML()
+	{
+		$out	=	html_entity_decode( $this->asIndentedXML( false, "\t", 0, 1 ), ENT_NOQUOTES, 'UTF-8' );
+		$out	=	str_replace( '&', '&amp;', $out );
 
-		// Add a <, and add the name of the tag
-		$out .= '<' . $this->getName();
+		return $out;
+	}
 
-		// For each attribute, add attr="value"
-		foreach ($this->attributes() as $attr)
-		{
-			$out .= ' ' . $attr->getName() . '="' . htmlspecialchars((string) $attr, ENT_COMPAT, 'UTF-8') . '"';
+	// asIndentedXML
+	public function asIndentedXML( $compressed = false, $indent = "\t", $level = 0, $xhtml = 0 )
+	{
+		$out	=	'';
+
+		if ( !( $level == 0 && $xhtml == -1 ) ) {
+			$pre	=	$level == 1 && $xhtml == -1 ? '' : "\n";
+			$out	.=	( $compressed ) ? '' : $pre . str_repeat( $indent, $level );
+			$out	.=	'<' . $this->getName();
+
+			// Attributes
+			foreach ( $this->attributes() as $attr ) {
+				$out	.=	' ' . $attr->getName() . '="' . htmlspecialchars( (string)$attr, ENT_COMPAT, 'UTF-8') . '"';
+			}
 		}
 
-		// If there are no children and it contains no data, end it off with a />
-		if (!count($this->children()) && !((string)$this != ''))
-		{
-			$out .= " />";
-		}
-		else
-		{
-			// If there are children
-			if (count($this->children()))
-			{
-				// Close off the start tag
-				$out .= '>';
+		// Data
+		if ( !count( $this->children() ) && !( (string)$this != '' ) ) {
+			if ( !( $level == 0 && $xhtml == -1 ) ) {
+				$out .= " />";
+			}
+		} else {
+			if ( count( $this->children() ) ) {
+				if ( !( $level == 0 && $xhtml == -1 ) ) {
+					$out .= '>';
+				}
 
 				$level++;
 
-				// For each child, call the asIndentedXML function (this will ensure that all children are added recursively)
-				foreach ($this->children() as $child)
-				{
-					$out .= $child->asIndentedXML($compressed, $indent, $level);
+				// Children (recursively)
+				foreach ( $this->children() as $child ) {
+					$out	.=	$child->asIndentedXML( $compressed, $indent, $level, $xhtml );
 				}
 
 				$level--;
+				
+				$pre	=	$level == 1 && $xhtml == -1 ? '' : "\n";
+				$out	.=	($compressed) ? '' : $pre . str_repeat( $indent, $level );
+			} elseif ( (string)$this != '' ) {
+				if ( !( $level == 0 && $xhtml == -1 ) ) {
+					$out .= '>';
+				}
 
-				// Add the newline and indentation to go along with the close tag
-				$out .= ($compressed) ? '' : "\n" . str_repeat($indent, $level);
-
+				if ( $xhtml ) {
+					$out	.=	(string)$this;
+				} else {
+					$out	.=	htmlspecialchars( (string)$this, ENT_COMPAT, 'UTF-8' );
+				}
 			}
-			elseif ((string)$this!='')
-			{
-				// If there is data, close off the start tag and add the data
-				$out .= '>' . htmlspecialchars((string) $this, ENT_COMPAT, 'UTF-8');
-			}
 
-			// Add the end tag
-			$out .= '</' . $this->getName() . '>';
+			if ( !( $level == 0 && $xhtml == -1 ) ) {
+				$out .= '</' . $this->getName() . '>';
+			}
 		}
 
 		return $out;
 	}
 }
+?>
