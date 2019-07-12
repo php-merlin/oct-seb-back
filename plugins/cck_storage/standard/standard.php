@@ -96,10 +96,14 @@ class plgCCK_StorageStandard extends JCckPluginStorage
 	}
 	
 	// onCCK_StoragePrepareSearch
-	public static function onCCK_StoragePrepareSearch( &$field, $match, $value, $name, $name2, $target, $fields = array(), &$config = array() )
+	public static function onCCK_StoragePrepareSearch( &$field, $match, $value, $name, $name2, $target, $suffix, $fields = array(), &$config = array() )
 	{
 		$sql	=	'';
-		
+
+		if ( (int)$field->storage_mode == 1 && $field->storage != 'json' ) {
+			$target	=	'JSON_EXTRACT('.$target.', '.JCckDatabase::quote('$."'.JFactory::getLanguage()->getTag().'"').')'; /* TODO#SEBLOD4 */
+		}
+
 		switch ( $match ) {
 			case 'exact':
 				$var_type	=	( $field->match_options ) ? $field->match_options->get( 'var_type', 1 ) : 1;
@@ -223,7 +227,7 @@ class plgCCK_StorageStandard extends JCckPluginStorage
 					} else {
 						foreach ( $values as $v ) {
 							if ( strlen( $v ) > 0 ) {
-								$fragments[] 	=	$target.' LIKE '.JCckDatabase::quote( '%'.JCckDatabase::escape( $v, true ).'%', false );
+								$fragments[] 	=	$target.' LIKE '.JCckDatabase::quote( '%'.JCckDatabase::escape( $v, true ).'%', false ).$suffix;
 							}
 						}
 					}
@@ -266,26 +270,21 @@ class plgCCK_StorageStandard extends JCckPluginStorage
 				$sql	=	$target.' > '.JCckDatabase::quote( $value );
 				break;
 			case 'nested_exact':
-				$table		=	( $field->match_options ) ? $field->match_options->get( 'table', $field->storage_table ) : $field->storage_table;
 				$column		=	'id';
-				$values		=	JCckDevHelper::getBranch( $table, $value );
+				$separator	=	( $field->match_value ) ? $field->match_value : ' ';
+				$table		=	( $field->match_options ) ? $field->match_options->get( 'table', $field->storage_table ) : $field->storage_table;
+				$parents	=	explode( $separator, $value );
+				$values		=	array();
 				
-				if ( $column != 'id' ) {
-					if ( count( $values ) ) {
-						$fragments	=	array();
-						foreach ( $values as $v ) {
-							if ( $v != '' ) {
-								$fragments[] 	=	JCckDatabase::quote( $v );
-							}
-						}
-						if ( count( $fragments ) ) {
-							$sql	=	$target.' IN (' . implode( ',', $fragments ) . ')';
-						}
+				foreach ( $parents as $parent ) {
+					$ids	=	JCckDevHelper::getBranch( $table, $parent );
+
+					if ( count( $ids ) ) {
+						$values	=	array_merge( $values, $ids );
 					}
-				} else {
-					if ( count( $values ) ) {
-						$sql	=	$target.' IN (' . implode( ',', $values ) . ')';
-					}
+				}
+				if ( count( $values ) ) {
+					$sql	=	$target.' IN (' . implode( ',', $values ) . ')';
 				}
 				if ( $sql == '' ) {
 					$sql	=	$target.' IN (0)';

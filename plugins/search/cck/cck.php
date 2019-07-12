@@ -57,6 +57,7 @@ class plgSearchCCK extends JPlugin
 		$doDebug		=	$options->get( 'debug' );
 
 		$doLimit		=	false;
+		$lang_suffix	=	strtolower( str_replace( '-', '_', JFactory::getLanguage()->getTag() ) );
 		$limit			=	(int)$options->get( 'limit' );
 		$doLimit		=	( $limit > 0 ) ? false : true;
 		$hasGroup		=	false;
@@ -117,6 +118,10 @@ class plgSearchCCK extends JPlugin
 			// -
 			$Pf		=	$field->storage_field;
 			$Pt		=	$field->storage_table;
+
+			if ( (int)$field->storage_mode == 2 ) {
+				$Pt	.=	'_'.$lang_suffix;
+			}
 			
 			if ( ((( $value !== '' && $field->match_mode != 'none' ) || ( $field->match_mode == 'empty' || $field->match_mode == 'not_empty' || $field->match_mode == 'not_null' )) && $field->storage != 'none' )
 			|| ( ( $field->type == 'search_operator' ) && $field->match_mode != 'none' ) ) {
@@ -216,7 +221,7 @@ class plgSearchCCK extends JPlugin
 										$value2		=	$value;
 									}
 									require_once JPATH_PLUGINS.'/cck_storage/'.$child->storage.'/'.$child->storage.'.php';
-									$v['sql']	.=	JCck::callFunc_Array( 'plgCCK_Storage'.$child->storage, 'onCCK_StoragePrepareSearch', array( &$child, $child->match_mode, $value2, $name, $name2, $target, $fields, &$config ) );
+									$v['sql']	.=	JCck::callFunc_Array( 'plgCCK_Storage'.$child->storage, 'onCCK_StoragePrepareSearch', array( &$child, $child->match_mode, $value2, $name, $name2, $target, '', $fields, &$config ) );
 									$k++;
 								}
 							}
@@ -281,7 +286,7 @@ class plgSearchCCK extends JPlugin
 					}
 					
 					require_once JPATH_PLUGINS.'/cck_storage/'.$field->storage.'/'.$field->storage.'.php';
-					$sql	=	JCck::callFunc_Array( 'plgCCK_Storage'.$field->storage, 'onCCK_StoragePrepareSearch', array( &$field, $field->match_mode, $value, $name, $name2, $target, $fields, &$config ) );
+					$sql	=	JCck::callFunc_Array( 'plgCCK_Storage'.$field->storage, 'onCCK_StoragePrepareSearch', array( &$field, $field->match_mode, $value, $name, $name2, $target, '', $fields, &$config ) );
 				}
 				if ( $hasSQL === false ) {
 					if ( $glues == 1 ) {

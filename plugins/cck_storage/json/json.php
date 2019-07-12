@@ -164,10 +164,10 @@ class plgCCK_StorageJson extends JCckPluginStorage
 	}
 	
 	// onCCK_StoragePrepareSearch
-	public static function onCCK_StoragePrepareSearch( &$field, $match, $value, $name, $name2, $target, $fields = array(), &$config = array() )
+	public static function onCCK_StoragePrepareSearch( &$field, $match, $value, $name, $name2, $target, $suffix, $fields = array(), &$config = array() )
 	{
 		$sql	=	'';
-		$target	=	'JSON_EXTRACT('.$target.', '.JCckDatabase::quote('$."'.$name.'"').')';
+		$target	=	'JSON_EXTRACT('.$target.', '.JCckDatabase::quote('$."'.$name.'"').')'; /* TODO#SEBLOD4: 'LOWER(JSON_EXTRACT('.$target.', '.JCckDatabase::quote('$."'.$name.'"').'))'; */
 		
 		switch ( $match ) { /* TODO#SEBLOD4: a few match modes may need to be overriden */
 			case 'none':
@@ -176,7 +176,9 @@ class plgCCK_StorageJson extends JCckPluginStorage
 			default:
 				require_once JPATH_PLUGINS.'/cck_storage/standard/standard.php';
 
-				$sql	=	JCck::callFunc_Array( 'plgCCK_StorageStandard', 'onCCK_StoragePrepareSearch', array( &$field, $match, $value, $name, $name2, $target, $fields, &$config ) );
+				$suffix	=	' COLLATE utf8mb4_unicode_ci';
+				$sql	=	JCck::callFunc_Array( 'plgCCK_StorageStandard', 'onCCK_StoragePrepareSearch', array( &$field, $match, $value, $name, $name2, $target, $suffix, $fields, &$config ) ); /* TODO#SEBLOD4: utf8_strtolower( $value ); */
+
 				break;
 		}
 		
@@ -190,6 +192,9 @@ class plgCCK_StorageJson extends JCckPluginStorage
 			return;
 		}
 		
+		// Prevent Broken JSON (Temporary Fix until json_encode?)
+		$value	=	str_replace( array( "\t\t", "\t" ), ' ', $value );
+
 		// Prepare
 		if ( strpos( $field->storage_field2, '|' ) !== false ) {
 			$levels	=	explode( '|', $field->storage_field2 );
