@@ -22,7 +22,7 @@ if ( $hide && JCckDevHelper::matchUrlVars( $hide ) !== false ) {
 // Render
 jimport( 'cck.base.item.item' );
 
-$id		=	CCK_Item::getAssociation( $params->get( 'id', '' ) );
+$id		=	CCK_Item::getAssociation( $params->get( 'id', '' ), ( (int)$params->get( 'auto_translate', '1' ) ? false : true ) );
 $data	=	CCK_Item::render( $id );
 
 $raw_rendering		=	$params->get( 'raw_rendering', JCck::getConfig_Param( 'raw_rendering', '1' ) );

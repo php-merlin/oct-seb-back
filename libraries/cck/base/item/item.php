@@ -14,12 +14,12 @@ defined( '_JEXEC' ) or die;
 class CCK_Item
 {
 	// getAssociation
-	public static function getAssociation( $id )
+	public static function getAssociation( $id, $strict = false )
 	{
 		$lang_tag		=	JFactory::getLanguage()->getTag();
 
 		if ( $lang_tag != JComponentHelper::getParams( 'com_languages' )->get( 'site', 'en-GB' ) ) {
-			$assoc_item		=	JCckDatabase::loadObject( 'SELECT pk, storage_location, storage_table FROM #__cck_core WHERE id = '.(int)$id );
+			$assoc_item		=	JCckDatabase::loadObject( 'SELECT id, pk, storage_location, storage_table FROM #__cck_core WHERE id = '.(int)$id );
 
 			if ( is_object( $assoc_item ) && $assoc_item->pk ) {
 				$context		=	'com_cck.free'; /* TODO */
@@ -40,8 +40,13 @@ class CCK_Item
 					}
 				}
 			}
+			if ( $strict ) {
+				if ( !is_object( $assoc_item ) || $assoc_item->id == $id ) {
+					$id	=	0;
+				}
+			}
 		}
-
+		
 		return $id;
 	}
 
