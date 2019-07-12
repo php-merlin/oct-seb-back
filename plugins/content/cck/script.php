@@ -222,98 +222,33 @@ class plgContentCCKInstallerScript
 			$db->setQuery( $query );
 			$db->execute();
 			
-			// - Content Types
-			$query	=	'UPDATE #__cck_core_types SET template_admin = '.$style->id.', template_site = '.$style->id.', template_content = '.$style->id.', template_intro = '.$style->id.' WHERE location != "collection"';
-			$db->setQuery( $query );
-			$db->execute();
 
-			// - Search Types (None)
-			$query	=	'UPDATE #__cck_core_searchs SET template_search = '.$style->id.', template_filter = '.$style->id.' WHERE id IN (27,28)';
-			$db->setQuery( $query );
-			$db->execute();
-			
-			// - Search Types (List)
-			$query	=	'UPDATE #__cck_core_searchs SET template_search = '.$style->id.', template_filter = '.$style->id.', template_list = '.$style2->id.' WHERE id IN (21,23,25,29)';
-			$db->setQuery( $query );
-			$db->execute();
 
-			// - Search Types (Table)
-			$query	=	'UPDATE #__cck_core_searchs SET template_search = '.$style->id.', template_filter = '.$style->id.', template_list = '.$style3->id.' WHERE id IN (11,15,18,22,24,26,30)';
-			$db->setQuery( $query );
-			$db->execute();
-			
-			$searchs	=	array(
-								'11'=>array(
-										'list'=>array( 'seb_table', 0, '0', 'seb_table - article_manager (list)', '{"rendering_item_attributes":"sortable-group-id=\\"$cck->getValue(\'art_catid\')\\"","rendering_css_class":"","cck_client_item":"0","class_table":"table table-striped","table_header":"0","table_columns":"0","table_layout":"responsive"}' )
-									  ),
-								'15'=>array(
-										'list'=>array( 'seb_table', 0, '0', 'seb_table - category_manager (list)', '{"rendering_item_attributes":"sortable-group-id=\\"$cck->getValue(\'cat_parent_id\')\\"","rendering_css_class":"","cck_client_item":"0","class_table":"table table-striped","table_header":"0","table_columns":"0","table_layout":"responsive"}' )
-									  ),
-								'21'=>array(
-										'list'=>array( 'seb_list', 0, '0', 'seb_list - article_item (list)', '{"rendering_item_attributes":"","rendering_css_class":"","cck_client_item":"0","list_display":"0","tag":"div_div","class":"","auto_clean":"0","attributes":""}' )
-									  ),
-								'23'=>array(
-										'list'=>array( 'seb_list', 0, '0', 'seb_list - category_item (list)', '{"rendering_item_attributes":"","rendering_css_class":"","cck_client_item":"0","list_display":"0","tag":"div_div","class":"","auto_clean":"0","attributes":""}' )
-									  ),
-								'25'=>array(
-										'list'=>array( 'seb_list', 0, '0', 'seb_list - user_item (list)', '{"rendering_item_attributes":"","rendering_css_class":"","cck_client_item":"0","list_display":"0","tag":"div_div","class":"","auto_clean":"0","attributes":""}' )
-									  ),
-								'29'=>array(
-										'list'=>array( 'seb_list', 0, '0', 'seb_list - menu_item_item (list)', '{"rendering_item_attributes":"","rendering_css_class":"","cck_client_item":"0","list_display":"0","tag":"div_div","class":"","auto_clean":"0","attributes":""}' )
-									  )
-							);
+// Add Categories
+JLoader::register( 'JTableCategory', JPATH_PLATFORM.'/joomla/database/table/category.php' );
+$categories	=	array(	0=>array( 'title'=>'Users', 'published'=>'1', 'access'=>'2', 'language'=>'*', 'parent_id'=>1, 'plg_name'=>'joomla_user' ),
+						1=>array( 'title'=>'User Groups', 'published'=>'1', 'access'=>'2', 'language'=>'*', 'parent_id'=>1, 'plg_name'=>'joomla_user_group' ) );
 
-			if ( count( $searchs ) ) {
-				foreach ( $searchs as $k=>$v ) {
-					$s	=	0;
-
-					if ( is_array( $v ) ) {
-						if ( is_array( $v['list'] ) ) {
-							$query	=	'INSERT INTO #__template_styles (template, client_id, home, title, params) VALUES ("'.$v['list'][0].'",'.$v['list'][1].',"'.$v['list'][2].'","'.$v['list'][3].'","'.$db->escape( $v['list'][4] ).'")';
-							$db->setQuery( $query );
-							if ( $db->execute() ) {
-								$query	=	'SELECT MAX(id) FROM #__template_styles';
-								$db->setQuery( $query );
-								$s		=	$db->loadResult();
-							}
-						} elseif ( $v['list'] ) {
-							$s	=	$v['list'];
-						}
-
-						if ( $s ) {
-							$query	=	'UPDATE #__cck_core_searchs SET template_list = '.$s.' WHERE id = '.(int)$k;
-							$db->setQuery( $query );
-							$db->execute();
-						}
-					}
-				}
-			}
-
-			// Add Categories
-			JLoader::register( 'JTableCategory', JPATH_PLATFORM.'/joomla/database/table/category.php' );
-			$categories	=	array(	0=>array( 'title'=>'Users', 'published'=>'1', 'access'=>'2', 'language'=>'*', 'parent_id'=>1, 'plg_name'=>'joomla_user' ),
-									1=>array( 'title'=>'User Groups', 'published'=>'1', 'access'=>'2', 'language'=>'*', 'parent_id'=>1, 'plg_name'=>'joomla_user_group' ) );
-			
-			foreach ( $categories as $category ) {
-				$table	=	JTable::getInstance( 'Category' );
-				$table->access	=	2;
-				$table->setLocation( 1, 'last-child' );	
-				$table->bind( $category );
-				$rules	=	new JAccessRules( '{"core.create":{"1":0}}' );
-				$table->setRules( $rules );
-				$table->check();
-				$table->extension	=	'com_content';
-				$table->path		.=	$table->alias;
-				$table->language	=	'*';
-				$table->store();
-				
-				$query			=	'SELECT extension_id as id, params FROM #__extensions WHERE type="plugin" AND folder="cck_storage_location" AND element="'.$category['plg_name'].'"';
-				$db->setQuery( $query );
-				$plugin			=	$db->loadObject();
-				$query			=	'UPDATE #__extensions SET params = "'.$db->escape( str_replace( '"bridge_default-catid":"2"', '"bridge_default-catid":"'.$table->id.'"', $plugin->params ) ).'" WHERE extension_id = '.(int)$plugin->id;
-				$db->setQuery( $query );
-				$db->execute();
-			}
+foreach ( $categories as $category ) {
+	$table	=	JTable::getInstance( 'Category' );
+	$table->access	=	2;
+	$table->setLocation( 1, 'last-child' );	
+	$table->bind( $category );
+	$rules	=	new JAccessRules( '{"core.create":{"1":0}}' );
+	$table->setRules( $rules );
+	$table->check();
+	$table->extension	=	'com_content';
+	$table->path		.=	$table->alias;
+	$table->language	=	'*';
+	$table->store();
+	
+	$query			=	'SELECT extension_id as id, params FROM #__extensions WHERE type="plugin" AND folder="cck_storage_location" AND element="'.$category['plg_name'].'"';
+	$db->setQuery( $query );
+	$plugin			=	$db->loadObject();
+	$query			=	'UPDATE #__extensions SET params = "'.$db->escape( str_replace( '"bridge_default-catid":"2"', '"bridge_default-catid":"'.$table->id.'"', $plugin->params ) ).'" WHERE extension_id = '.(int)$plugin->id;
+	$db->setQuery( $query );
+	$db->execute();
+}
 			
 			// Init Default Author
 			$res	=	JCckDatabase::loadResult( 'SELECT id FROM #__users ORDER BY id ASC' );
