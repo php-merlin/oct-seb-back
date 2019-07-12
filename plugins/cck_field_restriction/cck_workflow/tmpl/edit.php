@@ -19,8 +19,14 @@ JCckDev::initScript( 'restriction', $this->item );
         <?php
 		echo JCckDev::renderForm( 'core_location2', '', $config, array( 'label'=>'Location' ) );
 		echo JCckDev::renderForm( 'core_action2', '', $config );
-		echo JCckDev::renderForm( 'core_form', '', $config, array( 'selectlabel'=>'Any Form', 'options2'=>'{"query":"","table":"#__cck_core_types","name":"title","where":"published=1 AND location != \"collection\"","value":"name","orderby":"title","orderby_direction":"ASC"}', 'required'=>'' ) );
+		echo JCckDev::renderForm( 'core_form', '', $config, array( 'selectlabel'=>'Any Form', 'required'=>'' ) );
 		echo JCckDev::renderForm( 'core_dev_select', '', $config, array( 'label'=>'Author', 'selectlabel'=>'Any Author', 'options'=>'Current=1||Someone Else=-1', 'required'=>'', 'storage_field'=>'author' ) );
+		echo '<li class="w100"><label>'.JText::_( 'COM_CCK_VARIABLE_VALUES' ).'</label>'
+		 .	 JCckDev::getForm( 'core_dev_text', '', $config, array( 'label'=>'', 'defaultvalue'=>'', 'storage_field'=>'trigger' ) )
+		 .	 JCckDev::getForm( 'core_dev_select', '', $config, array( 'label'=>'', 'selectlabel'=>'', 'defaultvalue'=>'isEqual', 'options'=>'STATE_IS_EQUAL_IN=isEqual||STATE_IS_FILLED=isFilled', 'storage_field'=>'match' ) )
+		 .	 JCckDev::getForm( 'core_dev_text', '', $config, array( 'label'=>'', 'defaultvalue'=>'', 'css'=>'input-small', 'storage_field'=>'values' ) )
+		 .	 '</li>';
+		echo JCckDev::renderForm( 'core_bool', '', $config, array( 'label'=>'Invert', 'defaultvalue'=>'0', 'options'=>'Yes=1||No=0', 'storage_field'=>'do' ) );
         ?>
     </ul>
 </div>
