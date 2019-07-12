@@ -22,7 +22,6 @@ $ -> Language fix or change
 - -> Removed
 ! -> Note
 
-<<<<<<< HEAD
 -------------------- 4.0.0 Upgrade Release [xx-xxx-xxxx] -----------
 
 ! Joomla! 4.0 ready.
@@ -139,7 +138,7 @@ REMOVED EXTENSIONS
 # Sites (with context) fixed when site is reached from a subfolder.
 # Sites (with context) fixed when multi-language is on.
 # Various improvements or issues fixed.
-=======
+
 -------------------- 3.18.0 Upgrade Release [xx-Jul-2019] -----------
 
 + "Preview Form" permission added.
@@ -163,7 +162,6 @@ REMOVED EXTENSIONS
   >> "beforeStore" support added.
 
 # Minor issues fixed.
->>>>>>> master
 
 -------------------- 3.17.4 Upgrade Release [29-Mar-2019] -----------
 

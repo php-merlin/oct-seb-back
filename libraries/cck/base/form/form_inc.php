@@ -252,7 +252,6 @@ foreach ( $fields as $field ) {
 		$value	=	( isset( $post[$name] ) ) ? $post[$name] : '';
 	} else {
 		if ( $id ) {
-<<<<<<< HEAD
 			if ( $field->live_value == '1' && $field->live ) {
 				$dispatcher->trigger( 'onCCK_Field_LivePrepareForm', array( &$field, &$value, &$config ) );
 			} else {
@@ -268,32 +267,9 @@ foreach ( $fields as $field ) {
 
 						if ( !@$config['id'] && $config['base']->location ) {
 							$config['id']	=	JCck::callFunc( 'plgCCK_Storage_Location'.$config['base']->location, 'getId', $config );
-=======
-			$Pt	=	$field->storage_table;
-			if ( $Pt && ! isset( $config['storages'][$Pt] ) ) {
-				$config['storages'][$Pt]	=	'';
-				$dispatcher->trigger( 'onCCK_Storage_LocationPrepareForm', array( &$field, &$config['storages'][$Pt], $id, &$config ) );
-				
-				if ( !isset( $config['base'] ) ) {
-					$config['base']				=	new stdClass;
-					$config['base']->location	=	$field->storage_location;
-					$config['base']->table		=	$Pt;
-
-					if ( !@$config['id'] && $config['base']->location ) {
-						$config['id']	=	JCck::callFunc( 'plgCCK_Storage_Location'.$config['base']->location, 'getId', $config );
-					}
-				}
-				if ( $can['guest.edit'] || $can['preview'] ) {
-					// Do nothing as we already checked permissions.
-				} elseif ( $config['author'] ) {
-					// ACL
-					if ( $can['edit.own'] && ! $can['do'] ) {
-						if ( ( $user->id != $config['author'] ) && !$can['edit.own.content'] ) {
-							CCK_Form::redirect( $cannot['action'], $cannot['redirect'], $cannot['message'], $cannot['style'], $config, $doDebug ); return;
->>>>>>> master
 						}
 					}
-					if ( $can['guest.edit'] ) {
+					if ( $can['guest.edit'] || $can['preview'] ) {
 						// Do nothing as we already checked permissions.
 					} elseif ( $config['author'] ) {
 						// ACL
