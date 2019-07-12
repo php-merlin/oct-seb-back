@@ -27,6 +27,7 @@ $doc->list[$idx]		=	array();
 
 $debug		=	JCck::getConfig_Param( 'debug', 0 );
 $ids		=	'';
+$lang_tag	=	JFactory::getLanguage()->getTag();
 $optimize	=	(int)JCck::getConfig_Param( 'optimize_memory', 0 );
 $properties	=	CCK_List::getPropertyColumns_asString( $optimize );
 $pks		=	'';
@@ -138,9 +139,16 @@ if ( $count ) {
 					}
 					
 					$dispatcher->trigger( 'onCCK_StoragePrepareContent', array( &$field, &$value, &$config['storages'][$Pt] ) );
+					
 					if ( is_string( $value ) ) {
 						$value		=	trim( $value );
+
+						if ( (int)$field->storage_mode == 1 && $value != '' ) {
+							$json		=	json_decode( $value );
+							$value		=	isset( $json->$lang_tag ) ? $json->$lang_tag : '';
+						}
 					}
+					
 					$hasLink	=	( $field->link != '' ) ? 1 : 0;
 					$dispatcher->trigger( 'onCCK_FieldPrepareContent'.$suffix, array( &$field, $value, &$config ) );
 					$target		=	$field->typo_target;
@@ -295,9 +303,16 @@ if ( $count ) {
 					}
 					
 					$dispatcher->trigger( 'onCCK_StoragePrepareContent', array( &$field, &$value, &$config['storages'][$Pt] ) );
+					
 					if ( is_string( $value ) ) {
 						$value		=	trim( $value );
+
+						if ( (int)$field->storage_mode == 1 && $value != '' ) {
+							$json		=	json_decode( $value );
+							$value		=	isset( $json->$lang_tag ) ? $json->$lang_tag : '';
+						}
 					}
+					
 					$hasLink	=	( $field->link != '' ) ? 1 : 0;
 					$dispatcher->trigger( 'onCCK_FieldPrepareContent', array( &$field, $value, &$config ) );
 					$target		=	$field->typo_target;
