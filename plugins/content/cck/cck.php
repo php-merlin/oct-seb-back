@@ -645,7 +645,7 @@ class plgContentCCK extends JPlugin
 			// Merge
 			if ( count( $config['fields'] ) ) {
 				foreach ( $config['fields'] as $k=>$v ) {
-					if ( $v->restriction != 'unset' ) {
+					if ( !( $v->restriction == 'unset' || $v->markup == 'unset' ) ) {
 						$fields[$k]	=	$v;
 					}
 				}
