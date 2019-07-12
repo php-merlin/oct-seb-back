@@ -196,11 +196,9 @@ class plgCCK_FieldSearch_Ordering extends JCckPluginField
 
 					$opts[]				=	JHtml::_( 'select.option', $val, $text, 'value', 'text' );
 
-					if ( $isMultiLanguage ) {
-						if ( isset( $options2['options'][$i]['multilanguage'] ) && $options2['options'][$i]['multilanguage'] ) {
-							$child->storage			=	'json';
-							$child->storage_field2	=	$lang->getTag();
-						}
+					if ( $isMultiLanguage && (int)$child->storage_mode == 1 ) {
+						$child->storage			=	'json';
+						$child->storage_field2	=	$lang->getTag();
 					}
 
 					$i++;
@@ -310,7 +308,7 @@ class plgCCK_FieldSearch_Ordering extends JCckPluginField
 			$names2	=	'"'.str_replace( '||', '","', $parent->options ).'"';
 		}
 		
-		$query		= 	'SELECT a.name, a.label, a.type, a.storage, a.storage_table, a.storage_field, a.storage_field2'
+		$query		= 	'SELECT a.name, a.label, a.type, a.storage, a.storage_table, a.storage_field, a.storage_field2, a.storage_mode'
 					.	' FROM #__cck_core_fields AS a'
 					.	' WHERE a.name IN ('.$names2.') ORDER BY FIELD(name, '.$names2.')'
 					;

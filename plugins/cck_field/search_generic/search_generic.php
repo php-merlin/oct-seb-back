@@ -144,11 +144,9 @@ class plgCCK_FieldSearch_Generic extends JCckPluginField
 					$akas[$child->aka]	=	true;
 				}
 
-				if ( $isMultiLanguage ) {
-					if ( isset( $options2['options'][$i]['multilanguage'] ) && $options2['options'][$i]['multilanguage'] ) {
-						$child->storage			=	'json';
-						$child->storage_field2	=	$lang->getTag();
-					}
+				if ( $isMultiLanguage && (int)$child->storage_mode == 1 ) {
+					$child->storage			=	'json';
+					$child->storage_field2	=	$lang->getTag();
 				}
 
 				$i++;
@@ -216,7 +214,7 @@ class plgCCK_FieldSearch_Generic extends JCckPluginField
 	{
 		$names	=	'"'.str_replace( '||', '","', $parent->options ).'"';
 		
-		$query	= 	'SELECT a.name, a.type, a.options, a.options2, a.bool, a.bool2, a.bool3, a.storage, a.storage_location, a.storage_table, a.storage_field, a.storage_field2'
+		$query	= 	'SELECT a.name, a.type, a.options, a.options2, a.bool, a.bool2, a.bool3, a.storage, a.storage_location, a.storage_table, a.storage_field, a.storage_field2, a.storage_mode'
 				.	' FROM #__cck_core_fields AS a'
 				.	' WHERE a.name IN ('.$names.') ORDER BY FIELD(name, '.$names.')'
 				;
