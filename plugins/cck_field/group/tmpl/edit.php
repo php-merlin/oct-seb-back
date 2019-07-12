@@ -18,12 +18,22 @@ JCckDev::forceStorage();
     <ul class="adminformlist adminformlist-2cols">
         <?php
         echo JCckDev::renderForm( 'core_label', ( $this->isNew ? 'clear' : $this->item->label ), $config );
+        echo JCckDev::renderBlank();
+        echo JCckDev::renderForm( 'core_bool', $this->item->bool, $config, array( 'label'=>'Behavior', 'defaultvalue'=>'0', 'options'=>'Standard=0||Multilanguage=1' ) );
 		echo JCckDev::renderForm( 'core_form', $this->item->extended, $config, array( 'label'=>'CONTENT_TYPE_FORM', 'selectlabel'=>'Select',
 							'options2'=>'{"query":"","table":"#__cck_core_types","name":"title","where":"published!=-44","value":"name","orderby":"title","orderby_direction":"ASC","limit":""}',
 							'required'=>'required', 'storage_field'=>'extended' ) );
-							
+		echo JCckDev::renderForm( 'core_extended', $this->item->location, $config, array( 'label'=>'CONTENT_TYPE_FORM', 'storage_field'=>'location' ) );        
+
         echo JCckDev::renderSpacer( JText::_( 'COM_CCK_STORAGE' ), JText::_( 'COM_CCK_STORAGE_DESC' ) );
         echo JCckDev::getForm( 'core_storage', $this->item->storage, $config );
         ?>
     </ul>
 </div>
+
+<script type="text/javascript">
+jQuery(document).ready(function($) {
+    $('#extended').isVisibleWhen('bool','0');
+    $('#location').isVisibleWhen('bool','1');
+});
+</script>

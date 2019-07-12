@@ -66,6 +66,7 @@ class plgCCK_FieldGroup extends JCckPluginField
 		$name		=	$field->name;
 		$dispatcher	=	JEventDispatcher::getInstance();
 		$fields		=	self::_getChildren( $field, $config );
+		$lang_tag	=	JFactory::getLanguage()->getTag();
 
 		$xn			=	1;
 		$content	=	array();
@@ -82,7 +83,12 @@ class plgCCK_FieldGroup extends JCckPluginField
 						$dispatcher->trigger( 'onCCK_Storage_LocationPrepareContent', array( &$f, &$config['storages'][$table], $config['pk'], &$config ) );
 					}
 					$dispatcher->trigger( 'onCCK_StoragePrepareContent_Xi', array( &$f, &$f_value, &$config['storages'][$table], $name, $xi ) );
-					//					
+					
+					if ( (int)$f->storage_mode == 1 && $f_value != '' ) {
+						$json		=	json_decode( $f_value );
+						$f_value	=	isset( $json->$lang_tag ) ? $json->$lang_tag : '';
+					}
+
 					$dispatcher->trigger( 'onCCK_FieldPrepareContent', array( &$content[$f_name], $f_value, &$config, $inherit, true ) );
 					
 					$target	=	( isset( $content[$f_name]->typo_target ) ) ? $content[$f_name]->typo_target : 'value';
@@ -144,43 +150,38 @@ class plgCCK_FieldGroup extends JCckPluginField
 		
 		// Prepare
 		$dispatcher	=	JEventDispatcher::getInstance();
-		$fields		=	self::_getChildren( $field, $config );
 		$form		=	array();
 
-		foreach ( $fields as $f ) {
-			if ( is_object( $f ) ) {
-				$f_name		=	$f->name;
-				$f_value	=	'';
-				
-				if ( $config['pk'] ) {
-					$table	=	$f->storage_table;
-					if ( $table && ! isset( $config['storages'][$table] ) ) {
-						$config['storages'][$table]	=	'';
-						$dispatcher->trigger( 'onCCK_Storage_LocationPrepareForm', array( &$f, &$config['storages'][$table], $config['pk'], &$config ) );
-					}
-					$dispatcher->trigger( 'onCCK_StoragePrepareForm_Xi', array( &$f, &$f_value, &$config['storages'][$table], $name, 0 ) );
-				} elseif ( $f->live ) {
-					$dispatcher->trigger( 'onCCK_Field_LivePrepareForm', array( &$f, &$f_value, &$config ) );
-				} else {
-					$f_value				=	$f->live_value;
-				}
-				$inherit					=	array( 'caller'=>$field->extended );
-				$clone						=	clone $f;
+		if ( $field->bool ) {
+			$lang			=	JFactory::getLanguage();
+			$lang_codes		=	JCckDevHelper::getLanguageCodes();
+			$lang_default	=	$lang->getDefault();
+			$lang_default	=	substr( $lang_default, 0, 2 );
+			$user_groups	=	JFactory::getUser()->groups;
+			$variation		=	$field->variation;
 
-				if ( $field->variation != '' && $clone->variation == '' ) {
-					$clone->variation		=	$field->variation;
-				}
+			// Default Language
+			$field->extended	=	$field->location.$lang_default;
 
-				$results				=	$dispatcher->trigger( 'onCCK_FieldPrepareForm', array( &$clone, $f_value, &$config, $inherit, true ) );
+			// if ( isset( $user_groups[15] ) ) {
+			// 	$field->variation	=	'disabled';
+			// }
 
-				if ( !isset( $results[0] ) ) {
+			self::_prepareFormFields( $dispatcher, $field, $form, $name, $config );
+
+			// Other Languages
+			$field->variation		=	$variation;
+
+			foreach ( $lang_codes as $lang_code ) {
+				if ( $lang_code == $lang_default ) {
 					continue;
 				}
-				
-				$form[$f_name]				=	$results[0];
-				$form[$f_name]->name		=	$f->name;
-				$config['fields'][$f->name]	=	$form[$f_name];
+				$field->extended	=	$field->location.$lang_code;
+
+				self::_prepareFormFields( $dispatcher, $field, $form, $name, $config );
 			}
+		} else {			
+			self::_prepareFormFields( $dispatcher, $field, $form, $name, $config );	
 		}
 		
 		// Set
@@ -628,6 +629,52 @@ class plgCCK_FieldGroup extends JCckPluginField
 		}
 		
 		return $fields;
+	}
+
+	// _prepareFormFields
+	protected static function _prepareFormFields( $dispatcher, $field, &$form, $name, &$config )
+	{
+		$fields	=	self::_getChildren( $field, $config );
+
+		foreach ( $fields as $f ) {
+			if ( is_object( $f ) ) {
+				$f_name		=	$f->name;
+				$f_value	=	'';
+				
+				if ( $config['pk'] ) {
+					if ( $f->live_value == '1' && $f->live ) {
+						$dispatcher->trigger( 'onCCK_Field_LivePrepareForm', array( &$f, &$f_value, &$config ) );
+					} else {
+						$table	=	$f->storage_table;
+						if ( $table && ! isset( $config['storages'][$table] ) ) {
+							$config['storages'][$table]	=	'';
+							$dispatcher->trigger( 'onCCK_Storage_LocationPrepareForm', array( &$f, &$config['storages'][$table], $config['pk'], &$config ) );
+						}
+						$dispatcher->trigger( 'onCCK_StoragePrepareForm_Xi', array( &$f, &$f_value, &$config['storages'][$table], $name, 0 ) );
+					}
+				} elseif ( $f->live ) {
+					$dispatcher->trigger( 'onCCK_Field_LivePrepareForm', array( &$f, &$f_value, &$config ) );
+				} else {
+					$f_value				=	$f->live_value;
+				}
+				$inherit					=	array( 'caller'=>$field->extended );
+				$clone						=	clone $f;
+
+				if ( $field->variation != '' && $clone->variation == '' ) {
+					$clone->variation		=	$field->variation;
+				}
+
+				$results				=	$dispatcher->trigger( 'onCCK_FieldPrepareForm', array( &$clone, $f_value, &$config, $inherit, true ) );
+
+				if ( !isset( $results[0] ) ) {
+					continue;
+				}
+				
+				$form[$f_name]				=	$results[0];
+				$form[$f_name]->name		=	$f->name;
+				$config['fields'][$f->name]	=	$form[$f_name];
+			}
+		}
 	}
 }
 ?>
