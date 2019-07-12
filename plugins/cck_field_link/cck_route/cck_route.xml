@@ -24,8 +24,6 @@
 	<languages folder="languages">
 		<language tag="en-GB">en-GB/en-GB.plg_cck_field_link_cck_route.ini</language>
 		<language tag="en-GB">en-GB/en-GB.plg_cck_field_link_cck_route.sys.ini</language>
-		<language tag="fr-FR">fr-FR/fr-FR.plg_cck_field_link_cck_route.ini</language>
-		<language tag="fr-FR">fr-FR/fr-FR.plg_cck_field_link_cck_route.sys.ini</language>
 	</languages>
 	
 	<config>
