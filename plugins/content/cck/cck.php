@@ -559,7 +559,7 @@ class plgContentCCK extends JPlugin
 		if ( count( $fields ) ) {
 			JPluginHelper::importPlugin( 'cck_storage' );
 
-			$config	=	array( 'author'=>$cck->author,
+			$config		=	array( 'author'=>$cck->author,
 							   'client'=>$client,
 							   'context'=>array(),
    							   'doSEF'=>$p_sef,
@@ -578,6 +578,7 @@ class plgContentCCK extends JPlugin
 							   'type_id'=>(int)$cck->type_id,
 							   'type_alias'=>( $cck->type_alias ? $cck->type_alias : $cck->cck )
 							);
+			$lang_tag	=	JFactory::getLanguage()->getTag();
 
 			if ( is_array( $article_params ) ) {
 				$config['context']	=	$article_params;
@@ -595,8 +596,14 @@ class plgContentCCK extends JPlugin
 					}
 					
 					$dispatcher->trigger( 'onCCK_StoragePrepareContent', array( &$field, &$value, &$config['storages'][$Pt] ) );
+					
 					if ( is_string( $value ) ) {
 						$value		=	trim( $value );
+
+						if ( (int)$field->storage_mode == 1 && $value != '' ) {
+							$json		=	json_decode( $value );
+							$value		=	isset( $json->$lang_tag ) ? $json->$lang_tag : '';
+						}
 					}
 					
 					$hasLink	=	( $field->link != '' ) ? 1 : 0;
