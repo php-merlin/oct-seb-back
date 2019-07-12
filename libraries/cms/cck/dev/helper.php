@@ -330,7 +330,7 @@ abstract class JCckDevHelper
 				}
 				
 				// Merge
-				if ( count( $config['fields'] ) ) {
+				if ( isset( $config['fields'] ) && is_array( $config['fields'] ) && count( $config['fields'] ) ) {
 					foreach ( $config['fields'] as $k=>$v ) {
 						if ( $v->restriction != 'unset' ) {
 							$fields[$k]	=	$v;
@@ -371,6 +371,12 @@ abstract class JCckDevHelper
 		}
 
 		return $config;
+	}
+
+	// getLanguageCodes
+	public static function getLanguageCodes()
+	{
+		return JCckDatabase::loadColumn( 'SELECT sef FROM #__languages ORDER BY title' );
 	}
 	
 	// getPermalink()
@@ -651,6 +657,12 @@ abstract class JCckDevHelper
 				}
 
 				$str		=	str_replace( '$context->getAuthor()', $author, $str );
+			}
+		}
+		if ( $str != '' && strpos( $str, '$lang->' ) !== false ) {
+			$lang	=	JFactory::getLanguage();
+			if ( strpos( $str, '$lang->getTag()' ) !== false ) {
+				$str		=	str_replace( '$lang->getTag()', $lang->getTag(), $str );
 			}
 		}
 		if ( $str != '' && strpos( $str, '$user->' ) !== false ) {
