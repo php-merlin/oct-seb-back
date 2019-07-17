@@ -761,7 +761,7 @@ class plgSystemCCK extends JPlugin
 	}
 
 	// onInstallerAfterInstaller
-	public function onInstallerAfterInstaller( $package, $installer, &$result, &$msg )
+	public function onInstallerAfterInstaller( $package, $installer, $result, &$msg )
 	{
 		if ( JCckToolbox::getConfig()->get( 'processing', 0 ) ) {
 			$event		=	'onInstallerAfterInstaller';
