@@ -1,15 +1,15 @@
 
 CREATE TABLE IF NOT EXISTS `#__cck_more_countries` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name_en` varchar(255) NOT NULL,
-  `name_fr` varchar(255) NOT NULL,
-  `name_de` varchar(255) NOT NULL,
-  `name_ru` varchar(255) NOT NULL,
-  `name_es` varchar(255) NOT NULL,
-  `name_it` varchar(255) NOT NULL,
-  `name_uk` varchar(255) NOT NULL,
-  `code2` varchar(5) NOT NULL,
-  `code3` varchar(5) NOT NULL,
+  `name_en` varchar(255) NOT NULL DEFAULT '',
+  `name_fr` varchar(255) NOT NULL DEFAULT '',
+  `name_de` varchar(255) NOT NULL DEFAULT '',
+  `name_ru` varchar(255) NOT NULL DEFAULT '',
+  `name_es` varchar(255) NOT NULL DEFAULT '',
+  `name_it` varchar(255) NOT NULL DEFAULT '',
+  `name_uk` varchar(255) NOT NULL DEFAULT '',
+  `code2` varchar(5) NOT NULL DEFAULT '',
+  `code3` varchar(5) NOT NULL DEFAULT '',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 DEFAULT COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=247 ;
 
