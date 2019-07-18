@@ -92,7 +92,7 @@ class Helper_Admin extends CommonHelper_Admin
 		if ( $canDo->get( 'core.create' ) || $canDo->get( 'core.edit' ) ) {
 			if ( $canDo->get( 'core.create' ) ) {
 				if ( $vName == 'type' || $vName == 'search' || $vName == 'site' ) {
-					JHtml::_( 'bootstrap.modal', 'collapseModal' );
+					$hasModal	=	true;
 					$label	=	JText::_( 'JTOOLBAR_NEW' );
 					$html	=	'<button data-toggle="modal" data-target="#collapseModal2" class="btn btn-small btn-success">'
 							.	'<span class="icon-new" title="'.$label.'"></span> '.$label.'</button>';
@@ -127,19 +127,19 @@ class Helper_Admin extends CommonHelper_Admin
 		if ( $vName != 'site' && $vName != 'folder' /*&& $canDo->get('core.edit' )*/ ) {
 			if ( ( ( $vName == 'type' || $vName == 'search' ) && ( $canDo->get('core.create' ) || $canDo->get('core.edit' ) ) )
 				|| $canDo->get('core.edit' ) ) {
-				JHtml::_( 'bootstrap.modal', 'collapseModal' );
-				$label	=	JText::_( 'JTOOLBAR_BATCH' );
-				$html	=	'<button data-toggle="modal" data-target="#collapseModal" class="btn btn-small">'
-						.	'<span class="icon-checkbox-partial" title="'.$label.'"></span> '.$label.'</button>';
+				$hasModal	=	true;
+				$label		=	JText::_( 'JTOOLBAR_BATCH' );
+				$html		=	'<button data-toggle="modal" data-target="#collapseModal" class="btn btn-small">'
+							.	'<span class="icon-checkbox-partial" title="'.$label.'"></span> '.$label.'</button>';
 				$bar->appendButton( 'Custom', $html, 'batch' );
 			}
 		}
 		if ( $vName == 'folder' ) {
 			JToolBarHelper::custom( 'folders.rebuild', 'refresh', 'refresh', JText::_( 'COM_CCK_REBUILD' ), false );
 
-			JHtml::_( 'bootstrap.modal', 'collapseModal' );
-			$label	=	JText::_( 'COM_CCK_APP_FOLDER_EXPORT_OPTIONS' );
-			$html	=	'<button data-toggle="modal" data-target="#collapseModal" class="btn btn-small">'
+			$hasModal	=	true;
+			$label		=	JText::_( 'COM_CCK_APP_FOLDER_EXPORT_OPTIONS' );
+			$html		=	'<button data-toggle="modal" data-target="#collapseModal" class="btn btn-small">'
 					.	'<span class="icon-checkbox-partial" title="'.$label.'"></span> '.$label.'</button>';
 			$bar->appendButton( 'Custom', $html, 'batch' );
 		} elseif ( $vName == 'site' ) {
@@ -152,6 +152,14 @@ class Helper_Admin extends CommonHelper_Admin
 				$bar->appendButton( 'CckLink', 'cck-variation', JText::_( _C7_TEXT.'S' ), JRoute::_( 'index.php?option=com_cck&view=variations' ), '_self' );
 			}
 			$bar->appendButton( 'CckLink', 'folder', 'COM_CCK_'._C0_TEXT.'S', JRoute::_( 'index.php?option=com_cck&view=folders' ), '_self' );
+		}
+
+		if ( $hasModal ) {
+			if ( JCck::on( '4.0' ) ) {
+				JHtml::_( 'bootstrap.renderModal', 'collapseModal' );
+			} else {
+				JHtml::_( 'bootstrap.modal', 'collapseModal' );
+			}
 		}
 	}
 	

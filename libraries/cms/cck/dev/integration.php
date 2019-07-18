@@ -10,8 +10,6 @@
 
 defined( '_JEXEC' ) or die;
 
-use Joomla\CMS\Menu\MenuHelper;
-
 // JCckDevIntegration
 abstract class JCckDevIntegration
 {
@@ -132,13 +130,14 @@ abstract class JCckDevIntegration
 		jimport( 'joomla.filesystem.file' );
 		jimport( 'joomla.filesystem.folder' );
 
+		$class		=	JCck::on( '4.0' ) ? 'Joomla\Component\Menus\Administrator\Helper\MenusHelper' : 'Joomla\CMS\Menu\MenuHelper';
 		$presets	=	JFolder::files( JPATH_ADMINISTRATOR.'/components/com_cck/helpers/menu', '\.xml$' );
 
 		if ( count( $presets ) ) {
 			foreach ( $presets as $preset ) {
 				$preset	=	substr( $preset, 0, -4 );				
 				
-				MenuHelper::addPreset( $preset, 'LIB_CCK_MENUS_PRESET_'.strtoupper( $preset ), JPATH_ADMINISTRATOR.'/components/com_cck/helpers/menu/'.$preset.'.xml' );
+				$class::addPreset( $preset, 'LIB_CCK_MENUS_PRESET_'.strtoupper( $preset ), JPATH_ADMINISTRATOR.'/components/com_cck/helpers/menu/'.$preset.'.xml' );
 			}
 		}
 	}
