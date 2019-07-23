@@ -43,7 +43,7 @@ $ -> Language fix or change
 + Group plug-in improved:
   >> a content type can now be defined as "Collection".
   >> back-end UI cleaner for "Collections".
-  >> nested groups are allowed.
+  >> nested groups (i.e. a Group in a Group!) are allowed.
 + "Sync" process added for Menu Item addition/upgrade from native UI.
 + Syntax {cck_item:[id]} applied to render Intro view of any content item.
 + "Watch" processed added for Content Item .
