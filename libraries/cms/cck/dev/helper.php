@@ -376,7 +376,7 @@ abstract class JCckDevHelper
 	// getLanguageCodes
 	public static function getLanguageCodes()
 	{
-		return JCckDatabase::loadColumn( 'SELECT sef FROM #__languages ORDER BY title' );
+		return JCckDatabase::loadColumn( 'SELECT sef FROM #__languages WHERE published = 1 ORDER BY title' );
 	}
 	
 	// getPermalink()
