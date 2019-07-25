@@ -181,7 +181,7 @@ class plgCCK_FieldGroup extends JCckPluginField
 				self::_prepareFormFields( $dispatcher, $field, $form, $name, $config );
 			}
 		} else {			
-			self::_prepareFormFields( $dispatcher, $field, $form, $name, $config );	
+			self::_prepareFormFields( $dispatcher, $field, $form, $name, $config );
 		}
 		
 		// Set
@@ -223,34 +223,25 @@ class plgCCK_FieldGroup extends JCckPluginField
 		$value		=	'';
 		
 		// Prepare
-		$fields 	=	self::_getChildren( $field, $config );
-		if ( count( $fields ) ) {
-			foreach ( $fields as $f ) {
-				$name		=	$f->name;
-				$f->state	=	'';
-				
-				// Restriction
-				if ( isset( $f->restriction ) && $f->restriction ) {
-					$f->authorised	=	JCck::callFunc_Array( 'plgCCK_Field_Restriction'.$f->restriction, 'onCCK_Field_RestrictionPrepareStore', array( &$f, &$config ) );
-					
-					if ( !$f->authorised ) {
-						continue;
-					}
-				}
+		if ( $field->bool ) {
+			$lang_codes		=	JCckDevHelper::getLanguageCodes();
+			$variation		=	$field->variation;
 
-				if ( ( $f->variation == 'hidden' || $f->variation == 'disabled' || $f->variation == 'value' ) && ! $f->live && $f->live_value != '' ) {
-					$val	=	$f->live_value;
-				} else {
-					if ( isset( $data[$name] ) ) {
-						$val		=	$data[$name];
-					} else {
-						$val		=	null;
-						$f->state	=	'disabled';
-					}
-				}
-				$dispatcher->trigger( 'onCCK_FieldPrepareStore', array( &$f, $val, &$config, array() ) );
-				$config['fields'][$name]	=	$f;
+			// Default Language
+			$field->extended	=	$field->location.$lang_default;
+
+			self::_prepareStoreFields( $dispatcher, $field, $value, $data, $config );
+
+			// Other Languages
+			$field->variation		=	$variation;
+
+			foreach ( $lang_codes as $lang_code ) {
+				$field->extended	=	$field->location.$lang_code;
+
+				self::_prepareStoreFields( $dispatcher, $field, $value, $data, $config );
 			}
+		} else {
+			self::_prepareStoreFields( $dispatcher, $field, $value, $data, $config );
 		}
 		
 		$field->value	=	$value;
@@ -673,6 +664,41 @@ class plgCCK_FieldGroup extends JCckPluginField
 				$form[$f_name]				=	$results[0];
 				$form[$f_name]->name		=	$f->name;
 				$config['fields'][$f->name]	=	$form[$f_name];
+			}
+		}
+	}
+
+	// _prepareStoreFields
+	protected static function _prepareStoreFields( $dispatcher, $field, &$value, $data, &$config )
+	{
+		$fields 	=	self::_getChildren( $field, $config );
+		
+		if ( count( $fields ) ) {
+			foreach ( $fields as $f ) {
+				$name		=	$f->name;
+				$f->state	=	'';
+				
+				// Restriction
+				if ( isset( $f->restriction ) && $f->restriction ) {
+					$f->authorised	=	JCck::callFunc_Array( 'plgCCK_Field_Restriction'.$f->restriction, 'onCCK_Field_RestrictionPrepareStore', array( &$f, &$config ) );
+					
+					if ( !$f->authorised ) {
+						continue;
+					}
+				}
+
+				if ( ( $f->variation == 'hidden' || $f->variation == 'disabled' || $f->variation == 'value' ) && ! $f->live && $f->live_value != '' ) {
+					$val	=	$f->live_value;
+				} else {
+					if ( isset( $data[$name] ) ) {
+						$val		=	$data[$name];
+					} else {
+						$val		=	null;
+						$f->state	=	'disabled';
+					}
+				}
+				$dispatcher->trigger( 'onCCK_FieldPrepareStore', array( &$f, $val, &$config, array() ) );
+				$config['fields'][$name]	=	$f;
 			}
 		}
 	}
