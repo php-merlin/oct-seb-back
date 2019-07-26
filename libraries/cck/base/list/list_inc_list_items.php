@@ -25,12 +25,14 @@ if ( !isset( $doc->list ) ) {
 }
 $doc->list[$idx]		=	array();
 
-$debug		=	JCck::getConfig_Param( 'debug', 0 );
-$ids		=	'';
-$lang_tag	=	JFactory::getLanguage()->getTag();
-$optimize	=	(int)JCck::getConfig_Param( 'optimize_memory', 0 );
-$properties	=	CCK_List::getPropertyColumns_asString( $optimize );
-$pks		=	'';
+$debug			=	JCck::getConfig_Param( 'debug', 0 );
+$ids			=	'';
+$lang			=	JFactory::getLanguage();
+$lang_default	=	$lang->getDefault();
+$lang_tag		=	$lang->getTag();
+$optimize		=	(int)JCck::getConfig_Param( 'optimize_memory', 0 );
+$properties		=	CCK_List::getPropertyColumns_asString( $optimize );
+$pks			=	'';
 if ( $list['isCore'] ) {
 	for ( $i = 0; $i < $count; $i++ ) {
 		$ids	.=	(int)$items[$i]->pid.',';
@@ -141,11 +143,17 @@ if ( $count ) {
 					$dispatcher->trigger( 'onCCK_StoragePrepareContent', array( &$field, &$value, &$config['storages'][$Pt] ) );
 					
 					if ( is_string( $value ) ) {
-						$value		=	trim( $value );
+						$storage_mode	=	(int)$field->storage_mode;
+						$value			=	trim( $value );
 
-						if ( (int)$field->storage_mode == 1 && $value != '' ) {
-							$json		=	json_decode( $value );
-							$value		=	isset( $json->$lang_tag ) ? $json->$lang_tag : '';
+						if ( $storage_mode && $value != '' ) {
+							if ( $storage_mode == -1 ) {
+								$json		=	json_decode( $value );
+								$value		=	isset( $json->$lang_default ) ? $json->$lang_default : '';
+							} else {
+								$json		=	json_decode( $value );
+								$value		=	isset( $json->$lang_tag ) ? $json->$lang_tag : '';
+							}
 						}
 					}
 					
@@ -305,11 +313,17 @@ if ( $count ) {
 					$dispatcher->trigger( 'onCCK_StoragePrepareContent', array( &$field, &$value, &$config['storages'][$Pt] ) );
 					
 					if ( is_string( $value ) ) {
-						$value		=	trim( $value );
+						$storage_mode	=	(int)$field->storage_mode;
+						$value			=	trim( $value );
 
-						if ( (int)$field->storage_mode == 1 && $value != '' ) {
-							$json		=	json_decode( $value );
-							$value		=	isset( $json->$lang_tag ) ? $json->$lang_tag : '';
+						if ( $storage_mode && $value != '' ) {
+							if ( $storage_mode == -1 ) {
+								$json		=	json_decode( $value );
+								$value		=	isset( $json->$lang_default ) ? $json->$lang_default : '';
+							} else {
+								$json		=	json_decode( $value );
+								$value		=	isset( $json->$lang_tag ) ? $json->$lang_tag : '';
+							}
 						}
 					}
 					

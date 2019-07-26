@@ -63,10 +63,12 @@ class plgCCK_FieldGroup extends JCckPluginField
 		}
 	
 		// Prepare
-		$name		=	$field->name;
-		$dispatcher	=	JEventDispatcher::getInstance();
-		$fields		=	self::_getChildren( $field, $config );
-		$lang_tag	=	JFactory::getLanguage()->getTag();
+		$name			=	$field->name;
+		$dispatcher		=	JEventDispatcher::getInstance();
+		$fields			=	self::_getChildren( $field, $config );
+		$lang			=	JFactory::getLanguage();
+		$lang_default	=	$lang->getDefault();
+		$lang_tag		=	$lang->getTag();
 
 		$xn			=	1;
 		$content	=	array();
@@ -78,15 +80,22 @@ class plgCCK_FieldGroup extends JCckPluginField
 					$inherit			=	array();
 					$content[$f_name]	=	clone $f;
 					$table				=	$f->storage_table;
+					$storage_mode		=	(int)$f->storage_mode;
+
 					if ( $table && ! isset( $config['storages'][$table] ) ) {
 						$config['storages'][$table]	=	'';
 						$dispatcher->trigger( 'onCCK_Storage_LocationPrepareContent', array( &$f, &$config['storages'][$table], $config['pk'], &$config ) );
 					}
 					$dispatcher->trigger( 'onCCK_StoragePrepareContent_Xi', array( &$f, &$f_value, &$config['storages'][$table], $name, $xi ) );
 					
-					if ( (int)$f->storage_mode == 1 && $f_value != '' ) {
-						$json		=	json_decode( $f_value );
-						$f_value	=	isset( $json->$lang_tag ) ? $json->$lang_tag : '';
+					if ( $storage_mode && $f_value != '' ) {
+						if ( $storage_mode == -1 ) {
+							$json		=	json_decode( $f_value );
+							$f_value	=	isset( $json->$lang_default ) ? $json->$lang_default : '';
+						} elseif ( $storage_mode == 1 ) {
+							$json		=	json_decode( $f_value );
+							$f_value	=	isset( $json->$lang_tag ) ? $json->$lang_tag : '';
+						}
 					}
 
 					$dispatcher->trigger( 'onCCK_FieldPrepareContent', array( &$content[$f_name], $f_value, &$config, $inherit, true ) );

@@ -522,8 +522,10 @@ class plgContentCCK extends JPlugin
 		$user		=	JFactory::getUser();
 		$params		=	array( 'template'=>$tpl['folder'], 'file'=>'index.php', 'directory'=>$tpl['root'] );
 		
-		$lang		=	JFactory::getLanguage();
-		$lang_tag	=	$lang->getTag();
+		$lang			=	JFactory::getLanguage();
+		$lang_default	=	$lang->getDefault();
+		$lang_tag		=	$lang->getTag();
+
 		$lang->load( 'com_cck_default', JPATH_SITE );
 		
 		JPluginHelper::importPlugin( 'cck_field' );
@@ -578,7 +580,6 @@ class plgContentCCK extends JPlugin
 							   'type_id'=>(int)$cck->type_id,
 							   'type_alias'=>( $cck->type_alias ? $cck->type_alias : $cck->cck )
 							);
-			$lang_tag	=	JFactory::getLanguage()->getTag();
 
 			if ( is_array( $article_params ) ) {
 				$config['context']	=	$article_params;
@@ -598,11 +599,17 @@ class plgContentCCK extends JPlugin
 					$dispatcher->trigger( 'onCCK_StoragePrepareContent', array( &$field, &$value, &$config['storages'][$Pt] ) );
 					
 					if ( is_string( $value ) ) {
-						$value		=	trim( $value );
+						$storage_mode	=	(int)$field->storage_mode;
+						$value			=	trim( $value );
 
-						if ( (int)$field->storage_mode == 1 && $value != '' ) {
-							$json		=	json_decode( $value );
-							$value		=	isset( $json->$lang_tag ) ? $json->$lang_tag : '';
+						if ( $storage_mode && $value != '' ) {
+							if ( $storage_mode == -1 ) {
+								$json		=	json_decode( $value );
+								$value		=	isset( $json->$lang_default ) ? $json->$lang_default : '';
+							} elseif ( $storage_mode == 1 ) {
+								$json		=	json_decode( $value );
+								$value		=	isset( $json->$lang_tag ) ? $json->$lang_tag : '';
+							}
 						}
 					}
 					
