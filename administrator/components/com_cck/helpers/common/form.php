@@ -53,6 +53,17 @@ class CommonHelper_Form
 		return JHtml::_( 'select.genericlist', Helper_Admin::getFolderOptions( true, true, true, true, $config['vName'] ), $name, 'class="inputbox select small span12" onchange="this.form.submit()"', 'value', 'text', $value, $id );
 	}
 
+	// getFolderSelect
+	public static function getFolderSelect( &$field, $value, $name, $id, $config )
+	{
+		$class			=	$field->css ? ' '.$field->css : '';
+		$field->label	=	'App Folder';
+
+		/* $config['vName'] */
+
+		return JHtml::_( 'select.genericlist', Helper_Admin::getFolderOptions( 'Select', true, true, true, 'type' ), $name, 'class="inputbox select'.$class.'"', 'value', 'text', $value, $id );
+	}
+
 	// getFolderParent
 	public static function getFolderParent( &$field, $value, $name, $id, $config )
 	{

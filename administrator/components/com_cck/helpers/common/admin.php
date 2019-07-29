@@ -209,7 +209,11 @@ class CommonHelper_Admin
 		$options	=	array();
 		
 		if ( $selectlabel !== false ) {
-			$options[]	=	JHtml::_( 'select.option', '', JText::_( 'COM_CCK_ALL_FOLDERS_SL' ), 'value', 'text' );
+			if ( is_string( $selectlabel ) ) {
+				$options[]	=	JHtml::_( 'select.option', '', '- '.JText::_( 'COM_CCK_'.$selectlabel ).' -', 'value', 'text' );
+			} else {
+				$options[]	=	JHtml::_( 'select.option', '', JText::_( 'COM_CCK_ALL_FOLDERS_SL' ), 'value', 'text' );
+			}
 		}
 		if ( $quickfolder !== false ) {
 			$options[]	=	JHtml::_( 'select.option', '1', JText::_( 'COM_CCK_QUICK_FOLDER' ), 'value', 'text' );
