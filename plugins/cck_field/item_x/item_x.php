@@ -759,7 +759,7 @@ class plgCCK_FieldItem_X extends JCckPluginField
 				$parts	=	array( 0=>'', 1=>'', 2=>$referrer );
 			}
 
-			$query	=	'SELECT DISTINCT a.name, a.bool, a.bool2, a.bool3, a.location';
+			$query	=	'SELECT DISTINCT a.name, a.bool, a.bool2, a.bool3, a.bool4, a.location';
 			
 			if ( $parts[0] ) {
 				$query	.=	', b.required, b.variation';
@@ -793,6 +793,7 @@ class plgCCK_FieldItem_X extends JCckPluginField
 													'mode'=>( $field->bool ? true : false ),
 													'required'=>( $field->required ? true : false ),
 													'task_add'=>( $field->bool2 > -2 ? true : false ),
+													'task_batch'=>( (int)$field->bool4 > 0 ? true : false ),
 													'task_select'=>( $field->bool3 > -2 ? true : false ),
 													'variation'=>( $field->variation ? $field->variation : 'form' ),
 												);
