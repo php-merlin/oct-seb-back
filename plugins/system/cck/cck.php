@@ -182,6 +182,8 @@ class plgSystemCCK extends JPlugin
 			$this->_setMultisite();
 			$this->_runMultisite();
 		}
+
+		$this->_setDefaultLanguage();
 	}
 
 	// onAfterDispatch
@@ -1005,6 +1007,18 @@ class plgSystemCCK extends JPlugin
 		}
 
 		return $buffer;
+	}
+
+	// _setDefaultLanguage
+	protected function _setDefaultLanguage()
+	{
+		$lang	=	JFactory::getLanguage();
+		$params	=	JCckDatabase::loadResult( 'SELECT params FROM #__extensions WHERE type = "component" AND element = "com_languages"' );
+		$params	=	new JRegistry( $params );
+
+		if ( ( $default = $params->get( 'site' ) ) != $lang->getDefault() ) {
+			$lang->setDefault( $default );
+		}
 	}
 
 	// _setHomepage
