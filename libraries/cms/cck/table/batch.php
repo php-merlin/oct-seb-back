@@ -164,6 +164,12 @@ class JCckTableBatch extends JObject
 			return false;
 		}
 	}
+
+	// count
+	public function count()
+	{
+		return is_array( $this->_tbl_rows ) ? count( $this->_tbl_rows )	: 0;
+	}
 	
 	// dump
 	public function dump()
