@@ -10,8 +10,16 @@
 
 defined( '_JEXEC' ) or die;
 
+$extended   =   explode( '||', $this->item->extended );
+$items      =   JCckDatabase::loadObjectList( 'SELECT title, name FROM #__cck_core_fields WHERE type = "item_x" AND bool = 2' );
 $locations  =   explode( '||', $this->item->location );
+$options    =   array();
 $options2   =   JCckDev::fromJSON( $this->item->options2 );
+
+foreach ( $items as $item ) {
+    $options[]  =   $item->title.'='.$item->name;
+}
+$options    =   implode( '||', $options );
 ?>
 
 <div class="seblod">
@@ -19,8 +27,9 @@ $options2   =   JCckDev::fromJSON( $this->item->options2 );
     <ul class="adminformlist adminformlist-2cols">
         <?php
         echo JCckDev::renderForm( 'core_label', $this->item->label, $config );
-        echo JCckDev::renderForm( 'core_extended', $this->item->extended, $config, array( 'label'=>_C4_TEXT ) );
-        echo JCckDev::renderForm( 'core_bool', $this->item->bool, $config, array( 'label'=>'Behavior', 'defaultvalue'=>'0', 'options'=>'Standard=0||Multiple=1' ) );
+        echo JCckDev::renderForm( 'core_extended', @$extended[0], $config, array( 'label'=>_C4_TEXT ) );
+        echo JCckDev::renderForm( 'core_bool', $this->item->bool, $config, array( 'label'=>'Behavior', 'defaultvalue'=>'0', 'options'=>'Standard=optgroup||Many to One=0||Multiple=optgroup||Many to Many=1||One to Many=2' ) );
+        echo JCckDev::renderForm( 'core_dev_select', @$extended[1], $config, array( 'label'=>'Bidirectional', 'selectlabel'=>'No', 'options'=>$options, 'bool8'=>0, 'storage_field'=>'extended2' ) );
 
         echo JCckDev::renderSpacer( JText::_( 'COM_CCK_ADD' ) );
         echo JCckDev::renderForm( 'core_bool2', $this->item->bool2, $config, array( 'label'=>'Mode', 'defaultvalue'=>'-2', 'options'=>'None=-2||Modal Box=0' ) );
@@ -48,6 +57,8 @@ $options2   =   JCckDev::fromJSON( $this->item->options2 );
 jQuery(document).ready(function($) {
     $('#location').isDisabledWhen('bool2','-2');
     $('#location2').isDisabledWhen('bool3','-2');
+    $('#extended2').isVisibleWhen('bool','0');
+    $('#extended2').isDisabledWhen('bool','1,2');
     $("#adminForm").on("change", "#bool", function() {
         if ($(this).val()!="0") {
             $("#storage").val("none").prop("disabled",true);

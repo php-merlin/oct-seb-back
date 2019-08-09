@@ -32,6 +32,9 @@ class plgCCK_FieldItem_X extends JCckPluginField
 		if ( isset( $data['location2'] ) && $data['location2'] != '' ) {
 			$data['location']	.=	'||'.$data['location2'];
 		}
+		if ( isset( $data['extended2'] ) && $data['extended2'] != '' ) {
+			$data['extended']	.=	'||'.$data['extended2'];
+		}
 		parent::g_onCCK_FieldConstruct( $data );
 	}
 	
@@ -143,8 +146,15 @@ class plgCCK_FieldItem_X extends JCckPluginField
 				parent::g_addProcess( 'beforeRenderForm', self::$type, $config, array( 'name'=>$field->name, 'target'=>'link_select', 'link'=>$link2, 'itemId'=>$itemId ), 5 );
 			}
 
+			$extended	=	$field->extended;
+				
+			if ( strpos( $extended, '||' ) !== false ) {
+				$extended	=	explode( '||', $extended );
+				$extended	=	$extended[0];
+			}
+
 			$link2		=	( $app->isClient( 'administrator' ) ) ? $link2 : JRoute::_( $link2.'&Itemid='.$itemId );
-			$link5		=	JCckDevHelper::getAbsoluteUrl( 'auto', 'format=raw&view=list&layout=default&search='.$field->extended ).$context;
+			$link5		=	JCckDevHelper::getAbsoluteUrl( 'auto', 'format=raw&view=list&layout=default&search='.$extended ).$context;
 			$link6		=	JCckDevHelper::getAbsoluteUrl( 'auto', 'format=raw&task='.$task );
 			$link7		=	JCckDevHelper::getAbsoluteUrl( 'auto', 'format=raw&task='.$task2 );
 
@@ -512,15 +522,51 @@ class plgCCK_FieldItem_X extends JCckPluginField
 			return;
 		}
 		
-		// Prepare
-		if ( $field->variation == 'hidden' ) {
-			parent::g_onCCK_FieldPrepareSearch( $field, $config );
+		// Init
+		$bidirectional	=	false;
+		$extended		=	$field->extended;
+		$field->value	=	'';
+		
+		if ( strpos( $extended, '||' ) !== false ) {
+			$extended	=	explode( '||', $extended );
 
-			if ( $value != '' ) {
-				$field->value	=	(int)$value;
+			if ( $extended[1] ) {
+				$bidirectional	=	true;
+			}
+		}
+
+		// Prepare
+		if ( $bidirectional ) {
+			$app			=	JFactory::getApplication();
+			$field->form	=	'';
+			$id				=	$app->input->getInt( 'id' );
+
+			if ( $id ) {
+				$config['joins'][$field->stage][]	=	(object)array(
+															'aka'=>'',
+															'and'=>'',
+															'column'=>'id',
+															'column2'=>'id',
+															'mode'=>'0',
+															'table'=>'#__cck_store_join_'.$extended[1],
+															'table2'=>'#__content',
+															'type'=>'LEFT'
+														);
+
+				$bidirectional_pk	=	(int)JCckDatabase::loadResult( 'SELECT id FROM #__cck_store_join_'.$extended[1].' WHERE id2 = '.$id );
+
+				$app->input->set( 'pks', $bidirectional_pk );
 			}
 		} else {
-			self::onCCK_FieldPrepareForm( $field, $value, $config, $inherit, $return );
+			if ( $field->variation == 'hidden' ) {
+				parent::g_onCCK_FieldPrepareSearch( $field, $config );
+
+				if ( $value != '' ) {
+					$field->value	=	(int)$value;
+				}
+			} else {
+				self::onCCK_FieldPrepareForm( $field, $value, $config, $inherit, $return );
+			}
 		}
 		
 		// Return
@@ -546,13 +592,25 @@ class plgCCK_FieldItem_X extends JCckPluginField
 		if ( $field->bool ) {
 			$value		=	'';
 		
-			parent::g_addProcess( 'afterStore', self::$type, $config, array( 'name'=>$name ) );
+			parent::g_addProcess( 'afterStore', self::$type, $config, array( 'name'=>$name, 'bidirectional'=>'' ) );
 		} else {
 			if ( is_array( $value ) && isset( $value[0] ) ) {
 				$value	=	$value[0];
 			} elseif ( $value === null ) {
 				$field->state	=	'';
 				$value			=	'';
+			}
+
+			if ( $value ) {
+				$extended	=	$field->extended;
+				
+				if ( strpos( $extended, '||' ) !== false ) {
+					$extended	=	explode( '||', $extended );
+
+					if ( $extended[1] ) {
+						parent::g_addProcess( 'afterStore', self::$type, $config, array( 'name'=>$name, 'bidirectional'=>$extended[1] ) );
+					}
+				}
 			}
 			
 			// Validate
@@ -642,107 +700,136 @@ class plgCCK_FieldItem_X extends JCckPluginField
 	// onCCK_FieldAfterStore
 	public static function onCCK_FieldAfterStore( $process, &$fields, &$storages, &$config = array() )
 	{
-		/*
-		$keys		=	array(
-							'admin'=>array(),
-							'site'=>array(),
-							'intro'=>array(),
-							'content'=>array()
-						);
-		*/
-		$keys		=	array();
-		$hasKey		=	( count( $keys ) ) ? true : false;
 		$name		=	$process['name'];
-		$pks		=	array();
-		$table_name	=	'#__cck_store_join_'.$process['name'];
-		$tables		=	array();
 
-		if ( isset( $config['post'][$name] )
-		  && is_array( $config['post'][$name] ) && count( $config['post'][$name] ) ) {
-		  	$i		=	0;
-		  	$pks	=	$config['post'][$name];
+		if ( !$fields[$name]->bool ) {
+			if ( $process['bidirectional'] && $fields[$name]->value ) {
+				$pk			=	(int)$config['pk'];
+				$table_name	=	'#__cck_store_join_'.$process['bidirectional'];
 
-			foreach ( $config['post'][$name] as $field_id ) {
-				if ( isset( $config['post'][$field_id] ) ) {
-				  	if ( $hasKey && is_array( $config['post'][$field_id] ) && count( $config['post'][$field_id] ) ) {
-						foreach ( $config['post'][$field_id] as $k=>$v ) {
-							if ( isset( $keys[$k] ) ) {
-								$keys[$k][$field_id]				=	$v;
-								$keys[$k][$field_id]['id2']			=	$field_id;
-								$keys[$k][$field_id]['ordering']	=	$i;
-								$i++;
-							}
-						}
-					} else {
-						foreach ( $config['post'][$field_id] as $k=>$v ) {
-							if ( strpos( $k, '#__' ) !== false ) {
-								if ( !isset( $tables[$k] ) ) {
-									$tables[$k]	=	array();
-								}
-								if ( !isset( $tables[$k][$field_id] ) ) {
-									$tables[$k][$field_id]	=	$v;
-								}
-							}
-							if ( !isset( $keys[$field_id] ) ) {
-								$keys[$field_id]				=	array();
-								$keys[$field_id]['id2']			=	$field_id;
-								$keys[$field_id]['ordering']	=	$i;
-								$i++;
-							}
-							$keys[$field_id][$k]			=	$v;
-						}
-					}					
-				} else {
-					$keys[$field_id]				=	array();
-					$keys[$field_id]['id2']			=	$field_id;
-					$keys[$field_id]['ordering']	=	$i;
-					$i++;
+				if ( !(int)JCckDatabase::loadResult( 'SELECT COUNT(id) FROM '.$table_name.' WHERE id = '.(int)$fields[$name]->value.' AND id2 = '.$pk ) ) {
+					JCckDatabase::execute( 'DELETE a.* FROM '.$table_name.' AS a WHERE a.id2 = '.$pk );
+
+					$join		=	JCckTableBatch::getInstance( $table_name );
+					
+					$join->load( 'id = '.$fields[$name]->value, 'id2' );
+					$join->bindArray( array( (int)$config['pk']=>(object)array(
+																			'id2'=>(string)$pk,
+																			'ordering'=>(string)$join->count() ) ) );
+					$join->check( array(
+									'id'=>(string)$fields[$name]->value
+								  ) );
+					$join->store();
 				}
 			}
-		}
+		} else {
+			/*
+			$keys		=	array(
+								'admin'=>array(),
+								'site'=>array(),
+								'intro'=>array(),
+								'content'=>array()
+							);
+			*/
+			$keys		=	array();
+			$hasKey		=	( count( $keys ) ) ? true : false;
+			$pks		=	array();
+			$table_name	=	'#__cck_store_join_'.$process['name'];
+			$tables		=	array();
 
-		// Core
-		$clause		=	'id = '.$config['pk'];
-		if ( count( $keys ) ) {
-			if ( $hasKey ) {
-				foreach ( $keys as $key=>$v ) {
-					$clause2	=	$clause.' AND key = "'.$key.'"';
+			if ( isset( $config['post'][$name] )
+			  && is_array( $config['post'][$name] ) && count( $config['post'][$name] ) ) {
+			  	$i		=	0;
+			  	$pks	=	$config['post'][$name];
+
+				foreach ( $config['post'][$name] as $field_id ) {
+					if ( isset( $config['post'][$field_id] ) ) {
+					  	if ( $hasKey && is_array( $config['post'][$field_id] ) && count( $config['post'][$field_id] ) ) {
+							foreach ( $config['post'][$field_id] as $k=>$v ) {
+								if ( isset( $keys[$k] ) ) {
+									$keys[$k][$field_id]				=	$v;
+									$keys[$k][$field_id]['id2']			=	$field_id;
+									$keys[$k][$field_id]['ordering']	=	$i;
+									$i++;
+								}
+							}
+						} else {
+							foreach ( $config['post'][$field_id] as $k=>$v ) {
+								if ( strpos( $k, '#__' ) !== false ) {
+									if ( !isset( $tables[$k] ) ) {
+										$tables[$k]	=	array();
+									}
+									if ( !isset( $tables[$k][$field_id] ) ) {
+										$tables[$k][$field_id]	=	$v;
+									}
+								}
+								if ( !isset( $keys[$field_id] ) ) {
+									$keys[$field_id]				=	array();
+									$keys[$field_id]['id2']			=	$field_id;
+									$keys[$field_id]['ordering']	=	$i;
+									$i++;
+								}
+								$keys[$field_id][$k]			=	$v;
+							}
+						}					
+					} else {
+						$keys[$field_id]				=	array();
+						$keys[$field_id]['id2']			=	$field_id;
+						$keys[$field_id]['ordering']	=	$i;
+						$i++;
+					}
+				}
+			}
+
+			// Core
+			$clause		=	'id = '.$config['pk'];
+
+			if ( count( $keys ) ) {
+				if ( $hasKey ) {
+					foreach ( $keys as $key=>$v ) {
+						$clause2	=	$clause.' AND key = "'.$key.'"';
+						$join		=	JCckTableBatch::getInstance( $table_name );
+						$join->load( $clause2, 'fieldid' );
+						$join->mergeArray( $v );
+						$join->delete( $clause2 );
+						$join->sort( $pks );
+						$join->check( array(
+										'key'=>$key,
+										'id'=>$config['pk']
+									  ) );
+						$join->store();
+					}
+				} else {
 					$join		=	JCckTableBatch::getInstance( $table_name );
-					$join->load( $clause2, 'fieldid' );
-					$join->mergeArray( $v );
-					$join->delete( $clause2 );
+
+					if ( $fields[$name]->bool == 2 ) {
+						JCckDatabase::execute( 'DELETE a.* FROM '.$table_name.' AS a WHERE a.id2 IN ('.implode( ',', array_keys( $keys ) ).')' );
+					}
+
+					$join->load( $clause, 'id2' );
+					$join->mergeArray( $keys );
+					$join->delete( $clause );
 					$join->sort( $pks );
 					$join->check( array(
-									'key'=>$key,
 									'id'=>$config['pk']
 								  ) );
 					$join->store();
 				}
 			} else {
-				$join		=	JCckTableBatch::getInstance( $table_name );
-				$join->load( $clause, 'id2' );
-				$join->mergeArray( $keys );
+				$join	=	JCckTableBatch::getInstance( $table_name );
 				$join->delete( $clause );
-				$join->sort( $pks );
-				$join->check( array(
-								'id'=>$config['pk']
-							  ) );
-				$join->store();
 			}
-		} else {
-			$join	=	JCckTableBatch::getInstance( $table_name );
-			$join->delete( $clause );
-		}
 
-		// More
-		if ( count( $tables ) ) {
-			foreach ( $tables as $table_name=>$items ) {
-				$table	=	JCckTable::getInstance( $table_name );
-				
-				foreach ( $items as $k=>$v ) {
-					$table->load( $k );
-					$table->bind( $v );
-					$table->store();
+			// More
+			if ( count( $tables ) ) {
+				foreach ( $tables as $table_name=>$items ) {
+					$table	=	JCckTable::getInstance( $table_name );
+					
+					foreach ( $items as $k=>$v ) {
+						$table->load( $k );
+						$table->bind( $v );
+						$table->store();
+					}
 				}
 			}
 		}
@@ -837,6 +924,14 @@ class plgCCK_FieldItem_X extends JCckPluginField
 		$formValidation	=	'';
 		$option			=	$app->input->get( 'option', '' );
 		$view			=	'';
+
+		$extended	=	$field->extended;
+				
+		if ( strpos( $extended, '||' ) !== false ) {
+			$extended	=	explode( '||', $extended );
+			$extended	=	$extended[0];
+		}
+
 		$preconfig		=	array(
 								'action'=>'',
 								'auto_redirect'=>0,
@@ -848,7 +943,7 @@ class plgCCK_FieldItem_X extends JCckPluginField
 								'limit2'=>0,
 								'ordering'=>'',
 								'ordering2'=>'',
-								'search'=>$field->extended,
+								'search'=>$extended,
 								'show_form'=>1,
 								'submit'=>'JCck.Core.submit_'.$uniqId,
 								'task'=>'search',
