@@ -45,6 +45,7 @@ class JCckContent
 	protected $_callables				=	array();
 	protected $_data					=	null;
 	protected $_data_preset				=	array();
+	protected $_data_preset_null		=	false;
 	protected $_data_registry			=	array();
 	protected $_data_update				=	array();
 	protected $_error					=	false;
@@ -395,19 +396,23 @@ class JCckContent
 
 				return false;
 			}
+		} elseif ( !$this->isSuccessful() ) {
+			return false;
 		}
+
 		if ( !$this->_object ) {
 			return false;
 		}
 		if ( !( $this->_id && $this->_pk ) ) {
 			return false;
 		}
+
 		if ( !$this->can( 'delete' ) ) {
 			$this->log( 'error', 'Permissions denied.' );
 
 			return false;
 		}
-		
+
 		$result	=	$this->trigger( 'delete', 'before' );
 
 		if ( is_array( $result ) && in_array( false, $result, true ) ) {
@@ -636,6 +641,11 @@ class JCckContent
 			$data		=	$this->_getDataDispatch( $content_type, $data, $data_more, $data_more2 );
 		}
 
+		// Preset may set an error
+		if ( !$this->isSuccessful() ) {
+			return $this->_options->get( 'chain_methods', 1 ) ? $this : false;
+		}
+
 		$this->_is_new	=	true;
 
 		// Base
@@ -840,13 +850,14 @@ class JCckContent
 	}
 
 	// preset
-	public function preset( $data )
+	public function preset( $data, $check_null = false )
 	{
 		if ( !$this->isSuccessful() ) {
 			return $this;
 		}
 
-		$this->_data_preset	=	$data;
+		$this->_data_preset			=	$data;
+		$this->_data_preset_null	=	$check_null;
 
 		return $this;
 	}
@@ -1770,7 +1781,7 @@ class JCckContent
 	}
 
 	// extend
-	public function extend( $path, $scope = 'instance' )
+	public function extend( $path, $scope = 'instance', $scope_target = '' )
 	{
 		if ( !is_file( $path ) ) {
 			$this->_error	=	true;
@@ -1782,7 +1793,7 @@ class JCckContent
 		include $path;
 		ob_get_clean();
 
-		$this->_setMixin( $mixin, $scope );
+		$this->_setMixin( $mixin, $scope, $scope_target );
 	}
 
 	// _findResults
@@ -1897,12 +1908,18 @@ class JCckContent
 				if ( !isset( self::$types[$this->_type]['data_map'][$k] ) ) {
 					continue;
 				}
+				if ( $this->_data_preset_null ) {
+					if ( empty( $v ) || $v == '0000-00-00' || $v == '0000-00-00 00:00:00' ) {
+						$this->_error	=	true;
+					}
+				}
 
 				$table_instance_name			=	self::$types[$this->_type]['data_map'][$k];
 				$data[$table_instance_name][$k]	=	$v;
 			}
 
-			$this->_data_preset	=	array();
+			$this->_data_preset			=	array();
+			$this->_data_preset_null	=	false;
 		}
 		foreach ( $data as $name=>$array ) {
 			$data_array	=	${'data_'.$name};
@@ -2191,30 +2208,30 @@ class JCckContent
 	}
 
 	// _setCallable
-	protected function _setCallable( $name, $callable, $scope )
+	protected function _setCallable( $name, $callable, $scope, $scope_target = '' )
 	{
 		if ( $scope == 'object' ) {
-			self::$objects[$this->_object]['callables'][$name]	=	$callable;
+			self::$objects[($scope_target ? $scope_target : $this->_object)]['callables'][$name]	=	$callable;
 		} elseif ( $scope == 'type' ) {
-			self::$types[$this->_type]['callables'][$name]		=	$callable;
+			self::$types[($scope_target ? $scope_target : $this->_type)]['callables'][$name]		=	$callable;
 		} elseif ( $scope == 'global' ) {
-			self::$callables[$name]								=	$callable;
+			self::$callables[$name]		=	$callable;
 		} else {
-			$this->_callables[$name]							=	$callable;
+			$this->_callables[$name]	=	$callable;
 		}
 
 		self::$callables_map[$name]	=	$scope;
 	}
 
 	// _setMixin
-	protected function _setMixin( $mixin, $scope )
+	protected function _setMixin( $mixin, $scope, $scope_target = '' )
 	{
 		$methods	=	(new ReflectionClass( $mixin ) )->getMethods( ReflectionMethod::IS_PUBLIC | ReflectionMethod::IS_PROTECTED );
 
 		foreach ( $methods as $method ) {
 			$method->setAccessible( true );
 
-			$this->_setCallable( $method->name, $method->invoke( $mixin ), $scope );
+			$this->_setCallable( $method->name, $method->invoke( $mixin ), $scope, $scope_target );
 		}
 	}
 
