@@ -1059,6 +1059,27 @@ class JCckContent
 		}
 	}
 
+	// findOne (^)
+	public function findOne( $content_type = '', $data = array() )
+	{
+		if ( $content_type != '' ) {
+			$this->search( $content_type, $data )->limit( 1 );
+			$this->_findResults( 'find', true );
+
+			if ( !count( $this->_search_results ) ) {
+				$this->_error	=	true;
+
+				return $this;
+			} else {
+				$this->load( $this->_search_results[0] );
+			}
+		} else {
+			// TODO
+		}
+
+		return $this;
+	}
+
 	// findPks ($)
 	public function findPks()
 	{
