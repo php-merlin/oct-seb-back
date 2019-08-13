@@ -143,22 +143,10 @@ class plgContentCCKInstallerScript
 		$params =	JComponentHelper::getParams( 'com_cck' );
 
 		// Reorder Plugins
-		$i		=	2;
-		$ids	=	'';
-		$query	=	'SELECT extension_id FROM #__extensions WHERE type = "plugin" AND folder = "content" AND element != "cck" ORDER BY ordering';
-		$db->setQuery( $query );
-		$plgs	=	$db->loadObjectList();
-		$sql	=	'UPDATE #__extensions SET ordering = CASE extension_id';
-		foreach ( $plgs as $p ) {
-			$ids	.=	$p->extension_id.',';
-			$sql	.=	' WHEN '.$p->extension_id.' THEN '.$i;
-			$i++;
-		}
-		$ids	=	substr( $ids, 0, -1 );
-		$sql	.=	' END WHERE extension_id IN ('.$ids.')';
-		$db->setQuery( $sql );
-		$db->execute();			
-		$db->setQuery( 'UPDATE #__extensions SET ordering = 1 WHERE type = "plugin" AND folder = "content" AND element = "cck"' );
+		self::_reorderPlugins( 'content' );
+		self::_reorderPlugins( 'system' );
+
+		$db->setQuery( 'UPDATE #__extensions SET ordering = 0 WHERE type = "plugin" AND folder = "system" AND element = "languagefilter"' );
 		$db->execute();
 		
 		if ( $type == 'install' ) {
@@ -528,6 +516,32 @@ foreach ( $categories as $category ) {
 				}
 			}
 		}
+	}
+
+	// _reorderPlugins
+	protected function _reorderPlugins( $type )
+	{
+		$db		=	JFactory::getDbo();
+		$i		=	2;
+		$ids	=	array();
+				
+		$db->setQuery( 'SELECT extension_id FROM #__extensions WHERE type = "plugin" AND folder = "'.$type.'" AND element != "cck" ORDER BY ordering' );
+		
+		$items	=	$db->loadObjectList();
+		
+		$sql	=	'UPDATE #__extensions SET ordering = CASE extension_id';
+		
+		foreach ( $items as $item ) {
+			$ids[]	=	$item->extension_id;
+			$sql	.=	' WHEN '.$item->extension_id.' THEN '.$i++;
+		}
+		$sql	.=	' END WHERE extension_id IN ('.implode( ',', $ids ).')';
+		
+		$db->setQuery( $sql );
+		$db->execute();			
+		
+		$db->setQuery( 'UPDATE #__extensions SET ordering = 1 WHERE type = "plugin" AND folder = "'.$type.'" AND element = "cck"' );
+		$db->execute();
 	}
 
 	// _setUserActionsLog
