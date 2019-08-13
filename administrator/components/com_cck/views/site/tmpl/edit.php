@@ -76,6 +76,8 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
         <div class="legend top left"><?php echo '&rArr; ' . JText::_( 'COM_CCK_URLS' ); ?></div>
         <ul class="adminformlist adminformlist-2cols">
             <?php
+            echo JCckDev::renderForm( 'core_dev_select', @$cfg['context'], $config, array( 'label'=>'Config Multisite Context', 'selectlabel'=>'Inherited', 'options'=>'No=0', 'storage_field'=>'json[configuration][context]' ) );
+            echo JCckDev::renderBlank();
             $aliases    =   JCckDev::fromSTRING( $this->item->aliases );
             $exclusions =   JCckDev::fromSTRING( @$cfg['exclusions'] );
             echo JCckDev::renderForm( 'core_options', $aliases, $config, array( 'label'=>'Site Aliases', 'rows'=>'1', 'storage_field'=>'aliases' ) );
