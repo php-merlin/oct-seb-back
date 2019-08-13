@@ -161,19 +161,17 @@ abstract class JCck
 			$context		=	'';
 			$host			=	JUri::getInstance()->getHost();
 			$host2			=	'';
-			$lang_sef		=	'';
 			$path			=	JUri::getInstance()->getPath();
 			$path_base		=	$path;
 
 			if ( JCckDevHelper::isMultilingual( true ) ) {
-				jimport( 'joomla.language.helper' ); /* TODO#SEBLOD4: remove */
-
-				$languages	=	JLanguageHelper::getLanguages( 'lang_code' );
-				$lang_tag	=	JFactory::getLanguage()->getTag();
-
-				if ( isset( $languages[$lang_tag] ) && $languages[$lang_tag]->sef != '' ) {
-					$lang_sef	=	'/'.strtolower( $languages[$lang_tag]->sef );
+				$lang_sef	=	JCckDevHelper::getLanguageCode();
+				
+				if ( $lang_sef != '' ) {
+					$lang_sef	=	'/'.$lang_sef;
 				}
+			} else {
+				$lang_sef		=	'';
 			}
 
 			if ( $path ) {

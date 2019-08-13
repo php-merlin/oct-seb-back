@@ -55,9 +55,13 @@ class plgSystemCCK extends JPlugin
 		if ( $this->site ) {
 			if ( $this->site_context ) {
 				if ( $this->site->context != '' ) {
+					/*
 					if ( !$this->filter_lang || ( $this->filter_lang && $this->current_lang == $this->default_lang ) ) {
-						$uri->setPath( $uri->getPath() . '/' . $this->site->context . '/' );
+					*/
+					$uri->setPath( $uri->getPath() . '/' . $this->site->context . '/' );
+					/*
 					}
+					*/
 				}
 			}
 		}
@@ -67,13 +71,17 @@ class plgSystemCCK extends JPlugin
 
 			if ( $uri->getVar( 'option' ) == 'com_cck' && !$uri->getVar( 'task' ) && !$uri->getVar( 'view' ) ) {
 				$item	=	JFactory::getApplication()->getMenu()->getItem( $Itemid );
+				
 				if ( isset( $item->query['view'] ) && ( $item->query['view'] == 'list' || $item->query['view'] == 'form' ) ) {
 					$urlvars	=	$item->params->get( 'urlvars' );
+					
 					if ( $urlvars ) {
 						$vars		=	explode( '&', $urlvars );
+						
 						if ( count( $vars ) ) {
 							foreach ( $vars as $var ) {
 								$v	=	explode( '=', $var );
+								
 								if ( $v[0] && $v[1] ) {
 									$uri->setVar( $v[0], $v[1] );
 								}
@@ -88,18 +96,25 @@ class plgSystemCCK extends JPlugin
 	// parseRule
 	public function parseRule( &$router, &$uri )
 	{
+		$this->_setMultisite();
+
 		if ( $this->site ) {
 			if ( $this->site_context || ( !$this->site_context && $this->site_exclusion ) ) {
 				if ( $this->site->context != '' ) {
+					/*
 					if ( !$this->filter_lang || ( $this->filter_lang && $this->current_lang == $this->default_lang ) ) {
-						$path	=	$uri->getPath();
-						$pos	=	strpos( $path, $this->site->context );
+					*/
+					$path	=	$uri->getPath();
+					$pos	=	strpos( $path, $this->site->context );
 
-						if ( $pos !== false && $pos == 0 ) {
-							$path	=	substr( $path, strlen( $this->site->context ) + 1 );
-							$uri->setPath( $path );
-						}
+					if ( $pos !== false && $pos == 0 ) {
+						$path	=	substr( $path, strlen( $this->site->context ) + 1 );
+						
+						$uri->setPath( $path );
 					}
+					/*
+					}
+					*/
 				}
 			}
 		}
@@ -179,7 +194,6 @@ class plgSystemCCK extends JPlugin
 
 		// Multi-sites
 		if ( $this->multisite ) {
-			$this->_setMultisite();
 			$this->_runMultisite();
 		}
 
@@ -800,13 +814,10 @@ class plgSystemCCK extends JPlugin
 			$prefix		=	( !JFactory::getConfig()->get( 'sef_rewrite' ) ) ? '/index.php' : '';
 
 			if ( JCckDevHelper::isMultilingual( true ) ) {
-				jimport( 'joomla.language.helper' ); /* TODO#SEBLOD4: remove */
+				$lang_sef	=	JCckDevHelper::getLanguageCode();
 
-				$languages	=	JLanguageHelper::getLanguages( 'lang_code' );
-				$lang_tag	=	JFactory::getLanguage()->getTag();
-
-				if ( isset( $languages[$lang_tag] ) && $languages[$lang_tag]->sef != '' ) {
-					$prefix	.=	'/'.strtolower( $languages[$lang_tag]->sef );
+				if ( $lang_sef != '' ) {
+					$prefix	.=	'/'.$lang_sef;
 				}
 			}
 
@@ -1095,12 +1106,18 @@ class plgSystemCCK extends JPlugin
 		JCck::_setMultisite();
 		
 		$this->site		=	null;
-
+		
 		if ( JCck::isSite() ) {
 			$this->default_lang =	JComponentHelper::getParams( 'com_languages' )->get( 'site', 'en-GB' );
 			$this->filter_lang	=	JPluginHelper::isEnabled( 'system', 'languagefilter' );
 			$this->site			=	JCck::getSite();
 			$this->site_context	=	(int)JCck::getConfig_Param( 'multisite_context', '1' );
+
+			$auto_context		=	$this->site->configuration->get( 'context', '' );
+
+			if ( $auto_context != '' && $auto_context == 0 ) {
+				$this->site_context	=	0;
+			}
 
 			if ( $app->isClient( 'site' ) && $this->site ) {
 				// --- Redirect to Homepage
