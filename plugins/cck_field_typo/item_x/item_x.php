@@ -39,19 +39,28 @@ class plgCCK_Field_TypoItem_X extends JCckPluginTypo
 	protected static function _typo( $typo, $field, $value, &$config = array() )
 	{
 		$app		=	JFactory::getApplication();
+		$attr		=	' data-cck-remove-before-search=""';
 		$pk			=	(int)$field->value;
 		$referrer	=	$app->input->getCmd( 'cck_item_x_referrer', $app->input->getCmd( 'referrer', uniqid() ) );
+		
+		// Prepare
+		$mode			=	(int)plgCCK_FieldItem_X::getFieldProperty( $referrer, 'mode' );
+		$name_suffix	=	$mode ? '[]' : '';
 
 		if ( strpos( $referrer, '.' ) !== false ) {
 			$parts		=	explode( '.', $referrer );
 			$referrer	=	$parts[2];
-		}
 
+			if ( $parts[1] == 'search' ) {
+				$attr	=	'';
+			}
+		}
+		
 		if ( !$pk ) {
 			return '';
 		}
 
-		return '<input type="hidden" id="'.$pk.'_'.$referrer.'" name="'.$referrer.'[]" value="'.$pk.'" data-cck-remove-before-search="" />';
+		return '<input type="hidden" id="'.$pk.'_'.$referrer.'" name="'.$referrer.$name_suffix.'" value="'.$pk.'"'.$attr.' />';
 	}
 }
 ?>

@@ -18,7 +18,7 @@ JCckDev::initScript( 'restriction', $this->item );
     <ul class="adminformlist adminformlist-2cols">
         <?php
         echo JCckDev::renderForm( 'core_dev_select', '', $config, array( 'label'=>'Behavior', 'selectlabel'=>'Any Behavior', 'options'=>'Standard=0||Multiple=1', 'required'=>'', 'storage_field'=>'mode' ) );
-		echo JCckDev::renderForm( 'core_dev_select', '', $config, array( 'label'=>'Task', 'selectlabel'=>'Any Task', 'options'=>'Add=add||Batch=batch||Select=select', 'required'=>'', 'storage_field'=>'task' ) );
+		echo JCckDev::renderForm( 'core_dev_select', '', $config, array( 'label'=>'Task', 'selectlabel'=>'Any Task', 'options'=>'Add=add||Batch=batch||Select=select||Search=search', 'required'=>'', 'storage_field'=>'task' ) );
 		echo JCckDev::renderForm( 'core_dev_select', '', $config, array( 'label'=>'Validation', 'selectlabel'=>'', 'options'=>'Always=||Validation=optgroup||Optional=0||Required=1', 'required'=>'', 'storage_field'=>'required' ) );
 		echo JCckDev::renderForm( 'core_dev_select', '', $config, array( 'label'=>'Variation', 'selectlabel'=>'Any Variation', 'options'=>'Hidden=hidden||Visible=visible||Visible Form=visible_form||Variation=optgroup||Form=form||Readonly=disabled||Value=value', 'required'=>'', 'storage_field'=>'variation' ) );
         ?>

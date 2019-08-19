@@ -76,13 +76,9 @@ class plgCCK_Field_RestrictionItem_X extends JCckPluginRestriction
 			}
 		}
 
-		// if ( 1 == 1 ) {
-		// 	return true;
-		// }
-
 		if ( $variation != '' ) {
 			$referrer_variation	=	plgCCK_FieldItem_X::getFieldProperty( $referrer, 'variation' );
-
+			
 			if ( $variation == 'visible' ) {
 				if ( !( $referrer_variation == 'form' || $referrer_variation == 'disabled' || $referrer_variation == 'value' ) ) {
 					return false;

@@ -76,7 +76,13 @@ class plgCCK_FieldItem_X extends JCckPluginField
 			$referrer	=	$inherit['caller'].'.'.$config['client_form'];
 		} else {
 			$parent		=	( isset( $config['type_parent'] ) && $config['type_parent'] ) ? $config['type_parent'].'-' : '';
-			$referrer	=	$parent.$config['type'].'.'.$config['client_form'];
+			$referrer	=	$parent.$config['type'];
+
+			if ( isset( $config['client_form'] ) && $config['client_form'] ) {
+				$referrer	.=	'.'.$config['client_form'];
+			} else {
+				$referrer	.=	'.search';
+			}
 		}
 		if ( $field->bool && $field->label ) {
 			$field->markup_class	.=	' o-input-top';
@@ -208,6 +214,7 @@ class plgCCK_FieldItem_X extends JCckPluginField
 		    									$(".hasTooltip").tooltip({"html": true,"container": "body"});
 
 												if (close !== false) {
+													JCck.More.ItemX.search();
 													JCck.More.ItemX.modal.hide();
 													JCck.More.ItemX.modal.groups.ajax	=	[];
 													$("a[data-cck-modal]").each(function(i, e) {
@@ -304,6 +311,8 @@ class plgCCK_FieldItem_X extends JCckPluginField
 											$("#"+JCck.More.ItemX.active+" > [class$=\"-toolbar\"]").show();
 											$("#"+JCck.More.ItemX.active+" > [class$=\"-toolbar\"] + *").hide();
 										}
+										JCck.More.ItemX.search();
+
 										if (close !== false) {
 											JCck.More.ItemX.modal.hide();
 										} else {
@@ -360,6 +369,11 @@ class plgCCK_FieldItem_X extends JCckPluginField
 													error:function(){}
 												});
 											}
+										}
+									},
+									search: function() {
+										if (JCck.More.ItemX.instances[JCck.More.ItemX.active].trigger) {
+											JCck.Core.executeFunctionByName(JCck.More.ItemX.instances[JCck.More.ItemX.active].trigger, window, \'search\');
 										}
 									},
 									select: function() {
@@ -453,6 +467,16 @@ class plgCCK_FieldItem_X extends JCckPluginField
 				$doc->addScriptDeclaration( $js );
 			}
 
+			$trigger	=	'';
+
+			if ( $config['client'] == 'search' && $field->variation == 'form_filter' ) {
+				if ( isset( $config['submit'] ) ) {
+					$trigger	=	$config['submit'];
+				} else {
+					$trigger	=	'JCck.Core.submit';
+				}
+			}
+
 			$js 	=	'
 						(function ($){
 							$(document).ready(function() {
@@ -463,7 +487,8 @@ class plgCCK_FieldItem_X extends JCckPluginField
 									"link_process":\''.$link7.'\',
 									"link_select":"'.htmlspecialchars_decode( $link2 ).'",
 									"link_save":\''.$link6.'\',
-									"required":'.( $field->required ? 1 : 0 ).'
+									"required":'.( $field->required ? 1 : 0 ).',
+									"trigger":\''.$trigger.'\'
 								};
 								JCck.More.ItemX.setInstance("'.$field->name.'", data);					
 							});
@@ -566,6 +591,10 @@ class plgCCK_FieldItem_X extends JCckPluginField
 				}
 			} else {
 				self::onCCK_FieldPrepareForm( $field, $value, $config, $inherit, $return );
+
+				if ( $value != '' ) {
+					$field->value	=	$value;
+				}
 			}
 		}
 		
@@ -837,6 +866,7 @@ class plgCCK_FieldItem_X extends JCckPluginField
 
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Stuff & Script
 
+	// getFieldProperty
 	public static function getFieldProperty( $referrer, $property, $default = '' )
 	{
 		if ( !isset( self::$properties[$referrer] ) ) {
@@ -844,6 +874,12 @@ class plgCCK_FieldItem_X extends JCckPluginField
 				$parts	=	explode( '.', $referrer );
 			} else {
 				$parts	=	array( 0=>'', 1=>'', 2=>$referrer );
+			}
+			
+			if ( $parts[1] == 'search' ) {
+				$type	=	'search';
+			} else {
+				$type	=	'type';
 			}
 
 			$query	=	'SELECT DISTINCT a.name, a.bool, a.bool2, a.bool3, a.bool4, a.location';
@@ -855,8 +891,8 @@ class plgCCK_FieldItem_X extends JCckPluginField
 			$query	.=	' FROM #__cck_core_fields AS a';
 
 			if ( $parts[0] ) {
-				$query	.= 	' LEFT JOIN #__cck_core_type_field AS b ON b.fieldid = a.id'
-						. 	' LEFT JOIN #__cck_core_types AS c ON c.id = b.typeid';
+				$query	.= 	' LEFT JOIN #__cck_core_'.$type.'_field AS b ON b.fieldid = a.id'
+						. 	' LEFT JOIN #__cck_core_'.$type.'s AS c ON c.id = b.'.$type.'id';
 			}
 
 			$query	.=	' WHERE a.name = "'.$parts[2].'"';
@@ -881,9 +917,16 @@ class plgCCK_FieldItem_X extends JCckPluginField
 													'required'=>( $field->required ? true : false ),
 													'task_add'=>( $field->bool2 > -2 ? true : false ),
 													'task_batch'=>( (int)$field->bool4 > 0 ? true : false ),
+													'task_search'=>false,
 													'task_select'=>( $field->bool3 > -2 ? true : false ),
 													'variation'=>( $field->variation ? $field->variation : 'form' ),
 												);
+			
+			if ( $type == 'search' ) {
+				self::$properties[$referrer]['task_add']	=	false;
+				self::$properties[$referrer]['task_search']	=	true;
+				self::$properties[$referrer]['task_select']	=	false;
+			}
 
 			// Check Permissions
 			if ( self::$properties[$referrer]['task_add'] ) {
