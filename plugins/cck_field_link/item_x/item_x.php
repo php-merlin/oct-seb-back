@@ -36,12 +36,18 @@ class plgCCK_Field_LinkItem_X extends JCckPluginLink
 	protected static function _link( $link, &$field, &$config )
 	{
 		$identifier				=	$link->get( 'identifier', 'pk' );
+		$identifier_fieldname	=	'';
 		$link_class				=	$link->get( 'class', '' );
 		$link_onclick			=	'';
 		$link_title				=	$link->get( 'title', '' );
 		$link_title2			=	$link->get( 'title_custom', '' );
 		$parent					=	$link->get( 'fieldname', '' );
 		$type					=	$link->get( 'type', 'add' );
+
+		if ( $identifier == 'field' ) {
+			$identifier				=	'pk';
+			$identifier_fieldname	=	$link->get( 'identifier_fieldname', '' );
+		}
 
 		// Prepare
 		if ( $type == 'save' ) {
@@ -54,7 +60,13 @@ class plgCCK_Field_LinkItem_X extends JCckPluginLink
 			$close				=	(int)$link->get( 'close', '0' );
 			$close				=	$close ? ',true' : '';
 			$link_class			.=	' item_x-remove';
-			$link_onclick		=	'JCck.More.ItemX.setFromClick(this,false).remove('.$config[$identifier].$close.');';
+			$link_onclick		=	'JCck.More.ItemX.setFromClick(this,false).remove(';
+
+			if ( $identifier_fieldname ) {
+				parent::g_addProcess( 'beforeRenderContent', self::$type, $config, array( 'name'=>$field->name, 'fieldname'=>$link->get( 'identifier_fieldname', '' ), 'onclick'=>$link_onclick, 'onclick_identifier'=>$config[$identifier] ) );
+			}
+
+			$link_onclick		.=	$config[$identifier].$close.');';
 		} elseif ( $type == 'process' ) {
 			$processing			=	$link->get( 'processing', '' );
 			$link_class			.=	' item_x-assign';
@@ -63,7 +75,13 @@ class plgCCK_Field_LinkItem_X extends JCckPluginLink
 			$link_onclick		=	'JCck.More.ItemX.assignX();';
 		} else {
 			$link_class			.=	' item_x-assign';
-			$link_onclick		=	'JCck.More.ItemX.assign('.$config[$identifier].',true);';
+			$link_onclick		=	'JCck.More.ItemX.assign(';
+
+			if ( $identifier_fieldname ) {
+				parent::g_addProcess( 'beforeRenderContent', self::$type, $config, array( 'name'=>$field->name, 'fieldname'=>$link->get( 'identifier_fieldname', '' ), 'onclick'=>$link_onclick, 'onclick_identifier'=>$config[$identifier] ) );
+			}
+
+			$link_onclick		.=	$config[$identifier].',true);';
 		}
 		$link_class				=	trim( $link_class );
 		
@@ -94,6 +112,22 @@ class plgCCK_Field_LinkItem_X extends JCckPluginLink
 			}
 		} else {
 			$field->link_title		=	'';
+		}
+	}
+
+	// -------- -------- -------- -------- -------- -------- -------- -------- // Special Events
+	
+	// onCCK_Field_LinkBeforeRenderContent
+	public static function onCCK_Field_LinkBeforeRenderContent( $process, &$fields, &$storages, &$config = array() )
+	{
+		$fieldname	=	$process['fieldname'];
+		$name		=	$process['name'];
+
+		if ( isset( $fields[$fieldname] ) ) {
+			$search		=	'onclick="'.$process['onclick'].$process['onclick_identifier'];
+			$replace	=	'onclick="'.$process['onclick'].'\''.$fields[$fieldname]->value.'\'';
+
+			$fields[$name]->html	=	str_replace( $search, $replace, $fields[$name]->html );
 		}
 	}
 }

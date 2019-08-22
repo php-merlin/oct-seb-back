@@ -40,7 +40,7 @@ class plgCCK_Field_TypoItem_X extends JCckPluginTypo
 	{
 		$app		=	JFactory::getApplication();
 		$attr		=	' data-cck-remove-before-search=""';
-		$pk			=	(int)$field->value;
+		$value		=	$field->value; /* We may need a parameter to cast as (int) */
 		$referrer	=	$app->input->getCmd( 'cck_item_x_referrer', $app->input->getCmd( 'referrer', uniqid() ) );
 		
 		// Prepare
@@ -56,11 +56,11 @@ class plgCCK_Field_TypoItem_X extends JCckPluginTypo
 			}
 		}
 		
-		if ( !$pk ) {
+		if ( !$value ) {
 			return '';
 		}
 
-		return '<input type="hidden" id="'.$pk.'_'.$referrer.'" name="'.$referrer.$name_suffix.'" value="'.$pk.'"'.$attr.' />';
+		return '<input type="hidden" id="'.$value.'_'.$referrer.'" name="'.$referrer.$name_suffix.'" value="'.$value.'"'.$attr.' />';
 	}
 }
 ?>

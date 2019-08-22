@@ -84,6 +84,7 @@ class plgCCK_FieldItem_X extends JCckPluginField
 				$referrer	.=	'.search';
 			}
 		}
+		
 		if ( $field->bool && $field->label ) {
 			$field->markup_class	.=	' o-input-top';
 		}
@@ -998,7 +999,9 @@ class plgCCK_FieldItem_X extends JCckPluginField
 		$order_by		=	'';
 
 		if ( !$field->bool ) {
-			$app->input->set( 'pks', $value );
+			if ( $value != '' ) {
+				$app->input->set( 'pks', $value );
+			}
 		}
 
 		$app->input->set( 'cck_item_x_referrer', $referrer.'.'.$field->name );
