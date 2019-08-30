@@ -198,6 +198,10 @@ class plgSystemCCK extends JPlugin
 		}
 
 		$this->_setDefaultLanguage();
+
+		if ( JCckToolbox::getConfig()->get( 'processing', 0 ) ) {
+			JCckToolbox::process( 'onAfterRoute' );
+		}
 	}
 
 	// onAfterDispatch
