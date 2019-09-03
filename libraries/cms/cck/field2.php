@@ -1,6 +1,6 @@
 <?php
 /**
-* @version 			SEBLOD 3.x Core ~ $Id: type.php sebastienheraud $
+* @version 			SEBLOD 3.x Core ~ $Id: field.php sebastienheraud $
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				https://www.seblod.com
 * @editor			Octopoos - www.octopoos.com
@@ -13,7 +13,7 @@ defined( '_JEXEC' ) or die;
 use Joomla\Registry\Registry;
 
 // JCckType
-class JCckType
+class JCckField2
 {
 	protected static $callables			=	array();
 	protected static $callables_map		=	array();
@@ -71,9 +71,9 @@ class JCckType
 	// setInstanceBase
 	protected function setInstanceBase()
 	{
-		JLoader::register( 'CCK_TableType', JPATH_ADMINISTRATOR.'/components/com_cck/tables/type.php' );
+		JLoader::register( 'CCK_TableField', JPATH_ADMINISTRATOR.'/components/com_cck/tables/field.php' );
 
-		$this->_instance_base	=	JTable::getInstance( 'Type', 'CCK_Table' );
+		$this->_instance_base	=	JTable::getInstance( 'Field', 'CCK_Table' );
 		$this->_setDataMap( 'base' );
 
 		return true;
@@ -253,23 +253,6 @@ class JCckType
 		/* TODO#SEBLOD4 */
 
 		return $items;
-	}
-
-	// getContentObject
-	public function getContentObject()
-	{
-		if ( !is_file( JPATH_SITE.'/plugins/cck_storage_location/'.$this->_object.'/'.$this->_object.'.php' ) ) {
-			return false;
-		}
-
-		require_once JPATH_SITE.'/plugins/cck_storage_location/'.$this->_object.'/'.$this->_object.'.php';
-
-		$properties	=	array(
-							'type_alias'
-						);
-		$properties	=	JCck::callFunc( 'plgCCK_Storage_Location'.$this->_object, 'getStaticProperties', $properties );
-
-		return 'JCckContent'.$properties['type_alias'];
 	}
 
 	// getData
@@ -493,29 +476,9 @@ class JCckType
 
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Do More
 
-	// assign
-	public function assign( $field_name, $client, $params = array() )
+	// assignTo
+	public function assignTo( $type_name, $client, $params = array() )
 	{
-		$field_id	=	JCckDatabase::loadResult( 'SELECT id FROM #__cck_core_fields WHERE name = "'.$field_name.'"' );
-
-		if ( $field_id ) {
-			$table	=	JCckTableBatch::getInstance( '#__cck_core_type_field' );
-
-			$count				=	$table->count( 'typeid = '.$this->getPk().' AND client = "'.$client.'"' );
-			$params['client']	=	$client;
-			$params['fieldid']	=	(string)$field_id;
-			$params['ordering']	=	(string)( $count + 1 );
-
-			$table->bind( array(
-							$count=>(object)$params
-						  ) );
-			$table->check( array(
-							'typeid'=>(string)$this->getPk()
-						   ) );
-			$table->store();
-		}
-
-		return $this;
 	}
 
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Misc
@@ -704,7 +667,7 @@ class JCckType
 	protected function _setTypeByName( $identifier )
 	{
 		$query	=	'SELECT a.id AS pk, a.storage_location AS storage_location'
-				.	' FROM #__cck_core_types AS a'
+				.	' FROM #__cck_core_fields AS a'
 				.	' WHERE a.name = "'.$identifier.'"';
 
 		$core	=	JCckDatabase::loadObject( $query );
