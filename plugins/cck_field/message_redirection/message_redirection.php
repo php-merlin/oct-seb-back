@@ -54,6 +54,11 @@ class plgCCK_FieldMessage_Redirection extends JCckPluginField
 		}
 		self::$path	=	parent::g_getPath( self::$type.'/' );
 		parent::g_onCCK_FieldPrepareForm( $field, $config );
+
+		// Prepare
+		if ( $field->state ) {
+			parent::g_addProcess( 'beforeRenderForm', self::$type, $config, array( 'name'=>$field->name, 'options2'=>$field->options2 ), 5 );
+		}
 		
 		// Set
 		$field->display	=	0;
@@ -104,6 +109,10 @@ class plgCCK_FieldMessage_Redirection extends JCckPluginField
 		}
 		*/
 
+		if ( $field->state ) {
+			parent::g_addProcess( 'afterStore', self::$type, $config, array( 'name'=>$field->name, 'options2'=>$field->options2 ), 5 );
+		}		
+
 		// Prepare
 		$options2	=	json_decode( $field->options2 );
 
@@ -133,6 +142,18 @@ class plgCCK_FieldMessage_Redirection extends JCckPluginField
 
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Special Events
 	
+	// onCCK_FieldAfterStore
+	public static function onCCK_FieldAfterStore( $process, &$fields, &$storages, &$config = array() )
+	{
+		$name	=	$process['name'];
+
+		if ( !$fields[$name]->state ) {
+			return;
+		}
+		
+		self::_process( $process, $fields );
+	}
+
 	// onCCK_FieldBeforeRenderContent
 	public static function onCCK_FieldBeforeRenderContent( $process, &$fields, &$storages, &$config = array() )
 	{
@@ -180,10 +201,15 @@ class plgCCK_FieldMessage_Redirection extends JCckPluginField
 				$itemId	=	JFactory::getApplication()->input->getInt( 'Itemid' );
 			}
 			if ( isset( $options2->timeout ) && $options2->timeout == 0 ) {
-				$app	=	JFactory::getApplication();
+				$app			=	JFactory::getApplication();
+				$status_code	=	303;
+
+				if ( isset( $options2->status_code ) && $options2->status_code ) {
+					$status_code	=	(int)$options2->status_code;
+				}
 
 				$app->enqueueMessage( $message, $options2->message_style );
-				$app->redirect( JCckDevHelper::getAbsoluteUrl( $itemId ) );
+				$app->redirect( JCckDevHelper::getAbsoluteUrl( $itemId, $status_code ) );
 			} else {
 				$redirection	=	'document.location.href=\''.JCckDevHelper::getAbsoluteUrl( $itemId ).'\'';
 			
