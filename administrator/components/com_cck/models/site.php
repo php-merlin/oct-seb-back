@@ -81,10 +81,6 @@ class CCKModelSite extends JCckBaseLegacyModelAdmin
 		$data					=	JRequest::get( 'post' );
 		$data['description']	=	JRequest::getVar( 'description', '', '', 'string', JREQUEST_ALLOWRAW );
 		
-		if ( $data['context'] != '' ) {
-			$data['name']	.=	'@'.$data['context'];
-		}
-
 		if ( ! $data['id'] ) {
 			// $data	=	$this->preStore( $data );
 		}
