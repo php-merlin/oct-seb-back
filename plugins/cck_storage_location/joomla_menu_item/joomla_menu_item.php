@@ -296,6 +296,14 @@ class plgCCK_Storage_LocationJoomla_Menu_Item extends JCckPluginLocation
 													$item_request->id
 												);
 							break;
+						case 'com_cck.api':
+							$component		=	'com_cck_webservices';
+							$table->link	=	'index.php?option=com_cck_webservices&view=api';
+							break;
+						case 'com_cck.api-docs':
+							$component		=	'com_cck_webservices';
+							$table->link	=	'index.php?option=com_cck_webservices&view=api_docs';
+							break;
 						case 'com_cck.custom':
 							$component		=	'com_cck_toolbox';
 							$table->link	=	'index.php?option=com_cck_toolbox&view=processing';
