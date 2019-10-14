@@ -458,7 +458,11 @@ abstract class JCck
 			if ( JCck::isSite() && JCck::getSite()->context ) {
 				$context	=	'/'.JCck::getSite()->context;
 			}
+<<<<<<< HEAD
 			$doc->addScript( $root.'/media/cck/js/cck.core.min.js', array( 'version'=>JCckDev::getMediaVersion() ) );
+=======
+			$doc->addScript( $root.'/media/cck/js/cck.core-3.18.0.min.js' );
+>>>>>>> master
 			$doc->addScriptDeclaration( 'JCck.Core.baseURI = "'.JUri::base( true ).$context.'";' );
 			$doc->addScriptDeclaration( 'JCck.Core.sourceURI = "'.substr( JUri::root(), 0, -1 ).'";' );
 			
