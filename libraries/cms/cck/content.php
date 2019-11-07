@@ -378,13 +378,19 @@ class JCckContent
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Delete
 
 	// delete ($)
-	public function delete( $identifier = 0 )
+	public function delete( $identifier = 0, $force = '' )
 	{
 		if ( $identifier ) {
 			$this->reset();
 
 			if ( !$this->_setContentById( $identifier ) ) {
-				return false;
+				if ( $force ) {
+					if ( !$this->import( $force, $identifier )->isSuccessful() ) {
+						return false;
+					}
+				} else {
+					return false;
+				}
 			}
 			if ( $this->_instance_core->id ) {
 				if ( !$this->_instance_core->load( $this->_id ) ) {
