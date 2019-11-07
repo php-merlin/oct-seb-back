@@ -140,7 +140,16 @@ class plgCCK_FieldJform_Calendar extends JCckPluginField
 		$attr		=	'';
 		$class		=	'inputbox text'.$validate . ( $field->css ? ' '.$field->css : '' );
 		$readonly	=	( $field->variation == 'disabled' ) ? 'disabled="disabled"' : '';
-		$xml		=	'
+
+		if ( $field->attributes != '' ) {
+			$attr	.=	' '.$field->attributes;
+		}
+
+		if ( parent::g_isStaticVariation( $field, $field->variation ) ) {
+			$attr	=	'class="'.$class.'"'.$attr;
+			$form	=	'<input type="text" id="'.$id.'" name="'.$name.'" value="'.$value.'" '.$attr.' />';
+		} else {
+			$xml	=	'
 						<form>
 							<field
 								type="'.self::$type2.'"
@@ -152,29 +161,32 @@ class plgCCK_FieldJform_Calendar extends JCckPluginField
 								weeknumbers="'.( isset( $options2['week_numbers'] ) && $options2['week_numbers'] ? 'true' : 'false' ).'"
 								translateformat="'.( $convert == 'translate' ? 'true' : 'false' ).'"'.$format_date.'
 								filter="'.( isset( $options2['format_filter'] ) && $options2['format_filter'] ? 'user_utc' : 'server_utc' ).'"
+								onchange="JCck.Core.trigger(this,\'blur\');"
 								class="'.$class.'"
 								'.$readonly.'
 							/>
 						</form>
-					';
-		$form	=	JForm::getInstance( $id, $xml );
-		$form	=	$form->getInput( $name, '', $value );
-		$form	=	str_replace( 'btn btn-secondary', 'hasTooltip', $form );
+						';
+			$form	=	JForm::getInstance( $id, $xml );
+			$form	=	$form->getInput( $name, '', $value );
+			$form	=	str_replace( 'btn btn-secondary', 'hasTooltip', $form );
 
-		if ( $field->attributes != '' ) {
-			$attr	.=	' '.$field->attributes;
-		}
-		if ( JFactory::getApplication()->input->get( 'tmpl' ) == 'raw' ) {
-			$form	=	str_replace( 'class="field-calendar"', 'class="field-calendar raw"', $form );
-			$form	.=	self::_addScript();
+			if ( JFactory::getApplication()->input->get( 'tmpl' ) == 'raw' ) {
+				$form	=	str_replace( 'class="field-calendar"', 'class="field-calendar raw"', $form );
+				$form	.=	self::_addScript();
 
-			self::_addScripts();
+				self::_addScripts();
+			}
+
+			$form	=	str_replace( '<input ', '<input '.trim( $attr ).' ', $form );
 		}
-		$form	=	str_replace( '<input ', '<input '.$attr, $form );
 		
 		// Set
 		if ( ! $field->variation ) {
 			$field->form	=	$form;
+
+			JCck::loadjQuery();
+
 			if ( $field->script ) {
 				parent::g_addScriptDeclaration( $field->script );
 			}
