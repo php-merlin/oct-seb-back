@@ -369,7 +369,6 @@ class CCKController extends JControllerLegacy
 		$this->setRedirect( JUri::root() );
 	}
 
->>>>>>> master
 	// outputMessage
 	public function outputMessage()
 	{
