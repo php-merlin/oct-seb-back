@@ -169,7 +169,10 @@ class plgCCK_FieldJform_Calendar extends JCckPluginField
 						';
 			$form	=	JForm::getInstance( $id, $xml );
 			$form	=	$form->getInput( $name, '', $value );
+<<<<<<< HEAD
 			$form	=	str_replace( 'btn btn-secondary', 'hasTooltip', $form );
+=======
+>>>>>>> master
 
 			if ( JFactory::getApplication()->input->get( 'tmpl' ) == 'raw' ) {
 				$form	=	str_replace( 'class="field-calendar"', 'class="field-calendar raw"', $form );
