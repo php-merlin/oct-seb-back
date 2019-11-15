@@ -234,15 +234,6 @@ class plgCCK_FieldGroup extends JCckPluginField
 		// Prepare
 		if ( $field->bool ) {
 			$lang_codes		=	JCckDevHelper::getLanguageCodes();
-			$variation		=	$field->variation;
-
-			// Default Language
-			$field->extended	=	$field->location.$lang_default;
-
-			self::_prepareStoreFields( $dispatcher, $field, $value, $data, $config );
-
-			// Other Languages
-			$field->variation		=	$variation;
 
 			foreach ( $lang_codes as $lang_code ) {
 				$field->extended	=	$field->location.$lang_code;
