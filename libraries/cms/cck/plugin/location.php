@@ -800,7 +800,7 @@ class JCckPluginLocation extends JPlugin
 	}
 
 	// _checkAlias
-	protected function _checkAlias( $query, $where, $lang_tag, $alias )
+	protected static function _checkAlias( $query, $where, $lang_tag, $alias )
 	{
 		$db	=	JFactory::getDbo();
 
