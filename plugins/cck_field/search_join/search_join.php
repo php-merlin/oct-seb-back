@@ -102,6 +102,9 @@ class plgCCK_FieldSearch_Join extends JCckPluginField
 					if ( $aka ) {
 						$j->table	=	$aka;
 					}
+
+					$j->and	=	JCckDevHelper::replaceLive( $j->and );
+
 					$config['joins'][$field->stage][]	=	$j;
 				}
 			}
