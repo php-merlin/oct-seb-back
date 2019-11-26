@@ -100,6 +100,7 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 				<ul class="spe spe_sixth">
 					<?php echo JCckDev::renderForm( 'core_css_core', $this->item->stylesheets, $config, array( 'label'=>'Stylesheets', 'css'=>'max-width-180', 'storage_field'=>'stylesheets' ) ); ?>
 	            </ul>
+	        <?php } ?>
 	            <ul class="spe spe_name">
 	            	<li><label><?php echo JText::_( 'COM_CCK_PARENT' ); ?></label>
 	            	<?php
@@ -108,6 +109,7 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 	            	?>
 	            	</li>
 	            </ul>
+			<?php if ( $this->item->location != 'collection' ) { ?>
 	            <ul class="spe spe_type">
 	            	<?php echo JCckDev::renderForm( $cck['core_alias'], $this->item->alias, $config, array( 'css'=>'max-width-150' ) ); ?>
 	            </ul>

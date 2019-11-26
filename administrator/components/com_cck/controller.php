@@ -139,7 +139,8 @@ class CCKController extends JControllerLegacy
 		require_once JPATH_ADMINISTRATOR.'/components/com_cck/helpers/helper_workshop.php';
 		
 		$prefix						=	JCck::getConfig_Param( 'development_prefix', '' );
-		
+		$type						=	JCckDatabase::loadObject( 'SELECT name, parent, location, storage_location FROM #__cck_core_types WHERE id = '.(int)$type_id );
+
 		$table						=	JTable::getInstance( 'Type', 'CCK_Table' );
 		$table->title				=	$title;
         $table->folder				=	$folder;
@@ -151,7 +152,8 @@ class CCKController extends JControllerLegacy
 		$table->access				=	3;
 		$table->indexed				=	'none';
 		$table->location			=	'collection';
-		$table->storage_location	=	JCckDatabase::loadResult( 'SELECT storage_location FROM #__cck_core_types WHERE id = '.(int)$type_id );
+		$table->parent				=	( $type->location == 'collection' && $type->parent ) ? $type->parent : $type->name;
+		$table->storage_location	=	$type->storage_location;
 		
 		if ( !$table->storage_location ) {
 			$table->storage_location	=	'';

@@ -140,12 +140,15 @@ $js		=	'
 				}
 				$("#storage_advanced").hide();
 				$("#storage_alter_type, #storage_alter_table, #storage_alter_table_notice").hide();
-				
+				var cv = false;
 				if (!$("#myid").val()) {
 					if (!parent.jQuery("#element").length || (parent.jQuery("#element").length && parent.jQuery("#name").val())) {
 						if (parent.jQuery("#element").length && parent.jQuery("input:radio[name=\'linkage\']:checked").val() != 0) {
-							var t = parent.jQuery("#name").val();
-							$("#storage_cck").val(t);
+							if (parent.jQuery("#location").val()=="collection") {
+								cv = true;
+							} else {
+								$("#storage_cck").val(parent.jQuery("#name").val());
+							}
 						}
 						if ($("#storage").val() == "custom" && !$("#storage_field").val()) {
 							if ( $("#force_storage").val() == "0" ) {
@@ -175,6 +178,12 @@ $js		=	'
 						if ($("#storage").val() == "custom") {
 							var custom = $("#storage_location").find("option:selected").attr("data-custom");
 							$("#storage_field").val(custom);
+						}
+					}
+					if (cv) {
+						var pv = parent.jQuery("#parent").val();
+						if (pv) {
+							$("#op-"+storage_location+" #storage_cck").val(pv).trigger("change");
 						}
 					}
 				} else {
