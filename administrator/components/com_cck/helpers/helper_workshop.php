@@ -64,6 +64,7 @@ class Helper_Workshop
                 <?php
 				if ( $master == 'order' ) { ?>
 					<div class="pane ph1"><div><?php echo JText::_( 'COM_CCK_OPTIONS' ); ?></div><div><?php echo JText::_( 'COM_CCK_DIRECTION' ); ?></div></div>
+					<div class="pane ph2 hide"><div><?php echo JText::_( 'COM_CCK_RESTRICTION' ); ?></div><div><?php echo JText::_( 'COM_CCK_ACCESS' ); ?></div></div>
                 <?php } elseif ( $master == 'content' ) { ?>
                     <div class="pane ph4 hide"><div><?php echo JText::_( 'COM_CCK_RESTRICTION' ); ?></div><div><?php echo JText::_( 'COM_CCK_ACCESS' ); ?></div></div>
                     <div class="pane ph3 hide"><div><?php echo JText::_( 'COM_CCK_OUTPUT_CLASS' ); ?></div><div><?php echo JText::_( 'COM_CCK_OUTPUT' ); ?></div></div>
@@ -182,7 +183,8 @@ class Helper_Workshop
 							.	'<a class="hasTooltip qtip_cck icons panel pb6 icon-six" title="'.JText::_( 'COM_CCK_OUTPUT' ).' <b>+</b> '.JText::_( 'COM_CCK_OUTPUT_CLASS' ).'" href="javascript:void(0);">6</a>'
 							.	'<a class="hasTooltip qtip_cck icons panel pb7 icon-six" title="'.JText::_( 'COM_CCK_REQUIRED_VALIDATION' ).'" href="javascript:void(0);">7</a>';
 			} else {
-				$bar		.=	'<a class="hasTooltip qtip_cck icons panel icon-one first selected" title="'.JText::_( 'COM_CCK_DIRECTION' ).'" href="javascript: void(0);">1</a>';
+				$bar		.=	'<a class="hasTooltip qtip_cck icons panel icon-one first selected" title="'.JText::_( 'COM_CCK_DIRECTION' ).'" href="javascript: void(0);">1</a>'
+							.	'<a class="hasTooltip qtip_cck icons panel pb4 icon-four" title="'.JText::_( 'COM_CCK_ACCESS' ).' <b>+</b> '.JText::_( 'COM_CCK_RESTRICTION' ).'" href="javascript:void(0);">2</a>';
 			}
 		}
 		if ( $master != 'order' ) {
@@ -454,6 +456,11 @@ class Helper_Workshop
 											'100'=>JHtml::_( 'select.option', '<OPTGROUP>', JText::_( 'COM_CCK_CUSTOM' ) ),
 											'FIELD'=>JHtml::_( 'select.option', 'FIELD', JText::_( 'COM_CCK_VALUES' ) ),
 											'101'=>JHtml::_( 'select.option', '</OPTGROUP>', '' )
+										);
+				$data['access']		=	array( 0=>(object)array( 'text'=>JText::_( 'COM_CCK_CLEAR' ), 'value'=>0 ) ) + JCckDatabase::loadObjectList( $query_access, 'value' );
+				$data['restriction']=	array_merge(
+											array( ''=>JHtml::_( 'select.option', '', JText::_( 'COM_CCK_NONE' ) ) ),
+											Helper_Admin::getPluginOptions( 'field_restriction', 'cck_', false, false, true )
 										);
 			} elseif ( $master == 'content' ) {
 				$data['link']		=	array_merge(
