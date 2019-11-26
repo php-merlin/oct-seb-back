@@ -132,8 +132,8 @@ class plgCCK_Field_RestrictionX extends JCckPluginRestriction
 		return $do;
 	}
 
-	// _authoriseBeforeRender
-	protected static function _authoriseBeforeRender( $process, &$fields, &$storages, &$config = array() )
+	// _authoriseBeforeEvent
+	protected static function _authoriseBeforeEvent( $process, &$fields, &$storages, &$config = array() )
 	{
 		$do		=	true;
 		$name	=	$process['name'];
@@ -166,13 +166,19 @@ class plgCCK_Field_RestrictionX extends JCckPluginRestriction
 	// onCCK_Field_RestrictionBeforeRenderContent
 	public static function onCCK_Field_RestrictionBeforeRenderContent( $process, &$fields, &$storages, &$config = array() )
 	{
-		return self::_authoriseBeforeRender( $process, $fields, $storages, $config );
+		return self::_authoriseBeforeEvent( $process, $fields, $storages, $config );
 	}
 
 	// onCCK_Field_RestrictionBeforeRenderForm
 	public static function onCCK_Field_RestrictionBeforeRenderForm( $process, &$fields, &$storages, &$config = array() )
 	{
-		return self::_authoriseBeforeRender( $process, $fields, $storages, $config );
+		return self::_authoriseBeforeEvent( $process, $fields, $storages, $config );
+	}
+
+	// onCCK_Field_RestrictionBeforeSearch
+	public static function onCCK_Field_RestrictionBeforeSearch( $process, &$fields, &$storages, &$config = array() )
+	{
+		return self::_authoriseBeforeEvent( $process, $fields, $storages, $config );
 	}
 }
 ?>

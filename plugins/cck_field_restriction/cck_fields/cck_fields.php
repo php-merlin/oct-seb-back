@@ -57,7 +57,15 @@ class plgCCK_Field_RestrictionCck_Fields extends JCckPluginRestriction
 	protected static function _authorise( $restriction, &$field, &$config )
 	{
 		$do			=	$restriction->get( 'do', 0 );
-		$event		=	( $config['client'] == 'admin' || $config['client'] == 'site' || $config['client'] == 'search' ) ? 'beforeRenderForm' : 'beforeRenderContent';
+
+		if ( $config['client'] == 'admin' || $config['client'] == 'site' ) {
+			$event		=	'beforeRenderForm';
+		} elseif ( $config['client'] == 'search' ) {
+			$event		=	'beforeSearch';
+		} else {
+			$event	=	'beforeRenderContent';
+		}
+		
 		$priority	=	4;
 
 		if ( isset( $config['task'] ) ) {
@@ -76,8 +84,8 @@ class plgCCK_Field_RestrictionCck_Fields extends JCckPluginRestriction
 		return true;
 	}
 	
-	// _authoriseBeforeRender
-	protected static function _authoriseBeforeRender( $process, &$fields, &$storages, &$config = array() )
+	// _authoriseBeforeEvent
+	protected static function _authoriseBeforeEvent( $process, &$fields, &$storages, &$config = array() )
 	{
 		$name			=	$process['name'];
 		$restriction	=	$process['restriction'];
@@ -239,19 +247,25 @@ class plgCCK_Field_RestrictionCck_Fields extends JCckPluginRestriction
 	// onCCK_Field_RestrictionBeforeRenderContent
 	public static function onCCK_Field_RestrictionBeforeRenderContent( $process, &$fields, &$storages, &$config = array() )
 	{
-		return self::_authoriseBeforeRender( $process, $fields, $storages, $config );
+		return self::_authoriseBeforeEvent( $process, $fields, $storages, $config );
 	}
 
 	// onCCK_Field_RestrictionBeforeRenderForm
 	public static function onCCK_Field_RestrictionBeforeRenderForm( $process, &$fields, &$storages, &$config = array() )
 	{
-		return self::_authoriseBeforeRender( $process, $fields, $storages, $config );
+		return self::_authoriseBeforeEvent( $process, $fields, $storages, $config );
+	}
+
+	// onCCK_Field_RestrictionBeforeSearch
+	public static function onCCK_Field_RestrictionBeforeSearch( $process, &$fields, &$storages, &$config = array() )
+	{
+		return self::_authoriseBeforeEvent( $process, $fields['search'], $storages, $config );
 	}
 
 	// onCCK_Field_RestrictionBeforeStore
 	public static function onCCK_Field_RestrictionBeforeStore( $process, &$fields, &$storages, &$config = array() )
 	{
-		return self::_authoriseBeforeRender( $process, $fields, $storages, $config );
+		return self::_authoriseBeforeEvent( $process, $fields, $storages, $config );
 	}
 }
 ?>
