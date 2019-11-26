@@ -37,7 +37,7 @@ $options    =   implode( '||', $options );
         echo JCckDev::renderForm( 'core_dev_textarea', @$options2['add_custom'], $config, array( 'label'=>'Custom Variables', 'defaultvalue'=>'', 'cols'=>92, 'rows'=>1, 'storage_field'=>'json[options2][add_custom]' ), array(), 'w100' );
 
         echo JCckDev::renderSpacer( JText::_( 'COM_CCK_SELECT' ) );
-        echo JCckDev::renderForm( 'core_bool3', $this->item->bool3, $config, array( 'label'=>'Mode', 'defaultvalue'=>'0', 'options'=>'None=-2||Modal Box=0' ) );
+        echo JCckDev::renderForm( 'core_bool3', $this->item->bool3, $config, array( 'label'=>'Mode', 'defaultvalue'=>'0', 'options'=>'None=-2||Yes=optgroup||Checkbox List=-1||Modal Box=0' ) );
         echo JCckDev::renderForm( 'core_extended', @$locations[1], $config, array( 'label'=>_C4_TEXT, 'storage_field'=>'location2' ) );
         echo JCckDev::renderBlank();
         echo JCckDev::renderForm( 'core_dev_select', @$options2['select_task'], $config, array( 'label'=>'Config Search Task', 'defaultvalue'=>'search', 'selectlabel'=>'', 'options'=>'No=no||Yes=search', 'storage_field'=>'json[options2][select_task]' ) );
@@ -57,6 +57,7 @@ $options    =   implode( '||', $options );
 jQuery(document).ready(function($) {
     $('#location').isDisabledWhen('bool2','-2');
     $('#location2').isDisabledWhen('bool3','-2');
+    $('#location2,#json_options2_select_task,#json_options2_select_custom').isVisibleWhen('bool3','0');
     $('#extended2').isVisibleWhen('bool','0');
     $('#extended2').isDisabledWhen('bool','1,2');
     $("#adminForm").on("change", "#bool", function() {

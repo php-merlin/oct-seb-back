@@ -42,10 +42,11 @@ class plgCCK_Field_TypoItem_X extends JCckPluginTypo
 		$attr		=	' data-cck-remove-before-search=""';
 		$value		=	$field->value; /* We may need a parameter to cast as (int) */
 		$referrer	=	$app->input->getCmd( 'cck_item_x_referrer', $app->input->getCmd( 'referrer', uniqid() ) );
-		
+
 		// Prepare
 		$mode			=	(int)plgCCK_FieldItem_X::getFieldProperty( $referrer, 'mode' );
 		$name_suffix	=	$mode ? '[]' : '';
+		$ui				=	plgCCK_FieldItem_X::getFieldProperty( $referrer, 'ui' );
 
 		if ( strpos( $referrer, '.' ) !== false ) {
 			$parts		=	explode( '.', $referrer );
@@ -55,12 +56,32 @@ class plgCCK_Field_TypoItem_X extends JCckPluginTypo
 				$attr	=	'';
 			}
 		}
-		
+
 		if ( !$value ) {
 			return '';
 		}
 
-		return '<input type="hidden" id="'.$value.'_'.$referrer.'" name="'.$referrer.$name_suffix.'" value="'.$value.'"'.$attr.' />';
+		// Set
+		$attr	=	'id="'.$value.'_'.$referrer.'" name="'.$referrer.$name_suffix.'" value="'.$value.'"'.$attr;
+
+		if ( $ui ) {
+			parent::g_addProcess( 'beforeRenderContent', self::$type, $config, array( 'name'=>$field->name, 'attr'=>$attr, 'referrer'=>$referrer ) );
+		}
+
+		return '<input type="hidden" '.$attr.' />';
+	}
+
+	// -------- -------- -------- -------- -------- -------- -------- -------- // Special Events
+	
+	// onCCK_Field_TypoBeforeRenderContent
+	public static function onCCK_Field_TypoBeforeRenderContent( $process, &$fields, &$storages, &$config = array() )
+	{
+		$name	=	$process['name'];
+
+		if ( isset( $fields[$name] ) ) {
+			$checked				=	isset( $fields[$process['referrer'].'_pk'] ) && $fields[$process['referrer'].'_pk']->value ? ' checked="checked"' : '';
+			$fields[$name]->typo	=	'<input type="checkbox" '.$process['attr'].$checked.' />';
+		}
 	}
 }
 ?>

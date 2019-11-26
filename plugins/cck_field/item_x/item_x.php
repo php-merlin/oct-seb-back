@@ -188,6 +188,8 @@ class plgCCK_FieldItem_X extends JCckPluginField
 										if (JCck.More.ItemX.instances[JCck.More.ItemX.active].behavior) {
 											if ($("#"+JCck.More.ItemX.active+" table > tbody").children().length) {
 												infinite = 1;
+											} else if ($("#"+JCck.More.ItemX.active+" ul").children().length) {
+												infinite = 1;
 											}
 										}
 										$.ajax({
@@ -295,7 +297,7 @@ class plgCCK_FieldItem_X extends JCckPluginField
 										var close = close || false;
 										if (JCck.More.ItemX.instances[JCck.More.ItemX.active].behavior) {
 											if ($("#"+id+"_"+JCck.More.ItemX.active).length) {
-												var $el_p = $("#"+id+"_"+JCck.More.ItemX.active).parents("tr");
+												var $el_p = $("#"+id+"_"+JCck.More.ItemX.active).parents(JCck.More.ItemX.instances[JCck.More.ItemX.active].html_tag);
 												$el_p.find(".hasTooltip").tooltip("destroy");
 												$el_p.remove();
 
@@ -403,6 +405,14 @@ class plgCCK_FieldItem_X extends JCckPluginField
 									},
 									setInstance: function(name, data) {
 										JCck.More.ItemX.instances[name] = data;
+										JCck.More.ItemX.instances[name].html_tag = "tr";
+
+										if($("#"+name+" .cck-loading-more").length) {
+											var tag = $("#"+name+" .cck-loading-more").prop("tagName");
+											if (tag == "UL") {
+												JCck.More.ItemX.instances[name].html_tag = "li";
+											}
+										}
 
 										if(JCck.More.ItemX.instances[name].behavior) {
 											if($("#"+name+" .cck-loading-more").length) {
@@ -502,7 +512,9 @@ class plgCCK_FieldItem_X extends JCckPluginField
 													'required'=>( $field->required ? true : false ),
 													'task_add'=>( $field->bool2 > -2 ? true : false ),
 													'task_batch'=>( (int)$field->bool4 > 0 ? true : false ),
-													'task_select'=>( $field->bool3 > -2 ? true : false )
+													'task_check'=>( (int)$field->bool3 == -1 ? true : false ),
+													'task_select'=>( (int)$field->bool3 > -1 ? true : false ),
+													'ui'=>( (int)$field->bool3 == -1 ? true : false )
 												);
 
 			// Check Permissions
@@ -918,11 +930,13 @@ class plgCCK_FieldItem_X extends JCckPluginField
 													'required'=>( $field->required ? true : false ),
 													'task_add'=>( $field->bool2 > -2 ? true : false ),
 													'task_batch'=>( (int)$field->bool4 > 0 ? true : false ),
+													'task_check'=>( (int)$field->bool3 == -1 ? true : false ),
 													'task_search'=>false,
-													'task_select'=>( $field->bool3 > -2 ? true : false ),
-													'variation'=>( $field->variation ? $field->variation : 'form' ),
+													'task_select'=>( (int)$field->bool3 > -1 ? true : false ),
+													'ui'=>( (int)$field->bool3 == -1 ? true : false ),
+													'variation'=>( $field->variation ? $field->variation : 'form' )
 												);
-			
+
 			if ( $type == 'search' ) {
 				self::$properties[$referrer]['task_add']	=	false;
 				self::$properties[$referrer]['task_search']	=	true;
@@ -992,7 +1006,11 @@ class plgCCK_FieldItem_X extends JCckPluginField
 								'submit'=>'JCck.Core.submit_'.$uniqId,
 								'task'=>'search',
 							);
-		
+
+		if ( $field->bool3 == -1 ) {
+			$preconfig['search2']	=	$extended.'_checkbox_list';
+		}
+
 		$offset			=	0;
 		$limitstart		=	-1;
 		$live			=	'';

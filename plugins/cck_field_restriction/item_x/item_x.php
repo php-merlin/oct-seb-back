@@ -57,6 +57,9 @@ class plgCCK_Field_RestrictionItem_X extends JCckPluginRestriction
 	protected static function _authorise( $restriction, &$field, &$config )
 	{
 		$app		=	JFactory::getApplication();
+		$do			=	$restriction->get( 'do', 0 );
+		$state		=	1;
+
 		$mode		=	$restriction->get( 'mode' );
 		$property	=	'';
 		$referrer	=	$app->input->getCmd( 'cck_item_x_referrer', $app->input->getCmd( 'referrer', uniqid() ) );
@@ -66,13 +69,21 @@ class plgCCK_Field_RestrictionItem_X extends JCckPluginRestriction
 
 		if ( $mode != '' ) {
 			if ( (bool)$mode !== plgCCK_FieldItem_X::getFieldProperty( $referrer, 'mode' ) ) {
-				return false;
+				$state	=	0;
+
+				if ( !$do ) {
+					return false;
+				}
 			}
 		}
 
 		if ( $task != '' ) {
 			if ( !plgCCK_FieldItem_X::getFieldProperty( $referrer, 'task_'.$task ) ) {
-				return false;
+				$state	=	0;
+
+				if ( !$do ) {
+					return false;
+				}
 			}
 		}
 
@@ -81,24 +92,48 @@ class plgCCK_Field_RestrictionItem_X extends JCckPluginRestriction
 			
 			if ( $variation == 'visible' ) {
 				if ( !( $referrer_variation == 'form' || $referrer_variation == 'disabled' || $referrer_variation == 'value' ) ) {
-					return false;
+					$state	=	0;
+
+					if ( !$do ) {
+						return false;
+					}
 				}
 			} elseif ( $variation == 'visible_form' ) {
 				if ( !( $referrer_variation == 'form' || $referrer_variation == 'disabled' ) ) {
-					return false;
+					$state	=	0;
+
+					if ( !$do ) {
+						return false;
+					}
 				}
 			} elseif ( $variation !== $referrer_variation  ) {
-				return false;
+				$state	=	0;
+
+				if ( !$do ) {
+					return false;
+				}
 			}
 		}
 
 		if ( $required != '' ) {
 			if ( (bool)$required !== plgCCK_FieldItem_X::getFieldProperty( $referrer, 'required' ) ) {
-				return false;
+				$state	=	0;
+
+				if ( !$do ) {
+					return false;
+				}
 			}
 		}
 
-		return true;
+		/*TODO#SEBLOD4: currently OK only for one selection ... make it work for multiple */
+
+		if ( !$state ) {
+			return $do ? true : false;
+		} else {
+			return $do ? false : true;
+		}
+
+		// return true;
 	}
 }
 ?>
