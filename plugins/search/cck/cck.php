@@ -603,14 +603,24 @@ class plgSearchCCK extends JPlugin
 				}
 			}
 		} else {
-			$ordered	=	false;
+			$isMultiLanguage	=	JCckDevHelper::isMultilingual();
+			$lang				=	JFactory::getLanguage();
+			$ordered			=	false;
 
 			if ( is_array( $fields_order ) && count( $fields_order ) ) {
 				$str		=	(string)$query;
 				$str		=	explode( 'FROM', $str );
 				$str		=	$str[0];
 
+				JPluginHelper::importPlugin( 'cck_field_restriction' );
+
 				foreach ( $fields_order as $field ) {
+					if ( isset( $field->restriction ) && $field->restriction ) {
+						if ( !JCck::callFunc_Array( 'plgCCK_Field_Restriction'.$field->restriction, 'onCCK_Field_RestrictionPrepareContent', array( &$field, &$config ) ) ) {
+							continue;
+						}
+					}
+
 					$order		=	'';
 					$modifier	=	'';
 					$modifier2	=	'';
@@ -661,6 +671,8 @@ class plgSearchCCK extends JPlugin
 
 							if ( isset( $field->storage ) && $field->storage == 'json' ) {
 								$target	=	'JSON_EXTRACT('.$target.', '.JCckDatabase::quote('$."'.$field->storage_field2.'"').')';
+							} elseif ( $isMultiLanguage && (int)$field->storage_mode == 1 ) {
+								$target	=	'JSON_EXTRACT('.$target.', '.JCckDatabase::quote('$."'.$lang->getTag().'"').')';
 							}
 							$order	.=	$modifier.$target.$modifier2.$modifier3;
 						} elseif ( strpos( $str, $s_field.'.' ) !== false || strpos( $str, 'AS '.$s_field ) !== false ) {
