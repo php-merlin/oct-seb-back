@@ -173,7 +173,6 @@ class plgCCK_FieldItem_X extends JCckPluginField
 							(function ($){
 								JCck.More.ItemX = {
 									active: "",
-									form:"'.$referrer.'",
 									instances: [],
 									modal: JCck.Core.getModal({"backclose":false,"class":"modal-backend","title":"'.JText::_( 'COM_CCK_ADD' ).' / '.JText::_( 'COM_CCK_EDIT' ).'"}),
 									modal_preview: JCck.Core.getModal({"backclose":false,"backdrop":false,"title":"'.JText::_( 'COM_CCK_PREVIEW' ).'"}),
@@ -198,7 +197,7 @@ class plgCCK_FieldItem_X extends JCckPluginField
 											type: "GET",
 											url: JCck.More.ItemX.instances[JCck.More.ItemX.active].link_list,
 											beforeSend:function() {
-												this.url = this.url.replace(\'"referrer":""\',\'"referrer":"\'+JCck.More.ItemX.form+\'.\'+JCck.More.ItemX.active+\'"\');
+												this.url = this.url.replace(\'"referrer":""\',\'"referrer":"\'+JCck.More.ItemX.instances[JCck.More.ItemX.active].referrer+\'.\'+JCck.More.ItemX.active+\'"\');
 											},
 											success: function(response) {
 												JCck.More.ItemX.toggleRequired(false);
@@ -498,6 +497,7 @@ class plgCCK_FieldItem_X extends JCckPluginField
 									"link_process":\''.$link7.'\',
 									"link_select":"'.htmlspecialchars_decode( $link2 ).'",
 									"link_save":\''.$link6.'\',
+									"referrer":\''.$referrer.'\',
 									"required":'.( $field->required ? 1 : 0 ).',
 									"trigger":\''.$trigger.'\'
 								};
