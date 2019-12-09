@@ -92,6 +92,7 @@ class plgSearchCCK extends JPlugin
 			}
 			$t2		=	count( $tables );
 		}
+
 		foreach ( $fields as $field ) {
 			if ( !@$field->state ) {
 				continue;
@@ -271,6 +272,11 @@ class plgSearchCCK extends JPlugin
 					// -
 					if ( $Pt && !isset( $tables[$Pt] ) ) {
 						$tables[$Pt]	=	array( '_'=>'t'.$t, 'fields'=>array(), 'join'=>1 );
+
+						if ( $field->storage_key != '' ) {
+							$tables[$Pt]['key']	=	$field->storage_key;
+						}
+
 						$t++;
 					}
 					$tables[$Pt]['location']	=	$field->storage_location;

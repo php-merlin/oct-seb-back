@@ -109,6 +109,7 @@ class CCK_List
 							'storage_table',
 							'storage_field',
 							'storage_field2',
+							'storage_key',
 							'storage_mode'
 						);
 
