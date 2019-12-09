@@ -78,6 +78,9 @@ class plgCCK_Field_RestrictionCck_Fields extends JCckPluginRestriction
 		if ( isset( $field->priority ) && $field->priority < $priority ) {
 			$priority	=	$field->priority;
 		}
+		if ( (int)$restriction->get( 'priority', '' ) > 0 ) {
+			$priority	=	(int)$restriction->get( 'priority', '' );
+		}
 
 		parent::g_addProcess( $event, self::$type, $config, array( 'name'=>$field->name, 'restriction'=>$restriction ), $priority );
 

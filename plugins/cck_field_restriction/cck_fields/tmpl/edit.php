@@ -34,6 +34,9 @@ $html	=	JHtml::_( 'select.genericlist', $lives, 'live', 'class="input select"', 
 		 .	 JCckDev::getForm( 'core_dev_text', '', $config, array( 'label'=>'', 'defaultvalue'=>'', 'css'=>'input-small', 'storage_field'=>'values' ) )
 		 .	 '<span class="c_link" id="live_button" name="live_button">+</span>'
 		 .	 '</li>';
+
+        echo JCckDev::renderSpacer( JText::_( 'COM_CCK_CONSTRUCTION' ) . '<span class="mini">('.JText::_( 'COM_CCK_GENERIC' ).')</span>' );
+		echo JCckDev::renderForm( 'core_dev_bool', '', $config, array( 'label'=>'Priority', 'defaultvalue'=>'', 'selectlabel'=>'Inherited', 'options'=>'5||6', 'storage_field'=>'priority' ) );
         ?>
     </ul>
 </div>
