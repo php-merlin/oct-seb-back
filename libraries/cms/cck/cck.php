@@ -201,7 +201,7 @@ abstract class JCck
 
 					if ( $s->context != '' ) {
 						$hasContext	=	true;
-						$pos		=	strpos( $path_base, $base.$lang_sef.'/'.$s->context );
+						$pos		=	strpos( $path_base.'/', $base.$lang_sef.'/'.$s->context.'/' );
 
 						if ( $pos !== false && $pos == 0 ) {
 							$context	=	$s->context;
