@@ -929,13 +929,14 @@ class plgSystemCCK extends JPlugin
 				}
 			}
 			$nogroups	=	str_replace( ',,',',', $nogroups );
-      
-			// Viewlevels
-			$authlevels	=	$user->getAuthorisedViewLevels();
-			$nolevels	=	JCckDatabase::loadColumn( 'SELECT viewlevels FROM #__cck_core_sites WHERE id != '.$this->site->id );
-			$nolevels	=	( is_null( $nolevels ) ) ? array() : explode( ',', implode( ',', $nolevels ) );
 
+			// Viewlevels
+			$authlevels		=	$user->getAuthorisedViewLevels();
+			
 			if ( $multisite ) {
+				$nolevels	=	JCckDatabase::loadColumn( 'SELECT viewlevels FROM #__cck_core_sites WHERE id != '.$this->site->id );
+				$nolevels	=	( is_null( $nolevels ) ) ? array() : explode( ',', implode( ',', $nolevels ) );
+
 				if ( count( $nolevels) ) {
 					foreach ( $nolevels as $k=>$v ) {
 						$nolevels[$k]	=	(int)$v;
@@ -944,6 +945,7 @@ class plgSystemCCK extends JPlugin
 				$viewlevels		=	array_diff( $authlevels, $nolevels );
 				$otherlevels	=	array_diff( explode( ',', $this->site->viewlevels ), $viewlevels );
 				$otherlevels	=	array_intersect( $otherlevels, $authlevels );
+				$otherlevels[]	=	(int)$this->site->public_viewlevel;
 				$otherlevels	=	ArrayHelper::toInteger( $otherlevels );
 
 				if ( count( $otherlevels ) ) {
@@ -951,6 +953,7 @@ class plgSystemCCK extends JPlugin
 				}
 			} else {
 				$viewlevels		=	$authlevels;
+				$viewlevels[]	=	(int)$this->site->public_viewlevel;
 			}
 
 			if ( $app->isClient( 'administrator' ) && (int)$this->site->guest_only_viewlevel > 0 ) {
