@@ -39,10 +39,124 @@ class plgContentCCK extends JPlugin
 	// onCckConstructionAfterDelete
 	public function onCckConstructionAfterDelete( $context, $item )
 	{
+		if ( empty( $context ) ) {
+			return false;
+		}
+
+		$db		=	JFactory::getDbo();
+		$query	=	$db->getQuery( true )->select( 'name AS object' )
+										 ->from( '#__cck_core_objects' )
+										 ->where( 'context = '. $db->quote( $context ) );
+
+		$db->setQuery( $query );
+		$object	=	$db->loadResult();
+		
+		if ( ! $object ) {
+			return true;
+		}
+		
+		$table_key	=	$item->getKeyName();
+		$table_name	=	$item->getTableName();
+		$pk			= 	$item->$table_key;
+		$base 		= 	str_replace( '#__', '', $table_name );
+		
+		$parent		=	'';
+		$pkb		=	0;
+		$type		=	'';
+
+		// Core
+		$idx	=	array( 'pk'=>$pk, 'storage_location'=>$object );
+		$table	=	JCckTable::getInstance( '#__cck_core' );
+
+		if ( $table->load( $idx ) ) {
+			$type	=	$table->cck;
+		}
+
+		if ( $table->pk > 0 ) {
+			// -- Leave nothing behind
+			if ( $type != '' ) {
+				require_once JPATH_LIBRARIES.'/cck/base/form/form.php';
+
+				JPluginHelper::importPlugin( 'cck_field' );
+				JPluginHelper::importPlugin( 'cck_storage' );
+				JPluginHelper::importPlugin( 'cck_storage_location' );
+
+				$config		=	array(
+									'pk'=>$table->pk,
+									'storages'=>array(),
+									'type'=>$table->cck
+								);
+				$dispatcher	=	JEventDispatcher::getInstance();
+				$parent		=	JCckDatabase::loadResult( 'SELECT parent FROM #__cck_core_types WHERE name = "'.$type.'"' );
+				$fields		=	CCK_Form::getFields( array( $type, $parent ), 'all', -1, '', true );
+				
+				if ( count( $fields ) ) {
+					foreach ( $fields as $field ) {
+						$Pt		=	$field->storage_table;
+						$value	=	'';
+						
+						/* Yes but, .. */
+
+						if ( $Pt && ! isset( $config['storages'][$Pt] ) ) {
+							$config['storages'][$Pt]	=	'';
+							
+							if ( $Pt == $table_name ) {
+								$config['storages'][$Pt]	=	$item;
+							} else {
+								$dispatcher->trigger( 'onCCK_Storage_LocationPrepareDelete', array( &$field, &$config['storages'][$Pt], $pk, &$config ) );	
+							}
+						}
+						$dispatcher->trigger( 'onCCK_StoragePrepareDelete', array( &$field, &$value, &$config['storages'][$Pt], &$config ) );
+						$dispatcher->trigger( 'onCCK_FieldDelete', array( &$field, $value, &$config, array() ) );
+					}
+				}
+			}
+			// -- Leave nothing behind
+
+			$table->delete();
+		}
+
+		// Processing
+		JLoader::register( 'JCckToolbox', JPATH_PLATFORM.'/cms/cck/toolbox.php' );
 		if ( JCckToolbox::getConfig()->get( 'processing', 0 ) ) {
 			$event	=	'onCckConstructionAfterDelete';
 
 			$this->_process( array( 'event', 'context', 'item' ), $event, $context, $item );
+		}
+
+		$tables	=	JCckDatabase::getTableList();
+		$prefix	= 	JFactory::getConfig()->get( 'dbprefix' );
+		
+		if ( in_array( $prefix.'cck_store_item_'.$base, $tables ) ) {
+			$table	=	JCckTable::getInstance( '#__cck_store_item_'.$base, 'id', $pk );
+			if ( $table->id ) {
+				$table->delete();
+			}
+		}
+		
+		if ( in_array( $prefix.'cck_store_form_'.$type, $tables ) ) {
+			$table	=	JCckTable::getInstance( '#__cck_store_form_'.$type, 'id', $pk );
+			if ( $table->id ) {
+				$table->delete();
+			}
+		}
+
+		if ( $parent != '' && in_array( $prefix.'cck_store_form_'.$parent, $tables ) ) {
+			$table	=	JCckTable::getInstance( '#__cck_store_form_'.$parent, 'id', $pk );
+			if ( $table->id ) {
+				$table->delete();
+			}
+		}
+		
+		if ( isset( $config, $config['pk'] ) && $config['pk'] ) {
+			if ( JCckToolbox::getConfig()->get( 'processing', 0 ) ) {
+				$trigger_config	=	array(
+										'pk'=>$config['pk'],
+										'type'=>$config['type']
+									);
+
+				JCckToolbox::process( 'onCckPostAfterDelete', $trigger_config );
+			}
 		}
 	}
 

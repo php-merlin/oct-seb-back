@@ -51,18 +51,6 @@ class CCK_TableSite extends JTable
 
 		return true;
 	}
-	
-	// delete
-	public function delete( $pk = null )
-	{
-		if ( $this->id ) {
-			JCckDatabase::execute( 'DELETE IGNORE a.*'
-								.  ' FROM #__cck_core AS a'
-								.  ' WHERE a.storage_location="cck_site" AND a.pk="'.(int)$this->id.'"' );
-		}
-
-		return parent::delete();
-	}
 }
 
 // CCK_TableSiteHelper
