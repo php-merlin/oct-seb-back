@@ -119,7 +119,6 @@ class CCK_Rendering_Item
 	public function init() { $this->initialize(); } // (deprecated)
 	public function initialize()
 	{
-
 		$this->me			=	( isset( $this->fields_list ) && $this->fields_list ) ? $this->fields_list : ( ( isset( $this->fields ) ) ? $this->fields : new stdClass );
 		$this->methodRender	=	'onCCK_FieldRenderContent';
 
@@ -140,6 +139,10 @@ class CCK_Rendering_Item
 									'mode'=>$this->mode,
 									'rendering_id'=>$this->id
 								);
+
+		if ( ! @$this->params['variation_default'] ) {
+			$this->params['variation_default']	=	JCck::getConfig_Param( 'site_variation', '' );
+		}
 	}
 
 	// finalize
@@ -227,7 +230,7 @@ class CCK_Rendering_Item
 	{
 		$field	=	$this->get( $fieldname );
 		$html	=	'';
-		
+
 		if ( !$field ) {
 			return $html;
 		}
@@ -245,7 +248,7 @@ class CCK_Rendering_Item
 			$this->config['options']	=	$options;
 
 			$html	=	JCck::callFunc_Array( 'plgCCK_Field'.$field->type, $this->methodRender, array( &$field, &$this->config ) );
-			
+
 			if ( $field->display > 1 && $html != '' ) {
 				if ( ! $hasOptions ) {
 					return $html;
@@ -258,7 +261,7 @@ class CCK_Rendering_Item
 						$label	=	$this->getLabel( $fieldname, true, ( $field->required ? '*' : '' ) );
 						$html	=	$label.$html;
 					}
-				} elseif ( $this->markup ) {
+				} elseif ( $this->markup ) { /* Legacy */
 					// Description
 					$desc	=	'';
 					if ( $this->getStyleParam( 'field_description', 0 ) ) {
@@ -369,6 +372,9 @@ class CCK_Rendering_Item
 
 				if ( count( $excluded ) ) {
 					$names	=	array_diff( $names, $excluded );
+				}
+				if ( $n > 1 ) {
+					$options->set( 'markup', 1 );
 				}
 				foreach ( $names as $name ) {
 					$html	.=	$this->renderField( $name, $options );
