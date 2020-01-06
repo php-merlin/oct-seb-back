@@ -783,6 +783,12 @@ class CCKController extends JControllerLegacy
 		$app->close();
 	}
 	
+	// toggleAjax
+	public function toggleAjax()
+	{
+
+	}
+
 	// _download_hits
 	protected function _download_hits( $id, $fieldname, $collection = '', $x = 0 )
 	{
