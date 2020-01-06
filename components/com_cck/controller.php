@@ -756,6 +756,33 @@ class CCKController extends JControllerLegacy
 		echo json_encode( $return );
 	}
 
+	// saveFieldAjax
+	public function saveFieldAjax()
+	{
+		// JSession::checkToken() or jexit( JText::_( 'JINVALID_TOKEN' ) );
+		
+		$app		=	JFactory::getApplication();
+		$model		=	$this->getModel( 'form' );
+		$preconfig	=	array(
+							'id'=>$app->input->post->getInt( 'id', 0 ),
+							'target'=>$app->input->post->get( 'target', '' ),
+							'value'=>$app->input->post->getString( 'value', '' )
+						);
+		
+		$config		=	$model->storeField( $preconfig );
+		$return		=	array(
+							'error'=>0,
+							'id'=>$config['id'],
+							'pk'=>$config['pk']
+						);
+		
+		if ( !$return['pk'] ) {
+			$return['error']	=	1;
+		}
+		
+		echo json_encode( $return );
+	}
+
 	// saveOrderAjax
 	public function saveOrderAjax()
 	{
