@@ -29,8 +29,9 @@ $class_table	=	( $isResponsive ) ? $class_table.' responsive' : $class_table;
 $class_table	=	$class_table ? ' class="'.$class_table.'"' : '';
 $translate		=	JCck::getConfig_Param( 'language_jtext', 1 );
 
-$doc			=	JFactory::getDocument();
-$doc->addStyleSheet( JUri::root( true ).'/templates/'.$cck->template. '/css/'.'style.css' );
+if ( (int)JCck::getConfig_Param( 'css_core', '1' ) != 0 ) {
+	JFactory::getDocument()->addStyleSheet( JUri::root( true ).'/templates/'.$cck->template. '/css/'.'style.css' );
+}
 
 if ( $translate ) {
 	$lang	=	JFactory::getLanguage();
@@ -135,27 +136,36 @@ if ( $cck->id_class && !$isMore ) {
 			$body[$i]['html']	=	'<tr'.$item->replaceLive( $attributes ).'>';
 
             foreach ( $positions as $name=>$position ) {
-				$fieldnames	=	$cck->getFields( $name, '', false );
-
-				if ( $i == 0 ) {
-					$head[$name]['fields']	=	( count( $fieldnames ) > 1 ) ? true : false;
-				}
 				$col		=	'';
-				$multiple	=	$head[$name]['fields'];
 				$width		=	'';
+
 				if ( $isFixed ) {
 					$width	=	$attr['width'][$name];
 				}
-                foreach ( $fieldnames as $fieldname ) {
-					$content	=	$item->renderField( $fieldname );
-					if ( $content != '' ) {
-						if ( $item->getMarkup( $fieldname ) != 'none' && ( $multiple || $item->getMarkup_Class( $fieldname ) ) ) {
-							$col	.=	'<div class="cck-clrfix'.$item->getMarkup_Class( $fieldname ).'">'.$content.'</div>';
-						} else {
-							$col	.=	$content;
-						}
+
+				if ( 1 == 1 ) { /* TODO#SEBLOD4 */
+					$col		=	$item->renderPosition( $name, 'cell' );
+				} else {
+					$fieldnames	=	$cck->getFields( $name, '', false );
+
+					if ( $i == 0 ) {
+						$head[$name]['fields']	=	( count( $fieldnames ) > 1 ) ? true : false;
 					}
+
+					$multiple	=	$head[$name]['fields'];
+
+					foreach ( $fieldnames as $fieldname ) {
+						$content	=	$item->renderField( $fieldname );
+						if ( $content != '' ) {
+							if ( $item->getMarkup( $fieldname ) != 'none' && ( $multiple || $item->getMarkup_Class( $fieldname ) ) ) {
+								$col	.=	'<div class="cck-clrfix'.$item->getMarkup_Class( $fieldname ).'">'.$content.'</div>';
+							} else {
+								$col	.=	$content;
+							}
+						}
+					}	
 				}
+
 				if ( $col == '' ) {
 					if ( !$table_columns ) {
 						$head[$name]['count']--;
