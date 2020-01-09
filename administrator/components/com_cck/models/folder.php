@@ -182,7 +182,7 @@ class CCKModelFolder extends JCckBaseLegacyModelAdmin
 
 			if ( isset( $elements['fields'] ) ) {
 				$fields		=	JCckDatabase::loadObjectList( 'SELECT a.* FROM #__cck_core_fields AS a WHERE a.folder = '.(int)$folder->id );
-				CCK_Export::exportElements( 'field', $fields, $data, $extensions, 500, $copyright );
+				CCK_Export::exportElements( 'field', $fields, $data, $extensions, 5000, $copyright );
 			}
 			if ( isset( $elements['templates'] ) ) {
 				$templates	=	JCckDatabase::loadObjectList( 'SELECT a.* FROM #__cck_core_templates AS a WHERE a.folder = '.(int)$folder->id );
