@@ -73,7 +73,7 @@ $types		=	array(
 		echo JCckDevTabs::open( $group_id, 'tabs2', JText::_( 'COM_CCK_OPTIONS' ) );
 	}
 	echo '<ul class="adminformlist adminformlist-2cols">';
-	echo JCckDev::renderForm( 'core_dev_select', @$options['type'], $config, array( 'label'=>'Type', 'defaultvalue'=>'2,7', 'selectlabel'=>'', 'options'=>'Minimal=6||Basic=7||Standard=2,7||Advanced=2,3,6,7', 'storage_field'=>'json[options][type]' ) );
+	echo JCckDev::renderForm( 'core_dev_select', @$options['type'], $config, array( 'label'=>'Type', 'defaultvalue'=>'2,7', 'selectlabel'=>'', 'options'=>'Basic Manager=6||Basic Administrator=7||Standard=2,7||Advanced=2,3,6,7', 'storage_field'=>'json[options][type]' ) );
 	echo '</ul>';
 
 	echo JCckDevTabs::end();

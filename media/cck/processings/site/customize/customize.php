@@ -17,11 +17,10 @@ if ( !$config['isNew'] ) {
 	return;
 }
 
-$type			=	$opts['type']; /* '7' || '2,7' || 2,3,6,7 */
+$type			=	$opts['type']; /* '7' || '2,7' || 2,6,7 */
 $groups			=	explode( ',', $type );
 $types			=	array(
 						'2'=>'registered',
-						'3'=>'author',
 						'6'=>'manager',
 						'7'=>'administrator'
 				);

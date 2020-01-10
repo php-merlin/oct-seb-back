@@ -82,7 +82,7 @@ abstract class JCckDevIntegration
 				case 'sites':
 					$items	=	array( (object)array( 'text'=>JText::_( 'COM_CCK_BASIC' ), 'value'=>'7' ),
 									   (object)array( 'text'=>JText::_( 'COM_CCK_STANDARD' ), 'value'=>'2,7' ),
-									   (object)array( 'text'=>JText::_( 'COM_CCK_ADVANCED' ), 'value'=>'2,3,6,7' ) );
+									   (object)array( 'text'=>JText::_( 'COM_CCK_ADVANCED' ), 'value'=>'2,6,7' ) );
 					$link	=	'index.php?option=com_cck&task=site.add';
 					$var	=	'&type=';
 					$title	=	JText::_( 'COM_CCK_TIP_NEW_SITE' );
