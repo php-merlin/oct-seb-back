@@ -513,7 +513,7 @@ class CCK_Import
 			$core					=	JCckTable::getInstance( '#__cck_core', 'id' );
 			$core->load( $id );
 			$core->pk				=	$table->id;
-			$core->cck				=	'category';														/* TODO#SEBLOD: */
+			$core->cck				=	isset( $xml->joomla_category->attributes()->type ) && (string)$xml->joomla_category->attributes()->type ? (string)$xml->joomla_category->attributes()->type : 'category';
 			$core->storage_location	=	'joomla_category';
 			$core->author_id		=	JCck::getConfig_Param( 'integration_user_default_author', 42 );	/* TODO#SEBLOD: */
 			$core->parent_id		=	$table->parent_id;
