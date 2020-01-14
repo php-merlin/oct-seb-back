@@ -630,38 +630,43 @@ class CCK_Import
 	{
 		$db		=	JFactory::getDbo();
 		$path	=	$data['root'].'/tables';
-		
+
 		if ( file_exists( $path ) ) {
 			$items	=	JFolder::files( $path, '\.xml$' );
+
 			if ( count( $items ) ) {
 				$prefix		=	JFactory::getConfig()->get( 'dbprefix' );
 				$tables		=	JCckDatabase::getTableList( true );
-				
+
 				foreach ( $items as $item ) {
 					$xml	=	JCckDev::fromXML( $path.'/'.$item );
+					
 					if ( !$xml || (string)$xml->attributes()->type != 'tables' ) {
 						return;
 					}
 					$name		=	(string)$xml->table->name;
 					$table_key	=	(string)$xml->table->primary_key;
 					$short		=	str_replace( '#__', $prefix, $name );
-					
+
 					if ( isset( $tables[$short] ) ) {
 						$table			=	JCckTable::getInstance( $name );
 						$table_fields	=	$table->getFields();
 						$previous		=	'';
-						
+
 						// Fields
 						$fields		=	$xml->fields->children();
+
 						if ( count( $fields ) ) {
 							foreach ( $fields as $field ) {
 								$column		=	(string)$field;
 								$type		=	(string)$field->attributes()->type;
 								$default	=	(string)$field->attributes()->default;
+
 								if ( !isset( $table_fields[$column] ) ) {
 									$query	=	'ALTER TABLE '.$name.' ADD '.JCckDatabase::quoteName( $column ).' '.$type.' NOT NULL';
 									$query	.=	( $default != '' ) ? ' DEFAULT "'.$default.'"' : '';
 									$query	.=	( $previous != '' ) ? ' AFTER '.JCckDatabase::quoteName( $previous ) : ' FIRST';
+
 									JCckDatabase::execute( $query );
 								} else {
 									if ( $type != $table_fields[$column]->Type ) {
@@ -697,14 +702,20 @@ class CCK_Import
 						
 						// Fields
 						$fields		=	$xml->fields->children();
+						
 						if ( count( $fields ) ) {
 							foreach ( $fields as $field ) {
 								$type		=	(string)$field->attributes()->type;
 								$default	=	(string)$field->attributes()->default;
 								$sql_query	.=	' '.JCckDatabase::quoteName( (string)$field ).' '.$type.' NOT NULL';
+								
 								if ( $default != '' ) {
 									$sql_query	.=	' DEFAULT "'.$default.'"';
 								}
+								if ( isset( $field->attributes()->auto_increment ) && (bool)$field->attributes()->auto_increment ) {
+									$sql_query	.=	' AUTO_INCREMENT';
+								}
+
 								$sql_query	.=	',';
 							}
 						}
