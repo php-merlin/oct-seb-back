@@ -269,6 +269,9 @@ class plgCCK_Storage_LocationJoomla_Category extends JCckPluginLocation
 			$access	=	implode( ',', $user->getAuthorisedViewLevels() );
 			$query->where( $t_pk.'.access IN ('.$access.')' );
 		}
+		if ( JCckDevHelper::isMultilingual() && ! isset( $tables[self::$table]['fields']['language'] ) ) {
+			$query->where( $t_pk.'.language IN ("'.JFactory::getLanguage()->getTag().'","*")' );
+		}
 	}
 	
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Store

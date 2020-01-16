@@ -296,6 +296,9 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 			$access	=	implode( ',', $user->getAuthorisedViewLevels() );
 			$query->where( $t_pk.'.access IN ('.$access.')' );
 		}
+		if ( JCckDevHelper::isMultilingual() && ! isset( $tables[self::$table]['fields']['language'] ) ) {
+			$query->where( $t_pk.'.language IN ("'.JFactory::getLanguage()->getTag().'","*")' );
+		}
 		if ( ! isset( $tables[self::$table]['fields']['publish_up'] ) ) {
 			$query->where( '( '.$t_pk.'.publish_up = '.$db->quote( $null ).' OR '.$t_pk.'.publish_up <= '.$db->quote( $now ).' )' );
 		}
