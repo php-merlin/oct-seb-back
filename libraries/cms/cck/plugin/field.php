@@ -479,7 +479,8 @@ class JCckPluginField extends JPlugin
 		$column1			=	'<input class="thin blue" type="text" name="ffp['.$name.'][label]" size="22" '
 							.	'value="'.( ( @$field->label2 != '' ) ? htmlspecialchars( $field->label2 ) : htmlspecialchars( $field->label ) ).'" />'
 							.	'<input class="thin blue" type="hidden" name="ffp['.$name.'][label2]" value="'.$field->label.'" />';
-		$column2			=	'';
+		$column2			=	'<input type="hidden" id="'.$name.'_variation_override" name="ffp['.$name.'][variation_override]" '
+							.	'value="'.( ( @$field->variation_override != '' ) ? htmlspecialchars( $field->variation_override ) : '' ).'" />';
 		$field->params[]	=	self::g_getParamsHtml( 1, $style, $column1, $column2 );
 		
 		// 2
@@ -729,7 +730,8 @@ class JCckPluginField extends JPlugin
 		$column1			=	'<input class="thin blue" type="text" name="ffp['.$name.'][label]" size="22" '
 							.	'value="'.( ( @$field->label2 != '' ) ? htmlspecialchars( $field->label2 ) : htmlspecialchars( $field->label ) ).'" />'
 							.	'<input class="thin blue" type="hidden" name="ffp['.$name.'][label2]" value="'.$field->label.'" />';
-		$column2			=	'';
+		$column2			=	'<input type="hidden" id="'.$name.'_variation_override" name="ffp['.$name.'][variation_override]" '
+							.	'value="'.( ( @$field->variation_override != '' ) ? htmlspecialchars( $field->variation_override ) : '' ).'" />';
 		$field->params[]	=	self::g_getParamsHtml( 1, $style, $column1, $column2 );
 		
 		// 2

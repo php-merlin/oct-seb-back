@@ -113,6 +113,19 @@ if ( $count ) {
 				$fieldName			=	$field->name;
 				$value				=	'';
 				$name				=	( ! empty( $field->storage_field2 ) ) ? $field->storage_field2 : $fieldName; //-
+
+				if ( $field->variation_override ) {
+					$override	=	json_decode( $field->variation_override, true );
+
+					if ( count( $override ) ) {
+						foreach ( $override as $k=>$v ) {
+							$field->$k	=	$v;
+						}
+					}
+
+					$field->variation_override	=	null;
+				}
+				
 				if ( $fieldName ) {
 					$Pt				=	( $field->storage_table != '' ) ? $field->storage_table : '_';
 					if ( $Pt && ! isset( $config['storages'][$Pt] ) ) {
@@ -283,6 +296,19 @@ if ( $count ) {
 				$fieldName			=	$field->name;
 				$value				=	'';
 				$name				=	( ! empty( $field->storage_field2 ) ) ? $field->storage_field2 : $fieldName; //-
+
+				if ( $field->variation_override ) {
+					$override	=	json_decode( $field->variation_override, true );
+
+					if ( count( $override ) ) {
+						foreach ( $override as $k=>$v ) {
+							$field->$k	=	$v;
+						}
+					}
+
+					$field->variation_override	=	null;
+				}
+
 				if ( $fieldName ) {
 					$Pt				=	( $field->storage_table != '' ) ? $field->storage_table : '_';
 					if ( $Pt && ! isset( $config['storages'][$Pt] ) ) {
