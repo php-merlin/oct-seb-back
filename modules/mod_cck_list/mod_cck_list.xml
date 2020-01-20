@@ -87,6 +87,11 @@
 				</field>
 				<field name="search2" type="cck" construction="core_search_type" label="MOD_CCK_LIST_SEARCH_ALT" description="MOD_CCK_LIST_SEARCH_ALT_DESC" class="inputbox" cck_selectlabel="Inherited" />
 				<field name="limit" type="text" default="0" label="LIB_CCK_LIMIT" description="LIB_CCK_LIMIT_DESC" size="8" class="inputbox" />
+				<field name="show_form" type="list" label="COM_CCK_CONFIG_PREPARE_SEARCH_FORM" default="0" class="inputbox"
+					   description="COM_CCK_CONFIG_PREPARE_SEARCH_FORM_DESC">
+					<option value="0">JNO</option>
+					<option value="1">JYES</option>
+				</field>
 				<field name="raw_rendering" type="list" label="LIB_CCK_RAW_RENDERING" default="" description="LIB_CCK_RAW_RENDERING_DESC" class="inputbox">
 					<option value="">COM_CCK_INHERITED_SL</option>
 					<option value="0">JNO</option>
