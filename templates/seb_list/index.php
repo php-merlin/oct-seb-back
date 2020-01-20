@@ -39,6 +39,13 @@ if ( $auto_clean == 2 ) {
 
 // Set
 $isMore			=	$cck->isLoadingMore();
+$legacy			=	(int)JCck::getConfig_Param( 'core_legacy', '2012' );
+
+if ( !( $legacy && $legacy <= 2019 ) ) {
+	if ( !$display_mode ) {
+		$display_mode	=	2;
+	}
+}
 if ( $cck->isGoingToLoadMore() ) {
 	$class		=	trim( $class.' '.'cck-loading-more' );
 }
@@ -55,7 +62,7 @@ if ( !( $isRaw || $isMore ) ) { ?>
 	if ( $count ) {
 		if ( $display_mode == 2 ) {
 			foreach ( $items as $item ) {
-				$row	=	$item->renderPosition( 'element' );
+				$row	=	$item->renderPosition( 'element', '', '', array(), false, $cck );
 				if ( $row && !$isRaw ) {
 					$row	=	'<'.$tags[1].$item->replaceLive( $attributes ).'>'.$row.'</'.$tags[1].'>';
 				}

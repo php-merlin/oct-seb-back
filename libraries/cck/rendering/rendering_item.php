@@ -226,7 +226,7 @@ class CCK_Rendering_Item
 
 	// renderField
 	public function getField( $fieldname ) { return $this->renderField( $fieldname ); } // (deprecated)
-	public function renderField( $fieldname, $options = null )
+	public function renderField( $fieldname, $options = null, $parent = null )
 	{
 		$field	=	$this->get( $fieldname );
 		$html	=	'';
@@ -288,7 +288,8 @@ class CCK_Rendering_Item
 												'cck'=>$this,
 												'field'=>$field,
 												'html'=>$html,
-												'options'=>$options
+												'options'=>$options,
+												'parent'=>$parent
 											);
 
 						$layout 		=	new JLayoutFile( 'cck.markup.'.$markup, null, array( 'client'=>0, 'component'=>'com_cck' ) );
@@ -343,7 +344,7 @@ class CCK_Rendering_Item
 	}
 
 	// renderPosition
-	public function renderPosition( $position, $variation = '', $height = '', $excluded = array(), $force = false )
+	public function renderPosition( $position, $variation = '', $height = '', $excluded = array(), $force = false, $parent = null )
 	{
 		$html		=	'';
 		if ( ! $variation ) {
@@ -377,7 +378,7 @@ class CCK_Rendering_Item
 					$options->set( 'markup', 1 );
 				}
 				foreach ( $names as $name ) {
-					$html	.=	$this->renderField( $name, $options );
+					$html	.=	$this->renderField( $name, $options, $parent );
 				}
 			} else {
 				$legend	=	'';

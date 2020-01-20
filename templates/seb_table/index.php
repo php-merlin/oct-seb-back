@@ -39,6 +39,8 @@ if ( $translate ) {
 
 // Set
 $isMore			=	$cck->isLoadingMore();
+$legacy			=	(int)JCck::getConfig_Param( 'core_legacy', '2012' );
+
 if ( $cck->isGoingToLoadMore() ) {
 	$class_body	=	' class="cck-loading-more"';
 }
@@ -143,9 +145,7 @@ if ( $cck->id_class && !$isMore ) {
 					$width	=	$attr['width'][$name];
 				}
 
-				if ( 1 == 1 ) { /* TODO#SEBLOD4 */
-					$col		=	$item->renderPosition( $name, 'cell' );
-				} else {
+				if ( $legacy && $legacy <= 2019 ) {
 					$fieldnames	=	$cck->getFields( $name, '', false );
 
 					if ( $i == 0 ) {
@@ -163,7 +163,9 @@ if ( $cck->id_class && !$isMore ) {
 								$col	.=	$content;
 							}
 						}
-					}	
+					}
+				} else {
+					$col		=	$item->renderPosition( $name, 'cell' );
 				}
 
 				if ( $col == '' ) {
