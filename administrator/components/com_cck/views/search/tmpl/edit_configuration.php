@@ -92,8 +92,8 @@ $options	=	JCckDev::fromJSON( $this->item->options );
         <div class="legend top left"><?php echo '&rArr; ' . JText::_( 'COM_CCK_CONFIG_NO_RESULT' ); ?></div>
         <ul class="adminformlist adminformlist-2cols">
             <?php
-			echo JCckDev::renderForm( $cck['core_message_style'], @$options['message_style'], $config );
-			echo JCckDev::renderForm( $cck['core_action'], @$options['action'], $config );
+			echo JCckDev::renderForm( $cck['core_message_style'], @$options['message_style'], $config, array( 'defaultvalue'=>'0' ) );
+			echo JCckDev::renderForm( $cck['core_action'], @$options['action'], $config, array( 'defaultvalue'=>'file' ) );
 			echo JCckDev::renderForm( $cck['core_message'], @$options['message'], $config );
             echo JCckDev::renderForm( 'core_show_hide', @$options['show_list_desc_no_result'], $config, array( 'defaultvalue'=>1, 'label'=>'CONFIG_SHOW_LIST_DESCRIPTION', 'storage_field'=>'options[show_list_desc_no_result]' ) );
             ?>
