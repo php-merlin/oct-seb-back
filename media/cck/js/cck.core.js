@@ -150,7 +150,7 @@ if("undefined"===typeof JCck)var JCck={};
 	
 			m.modal.on('show', function(e) {
 				e.stopPropagation();
-				$('html').css('overflow','hidden');
+				$("html").removeClass("modal-off").addClass("modal-on");
 				m.callbacks.show(e);
 			});
 	
@@ -166,7 +166,7 @@ if("undefined"===typeof JCck)var JCck={};
 			
 			m.modal.on('hidden', function(e) {
 				e.stopPropagation();
-				$('html').css('overflow','auto');
+				$("html").removeClass("modal-on").addClass("modal-off");
 				m.callbacks.hidden(e);
 			});
 			
@@ -899,5 +899,14 @@ if("undefined"===typeof JCck)var JCck={};
 	};
 	$(document).ready( function() {
 		$('a[data-cck-modal]').CckModal();
+
+		var style = document.createElement('style');
+		style.type = 'text/css';
+		style.innerText = '.modal-on{overflow:hidden;height:auto;}.modal-on.scroll-bar{overflow:unset;position:static;top:0;bottom:0;left:0;right:0}.modal-off{overflow:auto;}';
+		document.getElementsByTagName('head')[0].appendChild(style);
+		var isApple = !!navigator.platform && /Mac|iPad|iPhone|iPod/.test(navigator.platform);
+		if (!isApple){
+			$("html").addClass("scroll-bar");
+		}
 	});
 })(jQuery);
