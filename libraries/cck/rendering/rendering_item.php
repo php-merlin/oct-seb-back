@@ -257,7 +257,7 @@ class CCK_Rendering_Item
 				if ( $field->markup == 'none' || ( $field->markup == '' && $markup == 'none' ) ) {
 					// Label
 					$label	=	'';
-					if ( $options->get( 'field_label', $this->getStyleParam( 'field_label', 1 ) ) ) {
+					if ( $options->get( 'field_label', $this->getStyleParam( 'field_label', 0 ) ) ) {
 						$label	=	$this->getLabel( $fieldname, true, ( $field->required ? '*' : '' ) );
 						$html	=	$label.$html;
 					}
