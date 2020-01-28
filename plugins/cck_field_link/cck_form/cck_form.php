@@ -40,17 +40,20 @@ class plgCCK_Field_LinkCCK_Form extends JCckPluginLink
 		$edit			=	(int)$link->get( 'form_edition', 1 );
 		$form			=	$link->get( 'form', '' );
 
-		if ( !$form ) {
-			if ( (int)$edit == 1 ) {
-				$edit	=	'&id='.$config['pk'];
-			} elseif ( $edit == 2 ) {
-				$edit	=	'&copyfrom_id='.$config['pk'];
-			} else {
-				$edit	=	'';
-			}
-		} else {
-			$edit		=	'';
+		if ( $edit == 1 ) {
+			$edit	=	$config['pk'] ? 3 : 0;
 		}
+		if ( $edit == 3 ) {
+			if ( !$config['pk'] ) {
+				return;
+			}
+			$edit	=	'&id='.$config['pk'];
+		} elseif ( $edit == 2 ) {
+			$edit	=	'&copyfrom_id='.$config['pk'];
+		} else {
+			$edit	=	'';
+		}
+		
 		$form			=	( $form ) ? $form : $config['type'];
 		$itemId			=	$link->get( 'itemid', $app->input->getInt( 'Itemid', 0 ) );
 		$redirection	=	$link->get( 'redirection', '' );

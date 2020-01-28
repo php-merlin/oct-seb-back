@@ -19,8 +19,8 @@ JCckDev::initScript( 'link', $this->item );
         <?php
 		echo JCckDev::renderForm( 'core_form', '', $config, array( 'selectlabel'=>'Inherited', 'options'=>'Use Value=optgroup||Field=-2||Forms=optgroup', 'options2'=>'{"query":"","table":"#__cck_core_types","name":"title","where":"published=1 AND location != \"collection\"","value":"name","orderby":"title","orderby_direction":"ASC"}', 'bool4'=>1, 'required'=>'' ) );
 		echo JCckDev::renderForm( 'core_menuitem', '', $config, array( 'selectlabel'=>'Inherited' ) );
-		echo '<li><label>'.JText::_( 'COM_CCK_EDITION' ).'</label>'
-			. JCckDev::getForm( 'core_dev_bool', '', $config, array( 'label'=>'Edition', 'options'=>'No=0||Yes=1||Yes as copy=2', 'storage_field'=>'form_edition' ) )
+		echo '<li><label>'.JText::_( 'COM_CCK_ACTION' ).'</label>'
+			. JCckDev::getForm( 'core_dev_bool', '', $config, array( 'options'=>'Auto SL=1||Action=optgroup||Add=0||Copy=2||Edit=3', 'storage_field'=>'form_edition' ) )
 			. JCckDev::getForm( 'core_dev_select', '', $config, array( 'selectlabel'=>'Auto', 'defaultvalue'=>'', 'options'=>'1=1||2=2||3=3||4=4||5=5||Final=0', 'bool8'=>0, 'storage_field'=>'form_edition_stage' ) )
 			. '</li>';
 		echo JCckDev::renderForm( 'core_dev_text', '', $config, array( 'label'=>'Field Name', 'storage_field'=>'form_fieldname' ) );
@@ -50,7 +50,6 @@ JCckDev::initScript( 'link', $this->item );
 
 <script type="text/javascript">
 jQuery(document).ready(function($) {
-	$('#form_edition,#blank_li').isVisibleWhen('form','');
 	$('#form_fieldname').isVisibleWhen('form','-2');
 	$('#title_custom').isVisibleWhen('title','2,3',false);
 	$('#redirection_custom,#blank_li').isVisibleWhen('redirection','');
