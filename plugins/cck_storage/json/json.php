@@ -166,20 +166,23 @@ class plgCCK_StorageJson extends JCckPluginStorage
 	// onCCK_StoragePrepareSearch
 	public static function onCCK_StoragePrepareSearch( &$field, $match, $value, $name, $name2, $target, $suffix, $fields = array(), &$config = array() )
 	{
-		$sql	=	'';
-		$target	=	'JSON_EXTRACT('.$target.', '.JCckDatabase::quote('$."'.$name.'"').')'; /* TODO#SEBLOD4: 'LOWER(JSON_EXTRACT('.$target.', '.JCckDatabase::quote('$."'.$name.'"').'))'; */
+		$sql		=	'';
+		$sql_fix	=	$target.' = '.JCckDatabase::quote( '{}' );
+		$target		=	'JSON_EXTRACT('.$target.', '.JCckDatabase::quote('$."'.$name.'"').')'; /* TODO#SEBLOD4: 'LOWER(JSON_EXTRACT('.$target.', '.JCckDatabase::quote('$."'.$name.'"').'))'; */
 		
 		switch ( $match ) { /* TODO#SEBLOD4: a few match modes may need to be overriden */
 			case 'none':
-				return;
+				return '';
 				break;
 			default:
 				require_once JPATH_PLUGINS.'/cck_storage/standard/standard.php';
 
 				$suffix	=	' COLLATE utf8mb4_unicode_ci';
 				$sql	=	JCck::callFunc_Array( 'plgCCK_StorageStandard', 'onCCK_StoragePrepareSearch', array( &$field, $match, $value, $name, $name2, $target, $suffix, $fields, &$config ) ); /* TODO#SEBLOD4: utf8_strtolower( $value ); */
-
 				break;
+		}
+		if ( $sql ) {
+			$sql	=	'('.$sql_fix.' OR '.$sql.')';
 		}
 		
 		return $sql;
