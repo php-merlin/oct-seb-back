@@ -6,7 +6,7 @@ defined( '_JEXEC' ) or die;
 		<span class="o-hide-after@sm icon-dots"></span>
 		<span class="o-hide-before@sm"><?php echo JText::_( 'COM_CCK_ACTIONS' ); ?></span>
 	</button>
-	<ul class="dropdown-menu flex-column-reverse">
+	<ul class="dropdown-menu">
 		<?php echo $displayData['html']; ?>
 	</ul>
 </div>
