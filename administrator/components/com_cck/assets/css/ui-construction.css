@@ -105,7 +105,7 @@ div.colc::selection {background: none;}
     width: auto !important; margin: auto;
 }
 .flexenter > .input-medium {width: 40%; margin: 0 1px;}
-div.seblod div.legend.flexenter .inputbox{font-size: 11px;}
+div.seblod div.legend.flexenter .inputbox{font-size: 12px;}
 
 #minwidth-body .colorpicker{display:none;}
 div.subtabs{color:#16396f; font-size:0.95em;}
