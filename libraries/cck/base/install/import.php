@@ -30,6 +30,15 @@ class CCK_Import
 		$buffer	=	str_replace( '%core_user_group%', $config['params']['more']->get( 'user_group', '-1' ), $buffer );
 		$buffer	=	str_replace( '%core_viewing_access_level%', $config['params']['more']->get( 'viewing_access_level', '-1' ), $buffer );
 
+		if ( strpos( $buffer, '%core_category:' ) !== false ) {
+			if ( isset( $config['params']['core']['category'] )
+			  && is_array( $config['params']['core']['category'] ) ) {
+				foreach ( $config['params']['core']['category'] as $k=>$v ) {
+					$buffer	=	str_replace( '%core_category:'.$k.'%', $v, $buffer );
+				}
+			}
+		}
+
 		if ( strpos( $buffer, '%core_viewing_access_level:' ) !== false ) {
 			if ( isset( $config['params']['core']['viewing_access_level'] )
 			  && is_array( $config['params']['core']['viewing_access_level'] ) ) {
@@ -58,40 +67,77 @@ class CCK_Import
 		foreach ( $items as $name ) {
 			$path	=	$base.$name;
 
-			$buffer	=	self::_fromXML( $path, $config, $data );
-			$xml	=	JCckDev::fromXML( $buffer, false );
+			$buffer		=	self::_fromXML( $path, $config, $data );
+			$item_type	=	'';
+			$xml		=	JCckDev::fromXML( $buffer, false );
 			
 			if ( !$xml || (string)$xml->attributes()->type != $type ) {
 				return;
 			}
+
+			$app	=	( isset( $xml->app ) ) ? (string)$xml->app : '';
+			$root	=	$xml->$type;
+
 			if ( $type == 'joomla_menu' ) {
-				$item	=	JTable::getInstance( 'MenuType' );
+				$item		=	JTable::getInstance( 'MenuType' );
+				$item_idx	=	'navs';
 			} elseif ( $type == 'joomla_menuitem' ) {
-				$item	=	JTable::getInstance( 'Menu' );
+				$item		=	JTable::getInstance( 'Menu' );
+				$item_idx	=	'nav_items';
+				$item_type	=	'JCckContentMenuItem';
 			} elseif ( $type == 'joomla_category' ) {
-				$item	=	JTable::getInstance( 'Category' );
+				$item		=	JTable::getInstance( 'Category' );
+				$item_idx	=	$data['elements']['category'];
+				$item_type	=	'JCckContentCategory';
 			} else {
 				return;
 			}
-			$root	=	$xml->$type;
 			
-			foreach ( $item as $k => $v ) {
-				if ( isset( $root->$k ) ) {
-					$item->$k	=	(string)$root->$k;
+
+
+			if ( $item_type && isset( $root->attributes()->type ) && (string)$root->attributes()->type ) {
+				$content_item	=	new $item_type;
+				$item_data		=	array();
+				
+				// Prepare
+				foreach ( $root->children() as $k=>$child ) {
+					$item_data[$k]	=	(string)$child;
 				}
+				
+				// Pre-Store
+				$call	=	'beforeImport'.$type;
+				$pk		=	self::$call( $type, $item_data, $data, $config );
+				
+				if ( $pk ) {
+					continue;
+				}
+
+				if ( $content_item->create( (string)$root->attributes()->type, $item_data )->isSuccessful() ) {
+					if ( $app && !isset( $data[$item_idx][$app] ) ) {
+						$data[$item_idx][$app]	=	$content_item->getPk();
+					}
+				}
+			} else {
+				// Prepare
+				foreach ( $item as $k => $v ) {
+					if ( isset( $root->$k ) ) {
+						$item->$k	=	(string)$root->$k;
+					}
+				}
+				
+				// Pre-Store
+				$call	=	'beforeImport'.$type;
+				$pk		=	self::$call( $type, $item, $data, $config );
+				
+				if ( $pk ) {
+					continue;
+				}
+
+				$item->check();
+				$item->store();
+				$call	=	'afterImport'.$type;
+				self::$call( $type, $item, $xml, $data );
 			}
-			
-			// Store
-			$call	=	'beforeImport'.$type;
-			$pk		=	self::$call( $type, $item, $data, $config );
-			
-			if ( $pk ) {
-				continue;
-			}
-			$item->check();
-			$item->store();
-			$call	=	'afterImport'.$type;
-			self::$call( $type, $item, $xml, $data );
 		}
 	}
 	
@@ -388,6 +434,22 @@ class CCK_Import
 			return -1;
 		}
 
+		if ( is_array( $table ) ) {
+			if ( !is_numeric( $table['parent_id'] ) ) {
+				if ( $table['level'] > 1 ) {
+					$table['parent_id']		=	(int)JCckDatabase::loadResult( 'SELECT id FROM #__categories WHERE alias = "'.$table['parent_id'].'"' );
+
+					if ( !$table['parent_id'] ) {
+						$table['parent_id']		=	(int)JCckDatabase::loadResult( 'SELECT id FROM #__categories WHERE alias = "project"' );
+
+						if ( !$table['parent_id'] ) {
+							$table['parent_id']	=	2;							
+						}
+					}
+				}
+			}
+		}
+
 		return 0;
 	}
 	
@@ -419,23 +481,42 @@ class CCK_Import
 			return -1;
 		}
 
-		if ( !is_numeric( $table->parent_id ) ) {
-			if ( $table->parent_id == '%core_menu_item%' ) {
-				$item_id			=	$config['params']['more']->get( 'menu_item', '-1' );
+		if ( is_array( $table ) ) {
+			if ( !is_numeric( $table['parent_id'] ) ) {
+				if ( $table['parent_id'] == '%core_menu_item%' ) {
+					$item_id			=	$config['params']['more']->get( 'menu_item', '-1' );
 
-				if ( $item_id == '-1' ) {
-					return -1;
+					if ( $item_id == '-1' ) {
+						return -1;
+					}
+					$table['parent_id']	=	$item_id;
 				}
-				$table->parent_id	=	$item_id;
 			}
+			if ( $table['type'] == 'component' ) {
+				$table['component_id']	=	JCckDatabase::loadResult( 'SELECT extension_id FROM #__extensions WHERE type = "component" AND element = "'.$table['component_id'].'"' );
+			}
+			if ( $table['level'] > 1 ) {
+				$table['parent_id']		=	JCckDatabase::loadResult( 'SELECT id FROM #__menu WHERE alias = "'.$table['parent_id'].'"' );
+			}
+		} else {
+			if ( !is_numeric( $table->parent_id ) ) {
+				if ( $table->parent_id == '%core_menu_item%' ) {
+					$item_id			=	$config['params']['more']->get( 'menu_item', '-1' );
+
+					if ( $item_id == '-1' ) {
+						return -1;
+					}
+					$table->parent_id	=	$item_id;
+				}
+			}
+			if ( $table->type == 'component' ) {
+				$table->component_id	=	JCckDatabase::loadResult( 'SELECT extension_id FROM #__extensions WHERE type = "component" AND element = "'.$table->component_id.'"' );
+			}
+			if ( $table->level > 1 ) {
+				$table->parent_id		=	JCckDatabase::loadResult( 'SELECT id FROM #__menu WHERE alias = "'.$table->parent_id.'"' );
+			}
+			$table->setLocation( $table->parent_id, 'last-child' );
 		}
-		if ( $table->type == 'component' ) {
-			$table->component_id	=	JCckDatabase::loadResult( 'SELECT extension_id FROM #__extensions WHERE type = "component" AND element = "'.$table->component_id.'"' );
-		}
-		if ( $table->level > 1 ) {
-			$table->parent_id		=	JCckDatabase::loadResult( 'SELECT id FROM #__menu WHERE alias = "'.$table->parent_id.'"' );
-		}
-		$table->setLocation( $table->parent_id, 'last-child' );
 
 		return 0;
 	}
