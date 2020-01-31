@@ -271,8 +271,8 @@ $cck	=	JCckDev::preload( array( 'core_storage_table', 'core_storage_field',
 	<ul class="adminformlist adminformlist-2cols">
 		<?php
 		$required	=	JCckDev::get( $cck['core_required'], $config['item']->required, $config );
-		$class_css	=	JCckDev::get( 'core_dev_textarea', $config['item']->css, $config, array( 'label'=>'Class CSS', 'cols'=>'92', 'rows'=>'1', 'storage_field'=>'css' ) );
-		$attributes	=	JCckDev::get( $cck['core_attributes'], $config['item']->attributes, $config, array( 'label'=>'Custom Attributes' ) );
+		$class_css	=	JCckDev::get( 'core_dev_textarea', $config['item']->css, $config, array( 'label'=>'Class CSS', 'cols'=>'100', 'rows'=>'1', 'storage_field'=>'css' ) );
+		$attributes	=	JCckDev::get( $cck['core_attributes'], $config['item']->attributes, $config, array( 'label'=>'Custom Attributes', 'cols'=>'100' ) );
 		$script		=	JCckDev::get( $cck['core_script'], $config['item']->script, $config );
 		?>
 		<li class="w100">
