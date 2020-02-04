@@ -23,6 +23,8 @@ $id			=	@(int)$post['id'];
 $isNew		=	( $id > 0 ) ? 0 : 1;
 $hash		=	JApplication::getHash( $id.'|'.$preconfig['type'].'|'.$preconfig['id'].'|'.$preconfig['copyfrom_id'] );
 $hashed		=	$session->get( 'cck_hash_'.$unique );
+$legacy		=	(int)JCck::getConfig_Param( 'core_legacy', '2012' );
+$legacy		=	$legacy && $legacy <= 2019 ? true : false;
 
 if ( $id && $preconfig['id'] ) {
 	$session->clear( 'cck_hash_'.$unique );
@@ -78,7 +80,7 @@ $dispatcher	=	JEventDispatcher::getInstance();
 $integrity	=	array();
 $processing	=	array();
 if ( JCckToolbox::getConfig()->get( 'processing', 0 ) ) {
-	$processing =	JCckDatabaseCache::loadObjectListArray( 'SELECT type, scriptfile, options FROM #__cck_more_processings WHERE published = 1 ORDER BY ordering', 'type' );
+	$processing =	JCckDatabaseCache::loadObjectListArray( 'SELECT type, scriptfile, options FROM #__cck_more_processings WHERE published = 1 AND type IN ("onCckPreBeforeStore","onCckPostBeforeStore","onCckPreAfterStore","onCckPostAfterStore") ORDER BY ordering', 'type' );
 }
 $storages	=	array();
 $config		=	array( 'author'=>( is_object( $author ) ? $author->id : 0 ),
@@ -311,10 +313,16 @@ if ( $config['validate'] ) {
 $event	=	'onCckPreBeforeStore';
 if ( isset( $processing[$event] ) ) {
 	foreach ( $processing[$event] as $p ) {
-		if ( is_file( JPATH_SITE.$p->scriptfile ) ) {
-			$options	=	new JRegistry( $p->options );
-			
-			include_once JPATH_SITE.$p->scriptfile; /* Variables: $fields, $config, $user */
+		if ( $legacy ) {
+			if ( is_file( JPATH_SITE.$p->scriptfile ) ) {
+				$options	=	new JRegistry( $p->options );
+
+				include_once JPATH_SITE.$p->scriptfile; /* Variables: $fields, $config, $user */
+			}
+		} else {
+			$process	=	new JCckProcessing( $event, JPATH_SITE.$p->scriptfile, $p->options );
+
+			call_user_func_array( array( $process, 'execute' ), array( &$config, &$fields ) );
 		}
 	}
 }
@@ -341,10 +349,16 @@ if ( $config['validate'] ) {
 $event	=	'onCckPostBeforeStore';
 if ( isset( $processing[$event] ) ) {
 	foreach ( $processing[$event] as $p ) {
-		if ( is_file( JPATH_SITE.$p->scriptfile ) ) {
-			$options	=	new JRegistry( $p->options );
+		if ( $legacy ) {
+			if ( is_file( JPATH_SITE.$p->scriptfile ) ) {
+				$options	=	new JRegistry( $p->options );
 
-			include_once JPATH_SITE.$p->scriptfile; /* Variables: $fields, $config, $user */
+				include_once JPATH_SITE.$p->scriptfile; /* Variables: $fields, $config, $user */
+			}
+		} else {
+			$process	=	new JCckProcessing( $event, JPATH_SITE.$p->scriptfile, $p->options );
+
+			call_user_func_array( array( $process, 'execute' ), array( &$config, &$fields ) );
 		}
 	}
 }
@@ -373,10 +387,16 @@ if ( (int)$config['pk'] > 0 ) {
 $event	=	'onCckPreAfterStore';
 if ( isset( $processing[$event] ) ) {
 	foreach ( $processing[$event] as $p ) {
-		if ( is_file( JPATH_SITE.$p->scriptfile ) ) {
-			$options	=	new JRegistry( $p->options );
+		if ( $legacy ) {
+			if ( is_file( JPATH_SITE.$p->scriptfile ) ) {
+				$options	=	new JRegistry( $p->options );
 
-			include_once JPATH_SITE.$p->scriptfile; /* Variables: $fields, $config, $user */
+				include_once JPATH_SITE.$p->scriptfile; /* Variables: $fields, $config, $user */
+			}
+		} else {
+			$process	=	new JCckProcessing( $event, JPATH_SITE.$p->scriptfile, $p->options );
+
+			call_user_func_array( array( $process, 'execute' ), array( &$config, &$fields ) );
 		}
 	}
 }
@@ -390,10 +410,16 @@ if ( isset( $config['process']['afterStore'] ) && count( $config['process']['aft
 $event	=	'onCckPostAfterStore';
 if ( isset( $processing[$event] ) ) {
 	foreach ( $processing[$event] as $p ) {
-		if ( is_file( JPATH_SITE.$p->scriptfile ) ) {
-			$options	=	new JRegistry( $p->options );
+		if ( $legacy ) {
+			if ( is_file( JPATH_SITE.$p->scriptfile ) ) {
+				$options	=	new JRegistry( $p->options );
 
-			include_once JPATH_SITE.$p->scriptfile; /* Variables: $fields, $config, $user */
+				include_once JPATH_SITE.$p->scriptfile; /* Variables: $fields, $config, $user */
+			}
+		} else {
+			$process	=	new JCckProcessing( $event, JPATH_SITE.$p->scriptfile, $p->options );
+
+			call_user_func_array( array( $process, 'execute' ), array( &$config, &$fields ) );
 		}
 	}
 }

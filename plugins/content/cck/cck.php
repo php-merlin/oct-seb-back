@@ -258,6 +258,8 @@ class plgContentCCK extends JPlugin
 				JPluginHelper::importPlugin( 'cck_storage_location' );
 
 				$config		=	array(
+									'id'=>$table->id,
+									'location'=>$table->storage_location,
 									'pk'=>$table->pk,
 									'storages'=>array(),
 									'type'=>$table->cck
@@ -351,13 +353,25 @@ class plgContentCCK extends JPlugin
 		}
 		
 		if ( isset( $config, $config['pk'] ) && $config['pk'] ) {
-			if ( JCckToolbox::getConfig()->get( 'processing', 0 ) ) {
-				$trigger_config	=	array(
-										'pk'=>$config['pk'],
-										'type'=>$config['type']
-									);
+			$legacy		=	(int)JCck::getConfig_Param( 'core_legacy', '2012' );
 
-				JCckToolbox::process( 'onCckPostAfterDelete', $trigger_config );
+			if ( JCckToolbox::getConfig()->get( 'processing', 0 ) ) {
+				unset( $config['storages'] );
+
+				if ( $legacy && $legacy <= 2019 ) {
+					JCckToolbox::process( 'onCckPostAfterDelete', $config );
+				} else {
+					$event		=	'onCckPostAfterDelete';
+					$processing	=	JCckDatabaseCache::loadObjectListArray( 'SELECT type, scriptfile, options FROM #__cck_more_processings WHERE published = 1 ORDER BY ordering', 'type' );
+
+					if ( isset( $processing[$event] ) ) {
+						foreach ( $processing[$event] as $p ) {
+							$process	=	new JCckProcessing( $event, JPATH_SITE.$p->scriptfile, $p->options );
+							
+							call_user_func_array( array( $process, 'execute' ), array( &$config, &$fields ) );
+						}
+					}
+				}
 			}
 		}
 
