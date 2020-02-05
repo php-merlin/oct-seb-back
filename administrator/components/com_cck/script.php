@@ -157,6 +157,18 @@ class com_cckInstallerScript
 			JFolder::copy( $src, JPATH_ADMINISTRATOR.'/manifests/packages/cck/updates', '', true );
 			JFolder::delete( $src );
 		}
+
+		// Additional stuff: /project
+		if ( $type == 'install' ) {	
+			$src	=	JPATH_ADMINISTRATOR.'/components/com_cck/install/project';
+			
+			if ( JFolder::exists( $src ) ) {
+				if ( !JFolder::exists( JPATH_SITE.'/project' ) ) {
+					JFolder::copy( $src, JPATH_SITE.'/project', '', true );
+				}
+				JFolder::delete( $src );
+			}
+		}
 	}
 	
 	// _getVersion
