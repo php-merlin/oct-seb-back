@@ -1,13 +1,23 @@
 <?php
 defined( '_JEXEC' ) or die;
 
-if ( !( $config['id'] && !$config['isNew'] ) ) {
+if ( !( isset( $this ) && $this->isSecure() ) ) {
 	return;
 }
 
-$path	=	JPATH_SITE.'/cache/cck_item@'.(int)$config['id'];
+if ( !$this->getId() ) {
+	return;
+}
 
-if ( is_dir( $path ) ) {
-	JFolder::delete( $path );
+// Per App
+/* TODO#SEBLOD4 */
+
+// Per Item
+if ( !$this->isNew() ) {
+	$path	=	JPATH_SITE.'/cache/cck_item@'.$this->getId();
+
+	if ( is_dir( $path ) ) {
+		JFolder::delete( $path );
+	}
 }
 ?>

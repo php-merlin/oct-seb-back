@@ -73,7 +73,7 @@ $content	=	new JCckContentMenuItem;
 
 if ( $content->load( $article->id )->isSuccessful() ) {
 	$canSave	=	true;	
-} elseif ( $content->import( 'menu_item', $article->id )->isSuccessful() ) {
+} elseif ( $content->import( 'o_nav_item', $article->id )->isSuccessful() ) {
 	$canSave	=	true;
 }
 if ( $canSave ) {
