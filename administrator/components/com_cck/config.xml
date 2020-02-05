@@ -179,11 +179,11 @@
 			<option value="0">JNO</option>
 		</field>
 		<field name="COM_CCK_CONFIG_LEGEND_CONSTRUCTION" type="spacer" hr="false" />
-		<field name="multisite_addition" type="list" default="0" label="COM_CCK_CONFIG_MULTISITE_ADDITION" description="COM_CCK_CONFIG_MULTISITE_ADDITION_DESC" class="inputbox" showon="multisite:1">
+		<field name="multisite_addition" type="list" default="1" label="COM_CCK_CONFIG_MULTISITE_ADDITION" description="COM_CCK_CONFIG_MULTISITE_ADDITION_DESC" class="inputbox" showon="multisite:1">
 			<option value="0">COM_CCK_COMPLETE</option>
 			<option value="1">COM_CCK_STRICTLY_NECESSARY</option>
 		</field>
-		<field name="multisite_mail_to_admin" type="radio" default="1" label="COM_CCK_CONFIG_MULTISITE_MAIL_TO_ADMIN" description="COM_CCK_CONFIG_MULTISITE_MAIL_TO_ADMIN_DESC" class="btn-group btn-group-yesno" showon="multisite:1">
+		<field name="multisite_mail_to_admin" type="radio" default="0" label="COM_CCK_CONFIG_MULTISITE_MAIL_TO_ADMIN" description="COM_CCK_CONFIG_MULTISITE_MAIL_TO_ADMIN_DESC" class="btn-group btn-group-yesno" showon="multisite:1">
 			<option value="1">JYES</option>
 			<option value="0">JNO</option>
 		</field>

@@ -12,7 +12,7 @@ if ( !$isNew ) {
 
 $app			=	JFactory::getApplication();
 $mode			=	JCck::getConfig_Param( 'multisite_integration', '1' );
-$mode_addition	=	(int)JCck::getConfig_Param( 'multisite_addition', '0' );
+$mode_addition	=	(int)JCck::getConfig_Param( 'multisite_addition', '1' );
 
 $type			=	$app->input->getString( 'type', '2,7' ); /* '7' || '2,7' || 2,6,7 */
 
@@ -307,7 +307,7 @@ foreach ( $users as $k=>$u ) {
 	$item->users[]	=	$u->id;
 }
 
-if ( (int)JCck::getConfig_Param( 'multisite_mail_to_admin', '1' ) == 1 && !empty( $accounts ) ) {
+if ( (int)JCck::getConfig_Param( 'multisite_mail_to_admin', '0' ) == 1 && !empty( $accounts ) ) {
 	CCK_TableSiteHelper::sendMails( $item, $accounts );
 }
 
