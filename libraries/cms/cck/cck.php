@@ -182,7 +182,12 @@ abstract class JCck
 				/* TODO#SEBLOD4: not quite sure that $host2 is right... check final "/" y/n? */
 			}
 			
-			self::$_sites	=	JCckDatabase::loadObjectList( 'SELECT id, title, name, context, aliases, guest, guest_only_viewlevel, groups, public_viewlevel, viewlevels, configuration, options, parent_id FROM #__cck_core_sites WHERE published = 1', 'name' );
+			$query	=	'SELECT id, title, name, context, aliases, guest, guest_only_viewlevel, groups, public_viewlevel, viewlevels, configuration, options, parent_id'
+					.	' FROM #__cck_core_sites'
+					.	' WHERE published = 1'
+					.	' AND access IN ('.implode( ',', JFactory::getUser()->getAuthorisedViewLevels() ).')';
+
+			self::$_sites	=	JCckDatabase::loadObjectList( $query, 'name' );
 			
 			if ( count( self::$_sites ) ) {
 				$break		=	0;
