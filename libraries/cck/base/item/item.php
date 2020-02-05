@@ -35,7 +35,7 @@ class CCK_Item
 						$assoc_id	=	$associations[$lang_tag]->id;
 
 						if ( $assoc_id ) {
-							$id	=	(int)JCckDatabase::loadResult( 'SELECT id FROM #__cck_core WHERE storage_table = "#__cck_store_free_elements" AND pk = '.(int)$assoc_id );
+							$id	=	(int)JCckDatabase::loadResult( 'SELECT id FROM #__cck_core WHERE storage_table = "'.$assoc_item->storage_table.'" AND pk = '.(int)$assoc_id );
 						}
 					}
 				}

@@ -50,9 +50,14 @@ class plgCCK_Storage_LocationFree_Helper extends plgCCK_Storage_LocationFree
 
 		if ( $hasForm ) {
 			$form->load( $addform, false );
+			$table_name	=	'';
 
-			$associations	=	JLanguageAssociations::getAssociations( 'com_cck', '#__cck_store_free_elements', $context, $config['pk'], 'id', '', '' );
+			if ( isset( $config['base']->table ) ) {
+				$table_name	=	$config['base']->table;
+			}
 			
+			$associations	=	JLanguageAssociations::getAssociations( 'com_cck', $table_name, $context, $config['pk'], 'id', '', '' );
+
 			if ( count( $associations ) ) {
 				foreach ( $associations as $tag=>$association ) {
 					$form->setValue( $tag, $name, $association->id );
