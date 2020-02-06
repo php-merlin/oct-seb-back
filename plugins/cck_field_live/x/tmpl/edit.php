@@ -37,6 +37,9 @@ $options['js']['load']		=	'var eid = "'.$this->item->id.'";
 										if (data.mode) {
 											$("#mode").myVal(data.mode);
 										}
+										if (data.modifier) {
+											$("#modifier").myVal(data.modifier);
+										}
 									}
 								}';
 $options['js']['submit']	=	'if ( $("#adminForm").validationEngine("validate") === true ) {
@@ -45,6 +48,7 @@ $options['js']['submit']	=	'if ( $("#adminForm").validationEngine("validate") ==
 									var data = {};
 									var excluded = [];
 									data.mode = $("#mode").myVal();
+									data.modifier = $("#modifier").myVal();
 									data.conditions = [];
 									$(".'.$type.'s").each(function(i) {
 										var v = $(this).myVal();
@@ -99,7 +103,7 @@ $html2			=	JHtml::_( 'select.genericlist', $restrictions, 'restriction', 'class=
 	<ul class="adminformlist adminformlist-2cols">
 		<?php
 		echo JCckDev::renderForm( 'core_dev_select', '', $config, array( 'label'=>'Behavior', 'selectlabel'=>'', 'defaultvalue'=>'0', 'options'=>'Apply First Not Empty=0||Concatenate=1', 'storage_field'=>'mode' ) );
-		echo JCckDev::renderBlank();
+		echo JCckDev::renderForm( 'core_dev_select', '', $config, array( 'label'=>'Modifier', 'selectlabel'=>'None', 'defaultvalue'=>'', 'options'=>'Base64=base64', 'storage_field'=>'modifier' ) );
 		?>
 	</ul>
 	<?php echo JCckDev::renderLegend( JText::_( 'COM_CCK_CONSTRUCTION' ), JText::_( 'PLG_CCK_FIELD_LIVE_'.$this->item->name.'_DESC' ) ); ?>

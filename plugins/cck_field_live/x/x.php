@@ -97,9 +97,19 @@ class plgCCK_Field_LiveX extends JCckPluginLive
 				$field->state			=	$state;
 			}
 		}
-		
+
 		// Set
 		$value	=	(string)$live;
+
+		if ( isset( $lives['modifier'] ) && $lives['modifier'] && $value != '' ) {
+			switch ( $lives['modifier'] ) {
+				case 'base64':
+					$value	=	base64_encode( $value );
+					break;
+				default:
+					break;
+			}
+		}
 	}
 }
 ?>
