@@ -10,6 +10,7 @@
 
 defined( '_JEXEC' ) or die;
 
+use Joomla\Registry\Registry;
 use Joomla\String\StringHelper;
 
 // JCckDevHelper
@@ -155,6 +156,26 @@ abstract class JCckDevHelper
 		}
 	}
 	
+	// getApp
+	public static function getApp( $app )
+	{
+		if ( is_numeric( $app ) ) {
+			$where	=	'id = '.$app;
+		} else {
+			$where	=	'name = "'.$app.'"';
+		}
+
+		$app			=	JCckDatabase::loadObject( 'SELECT id, name, params FROM #__cck_core_folders WHERE '.$where );
+
+		if ( !$app ) {
+			return (object)array( 'id'=>0, 'name'=>'' );
+		}
+
+		$app->params	=	new Registry( $app->params );
+		
+		return $app;
+	}
+
 	// getBranch
 	public static function getBranch( $table, $pk )
 	{

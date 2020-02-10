@@ -65,7 +65,7 @@ require_once JPATH_ADMINISTRATOR.'/components/com_cck/tables/site.php';
 JLoader::register( 'JUser', JPATH_PLATFORM.'/joomla/user/user.php' );
 
 // Guest Group
-$guest_group	=	( $mode ) ? CCK_TableSiteHelper::addUserGroup( $sitetitle, 1 )
+$guest_group	=	( $mode ) ? CCK_TableSiteHelper::addUserGroup( $sitetitle, JCckDevHelper::getApp( 'more' )->params->get( 'user_group.Sites', 1 ) )
 							  : CCK_TableSiteHelper::addUserGroup( 'Public' .' - '. $sitetitle, 1 );
 $parent_id		=	$guest_group;
 $usergroups[]	=	$guest_group;
