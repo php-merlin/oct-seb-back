@@ -294,8 +294,13 @@ class CCK_Import
 							 . ' WHERE a.'.$elemtype.'id = '.(int)$item->id );
 		
 		$db		=	JFactory::getDbo();
-		$acl	=	(string)$xml->acl;
-		JCckDatabase::execute( 'UPDATE #__assets SET rules = "'.$db->escape( $acl ).'" WHERE name = "com_cck.form.'.$item->id.'"' );
+
+		if ( $item->location == 'collection' ) {
+			JCckDatabase::execute( 'DELETE IGNORE a.* FROM #__assets AS a WHERE a.name = "com_cck.form.'.$item->id.'"' );
+		} else {
+			$acl	=	(string)$xml->acl;
+			JCckDatabase::execute( 'UPDATE #__assets SET rules = "'.$db->escape( $acl ).'" WHERE name = "com_cck.form.'.$item->id.'"' );
+		}
 
 		if ( !isset( $data['tables_columns']['#__cck_core_'.$elemtype.'_field'] ) ) {
 			$table	=	'#__cck_core_'.$elemtype.'_field';
