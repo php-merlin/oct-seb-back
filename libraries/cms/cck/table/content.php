@@ -15,5 +15,22 @@ JLoader::register( 'JTableContent', JPATH_PLATFORM.'/joomla/database/table/conte
 // JCckTableContent
 class JCckTableContent extends JTableContent
 {
+	// __construct
+	public function __construct( JDatabaseDriver $db )
+	{
+		parent::__construct( $db );
+
+		$this->_trackAssets	=	false;
+	}
+
+	// setRules
+	public function setRules( $input )
+	{
+		if ( (string)$input != '{}' ) {
+			$this->_trackAssets	=	true;
+		}
+
+		parent::setRules( $input );
+	}
 }
 ?>
