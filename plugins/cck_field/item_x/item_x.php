@@ -178,8 +178,14 @@ class plgCCK_FieldItem_X extends JCckPluginField
 									modal_preview: JCck.Core.getModal({"backclose":false,"backdrop":false,"title":"'.JText::_( 'COM_CCK_PREVIEW' ).'"}),
 									modal_form_id:"'.$config['formId'].'_'.$tmpl.'",
 									token:"'.JSession::getFormToken().'=1",
-									add: function() {
-										JCck.More.ItemX.modal.loadUrl(JCck.More.ItemX.instances[JCck.More.ItemX.active].link_add);
+									add: function(form) {
+										var form = form || "";
+										var link = JCck.More.ItemX.instances[JCck.More.ItemX.active].link_add;
+										if (form) {
+											var parts = link.split("?");
+											link = link.substring(0,parts[0].lastIndexOf("/"))+"/"+form+"?"+parts[1];
+										}
+										JCck.More.ItemX.modal.loadUrl(link);
 									},
 									assign: function(pks,close) {
 										var close = close || false;

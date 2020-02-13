@@ -53,7 +53,9 @@ class plgCCK_Field_LinkItem_X extends JCckPluginLink
 		if ( $type == 'save' ) {
 			$link_onclick		=	'JCck.More.ItemX.save();';
 		} elseif ( $type == 'add' ) {
-			$link_onclick		=	'JCck.More.ItemX.setFromClick(this).add();';
+			$form				=	$link->get( 'form', '' );
+			$form				=	$form ? '\''.$form.'\'' : '';
+			$link_onclick		=	'JCck.More.ItemX.setFromClick(this).add('.$form.');';
 		} elseif ( $type == 'select' ) {
 			$link_onclick		=	'JCck.More.ItemX.setFromClick(this).select();';
 		} elseif ( $type == 'remove' ) {

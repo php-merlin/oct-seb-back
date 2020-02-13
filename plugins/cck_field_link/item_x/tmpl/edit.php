@@ -18,6 +18,7 @@ JCckDev::initScript( 'link', $this->item );
     <ul class="adminformlist adminformlist-2cols">
         <?php
         echo JCckDev::renderForm( 'core_dev_select', '', $config, array( 'label'=>'Task', 'selectlabel'=>'', 'defaultvalue'=>'', 'options'=>'Add=add||Select=select||Current=optgroup||Assign=assign||Process=process||Remove=remove||Save=save||Selection=optgroup||Assign=assign_multiple', 'storage_field'=>'type', 'required'=>'required' ) );
+        echo JCckDev::renderForm( 'core_form', '', $config, array( 'selectlabel'=>'Inherited', 'options2'=>'{"query":"","table":"#__cck_core_types","name":"title","where":"published=1 AND location != \"collection\"","value":"name","orderby":"title","orderby_direction":"ASC"}', 'required'=>'' ) );
         echo JCckDev::renderForm( 'core_task_processing', '', $config, array( 'storage_field'=>'processing' ) );
         echo JCckDev::renderForm( 'core_dev_bool', '', $config, array( 'defaultvalue'=>'0', 'label'=>'Close', 'storage_field'=>'close' ) );
         echo JCckDev::renderForm( 'core_dev_bool', '', $config, array( 'defaultvalue'=>'0', 'label'=>'Confirm', 'storage_field'=>'confirm' ) );
@@ -30,7 +31,7 @@ JCckDev::initScript( 'link', $this->item );
         echo '<li><label>'.JText::_( 'COM_CCK_TITLE' ).'</label>'
             . JCckDev::getForm( 'core_dev_select', '', $config, array( 'selectlabel'=>'None', 'options'=>'Custom Text=2||Translated Text=3', 'storage_field'=>'title' ) )
             . JCckDev::getForm( 'core_dev_text', '', $config, array( 'label'=>'Title', 'size'=>16, 'css'=>'input-medium', 'storage_field'=>'title_custom' ) )
-            . '</li>';
+            . '</li>';        
         ?>
     </ul>
 </div>
@@ -42,5 +43,6 @@ jQuery(document).ready(function($) {
     $('#processing').isVisibleWhen('type','process');
     $('#title_custom').isVisibleWhen('title','2,3',false);
     $('#identifier_fieldname').isVisibleWhen('identifier','field');
+    $('#form').isVisibleWhen('type','add');
 });
 </script>
