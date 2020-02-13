@@ -134,7 +134,7 @@ class CCKViewSearch extends JViewLegacy
 
 		// Fields
 		if ( $this->item->cck_type != '' && !$this->item->skip ) {
-			$pos								=	isset( $this->style->positions[0]->value ) ? $this->style->positions[0]->value : 'mainbody';
+			$pos								=	'_pre_';
 			$this->fields						=	Helper_Workshop::getFields( 'search', $this->item, 'a.name = "cck"', false, false, $pos );
 			$this->fields[$pos][0]->variation	=	'hidden';
 			$this->fields[$pos][0]->match_mode	=	'exact';
