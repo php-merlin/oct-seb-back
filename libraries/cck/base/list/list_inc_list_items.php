@@ -202,7 +202,7 @@ if ( $count ) {
 			// Merge
 			if ( count( $config['fields'] ) ) {
 				foreach ( $config['fields'] as $k=>$v ) {
-					if ( $v->restriction != 'unset' ) {
+					if ( !( $v->restriction == 'unset' || $v->markup == 'unset' ) ) {
 						$fieldsI[$k]	=	$v;
 					}
 				}
@@ -391,7 +391,7 @@ if ( $count ) {
 			// Merge
 			if ( count( $config['fields'] ) ) {
 				foreach ( $config['fields'] as $k=>$v ) {
-					if ( $v->restriction != 'unset' ) {
+					if ( !( $v->restriction == 'unset' || $v->markup == 'unset' ) ) {
 						$fieldsI[$k]	=	$v;
 					}
 				}
