@@ -157,11 +157,8 @@ class CCKViewList extends JViewLegacy
 			$this->title				=	( isset( $search->title ) ) ? $search->title : '';
 		}
 
-		$this->show_list_desc			=	$params->get( 'show_list_desc' );
-		if ( $this->show_list_desc == '' ) {
-			$this->show_list_desc		=	$options->get( 'show_list_desc', '1' );
-			$this->description			=	@$search->description;
-		} elseif ( $this->show_list_desc ) {
+		$this->show_list_desc			=	$params->get( 'show_list_desc', $options->get( 'show_list_desc', '1' ) );
+		if ( $this->show_list_desc ) {
 			$this->description			=	$params->get( 'list_desc', @$search->description );
 		} else {
 			$this->description			=	'';
