@@ -213,7 +213,7 @@ class CCKModelSearch extends JCckBaseLegacyModelAdmin
 									'language'=>'*',
 									'link'=>'index.php?option=com_cck&view=list&search='.$data['name'].'&task=search',
 									'menutype'=>$quick_item[0],
-									'params'=>'{}',
+									'params'=>'{"display_list_title":"1","title_list_title":"'.$data['title'].'"}',
 									'parent_id'=>$quick_item[1],
 									'published'=>1,
 									'template_style_id'=>0,
