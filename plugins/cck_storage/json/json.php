@@ -194,9 +194,11 @@ class plgCCK_StorageJson extends JCckPluginStorage
 		if ( !isset( $value ) ) {
 			return;
 		}
-		
+
 		// Prevent Broken JSON (Temporary Fix until json_encode?)
-		$value	=	str_replace( array( "\t\t", "\t" ), ' ', $value );
+		if ( is_string( $value ) ) {
+			$value	=	str_replace( array( "\t\t", "\t" ), ' ', $value );
+		}
 
 		// Prepare
 		if ( strpos( $field->storage_field2, '|' ) !== false ) {
