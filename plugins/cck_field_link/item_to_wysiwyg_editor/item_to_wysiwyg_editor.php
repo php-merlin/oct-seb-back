@@ -36,12 +36,13 @@ class plgCCK_Field_LinkItem_To_Wysiwyg_Editor extends JCckPluginLink
 	protected static function _link( $link, &$field, &$config )
 	{
 		$app			=	JFactory::getApplication();
+		$custom 		=	$link->get( 'custom', '' );
 		$type			=	$link->get( 'type', 'link' );
 		$editor 		=	$app->input->get( 'editor', '' );
 
 		//
 		$field->link	=	'#';
-		$params 		=	array( 'name'=>$field->name, 'type'=>$type, 'editor'=>$editor );
+		$params 		=	array( 'name'=>$field->name, 'type'=>$type, 'editor'=>$editor, 'custom'=>$custom );
 
 		if ( $type == 'link' ) {
 			$params['field_link'] 	=	$link->get( 'field_link', '' );
@@ -59,14 +60,12 @@ class plgCCK_Field_LinkItem_To_Wysiwyg_Editor extends JCckPluginLink
 		$name 			=	$process['name'];
 
 		if ( $process['type'] == 'link' ) {
-
 			$field_text 				=	$process['field_text'];
 			$link 						=	$fields[$process['field_link']]->link;
 			$text 						=	( isset( $fields[$field_text] ) && $fields[$field_text]->value != '' ) ? $fields[$field_text]->value : '';
 			$fields[$name]->onclick 	=	'JCck.More.ButtonXtd.insertText(&quot;'.$process['editor'].'&quot;,&quot;'.$link.'&quot;,&quot;'.$text.'&quot;);';
-			
 		} elseif ( $process['type'] == 'content' ) {
-			$fields[$name]->onclick 	=	'JCck.More.ButtonXtd.insertContent(&quot;'.$process['editor'].'&quot;,&quot;'.$config['id'].'&quot;);';
+			$fields[$name]->onclick 	=	'JCck.More.ButtonXtd.insertContent(&quot;'.$process['editor'].'&quot;,&quot;'.$config['id'].'&quot;,&quot;'.$process['custom'].'&quot;);';
 		} else {
 			$fields[$name]->onclick 	=	'return false;';
 		}

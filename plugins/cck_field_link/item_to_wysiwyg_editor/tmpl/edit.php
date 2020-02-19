@@ -19,6 +19,7 @@ JCckDev::initScript( 'link', $this->item );
         <?php
 		echo JCckDev::renderForm( 'core_dev_select', '', $config, array( 'defaultvalue'=>'link', 'label'=>'Type', 'options'=>'Link On Selection=link||Insert Content=content', 'selectlabel'=>'', 'storage_field'=>'type' ) );
 		echo JCckDev::renderBlank();
+		echo JCckDev::renderForm( 'core_dev_text', '', $config, array( 'label'=>'Custom', 'size'=>24, 'storage_field'=>'custom' ) );
 		echo JCckDev::renderForm( 'core_dev_text', '', $config, array( 'label'=>'Field Link', 'size'=>24, 'required'=>'required', 'storage_field'=>'field_link' ) );
 		echo JCckDev::renderForm( 'core_dev_text', '', $config, array( 'label'=>'Field Text', 'size'=>24, 'storage_field'=>'field_text' ) );
         ?>
@@ -28,5 +29,6 @@ JCckDev::initScript( 'link', $this->item );
 <script type="text/javascript">
 jQuery(document).ready(function($) {
 	$('#field_link, #field_text').isVisibleWhen('type','link');
+	$('#custom').isVisibleWhen('type','content');
 });
 </script>

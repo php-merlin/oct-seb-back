@@ -34,12 +34,14 @@ class plgButtonCCK extends JPlugin
 				continue;
 			}
 
+			$button->custom 		=	( $button->custom != '' ) ? '&'.$button->custom : '';
+
 			$toolbar[$i]			=	new JObject;
 			$toolbar[$i]->class		=	'btn';
 			$toolbar[$i]->link		=	'#';
 			$toolbar[$i]->modal		=	false;
 			$toolbar[$i]->name		=	$button->icon;
-			$toolbar[$i]->onclick	=	'javascript:JCck.More.ButtonXtd.select(\''.$button->list.'\',\''.$name.'\');';
+			$toolbar[$i]->onclick	=	'javascript:JCck.More.ButtonXtd.select(\''.$button->list.'\',\''.$button->custom.'\',\''.$name.'\');';
 			$toolbar[$i]->options	=	'';
 			$toolbar[$i]->text		=	$button->text;
 
@@ -75,12 +77,17 @@ class plgButtonCCK extends JPlugin
 									}
 									JCck.More.ButtonXtd.modal.hide();
 								},
-								insertContent: function(editor,id) {
-									window.parent.jInsertEditorText("{cck_item:"+id+"}", editor);
+								insertContent: function(editor,id,custom) {
+									if (custom != "") {
+										custom = custom.replace(/,/g,"\",\"");
+										custom = custom.replace(/:/g,"\":\"");
+										custom = " {\""+custom+"\"}";
+									}
+									window.parent.jInsertEditorText("{cck_item:"+id+custom+"}", editor);
 									JCck.More.ButtonXtd.modal.hide();
 								},
-								select: function(list,editor) {
-									JCck.More.ButtonXtd.modal.loadUrl(JCck.More.ButtonXtd.link_select+"&search="+list+"&editor="+editor);
+								select: function(list,custom,editor) {
+									JCck.More.ButtonXtd.modal.loadUrl(JCck.More.ButtonXtd.link_select+"&search="+list+"&editor="+editor+custom);
 								}
 							}
 						})(jQuery);

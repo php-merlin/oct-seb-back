@@ -36,6 +36,12 @@
 			description="PLG_EDITORS-XTD_CCK_TEXT_DESC"
 		/>
 		<field
+			name="custom"
+			type="textarea"
+			label="PLG_EDITORS-XTD_CCK_CUSTOM_VARIABLES_LABEL"
+			description="PLG_EDITORS-XTD_CCK_CUSTOM_VARIABLES_DESC"
+		/>
+		<field
 			name="location"
 			type="list"
 			label="PLG_EDITORS-XTD_CCK_LOCATION_LABEL"
