@@ -73,7 +73,11 @@ class plgCCK_Field_ValidationRequired extends JCckPluginValidation
 			$alert3	=	JText::_( 'PLG_CCK_FIELD_VALIDATION_'.self::$type.'_ALERT3' );
 			$prefix	=	JCck::getConfig_Param( 'validation_prefix', '* ' );
 			
-			if ( $name != 'condRequired' ) {
+			if ( $name == 'condRequired' ) {
+				// OK
+			} elseif ( $name == 'groupRequired' ) {
+				// OK
+			} else {
 				$rule	=	'
 						"'.$name.'":{
 							"regex":'.$regex.',
@@ -81,8 +85,18 @@ class plgCCK_Field_ValidationRequired extends JCckPluginValidation
 							"alertTextCheckboxe":"'.$prefix.$alert2.'",
 							"alertTextCheckboxMultiple":"'.$prefix.$alert3.'"}
 							';
-				
+
 				$config['validation'][$name]	=	$rule;
+
+				if ( $name == 'required' ) {
+					$rule	=	'
+						"groupRequired":{
+							"regex":'.$regex.',
+							"alertText":"'.$prefix.JText::_( 'PLG_CCK_FIELD_VALIDATION_GROUPREQUIRED_ALERT' ).'"}
+							';
+				
+					$config['validation']['groupRequired']	=	$rule;
+				}
 			}
 			$field->validate[]				=	$required;
 		}
