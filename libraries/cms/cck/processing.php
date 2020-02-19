@@ -124,6 +124,16 @@ class JCckProcessing
 
 			if ( is_object( $field ) && $field->storage_table && $field->storage_field ) {
 				switch ( $field->storage ) {
+					case 'json':
+						$json	=	new Registry( $this->_data['config']['storages'][$field->storage_table][$field->storage_field] );
+						$json->set( $field->storage_field2, $value );
+
+						$this->_data['config']['storages'][$field->storage_table][$field->storage_field]	=	$json->toString( 'JSON', array( 'bitmask'=>JSON_UNESCAPED_UNICODE ) );
+
+						if ( strpos( $this->_event, 'afterStore' ) !== false && $this->_pk ) {
+							JCckDatabase::execute( 'UPDATE '.$field->storage_table.' SET '.$field->storage_field.'= "'.JCckDatabase::escape( $value ).'" WHERE id = '.(int)$pk );
+						}
+						break;
 					case 'standard':
 						if ( isset( $this->_data['config']['storages'] ) ) {
 							$this->_data['config']['storages'][$field->storage_table][$field->storage_field]	=	$value;
