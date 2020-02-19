@@ -59,8 +59,9 @@ class plgCCK_Field_RestrictionCck_Workflow extends JCckPluginRestriction
 		$action		=	$restriction->get( 'action', '' );
 		$author		=	$restriction->get( 'author', '' );
 		$location	=	$restriction->get( 'location', '' );
-		$type		=	$restriction->get('form', '' );
-		
+		$type		=	$restriction->get( 'form', '' );
+		$do			=	(int)$restriction->get( 'do', 0 );
+
 		// Action
 		if ( $action ) {
 			if ( ( $action == 'add' && !$config['isNew'] )
@@ -84,8 +85,15 @@ class plgCCK_Field_RestrictionCck_Workflow extends JCckPluginRestriction
 		// Content Type
 		if ( $type ) {
 			if ( $type != $config['type'] ) {
-				$field->display	=	0;
-				return false;
+				if ( !$do ) {
+					$field->display	=	0;
+					return false;					
+				}
+			} else {
+				if ( $do ) {
+					$field->display	=	0;
+					return false;					
+				}
 			}
 		}
 
@@ -101,7 +109,6 @@ class plgCCK_Field_RestrictionCck_Workflow extends JCckPluginRestriction
 		$condition_field	=	$restriction->get( 'trigger' );
 		$condition_match	=	$restriction->get( 'match' );
 		$condition_values	=	$restriction->get( 'values' );
-		$do					=	$restriction->get( 'do', 0 );
 		$state				=	0;
 		$variable			=	isset( $config['context'][$condition_field] ) ? $config['context'][$condition_field] : '';
 		
