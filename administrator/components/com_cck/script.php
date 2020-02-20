@@ -169,6 +169,18 @@ class com_cckInstallerScript
 				JFolder::delete( $src );
 			}
 		}
+
+		// Additional stuff: /resources
+		if ( $type == 'install' ) {	
+			$src	=	JPATH_ADMINISTRATOR.'/components/com_cck/install/resources';
+			
+			if ( JFolder::exists( $src ) ) {
+				if ( !JFolder::exists( JPATH_SITE.'/resources' ) ) {
+					JFolder::copy( $src, JPATH_SITE.'/resources', '', true );
+				}
+				JFolder::delete( $src );
+			}
+		}
 	}
 	
 	// _getVersion
