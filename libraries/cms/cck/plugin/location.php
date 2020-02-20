@@ -96,6 +96,12 @@ class JCckPluginLocation extends JPlugin
 		return '';
 	}
 
+	// getRouteLink
+	public static function getRouteLink( $pk )
+	{
+		return '';
+	}
+
 	// getStaticParams
 	public static function getStaticParams()
 	{
@@ -125,6 +131,7 @@ class JCckPluginLocation extends JPlugin
 									'custom'=>'',
 									'events'=>'',
 									'key'=>'',
+									'key_field'=>'',
 									'modified_at'=>'',
 									'ordering'=>'',
 									'parent'=>'',

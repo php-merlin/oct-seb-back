@@ -22,6 +22,7 @@ class plgCCK_Storage_LocationJoomla_Category extends JCckPluginLocation
 	protected static $table			=	'#__categories';
 	protected static $table_object	=	array( 'Category', 'JTable' );
 	protected static $key			=	'id';
+	protected static $key_field		=	'category_pk';
 	
 	protected static $access		=	'access';
 	protected static $author		=	'created_user_id';
@@ -689,45 +690,21 @@ class plgCCK_Storage_LocationJoomla_Category extends JCckPluginLocation
 
 		return $assoc;
 	}
-
+	
 	// getRoute
 	public static function getRoute( $item, $sef, $itemId, $config = array(), $lang_tag = '' )
 	{
-		$route		=	'';
+		$route	=	self::_prepareRoute( $item, $sef, $itemId, $config, $lang_tag );
 
-		if ( is_numeric( $item ) ) {
-			$item	=	self::_getTable( (int)$item, true );
-
-			if ( empty( $item ) ) {
-				return '';
-			}
-		}
-		if ( !is_object( $item ) ) {
-			return '';
-		}
-
-		$pk			=	( isset( $item->pk ) ) ? $item->pk : $item->id;
-		$item->slug	=	( $item->alias ) ? $pk.':'.$item->alias : $pk;
-		
-		if ( $sef ) {
-			if ( $sef == '0' || $sef == '1' ) {
-				$path	=	'&catid='.$item->catid;
-			} elseif ( $sef[0] == '4' ) {
-				$path	=	'&catid='.( isset( $item->parent_alias ) ? $item->parent_alias : $item->parent_id );
-			} elseif ( $sef[0] == '3' ) {
-				$path	=	( $config['type'] ) ? '&typeid='.$config['type'] : '';
-			} else {
-				$path	=	'';
-			}
-			$route		=	self::_getRoute( $sef, $itemId, $item->slug, $path, '', $lang_tag );
-		} else {
-			require_once JPATH_SITE.'/components/com_content/helpers/route.php';
-			$route		=	ContentHelperRoute::getCategoryRoute( $item->id );
-		}
-		
 		return JRoute::_( $route, false );
 	}
-	
+
+	// getRouteLink
+	public static function getRouteLink( $item, $sef, $itemId, $config = array(), $lang_tag = '' )
+	{
+		return self::_prepareRoute( $item, $sef, $itemId, $config, $lang_tag );
+	}
+
 	// getRouteByStorage
 	public static function getRouteByStorage( &$storage, $sef, $itemId, $config = array(), $lang_tag = '' )
 	{
@@ -957,6 +934,54 @@ class plgCCK_Storage_LocationJoomla_Category extends JCckPluginLocation
 		return $link;
 	}
 
+	// _prepareRoute
+	protected static function _prepareRoute( $item, $sef, $itemId, $config = array(), $lang_tag = '' )
+	{
+		$route		=	'';
+
+		if ( is_numeric( $item ) ) {
+			$item	=	self::_getTable( (int)$item, true );
+
+			if ( empty( $item ) ) {
+				return '';
+			}
+		}
+		if ( !is_object( $item ) ) {
+			return '';
+		}
+
+		if ( isset( $item->alias_slug ) && $item->alias_slug ) {
+			$item->alias		=	$item->alias_slug;
+		}
+		if ( isset( $item->parent_alias_slug ) && $item->parent_alias_slug ) {
+			$item->parent_alias	=	$item->parent_alias_slug;
+		}
+
+		$pk			=	( isset( $item->pk ) ) ? $item->pk : $item->id;
+
+		if ( !( isset( $item->slug ) && $item->slug ) ) {
+			$item->slug	=	( $item->alias ) ? $pk.':'.$item->alias : $pk;
+		}
+		
+		if ( $sef ) {
+			if ( $sef == '0' || $sef == '1' ) {
+				$path	=	'&catid='.$item->catid;
+			} elseif ( $sef[0] == '4' ) {
+				$path	=	'&catid='.( isset( $item->parent_alias ) ? $item->parent_alias : $item->parent_id );
+			} elseif ( $sef[0] == '3' ) {
+				$path	=	( $config['type'] ) ? '&typeid='.$config['type'] : '';
+			} else {
+				$path	=	'';
+			}
+			$route		=	self::_getRoute( $sef, $itemId, $item->slug, $path, '', $lang_tag );
+		} else {
+			require_once JPATH_SITE.'/components/com_content/helpers/route.php';
+			$route		=	ContentHelperRoute::getCategoryRoute( $item->id );
+		}
+		
+		return $route;
+	}
+
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Stuff
 	
 	// access
@@ -1000,6 +1025,7 @@ class plgCCK_Storage_LocationJoomla_Category extends JCckPluginLocation
 									'custom'=>'',
 									'events'=>'',
 									'key'=>'',
+									'key_field'=>'',
 									'modified_at'=>'',
 									'ordering'=>'',
 									'parent'=>'',
