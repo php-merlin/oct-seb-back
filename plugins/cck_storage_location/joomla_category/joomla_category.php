@@ -793,7 +793,20 @@ class plgCCK_Storage_LocationJoomla_Category extends JCckPluginLocation
 					$vars['catid']	=	$segments[0];
 				} else {
 					$segments[0]	=	str_replace( ':', '-', $segments[0] );
-					$where			=	' AND b.alias = '.JCckDatabase::quote( $segments[0] );
+					
+					if ( $isMultiLanguage && $isMultiAlias ) {
+						$join		=	' LEFT JOIN #__cck_store_item_categories AS b on b.id = a.parent_id';
+
+						if ( $legacy ) {
+							$where		=	' AND b.alias_'.$lang_sef.' = '.JCckDatabase::quote( $segments[0] );
+						} else {
+							$where		=	' AND JSON_EXTRACT(b.aliases, '.JCckDatabase::quote('$."'.$lang_tag.'"').') = '.JCckDatabase::quote( $segments[0] );
+						}
+						
+					} else {
+						$where		=	' AND b.alias = '.JCckDatabase::quote( $segments[0] );
+					}
+
 				}
 			}
 		}

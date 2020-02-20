@@ -892,7 +892,7 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 		}
 
 		// Prepare the query
-		if ( $n == 2 ) {
+		if ( $n == 2 || $n == 3 ) {
 			if ( $config['doSEF'][0] == '5' ) {
 				$join				.=	' LEFT JOIN #__cck_core AS c ON (c.storage_location = "joomla_user" AND c.pk = a.created_by)'
 									.	' LEFT JOIN #__content AS d ON d.id = c.pkb';
@@ -907,19 +907,40 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 					$where			=	' AND b.id = '.(int)$segments[0];
 					$vars['catid']	=	$segments[0];
 				} else {
-					$segments[0]	=	str_replace( ':', '-', $segments[0] );
+					$idx			=	 $n == 3 ? 1 : 0;
+					$segments[$idx]	=	str_replace( ':', '-', $segments[$idx] );
 
 					if ( $isMultiLanguage && $isMultiAlias ) {
 						$join		=	' LEFT JOIN #__cck_store_item_categories AS b on b.id = a.catid';
 
 						if ( $legacy ) {
-							$where		=	' AND b.alias_'.$lang_sef.' = '.JCckDatabase::quote( $segments[0] );
+							$where		=	' AND b.alias_'.$lang_sef.' = '.JCckDatabase::quote( $segments[$idx] );
 						} else {
-							$where		=	' AND JSON_EXTRACT(b.aliases, '.JCckDatabase::quote('$."'.$lang_tag.'"').') = '.JCckDatabase::quote( $segments[0] );
+							$where		=	' AND JSON_EXTRACT(b.aliases, '.JCckDatabase::quote('$."'.$lang_tag.'"').') = '.JCckDatabase::quote( $segments[$idx] );
 						}
 						
 					} else {
-						$where		=	' AND b.alias = '.JCckDatabase::quote( $segments[0] );
+						$where		=	' AND b.alias = '.JCckDatabase::quote( $segments[$idx] );
+					}
+
+					if ( $n == 3 ) {
+						$idx			=	0;
+						$segments[$idx]	=	str_replace( ':', '-', $segments[$idx] );
+
+						if ( $isMultiLanguage && $isMultiAlias ) {
+							$join		.=	' LEFT JOIN #__categories AS b2 on b2.id = a.catid';
+							$join		.=	' LEFT JOIN #__categories AS c on c.id = b2.parent_id';
+							$join		.=	' LEFT JOIN #__cck_store_item_categories AS d on d.id = c.id';
+
+							if ( $legacy ) {
+								$where		.=	' AND d.alias_'.$lang_sef.' = '.JCckDatabase::quote( $segments[$idx] );
+							} else {
+								$where		.=	' AND JSON_EXTRACT(d.aliases, '.JCckDatabase::quote('$."'.$lang_tag.'"').') = '.JCckDatabase::quote( $segments[$idx] );
+							}
+							
+						} else {
+							$where		.=	' AND c.alias = '.JCckDatabase::quote( $segments[$idx] );
+						}						
 					}
 				}
 			}
