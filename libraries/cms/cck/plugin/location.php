@@ -97,7 +97,7 @@ class JCckPluginLocation extends JPlugin
 	}
 
 	// getRouteLink
-	public static function getRouteLink( $pk )
+	public static function getRouteLink( $item, $sef, $itemId, $config = array(), $lang_tag = '' )
 	{
 		return '';
 	}
