@@ -19,7 +19,7 @@ JCckDev::initScript( 'restriction', $this->item );
         <?php
 		echo JCckDev::renderForm( 'core_location2', '', $config, array( 'label'=>'Location' ) );
 		echo JCckDev::renderForm( 'core_action2', '', $config );
-		echo JCckDev::renderForm( 'core_form', '', $config, array( 'selectlabel'=>'Any Form', 'required'=>'' ) );
+		echo JCckDev::renderForm( 'core_content_type', '', $config, array( 'selectlabel'=>'Any Form', 'required'=>'' ) );
 		echo JCckDev::renderForm( 'core_dev_select', '', $config, array( 'label'=>'Author', 'selectlabel'=>'Any Author', 'options'=>'Current=1||Someone Else=-1', 'required'=>'', 'storage_field'=>'author' ) );
 		echo '<li class="w100"><label>'.JText::_( 'COM_CCK_VARIABLE_VALUES' ).'</label>'
 		 .	 JCckDev::getForm( 'core_dev_text', '', $config, array( 'label'=>'', 'defaultvalue'=>'', 'storage_field'=>'trigger' ) )
