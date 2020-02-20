@@ -116,7 +116,7 @@ class CckRouter extends JComponentRouterBase
 						$properties		=	JCck::callFunc( 'plgCCK_Storage_Location'.$params['location'], 'getStaticProperties', $properties );
 
 						if ( $properties[$target] != '' ) {
-							$params['doSEF'][0]	=	'2';
+							$params['doSEF'][0]	=	$count == 2 ? '4' : '2';
 							$isNew				=	true;
 							$parent_id			=	(int)$menuItem->parent_id;
 							
