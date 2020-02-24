@@ -362,21 +362,22 @@ class CCK_Import
 		$table	=	'#__cck_core_'.$elemtype.'_'.$type;
 		
 		foreach ( $joined as $j ) {
-			$name			=	(string)$j;
+			$id		=	0;
+			$name	=	(string)$j;
 			if ( $type == 'field' ) {
 				if ( isset( $data['fields'][$name] ) ) {
 					if ( file_exists( JPATH_SITE.'/plugins/cck_field/'.$data['fields'][$name]->type.'/classes/app.php' ) ) {
 						require_once JPATH_SITE.'/plugins/cck_field/'.$data['fields'][$name]->type.'/classes/app.php';
 						JCck::callFunc_Array( 'plgCCK_Field'.$data['fields'][$name]->type.'_App', 'onCCK_FieldImport'.$elemtype.'_Field', array( $data['fields'][$name], &$j, $data ) );
 					}
-					$name	=	$data['fields'][$name]->id;
+					$id		=	$data['fields'][$name]->id;
 				} else {
 					$name	=	'';
 				}
 			}
 			
-			if ( $name ) {
-				$str2		=	$item->id.', "'.$name.'", ';
+			if ( $id ) {
+				$str2		=	$item->id.', "'.$id.'", ';
 				$attributes	=	$j->attributes();
 				
 				if ( (string)$attributes->link != '' && isset( $data['fields'][$name] ) ) {
