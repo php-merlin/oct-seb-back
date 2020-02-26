@@ -362,9 +362,11 @@ class CCK_Import
 		$table	=	'#__cck_core_'.$elemtype.'_'.$type;
 		
 		foreach ( $joined as $j ) {
-			$id		=	0;
 			$name	=	(string)$j;
+			
 			if ( $type == 'field' ) {
+				$id	=	0;
+
 				if ( isset( $data['fields'][$name] ) ) {
 					if ( file_exists( JPATH_SITE.'/plugins/cck_field/'.$data['fields'][$name]->type.'/classes/app.php' ) ) {
 						require_once JPATH_SITE.'/plugins/cck_field/'.$data['fields'][$name]->type.'/classes/app.php';
@@ -374,16 +376,20 @@ class CCK_Import
 				} else {
 					$name	=	'';
 				}
+			} else {
+				$id	=	$name;
 			}
 			
 			if ( $id ) {
 				$str2		=	$item->id.', "'.$id.'", ';
 				$attributes	=	$j->attributes();
 				
-				if ( (string)$attributes->link != '' && isset( $data['fields'][$name] ) ) {
-					if ( file_exists( JPATH_SITE.'/plugins/cck_field_link/'.(string)$attributes->link.'/classes/app.php' ) ) {
-						require_once JPATH_SITE.'/plugins/cck_field_link/'.(string)$attributes->link.'/classes/app.php';
-						JCck::callFunc_Array( 'plgCCK_Field_Link'.(string)$attributes->link.'_App', 'onCCK_Field_LinkImport'.$elemtype.'_Field', array( $data['fields'][$name], &$attributes, $data ) );
+				if ( $type == 'field' ) {
+					if ( (string)$attributes->link != '' && isset( $data['fields'][$name] ) ) {
+						if ( file_exists( JPATH_SITE.'/plugins/cck_field_link/'.(string)$attributes->link.'/classes/app.php' ) ) {
+							require_once JPATH_SITE.'/plugins/cck_field_link/'.(string)$attributes->link.'/classes/app.php';
+							JCck::callFunc_Array( 'plgCCK_Field_Link'.(string)$attributes->link.'_App', 'onCCK_Field_LinkImport'.$elemtype.'_Field', array( $data['fields'][$name], &$attributes, $data ) );
+						}
 					}
 				}
 				
