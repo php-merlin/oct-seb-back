@@ -148,8 +148,14 @@ class CCKViewSearch extends JViewLegacy
 		
 		// Positions
 		$positions				=	Helper_Workshop::getPositions( 'search', $this->item );
-		if ( is_object( $this->style ) && count( $this->style->positions ) ) {
-			$this->positions	=	array();
+		
+		if ( is_object( $this->style ) && ( $count = count( $this->style->positions ) ) ) {
+			$this->positions				=	array();
+
+			if ( $this->item->client == 'list' ) {
+				$this->style->positions[$count]	=	(object)array( 'disable'=>false, 'text'=>'Below', 'value'=>'_below_' );
+			}
+
 			foreach ( $this->style->positions as $p ) {
 				if ( $p->value ) {
 					$this->positions[$p->value]						=	new stdClass;
@@ -163,6 +169,10 @@ class CCKViewSearch extends JViewLegacy
 					$this->positions[$p->value]->height				=	@$positions[$p->value]->height;
 					$this->positions[$p->value]->css				=	@$positions[$p->value]->css;
 				}
+			}
+
+			if ( $this->item->client == 'list' ) {
+				unset( $this->style->positions[$count] );
 			}
 		} else {
 			$this->positions	=	array( 'mainbody' => (object)array( 'title'=>'(mainbody)', 'name'=>'mainbody', 'disable'=>false, 'legend'=>'',
@@ -207,7 +217,7 @@ class CCKViewSearch extends JViewLegacy
 	}
 
 	// setPosition
-	public function setPosition( $name, $title = '' )
+	public function setPosition( $name, $title = '', $no = '' )
 	{
 		$title	=	( !empty( $title ) ) ? $title : $name;
 		$legend	=	'<input class="thin blue" type="text" name="ffp[pos-'.$name.'][legend]" value="'.htmlspecialchars( @$this->positions[$name]->legend ).'" size="22" />';
@@ -217,7 +227,7 @@ class CCKViewSearch extends JViewLegacy
 		$height	=	'<input class="thin blue" type="text" name="ffp[pos-'.$name.'][height]" value="'.@$this->positions[$name]->height.'" size="8" style="text-align:center;" />';
 		$css	=	'<input class="thin blue" type="text" name="ffp[pos-'.$name.'][css]" value="'.@$this->positions[$name]->css.'" size="22" />';
 		
-		Helper_Workshop::displayPosition( $this->p, $name, $title, $legend, $variat, @$this->positions[$name]->variation, $width, $height, $css, array( 'template'=>$this->item->template, 'name'=>$this->item->name, 'view'=>$this->item->client ) );
+		Helper_Workshop::displayPosition( $this->p, $name, $title, $legend, $variat, @$this->positions[$name]->variation, $width, $height, $css, array( 'template'=>$this->item->template, 'name'=>$this->item->name, 'view'=>$this->item->client ), $no );
 		$this->p++;
 		
 		return $name;

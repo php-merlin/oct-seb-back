@@ -102,6 +102,7 @@ if ( !( $isRaw || $isMore ) ) {
 </<?php echo $tags[0]; ?>>
 <?php
 }
+echo $cck->renderPosition( '_below_' );
 if ( $id_class && !$isMore ) { ?>
 </div>
 <?php } ?>

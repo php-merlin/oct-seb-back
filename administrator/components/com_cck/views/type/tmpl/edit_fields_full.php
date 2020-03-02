@@ -41,7 +41,7 @@ $attr       =   array( 'class'=>' b', 'span'=>'<span class="icon-pencil-2"></spa
             echo '<ul class="sortable connected" id="sortable1" myid="1">';
 
             if ( $this->item->location == 'collection' ) {
-                echo '<li class="position ui-state-disabled boundary" id="pos-1"><input class="selector" type="radio" id="position0" name="positions" gofirst="#pos-1" golast="#pos-2"><span class="title"></span><input type="hidden" name="ff[pos-_main_]" value="position" /></li>';
+                echo '<li class="position p-no ui-state-disabled boundary" id="pos-1"><input class="selector" type="radio" id="position0" name="positions" gofirst="#pos-1" golast="#pos-2"><span class="title"></span><input type="hidden" name="ff[pos-_main_]" value="position" /></li>';
 
                 foreach ( $this->fields as $pos ) {
                     foreach ( $pos as $field ) {
@@ -56,7 +56,7 @@ $attr       =   array( 'class'=>' b', 'span'=>'<span class="icon-pencil-2"></spa
                 }
                 $this->positions_nb =   0;
             } else {
-                echo '<li class="position ui-state-disabled boundary" id="pos-0"><input class="selector" type="radio" id="position0" name="positions" gofirst="#pos-0" golast="#pos-1"><span class="title"></span><input type="hidden" name="ff[pos-_pre_]" value="position" /></li>';
+                echo '<li class="position p-no ui-state-disabled boundary" id="pos-0"><input class="selector" type="radio" id="position0" name="positions" gofirst="#pos-0" golast="#pos-1"><span class="title"></span><input type="hidden" name="ff[pos-_pre_]" value="position" /></li>';
 
                 if ( isset( $this->fields['_pre_'] ) ) {
                     foreach ( $this->fields['_pre_'] as $field ) {
@@ -91,7 +91,7 @@ $attr       =   array( 'class'=>' b', 'span'=>'<span class="icon-pencil-2"></spa
                 
                 $ijk++;			
 
-                echo '<li class="position ui-state-disabled boundary" id="pos-'.$ijk.'"><input class="selector" type="radio" id="position0" name="positions" gofirst="#pos-'.$ijk.'" golast="#pos-'.( $ijk + 1 ).'"><span class="title"></span><input type="hidden" name="ff[pos-_post_]" value="position" /></li>';
+                echo '<li class="position p-no ui-state-disabled boundary" id="pos-'.$ijk.'"><input class="selector" type="radio" id="position0" name="positions" gofirst="#pos-'.$ijk.'" golast="#pos-'.( $ijk + 1 ).'"><span class="title"></span><input type="hidden" name="ff[pos-_post_]" value="position" /></li>';
 
                 if ( isset( $this->fields['_post_'] ) ) {
                     foreach ( $this->fields['_post_'] as $field ) {

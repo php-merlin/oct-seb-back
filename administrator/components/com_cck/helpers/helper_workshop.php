@@ -26,7 +26,13 @@ class Helper_Workshop
 		$name	=	( $hasMb ) ? mb_convert_case( substr( $field->title, 0, 1 ), MB_CASE_LOWER, 'UTF-8' ) : strtolower( substr( $field->title, 0, 1 ) );
 		$link	=	'index.php?option=com_cck&task=field.edit&id='.$field->id.'&tmpl=component';
 		$class	=	$field->checked_out ? ' zz' : '';
-		?><li class="field <?php echo 't-'.$field->type.' f-'.$field->folder.' a-'.$name.$type_field; ?>" id="<?php echo $field->id; ?>"><a class="cbox<?php echo $attr['class'].$class; ?>" href="<?php echo $link; ?>"><?php echo $attr['span']; ?></a><span class="title" onDblClick="JCck.DevHelper.move('<?php echo $field->id; ?>');"><?php echo $field->title; ?><span class="subtitle">(<?php echo JText::_( 'PLG_CCK_FIELD_'.$field->type.'_LABEL2' ); ?>)</span></span><input type="hidden" id="k<?php echo $field->id; ?>" name="ff[<?php echo $field->name; ?>]" value="<?php echo $field->id; ?>" /><?php echo '<div class="move" onClick="JCck.DevHelper.move('.$field->id.');"></div>'; ?><div class="drag"></div><?php echo @$field->params; ?></li><?php
+
+		if ( isset( $field->storage ) ) {
+			$no	=	$field->storage == 'none' ? '<span class="no">&times;</span>' : '';
+		} else {
+			$no	=	'';
+		}
+		?><li class="field <?php echo 't-'.$field->type.' f-'.$field->folder.' a-'.$name.$type_field; ?>" id="<?php echo $field->id; ?>"><a class="cbox<?php echo $attr['class'].$class; ?>" href="<?php echo $link; ?>"><?php echo $attr['span']; ?></a><span class="title" onDblClick="JCck.DevHelper.move('<?php echo $field->id; ?>');"><?php echo $field->title; ?><span class="subtitle">(<?php echo JText::_( 'PLG_CCK_FIELD_'.$field->type.'_LABEL2' ); ?>)<?php echo $no; ?></span></span><input type="hidden" id="k<?php echo $field->id; ?>" name="ff[<?php echo $field->name; ?>]" value="<?php echo $field->id; ?>" /><?php echo '<div class="move" onClick="JCck.DevHelper.move('.$field->id.');"></div>'; ?><div class="drag"></div><?php echo @$field->params; ?></li><?php
 	}
 	
 	// displayHeader
@@ -89,13 +95,21 @@ class Helper_Workshop
 	}
 	
 	// displayPosition
-	public static function displayPosition( $p, $name, $title, $legend, $variation, $variation_status, $width, $height, $css, $info = array() )
+	public static function displayPosition( $p, $name, $title, $legend, $variation, $variation_status, $width, $height, $css, $info = array(), $no = '' )
 	{
-		$attr	=	'';
-		$class	=	'';
-		$dir	=	'down';
-		$to		=	$p + 1;
-		$hide	=	( $variation_status != '' ) ? '' : ' hidden';
+		$attr		=	'';
+		$class		=	'';
+		$dir		=	'down';
+		$hide		=	( $variation_status != '' ) ? '' : ' hidden';
+		$no_class	=	'';
+		$to			=	$p + 1;
+		
+		if ( $no == 'p-no' ) {
+			$no_class	=	' '.$no;
+			$no			=	'';
+		} elseif ( $no ) {
+			$no_class	=	' p-yes';
+		}
 
 		if ( isset( $info['template'] ) && $info['template'] != '' ) {
 			if ( is_file( JPATH_SITE.'/templates/'.$info['template'].'/positions/'.$name.'.php' ) ) {
@@ -106,9 +120,10 @@ class Helper_Workshop
 				$class	=	' overridden';
 			}
 		}
-		$pos	=	'<li class="position ui-state-disabled" id="pos-'.$p.'">'
+
+		$pos	=	'<li class="position'.$no_class.' ui-state-disabled" id="pos-'.$p.'">'
 				.	'<input class="selector" type="radio" id="position'.$p.'" name="positions" gofirst="#pos-'.($to-1).'" golast="#pos-'.$to.'" />'
-				.	'<span class="title'.$class.'"'.$attr.'>'.$title.'</span>'
+				.	'<span class="title'.$class.'"'.$attr.'>'.$title.$no.'</span>'
 				.	'<input type="hidden" name="ff[pos-'.$name.']" value="position" />'
 				.	'<div class="pane la">'
 				.	'<div class="col1"><div class="colc">'.$legend.'</div></div>'
@@ -137,7 +152,7 @@ class Helper_Workshop
 		$height	=	'<input type="hidden" name="ffp[pos-'.$name.'][height]" value="" />';
 		$css	=	'<input type="hidden" name="ffp[pos-'.$name.'][css]" value="" />';
 		
-		self::displayPosition( $p, $name, $title, $legend, $variat, '', $width, $height, $css );
+		self::displayPosition( $p, $name, $title, $legend, $variat, '', $width, $height, $css, array(), 'p-no' );
 	}
 	
 	// displayToolbar
@@ -235,7 +250,7 @@ class Helper_Workshop
 			$fields	=	array();
 			if ( $featured != '' ) {
 				$where	=	'WHERE '.$featured.' AND a.type != "" AND a.storage != "dev" AND ( a.storage_table NOT LIKE "#__cck_store_form_%" )';
-				$fields	=	JCckDatabase::loadObjectList( 'SELECT DISTINCT a.id, a.title, a.name, a.folder, a.type, a.label, a.checked_out FROM #__cck_core_fields AS a '.$where.' ORDER BY a.ordering ASC' );
+				$fields	=	JCckDatabase::loadObjectList( 'SELECT DISTINCT a.id, a.title, a.name, a.folder, a.type, a.label, a.storage, a.checked_out FROM #__cck_core_fields AS a '.$where.' ORDER BY a.ordering ASC' );
 				if ( count( $fields ) ) {
 					$list	=	array();
 					foreach ( $fields as $f ) {
@@ -257,7 +272,7 @@ class Helper_Workshop
 			$fields	=	implode( ',', $fields );
 		} else {
 			$and	=	( $force === true ) ? ' '.$featured : '';
-			$query	=	' SELECT DISTINCT a.id, a.title, a.name, a.folder, a.type, a.label, a.checked_out, c.client, '.plgCCK_FieldGeneric_More::gm_getConstruction_Columns( $table, '_get' )
+			$query	=	' SELECT DISTINCT a.id, a.title, a.name, a.folder, a.type, a.label, a.storage, a.checked_out, c.client, '.plgCCK_FieldGeneric_More::gm_getConstruction_Columns( $table, '_get' )
 					.	' FROM #__cck_core_fields AS a '
 					. 	' LEFT JOIN #__cck_core_'.$table.' AS c ON c.fieldid = a.id'
 					.	' WHERE c.'.$element.'id = '.(int)$item->id.' AND c.client = "'.$item->client.'"'
@@ -292,7 +307,7 @@ class Helper_Workshop
 			}
 			$where	.=	' AND ( (a.storage_table NOT LIKE "#__cck_store_form_%" OR a.storage_table ="#__cck_store_form_'.$item->name.'") '.$or.')';			
 		} elseif ( $element == 'search' ) {
-			$select	=	', a.storage_table, a.storage_field';
+			$select	=	', a.storage, a.storage_table, a.storage_field';
 		}
 		if ( $excluded ) {
 			$where	.=	' AND a.id NOT IN ('.$excluded.')';
