@@ -47,9 +47,7 @@ class plgCCK_Field_LinkContent extends JCckPluginLink
 
 		// Prepare
 		if ( !$itemId ) {
-			$view	=	$app->input->get( 'view', '' );
-			$layout	=	$app->input->get( 'layout', '' );
-			if ( ( $view == 'category' && $layout == 'blog' ) || $view == 'featured' ) {
+			if ( ( $app->input->get( 'view', '' ) == 'category' && $app->input->get( 'layout', '' ) == 'blog' ) || $app->input->get( 'view', '' ) == 'featured' ) {
 				$sef	=	0;
 			}
 			if ( $sef ) {
@@ -62,6 +60,12 @@ class plgCCK_Field_LinkContent extends JCckPluginLink
 				$itemId	=	$menu->parent_id;
 			}
 		}
+
+		// -- Inherit SEF
+		if ( $sef && (int)$itemId > 0 ) {
+			$sef	=	JCckDevHelper::getRouteSef( $itemId, $config['type'], $sef );
+		}
+		// -- Inherit SEF
 
 		$lang_tag			=	$link->get( 'language', '' );
 		$link_attr			=	$link->get( 'attributes', '' );

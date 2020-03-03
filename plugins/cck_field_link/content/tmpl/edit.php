@@ -27,8 +27,8 @@ $options	=	implode( '||', $options );
 	<?php echo JCckDev::renderLegend( JText::_( 'COM_CCK_CONSTRUCTION' ), JText::_( 'PLG_CCK_FIELD_LINK_'.$this->item->name.'_DESC' ) ); ?>
     <ul class="adminformlist adminformlist-2cols">
         <?php
-		echo JCckDev::renderForm( 'core_sef', '', $config, array( 'selectlabel'=>'Inherited', 'storage_field'=>'sef' ) );
 		echo JCckDev::renderForm( 'core_menuitem', '', $config, array( 'selectlabel'=>'Inherited', 'options'=>'Parent=-1||Use Mapping=optgroup||Fields=-3||Use Value=optgroup||Field=-2' ) );
+		echo JCckDev::renderForm( 'core_sef', '', $config, array( 'selectlabel'=>'Inherited', 'storage_field'=>'sef' ) );
 		echo JCckDev::renderBlank( '<input type="hidden" id="blank_li2" value="" />' );
 		echo JCckDev::renderForm( 'core_dev_text', '', $config, array( 'label'=>'Field Name', 'storage_field'=>'itemid_fieldname' ) );
 		echo JCckDev::renderForm( 'core_dev_select', '', $config, array( 'defaultvalue'=>'', 'label'=>'Content', 'selectlabel'=>'Current', 'options'=>'Use Value=optgroup||Field=2||Own=-2', 'storage_field'=>'content' ) );
@@ -66,8 +66,7 @@ JCckDev::initScript( 'link', $this->item );
 
 <script type="text/javascript">
 jQuery(document).ready(function($) {
-	$('#itemid').isDisabledWhen('sef','0');
-	$('#itemid_fieldname,#blank_li2').isVisibleWhen('itemid','-2');
+	$('#itemid_fieldname').isVisibleWhen('itemid','-2');
 	$('#sortable_core_dev_texts').isVisibleWhen('itemid','-3');
 	$('#content_fieldname,#blank_li').isVisibleWhen('content','2');
 	$('#content_location').isVisibleWhen('content','2,-2');
@@ -75,5 +74,6 @@ jQuery(document).ready(function($) {
 	$('#title_custom').isVisibleWhen('title','2,3',false);
 	$('#site').isVisibleWhen('path_type','1,2');
 	$('#target_params').isVisibleWhen('target','modal');
+	$('#sef').parent().hide();
 });
 </script>

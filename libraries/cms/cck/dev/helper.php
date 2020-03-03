@@ -476,6 +476,68 @@ abstract class JCckDevHelper
 		return $path;
 	}
 
+	// getRouteSef
+	public static function getRouteSef( $itemId, $type, $sef = '' )
+	{
+		static $cache	=	array();
+
+		if ( !$itemId ) {
+			return $sef;
+		}
+		/*
+		if ( $itemId == JFactory::getApplication()->input->getInt( 'Itemid', 0 ) ) {
+			return $sef;
+		}
+		*/
+
+		$idx	=	$itemId.'_'.$type;
+
+		if ( !isset( $cache[$idx] ) ) {
+			$item			=	JFactory::getApplication()->getMenu()->getItem( $itemId );
+			$cache[$idx]	=	'';
+
+			if ( !( is_object( $item ) && isset( $item->params ) ) ) {
+				$item 			=	JCckDatabase::loadObject( 'SELECT link, params FROM #__menu WHERE id = '.(int)$itemId );
+				$item->query	=	self::getUrlVars( $item->link, true, false );
+			}
+			if ( isset( $item->params ) ) {
+				if ( is_string( $item->params ) ) {
+					$item->params		=	new JRegistry( $item->params );
+				}
+
+				$cache[$idx]	=	$item->params->get( 'sef', '' );
+			}
+			if ( isset( $item->query['search'] ) ) {
+				/* TODO
+				cache::getSearch
+
+				self::getRouteParams
+				*/
+				$list 			=	JCckDatabaseCache::loadObject( 'SELECT options, sef_route FROM #__cck_core_searchs WHERE name = "'.$item->query['search'].'"' );
+
+				if ( !$cache[$idx] ) {
+					$list->options	=	new JRegistry( $list->options );
+					$cache[$idx]	=	$list->options->get( 'sef', '' );	
+				}
+				if ( $list->sef_route && $type ) {
+					$parts			=	explode( '/', $list->sef_route );
+					$target			=	array_search( $type, $parts );
+
+					if ( $target !== false ) {
+						$targets		=	array( 0=>'2', 1=>'4', 2=>'8' );
+						$cache[$idx][0]	=	$targets[$target];	
+					}
+				}
+			}
+
+			if ( !$cache[$idx] ) {
+				$cache[$idx]	=	$sef;
+			}
+		}
+
+		return $cache[$idx];
+	}
+
 	// getRules
 	public static function getRules( $rules, $default = '{}' )
 	{
@@ -531,7 +593,7 @@ abstract class JCckDevHelper
 	}
 
 	// getUrlVars
-	public static function getUrlVars( $url, $force = false )
+	public static function getUrlVars( $url, $force = false, $registry = true )
 	{
 		if ( ( $pos = strpos( $url, '?') ) !== false ) {
 			$url	=	substr( $url, $pos + 1 );
@@ -550,7 +612,10 @@ abstract class JCckDevHelper
 				}
 			}
 		}
-		$url	=	new JRegistry( $url );
+
+		if ( $registry ) {
+			$url	=	new JRegistry( $url );
+		}
 		
 		return $url;
 	}
