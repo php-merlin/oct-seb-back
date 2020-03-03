@@ -171,7 +171,8 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 							$select		.=	', f.alias_'.$lang_sef.' AS alias_slug, g.alias_'.$lang_sef.' AS category_alias_slug';
 						} else {
 							$select		.=	', JSON_UNQUOTE(JSON_EXTRACT(f.aliases, '.JCckDatabase::quote('$."'.$lang_tag.'"').')) AS alias_slug'
-										.	', JSON_UNQUOTE(JSON_EXTRACT(g.aliases, '.JCckDatabase::quote('$."'.$lang_tag.'"').')) AS category_alias_slug';
+										.	', JSON_UNQUOTE(JSON_EXTRACT(g.aliases, '.JCckDatabase::quote('$."'.$lang_tag.'"').')) AS category_alias_slug'
+										.	', JSON_UNQUOTE(JSON_EXTRACT(g2.aliases, '.JCckDatabase::quote('$."'.$lang_tag.'"').')) AS category_parent_alias';
 						}
 					}
 				}
@@ -185,8 +186,11 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 				}
 				
 				if ( $sef_slug ) {
-					$query			.=	' LEFT JOIN #__cck_store_item_content AS f on f.id = a.id';
-					$query			.=	' LEFT JOIN #__cck_store_item_categories AS g on g.id = a.catid';
+					$query			.=	' LEFT JOIN #__cck_store_item_content AS f on f.id = a.id'
+									.	' LEFT JOIN #__cck_store_item_categories AS g on g.id = a.catid'
+									.	' LEFT JOIN #__categories AS b2 on b2.id = b.parent_id'
+									.	' LEFT JOIN #__cck_store_item_categories AS g2 on g2.id = b2.id'
+									;
 				}
 
 				$query				.=	' WHERE a.'.self::$key.' IN ('.$config['pks'].')';
@@ -231,6 +235,7 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 					$query			.=	' WHERE a.'.self::$key.' IN ('.$config['pks'].')';
 
 					$storages[self::$table]	=	JCckDatabase::loadObjectList( $query, self::$key );
+
 					foreach ( $storages[self::$table] as $s ) {
 						$s->slug	=	( $s->alias ) ? $s->id.':'.$s->alias : $s->id;
 					}
@@ -810,7 +815,11 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 			} elseif ( $sef[0] == '5' ) {
 				$path	=	'&userid='.( isset( $storage[self::$table]->author_alias ) ? $storage[self::$table]->author_alias : $storage[self::$table]->created_by );
 			} elseif ( $sef[0] == '4' || $sef[0] == '8' ) {
-				$path	=	'&catid='.( isset( $storage[self::$table]->category_alias ) ? $storage[self::$table]->category_alias : $storage[self::$table]->catid );
+				$path	=	isset( $storage[self::$table]->category_alias ) ? $storage[self::$table]->category_alias : $storage[self::$table]->catid;
+				if ( isset( $storage[self::$table]->category_parent_alias ) && $storage[self::$table]->category_parent_alias ) {
+					$path	=	$storage[self::$table]->category_parent_alias.'/'.$path;
+				}
+				$path	=	'&catid='.$path;
 			} elseif ( $sef[0] == '3' ) {
 				$path	=	'&typeid='.$config['type'];
 			} elseif (  $sef == '10') {
@@ -950,7 +959,9 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 		if ( isset( $config['sef_types'] ) && $config['sef_types'] != '' ) {
 			if ( $config['doSEF'][0] != '3' ) {
 				$join	.=	' LEFT JOIN #__cck_core AS e on e.'.$config['join_key'].' = a.id';
-				$where	.=	( strpos( $config['sef_types'], ',' ) !== false ) ? ' AND e.cck IN ("'.str_replace( ',', '","', $config['sef_types'] ).'")' : ' AND e.cck = "'.$config['sef_types'].'"';
+				$parts	=	explode( '/', $config['sef_types'] );
+				$count	=	count( $parts );
+				$where	.=	' AND e.cck IN ("'.str_replace( ',', '","', $parts[($count - 1)] ).'")';
 			}
 		}
 
@@ -1069,7 +1080,7 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 		if ( $lang_tag ) {
 			$link	.=	'&lang='.$lang_tag;
 		}
-		
+
 		return $link;
 	}
 
