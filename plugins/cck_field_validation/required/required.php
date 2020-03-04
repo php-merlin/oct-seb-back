@@ -23,6 +23,15 @@ class plgCCK_Field_ValidationRequired extends JCckPluginValidation
 	{
 		$regex	=	self::$regex;
 
+		if ( $field->required == 'required[lang:default]' ) {
+			if ( JFactory::getLanguage()->getDefault() == $field->language ) {
+				$field->required	=	'required';
+			} else {
+				$field->required	=	'';
+
+				return;
+			}
+		}
 		if ( self::$type != $field->required ) {
 			if ( strpos( $field->required, self::$type.'[' ) !== false ) {
 				$fieldId	=	explode( '[', $field->required );
