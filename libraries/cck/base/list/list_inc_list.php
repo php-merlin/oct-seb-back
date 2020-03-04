@@ -111,7 +111,7 @@ if ( $go_for_item || $go_for_both ) {
 }
 
 foreach ( $fields as $field ) {
-	if ( $field->position == '_below_' ) {
+	if ( $field->position == '_above_' || $field->position == '_below_' ) {
 		if ( !$field->name ) {
 			continue;
 		}

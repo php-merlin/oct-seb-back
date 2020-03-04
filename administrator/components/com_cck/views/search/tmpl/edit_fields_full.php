@@ -69,8 +69,24 @@ $attr       =   array( 'class'=>' b', 'span'=>'<span class="icon-pencil-2"></spa
                     }
 
 					if ( $this->positions_nb ) {
+                        if ( $this->item->client == 'list' ) {
+                            $ijk++;
+
+                            $this->setPosition( '_above_', 'ABOVE', '<span class="no">↑</span>' );
+
+                            if ( isset( $this->fields['_above_'] ) ) {
+                                foreach ( $this->fields['_above_'] as $field ) {
+                                    $type_field     =   '';
+                                    if ( isset( $this->type_fields[$field->id] ) ) {
+                                        $type_field =   ' c-'.$this->type_fields[$field->id]->cc;
+                                    }
+                                    JCck::callFunc_Array( 'plgCCK_Field'.$field->type, 'onCCK_FieldConstruct_Search'.$this->item->master, array( &$field, $style, $data, &$data2 ) );
+                                    Helper_Workshop::displayField( $field, $type_field, $attr );
+                                }
+                            }
+                        }   
 						foreach ( $this->positions as $pos ) {
-                            if ( $pos->name == '_below_' ) {
+                            if ( $pos->name == '_above_' || $pos->name == '_below_' ) {
                                 continue;
                             }
 							if ( isset( $this->fields[$pos->name] ) ) {
@@ -95,7 +111,7 @@ $attr       =   array( 'class'=>' b', 'span'=>'<span class="icon-pencil-2"></spa
                         if ( $this->item->client == 'list' ) {
                             $ijk++;
 
-                            $this->setPosition( '_below_', 'BELOW', '<span class="no">&times;</span>' );
+                            $this->setPosition( '_below_', 'BELOW', '<span class="no">↓</span>' );
 
                             if ( isset( $this->fields['_below_'] ) ) {
                                 foreach ( $this->fields['_below_'] as $field ) {

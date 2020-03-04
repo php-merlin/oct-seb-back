@@ -56,6 +56,7 @@ $class			=	$class ? ' class="'.$class.'"' : '';
 if ( $id_class && !$isMore ) {
 ?>
 <div class="<?php echo trim( $cck->id_class ); ?>"<?php echo ( $cck->id_attributes ? ' '.$cck->id_attributes : '' ); ?>><?php }
+echo $cck->renderPosition( '_above_' );
 if ( !( $isRaw || $isMore ) ) { ?>
 <<?php echo $tags[0]; ?><?php echo $class.$custom_attr; ?>>
 <?php }

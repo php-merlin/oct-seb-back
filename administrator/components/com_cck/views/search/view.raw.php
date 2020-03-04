@@ -153,7 +153,8 @@ class CCKViewSearch extends JViewLegacy
 			$this->positions				=	array();
 
 			if ( $this->item->client == 'list' ) {
-				$this->style->positions[$count]	=	(object)array( 'disable'=>false, 'text'=>'Below', 'value'=>'_below_' );
+				$this->style->positions[$count]			=	(object)array( 'disable'=>false, 'text'=>'Above', 'value'=>'_above_' );
+				$this->style->positions[($count + 1)]	=	(object)array( 'disable'=>false, 'text'=>'Below', 'value'=>'_below_' );
 			}
 
 			foreach ( $this->style->positions as $p ) {
@@ -168,11 +169,16 @@ class CCKViewSearch extends JViewLegacy
 					$this->positions[$p->value]->width				=	@$positions[$p->value]->width;
 					$this->positions[$p->value]->height				=	@$positions[$p->value]->height;
 					$this->positions[$p->value]->css				=	@$positions[$p->value]->css;
+
+					if ( ( $p->value == '_above_' || $p->value == '_below_' ) && !isset( $positions[$p->value] ) ) {
+						$this->positions[$p->value]->variation	=	'none';
+					}
 				}
 			}
 
 			if ( $this->item->client == 'list' ) {
 				unset( $this->style->positions[$count] );
+				unset( $this->style->positions[($count + 1)] );
 			}
 		} else {
 			$this->positions	=	array( 'mainbody' => (object)array( 'title'=>'(mainbody)', 'name'=>'mainbody', 'disable'=>false, 'legend'=>'',
