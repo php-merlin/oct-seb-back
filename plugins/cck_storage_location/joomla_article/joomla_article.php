@@ -45,7 +45,7 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 											'beforeDelete'=>'onContentBeforeDelete',
 											'beforeSave'=>'onContentBeforeSave'
 										);
-	protected static $ordering		=	array( 'alpha'=>'title ASC', 'newest'=>'created DESC', 'oldest'=>'created ASC', 'ordering'=>'ordering ASC', 'popular'=>'hits DESC' );
+	protected static $ordering		=	array( 'alpha'=>'title ASC', 'newest'=>'publish_up DESC', 'oldest'=>'publish_up ASC', 'ordering'=>'ordering ASC', 'popular'=>'hits DESC' );
 	protected static $ordering2		=	array();
 	protected static $pk			=	0;
 	protected static $routes		=	array();
