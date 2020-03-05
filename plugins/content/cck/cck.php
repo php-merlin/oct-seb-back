@@ -671,6 +671,7 @@ class plgContentCCK extends JPlugin
 
 		$doc		=	CCK_Document::getInstance( 'html' );
 		$positions	=	array();
+		$unset		=	array();
 
 		if ( $parent_type != '' ) {
 			$w_type	=	'(b.name = "'.$contentType.'" OR b.name = "'.$parent_type.'")';
@@ -780,7 +781,10 @@ class plgContentCCK extends JPlugin
 			// Merge
 			if ( count( $config['fields'] ) ) {
 				foreach ( $config['fields'] as $k=>$v ) {
-					if ( !( $v->restriction == 'unset' || $v->markup == 'unset' ) ) {
+					if ( $v->markup == 'unset' && isset( $fields[$k] ) ) {
+						$unset[$k]	=	$fields[$k];
+					}
+					if ( !( $v->restriction == 'unset' ) ) {
 						$fields[$k]	=	$v;
 					}
 				}
@@ -798,6 +802,12 @@ class plgContentCCK extends JPlugin
 					JCck::callFunc_Array( 'plg'.$process->group.$process->type, 'on'.$process->group.'BeforeRenderContent', array( $process->params, &$fields, &$config['storages'], &$config ) );
 				}
 			}
+		}
+		if ( count( $unset ) ) {
+			foreach ( $unset as $k=>$v ) {
+				$fields[$k]	=	$v;
+			}
+			unset( $unset );
 		}
 
 		// Set Title

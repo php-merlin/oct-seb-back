@@ -106,13 +106,16 @@ if ( $count ) {
 								'type_alias'=>( $items[$i]->type_alias ? $items[$i]->type_alias : $items[$i]->cck )
 							);
 			$fieldsI	=	array();
+			$unset		=	array();
 			
 			foreach ( $fields as $field ) {
+				if ( $field->position == '_above_' || $field->position == '_below_' ) {
+					continue;
+				}
 				$field				=	clone $field;
 				$field->typo_target	=	'value';
 				$fieldName			=	$field->name;
 				$value				=	'';
-				$name				=	( ! empty( $field->storage_field2 ) ) ? $field->storage_field2 : $fieldName; //-
 
 				if ( $field->variation_override ) {
 					$override	=	json_decode( $field->variation_override, true );
@@ -202,14 +205,34 @@ if ( $count ) {
 			// Merge
 			if ( count( $config['fields'] ) ) {
 				foreach ( $config['fields'] as $k=>$v ) {
-					if ( !( $v->restriction == 'unset' || $v->markup == 'unset' ) ) {
+					if ( $v->markup == 'unset' && isset( $fieldsI[$k] ) ) {
+						$unset[$k]		=	$fieldsI[$k];
+					}
+					if ( !( $v->restriction == 'unset' ) ) {
 						$fieldsI[$k]	=	$v;
 					}
 				}
 				$config['fields']	=	null;
 				unset( $config['fields'] );
 			}
-			
+
+			// BeforeRender
+			if ( isset( $config['process']['beforeRenderContent'] ) && count( $config['process']['beforeRenderContent'] ) ) {
+				JCckDevHelper::sortObjectsByProperty( $config['process']['beforeRenderContent'], 'priority' );
+				
+				foreach ( $config['process']['beforeRenderContent'] as $process ) {
+					if ( $process->type ) {
+						JCck::callFunc_Array( 'plg'.$process->group.$process->type, 'on'.$process->group.'BeforeRenderContent', array( $process->params, &$fieldsI, &$config['storages'], &$config ) );
+					}
+				}
+			}
+			if ( count( $unset ) ) {
+				foreach ( $unset as $k=>$v ) {
+					$fieldsI[$k]	=	$v;
+				}
+				unset( $unset );
+			}
+
 			/* TODO#SEBLOD: ->legend2 may be deprecated (from here) in a near future... in order to move at template level. */
 			if ( $i == 0 ) {
 				foreach ( $positions as $p_key=>$p_fields ) {
@@ -223,17 +246,6 @@ if ( $count ) {
 
 					if ( isset( $positions_p[$p_key] ) ) {
 						$positions_p[$p_key]->legend2	=	$legend2;
-					}
-				}
-			}
-
-			// BeforeRender
-			if ( isset( $config['process']['beforeRenderContent'] ) && count( $config['process']['beforeRenderContent'] ) ) {
-				JCckDevHelper::sortObjectsByProperty( $config['process']['beforeRenderContent'], 'priority' );
-				
-				foreach ( $config['process']['beforeRenderContent'] as $process ) {
-					if ( $process->type ) {
-						JCck::callFunc_Array( 'plg'.$process->group.$process->type, 'on'.$process->group.'BeforeRenderContent', array( $process->params, &$fieldsI, &$config['storages'], &$config ) );
 					}
 				}
 			}
@@ -289,13 +301,13 @@ if ( $count ) {
 								'type_alias'=>( $items[$i]->type_alias ? $items[$i]->type_alias : $items[$i]->cck )
 							);
 			$fieldsI	=	array();
+			$unset		=	array();
 			
 			foreach ( $fields2 as $field ) {
 				$field				=	clone $field;
 				$field->typo_target	=	'value';
 				$fieldName			=	$field->name;
 				$value				=	'';
-				$name				=	( ! empty( $field->storage_field2 ) ) ? $field->storage_field2 : $fieldName; //-
 
 				if ( $field->variation_override ) {
 					$override	=	json_decode( $field->variation_override, true );
@@ -391,14 +403,34 @@ if ( $count ) {
 			// Merge
 			if ( count( $config['fields'] ) ) {
 				foreach ( $config['fields'] as $k=>$v ) {
-					if ( !( $v->restriction == 'unset' || $v->markup == 'unset' ) ) {
+					if ( $v->markup == 'unset' && isset( $fieldsI[$k] ) ) {
+						$unset[$k]		=	$fieldsI[$k];
+					}
+					if ( !( $v->restriction == 'unset' ) ) {
 						$fieldsI[$k]	=	$v;
 					}
 				}
 				$config['fields']	=	null;
 				unset( $config['fields'] );
 			}
-			
+
+			// BeforeRender
+			if ( isset( $config['process']['beforeRenderContent'] ) && count( $config['process']['beforeRenderContent'] ) ) {
+				JCckDevHelper::sortObjectsByProperty( $config['process']['beforeRenderContent'], 'priority' );
+
+				foreach ( $config['process']['beforeRenderContent'] as $process ) {
+					if ( $process->type ) {
+						JCck::callFunc_Array( 'plg'.$process->group.$process->type, 'on'.$process->group.'BeforeRenderContent', array( $process->params, &$fieldsI, &$config['storages'], &$config ) );
+					}
+				}
+			}
+			if ( count( $unset ) ) {
+				foreach ( $unset as $k=>$v ) {
+					$fieldsI[$k]	=	$v;
+				}
+				unset( $unset );
+			}
+
 			/* TODO#SEBLOD: ->legend2 may be deprecated (from here) in a near future... in order to move at template level. */
 			if ( $i == 0 ) {
 				foreach ( $positions2 as $p_key=>$p_fields ) {
@@ -416,16 +448,6 @@ if ( $count ) {
 				}
 			}
 
-			// BeforeRender
-			if ( isset( $config['process']['beforeRenderContent'] ) && count( $config['process']['beforeRenderContent'] ) ) {
-				JCckDevHelper::sortObjectsByProperty( $config['process']['beforeRenderContent'], 'priority' );
-
-				foreach ( $config['process']['beforeRenderContent'] as $process ) {
-					if ( $process->type ) {
-						JCck::callFunc_Array( 'plg'.$process->group.$process->type, 'on'.$process->group.'BeforeRenderContent', array( $process->params, &$fieldsI, &$config['storages'], &$config ) );
-					}
-				}
-			}
 			$item->fields_list		=	$fieldsI;
 		}
 		
