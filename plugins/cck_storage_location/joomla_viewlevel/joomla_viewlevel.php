@@ -22,6 +22,7 @@ class plgCCK_Storage_LocationJoomla_Viewlevel extends JCckPluginLocation
 	protected static $table			=	'#__viewlevels';
 	protected static $table_object	=	array( 'Viewlevel', 'JTable' );
 	protected static $key			=	'id';
+	protected static $key_field		=	'viewing_access_level_pk';
 	
 	protected static $access		=	'';
 	protected static $author		=	'';

@@ -111,6 +111,7 @@ $config	=	array( 'action'=>$preconfig['action'],
 				   'formId'=>$preconfig['formId'],
 				   'isNew'=>$isNew,
 				   'javascript'=>'',
+				   'id'=>0,
 				   'pk'=>$id,
    				   'submit'=>$preconfig['submit'],
 				   'storages'=>array(),
@@ -224,6 +225,16 @@ if ( $id ) {
 }
 $dispatcher	=	JEventDispatcher::getInstance();
 
+if ( $id && $type->storage_location ) {
+	$properties					=	array( 'key_field' );
+	$properties					=	JCck::callFunc( 'plgCCK_Storage_Location'.$type->storage_location, 'getStaticProperties', $properties );
+	$properties['key_field']	=	CCK_Form::getField( $properties['key_field'], $type->name );
+
+	if ( is_object( $properties['key_field'] ) ) {
+		array_unshift( $fields, $properties['key_field'] );
+	}
+}
+
 // Validation
 if ( (int)JCck::getConfig_Param( 'validation', '3' ) > 1 ) {
 	$lang->load( 'plg_cck_field_validation_required', JPATH_ADMINISTRATOR, null, false, true );
@@ -322,6 +333,11 @@ foreach ( $fields as $field ) {
 	}
 }
 
+// Fix
+if ( isset( $properties['key_field'] ) && $properties['key_field'] ) {
+	unset( $fields[0] );
+}
+
 // Merge
 if ( count( $config['fields'] ) ) {
 	foreach ( $config['fields'] as $k=>$v ) {
@@ -390,6 +406,8 @@ if ( $copyfrom_id > 0 ) {
 	$id					=	0;
 	unset( $config['base'] );
 }
+
+/*
 if ( $config['pk'] && empty( $config['id'] ) ) {
 	if ( ! ( isset( $config['base'] ) && is_object( $config['base'] ) ) ) {
 		$config['base']				=	new stdClass;
@@ -408,6 +426,7 @@ if ( $config['pk'] && empty( $config['id'] ) ) {
 } else {
 	$config['id']	=	( @$config['id'] ) ? $config['id'] : 0;
 }
+*/
 
 // Versions
 if ( $app->isClient( 'administrator' ) ) {

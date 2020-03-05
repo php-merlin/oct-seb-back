@@ -18,6 +18,7 @@ class plgCCK_Storage_LocationJoomla_Language extends JCckPluginLocation
 	protected static $table			=	'#__languages';
 	protected static $table_object	=	array( 'Language', 'JTable' );
 	protected static $key			=	'lang_id';
+	protected static $key_field		=	'language_pk';
 	
 	protected static $access		=	'access';
 	protected static $author		=	''; /* TODO */

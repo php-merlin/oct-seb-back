@@ -18,6 +18,7 @@ class plgCCK_Storage_LocationJoomla_Module extends JCckPluginLocation
 	protected static $table			=	'#__modules';
 	protected static $table_object	=	array( 'Module', 'JTable' );
 	protected static $key			=	'id';
+	protected static $key_field		=	'module_pk';
 	
 	protected static $access		=	'access';
 	protected static $author		=	'';

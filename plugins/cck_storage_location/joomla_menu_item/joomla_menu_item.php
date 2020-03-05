@@ -20,6 +20,7 @@ class plgCCK_Storage_LocationJoomla_Menu_Item extends JCckPluginLocation
 	protected static $table			=	'#__menu';
 	protected static $table_object	=	array( 'Menu', 'JTable' );
 	protected static $key			=	'id';
+	protected static $key_field		=	'nav_item_pk';
 	
 	protected static $access		=	'access';
 	protected static $author		=	'';

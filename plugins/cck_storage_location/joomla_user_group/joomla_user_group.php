@@ -20,6 +20,7 @@ class plgCCK_Storage_LocationJoomla_User_Group extends JCckPluginLocation
 	protected static $table			=	'#__usergroups';
 	protected static $table_object	=	array( 'Usergroup', 'JTable' );
 	protected static $key			=	'id';
+	protected static $key_field		=	'user_group_pk';
 	
 	protected static $access		=	'';
 	protected static $author		=	'';
