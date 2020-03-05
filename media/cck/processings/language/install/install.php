@@ -52,7 +52,7 @@ if ( !$content_language->count( $content_type, array( 'lang_id'=>$pk ) ) ) {
 		// $content_language->_createElements();
 
 		// Create Fields
-		// ...
+		$content_language->_createFields();
 
 		// Create Types
 		// ...

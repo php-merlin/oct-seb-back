@@ -4,6 +4,46 @@ defined( '_JEXEC' ) or die;
 $mixin	=	new class() {
 	use JCckContentTraitMixin;
 
+	// _swapFieldProperty
+	protected function _swapFieldProperty()
+	{
+		return function( $str, $mode = '' ) {
+			if ( $str ) {
+				$lang_sef	=	'en';
+				
+				if ( $mode == 'name' ) {
+					if ( strpos( $str, '_'.$lang_sef ) === ( strlen( $str ) - 3 ) ) {
+						$str	=	substr( $str, 0, -2 ).$this->_( 'lang_sef' );
+					} else {
+						$str	=	str_replace( '_en_', '_'.$this->_( 'lang_sef' ).'_', $str );	
+					}
+				} elseif ( $mode == 'title' ) {
+					if ( strpos( $str, ' '.strtoupper( $lang_sef ) ) === ( strlen( $str ) - 3 ) ) {
+						$str	=	substr( $str, 0, -2 ).strtoupper( $this->_( 'lang_sef' ) );
+					} else {
+						$str	=	str_replace( ' EN ', ' '.strtoupper( $this->_( 'lang_sef' ) ).' ', $str );
+					}
+				} else {
+					if ( strpos( $str, '_'.$lang_sef ) === ( strlen( $str ) - 3 ) ) {
+						$str	=	substr( $str, 0, -2 ).$this->_( 'lang_sef' );
+					}	
+				}
+			}
+
+			return $str;
+		};
+	}
+
+	// _createAppFields
+	protected function _createAppFields()
+	{
+		return function( $app_name ) {
+			foreach ( $this->_getDef( $app_name, 'fields' ) as $name=>$null ) {
+				$this->_createField( $name );
+			}
+		};
+	}
+
 	// _createElements
 	protected function _createElements()
 	{
@@ -90,15 +130,40 @@ $mixin	=	new class() {
 
 			$data	=	$field->getData();
 
-			$data['name']			=	substr( $data['name'], 0, -2 ).$this->_( 'lang_sef' );
-			$data['title']			=	substr( $data['title'], 0, -2 ).strtoupper( $this->_( 'lang_sef' ) );
+			if ( !( $data['language'] && $data['language'] != '*' ) ) {
+				return false;
+			}
 
-			if ( $data['type'] == 'group' ) {
-				$data['extended']		=	$data['name'];
-			} elseif ( $data['type'] == 'item_x' ) {
-				$data['storage_field']	=	substr( $data['storage_field'], 0, -2 ).$this->_( 'lang_sef' );
-			} else {
-				$data['storage_field2']	=	$this->_( 'lang_tag' );
+			$lang_tag	=	'en-GB';
+			$lang_sef	=	'en';
+			
+			// Data
+			if ( $data['storage'] && $data['storage'] != 'none' ) {
+				$data['storage_field']	=	$this->_swapFieldProperty( $data['storage_field'] );
+
+				if ( $data['storage_field2'] == $lang_tag ) {
+					$data['storage_field2']	=	$this->_( 'lang_tag' );
+				}
+			}
+
+			$data['extended']	=	$this->_swapFieldProperty( $data['extended'] );
+			$data['language']	=	$this->_( 'lang_tag' );
+			$data['name']		=	$this->_swapFieldProperty( $data['name'], 'name' );
+			$data['title']		=	$this->_swapFieldProperty( $data['title'], 'title' );
+
+			$parts				=	explode( '||', $data['location'] );
+
+			foreach ( $parts as $replace ) {
+				if ( !$replace ) {
+					continue;
+				}
+
+				$search				=	$replace;
+				$replace			=	$this->_swapFieldProperty( $replace );
+
+				if ( $search != $replace ) {
+					$data['location']	=	str_replace( $search, $replace, $data['location'] );
+				}
 			}
 
 			unset( $data['checked_out'], $data['checked_out_time'] );
@@ -114,8 +179,10 @@ $mixin	=	new class() {
 	// _createFields
 	protected function _createFields()
 	{
-		return function( $app_name ) {
-			foreach ( $this->_getDef( $app_name, 'fields' ) as $name=>$null ) {
+		return function() {
+			$field_names	=	JCckDatabase::loadColumn( 'SELECT name FROM #__cck_core_fields WHERE language = "en-GB"' );
+
+			foreach ( $field_names as $name ) {
 				$this->_createField( $name );
 			}
 		};
@@ -136,8 +203,9 @@ $mixin	=	new class() {
 				$data	=	$type->getData();
 				$fields	=	$type->_getFields( 'admin' );
 
-				$data['name']	=	substr( $data['name'], 0, -2 ).$this->_( 'lang_sef' );
-				$data['title']	=	substr( $data['title'], 0, -2 ).strtoupper( $this->_( 'lang_sef' ) );
+				// Data
+				$data['name']	=	$this->_swapFieldProperty( $data['name'], 'name' );
+				$data['title']	=	$this->_swapFieldProperty( $data['title'], 'title' );				
 
 				unset( $data['asset_id'], $data['checked_out'], $data['checked_out_time'] );
 
@@ -145,10 +213,11 @@ $mixin	=	new class() {
 					continue;
 				}
 
+				// Fields
 				$fields	=	$type->_changeFields( $fields, $this->_( 'lang_sef' ) );
-				$res	=	$type->_setFields( $fields );
-				
-				$this->_createField( $name );
+				$type->_setFields( $fields );
+
+				// $this->_createField( $name );
 			}
 		};
 	}
@@ -255,7 +324,7 @@ $mixin	=	new class() {
 				return $this;
 			}
 
-			$this->_createFields( $app_name );
+			// $this->_createAppFields( $app_name );
 
 			$this->_createType( $app_name );
 
