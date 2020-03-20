@@ -836,6 +836,17 @@ CREATE TABLE IF NOT EXISTS `#__cck_store_item_menu` (
   `item_type` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `item_request` varchar(512) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `children_type` tinyint(3) NOT NULL DEFAULT 0,
+  `children_content_type` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+
+-- --------------------------------------------------------
+
+
+CREATE TABLE IF NOT EXISTS `#__cck_store_item_menu_types` (
+  `id` int(10) unsigned NOT NULL,
+  `list_type` tinyint(3) NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -887,3 +898,16 @@ CREATE TABLE IF NOT EXISTS `#__cck_store_item_viewlevels` (
   PRIMARY KEY (`id`),
   KEY `idx_access` (`access`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+
+-- --------------------------------------------------------
+
+
+CREATE TABLE IF NOT EXISTS `#__cck_store_join_o_nav_list_nav_items` (
+  `id` int(11) NOT NULL,
+  `id2` int(11) NOT NULL,
+  `ordering` int(11) NOT NULL DEFAULT '0'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+
+-- --------------------------------------------------------
