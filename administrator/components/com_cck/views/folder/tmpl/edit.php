@@ -40,7 +40,7 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
             $attr   =   ( $this->item->id == 1 || $this->item->id == 2 ) ? 'disabled="disabled"' : '';
 
             echo JCckDev::renderForm( 'core_featured', $this->item->home, $config, array( 'label'=>'App Root', 'options'=>'No=0||Yes App Root=1', 'storage_field'=>'home', 'attributes'=>$attr ), array(), 'w100' );
-            echo JCckDev::renderForm( 'core_featured', $this->item->featured, $config, array( 'attributes'=>$attr ), array(), 'w100' );
+            echo JCckDev::renderForm( 'core_featured', $this->item->featured, $config, array( 'label'=>'Multilanguage', 'options'=>'No=0||Yes=1', 'attributes'=>$attr ), array(), 'w100' );
             echo JCckDev::renderForm( 'core_dev_text', $this->item->icon_path, $config, array( 'label'=>'Icon', 'size'=>64, 'storage_field'=>'icon_path' ), array(), 'w100' );
             echo JCckDev::renderForm( 'core_elements', $this->item->elements, $config, array( 'bool'=>1 ) );
             echo JCckDev::renderForm( 'core_color', $this->item->color, $config );

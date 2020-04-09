@@ -16,6 +16,7 @@ $uix			=	JCck::getUIX();
 $css			=	array();
 $doc			=	JFactory::getDocument();
 $hasToolbox		=	JCckToolbox::getConfig()->def( 'KO' ) ? false : true;
+$hasWebservices	=	JCckWebservice::getConfig()->params->def( 'KO' ) ? false : true;
 $images			=	array( '0'=>'16/icon-16-download.png', '1'=>'24/icon-24-download.png' );
 $user			=	JFactory::getUser();
 $userId			=	$user->id;
@@ -62,11 +63,12 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 				?>
 			</th>
 			<th width="10%" class="center hidden-phone nowrap"><?php echo JHtml::_( 'grid.sort', 'COM_CCK_COLOR', 'a.color', $listDir, $listOrder ); ?></th>
-			<th width="6%" class="center hidden-phone nowrap"><?php echo '<span class="icon-cck-form hasTooltip large" title="'.JText::_( 'COM_CCK_FORMS' ).'"></span>'; ?></th>
-            <th width="6%" class="center hidden-phone nowrap"><?php echo '<span class="icon-cck-plugin hasTooltip large" title="'.JText::_( 'COM_CCK_FIELDS' ).'"></span>'; ?></th>
-			<th width="6%" class="center hidden-phone nowrap"><?php echo '<span class="icon-cck-search hasTooltip large" title="'.JText::_( 'COM_CCK_LISTS' ).'"></span>'; ?></th>
-			<th width="6%" class="center hidden-phone nowrap"><?php echo '<span class="icon-cck-template hasTooltip large" title="'.JText::_( 'COM_CCK_TEMPLATES' ).'"></span>'; ?></th>
-			<th width="6%" class="center hidden-phone nowrap"><?php echo '<span class="icon-cck-addon hasTooltip large" title="'.JText::_( 'COM_CCK_PROCESSINGS' ).'"></span>'; ?></th>
+			<th width="5%" class="center hidden-phone nowrap"><?php echo '<span class="icon-cck-form hasTooltip large" title="'.JText::_( 'COM_CCK_FORMS' ).'"></span>'; ?></th>
+            <th width="5%" class="center hidden-phone nowrap"><?php echo '<span class="icon-cck-plugin hasTooltip large" title="'.JText::_( 'COM_CCK_FIELDS' ).'"></span>'; ?></th>
+			<th width="5%" class="center hidden-phone nowrap"><?php echo '<span class="icon-cck-search hasTooltip large" title="'.JText::_( 'COM_CCK_LISTS' ).'"></span>'; ?></th>
+			<th width="5%" class="center hidden-phone nowrap"><?php echo '<span class="icon-cck-template hasTooltip large" title="'.JText::_( 'COM_CCK_TEMPLATES' ).'"></span>'; ?></th>
+			<th width="5%" class="center hidden-phone nowrap"><?php echo '<span class="icon-cck-addon hasTooltip large" title="'.JText::_( 'COM_CCK_PROCESSINGS' ).'"></span>'; ?></th>
+			<th width="5%" class="center hidden-phone nowrap"><?php echo '<span class="icon-cck-addon hasTooltip large" title="'.JText::_( 'COM_CCK_RESOURCES' ).'"></span>'; ?></th>
 			<th width="10%" class="center nowrap"><?php echo JHtml::_( 'grid.sort', 'COM_CCK_STATUS', 'a.published', $listDir, $listOrder ); ?></th>
 			<th width="32" class="center hidden-phone nowrap"><?php echo JHtml::_( 'grid.sort', 'COM_CCK_ID', 'a.id', $listDir, $listOrder ); ?></th>
 		</tr>
@@ -94,6 +96,13 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 		} else {
 			$classProcessing	=	' disabled';
 			$linkProcessing		=	'javascript:void(0);';
+		}
+		if ( $hasWebservices ) {
+			$classResource		=	'';
+			$linkResource		=	JRoute::_( 'index.php?option=com_cck_webservices&view=resources&folder_id='.$item->id );
+		} else {
+			$classResource		=	' disabled';
+			$linkResource		=	'javascript:void(0);';
 		}
 		$linkFilter		=	JRoute::_( 'index.php?option='.$this->option.'&view='.$this->getName().'&folder_id='.$item->id );
 		
@@ -142,36 +151,41 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
                     </div>
                 </a>
 			</td>
-			<td width="6%" class="center hidden-phone">
+			<td width="5%" class="center hidden-phone">
 				<?php echo ( $item->types_nb ) ? '<a class="btn btn-micro btn-count hasTooltip" href="'.$linkType.'" style="text-decoration: none;" title="'.JText::_( 'COM_CCK_FILTER_FORMS' ).'">'
 											   . '<span>'.$item->types_nb.'</span>'
 											   . '</a>' : ( isset( $elements['type'] ) ? '-' : '' ); ?>
 			</td>
-			<td width="6%" class="center hidden-phone">
+			<td width="5%" class="center hidden-phone">
 				<?php echo ( $item->fields_nb ) ? '<a class="btn btn-micro btn-count hasTooltip" href="'.$linkField.'" style="text-decoration: none;" title="'.JText::_( 'COM_CCK_FILTER_FIELDS' ).'">'
 												. '<span>'.$item->fields_nb.'</span>'
 												. '</a>' : ( isset( $elements['field'] ) ? '-' : '' ); ?>
 			</td>
-			<td width="6%" class="center hidden-phone">
+			<td width="5%" class="center hidden-phone">
 				<?php echo ( $item->searchs_nb ) ? '<a class="btn btn-micro btn-count hasTooltip" href="'.$linkSearch.'" style="text-decoration: none;" title="'.JText::_( 'COM_CCK_FILTER_LISTS' ).'">'
 												 . '<span>'.$item->searchs_nb.'</span>'
 												 . '</a>' : ( isset( $elements['search'] ) ? '-' : '' ); ?>
 			</td>
-			<td width="6%" class="center hidden-phone">
+			<td width="5%" class="center hidden-phone">
 				<?php echo ( $item->templates_nb ) ? '<a class="btn btn-micro btn-count hasTooltip" href="'.$linkTemplate.'" style="text-decoration: none;" title="'.JText::_( 'COM_CCK_FILTER_TEMPLATES' ).'">'
 												   . '<span>'.$item->templates_nb.'</span>'
 												   . '</a>' : ( isset( $elements['template'] ) ? '-' : '' ); ?>
 			</td>
-			<td width="6%" class="center hidden-phone">
+			<td width="5%" class="center hidden-phone">
 				<?php echo ( $item->processings_nb ) ? '<a class="btn btn-micro btn-count hasTooltip'.$classProcessing.'" href="'.$linkProcessing.'" style="text-decoration: none;" title="'.JText::_( 'COM_CCK_FILTER_PROCESSINGS' ).'">'
 												   . '<span>'.$item->processings_nb.'</span>'
+												   . '</a>' : ( $item->id != 2 ? '-' : '' ); ?>
+			</td>
+			<td width="5%" class="center hidden-phone">
+				<?php echo ( $item->resources_nb ) ? '<a class="btn btn-micro btn-count hasTooltip'.$classResource.'" href="'.$linkResource.'" style="text-decoration: none;" title="'.JText::_( 'COM_CCK_FILTER_RESOURCES' ).'">'
+												   . '<span>'.$item->resources_nb.'</span>'
 												   . '</a>' : ( $item->id != 2 ? '-' : '' ); ?>
 			</td>
 			<td class="center">
 				<div class="btn-group">
 					<?php
 					echo JHtml::_( 'jgrid.published', $item->published, $i, $this->vName.'s.', $canChange, 'cb' );
-					Helper_Display::quickJGrid( 'featured', $item->featured, $i, false );
+					Helper_Display::quickJGrid( 'language', $item->featured, $i, false );
 					?>
 				</div>
 			</td>
