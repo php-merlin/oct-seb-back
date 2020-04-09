@@ -110,6 +110,12 @@ class CCKModelFields extends JModelList
 			$query->where( 'a.type = "'.(string)$type.'"' );
 		}
 
+		// Filter Language
+		$language	=	trim( $this->getState( 'filter.language' ) );
+		if ( is_string( $language ) && $language != '' ) {
+			$query->where( 'a.language = "'.(string)$language.'"' );
+		}
+
 		// Filter Storage
 		$storage	=	trim( $this->getState( 'filter.storage' ) );
 		if ( is_string( $storage ) && $storage != '' ) {
@@ -161,6 +167,7 @@ class CCKModelFields extends JModelList
 		$id	.=	':' . $this->getState( 'filter.folder' );
 		$id	.=	':' . $this->getState( 'filter.state' );
 		$id	.=	':' . $this->getState( 'filter.type' );
+		$id	.=	':' . $this->getState( 'filter.language' );
 		$id	.=	':' . $this->getState( 'filter.storage' );
 		
 		return parent::getStoreId( $id );
@@ -196,6 +203,9 @@ class CCKModelFields extends JModelList
 
 		$type		=	$app->getUserStateFromRequest( $this->context.'.filter.type', 'filter_type', '', 'string' );
 		$this->setState( 'filter.type', $type );
+
+		$language	=	$app->getUserStateFromRequest( $this->context.'.filter.language', 'filter_language', '', 'string' );
+		$this->setState( 'filter.language', $language );
 
 		$storage	=	$app->getUserStateFromRequest( $this->context.'.filter.storage', 'filter_storage', '', 'string' );
 		$this->setState( 'filter.storage', $storage );

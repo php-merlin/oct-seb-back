@@ -48,9 +48,11 @@ if ( $listDir == 'asc' ) {
 	<div class="<?php echo $this->css['filter_select']; ?>">
         <?php
         echo $this->html['filter_select_header'];
-		echo JCckDev::getFormFromHelper( array( 'component'=>'com_cck', 'function'=>'getStorageMode', 'name'=>'core_storage_filter' ), $this->state->get( 'filter.storage' ), $config, array( 'selectlabel'=>'All Storages', 'attributes'=>'onchange="this.form.submit();"', 'storage_field'=>'filter_storage' ) );
-		echo $this->html['filter_select_separator'];
 		echo JCckDev::getFormFromHelper( array( 'component'=>'com_cck', 'function'=>'getTypeFilter', 'name'=>'core_type_filter' ), $this->state->get( 'filter.type' ), $config, array( 'storage_field'=>'filter_type' ) );
+		echo $this->html['filter_select_separator'];
+		echo JCckDev::getForm( $cck['core_languages'], $this->state->get( 'filter.language' ), $config, array( 'selectlabel'=>'Any Language', 'options'=>'All=*', 'bool4'=>'1', 'attributes'=>'onchange="this.form.submit();"', 'storage_field'=>'filter_language', 'css'=>'small span12' ) );
+		echo $this->html['filter_select_separator'];
+		echo JCckDev::getFormFromHelper( array( 'component'=>'com_cck', 'function'=>'getStorageMode', 'name'=>'core_storage_filter' ), $this->state->get( 'filter.storage' ), $config, array( 'selectlabel'=>'All Storages', 'attributes'=>'onchange="this.form.submit();"', 'storage_field'=>'filter_storage' ) );
 		echo $this->html['filter_select_separator'];
 		echo JCckDev::getFormFromHelper( array( 'component'=>'com_cck', 'function'=>'getFolderFilter', 'name'=>'core_folder_filter' ), $this->state->get( 'filter.folder' ), $config, array( 'storage_field'=>'filter_folder' ) );
 		echo $this->html['filter_select_separator'];
