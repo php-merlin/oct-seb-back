@@ -49,7 +49,12 @@ class CCKModelFolders extends JModelList
 			$fields			=	JCckDatabase::loadObjectList( 'SELECT a.folder, COUNT( a.folder ) AS num FROM #__cck_core_fields AS a WHERE a.published != -44 GROUP BY a.folder', 'folder' );
 			$searchs		=	JCckDatabase::loadObjectList( 'SELECT a.folder, COUNT( a.folder ) AS num FROM #__cck_core_searchs AS a WHERE a.published != -44 GROUP BY a.folder', 'folder' );
 			$processings	=	JCckDatabase::loadObjectList( 'SELECT a.folder, COUNT( a.folder ) AS num FROM #__cck_more_processings AS a WHERE a.published != -44 GROUP BY a.folder', 'folder' );
-			$resources		=	JCckDatabase::loadObjectList( 'SELECT a.folder, COUNT( a.folder ) AS num FROM #__cck_more_webservices_resources AS a WHERE a.published != -44 GROUP BY a.folder', 'folder' );
+
+			if ( JCckWebservice::getConfig()->params->def( 'KO' ) ) {
+				$resources	=	array();
+			} else {
+				$resources	=	JCckDatabase::loadObjectList( 'SELECT a.folder, COUNT( a.folder ) AS num FROM #__cck_more_webservices_resources AS a WHERE a.published != -44 GROUP BY a.folder', 'folder' );
+			}
 			
 			foreach ( $items as $item ) {
 				$item->templates_nb		=	@$templates[$item->id]->num ? $templates[$item->id]->num : 0;
