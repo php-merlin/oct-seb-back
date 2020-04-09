@@ -494,16 +494,18 @@ class JCckType
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Do More
 
 	// assign
-	public function assign( $field_name, $client, $params = array() )
+	public function assign( $field_identifier, $client, $params = array() )
 	{
-		$field_id	=	JCckDatabase::loadResult( 'SELECT id FROM #__cck_core_fields WHERE name = "'.$field_name.'"' );
-
-		if ( $field_id ) {
+		if ( !is_numeric( $field_identifier ) ) {
+			$field_identifier	=	JCckDatabase::loadResult( 'SELECT id FROM #__cck_core_fields WHERE name = "'.$field_identifier.'"' );
+		}
+		
+		if ( $field_identifier ) {
 			$table	=	JCckTableBatch::getInstance( '#__cck_core_type_field' );
 
 			$count				=	$table->count( 'typeid = '.$this->getPk().' AND client = "'.$client.'"' );
 			$params['client']	=	$client;
-			$params['fieldid']	=	(string)$field_id;
+			$params['fieldid']	=	(string)$field_identifier;
 			$params['ordering']	=	(string)( $count + 1 );
 
 			$table->bind( array(
