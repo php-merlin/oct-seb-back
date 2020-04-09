@@ -665,6 +665,7 @@ CREATE TABLE IF NOT EXISTS `#__cck_core_types` (
   `template_intro` int(11) NOT NULL DEFAULT 0,
   `description` varchar(5120) NOT NULL DEFAULT '',
   `indexed` varchar(50) NOT NULL DEFAULT '',
+  `language` CHAR(7) NOT NULL DEFAULT '*',
   `published` tinyint(3) NOT NULL DEFAULT 1,
   `options_admin` text NOT NULL,
   `options_site` text NOT NULL,
@@ -826,6 +827,20 @@ CREATE TABLE IF NOT EXISTS `#__cck_store_item_categories` (
   `titles` text NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 DEFAULT COLLATE=utf8mb4_unicode_ci;
+
+
+-- --------------------------------------------------------
+
+
+CREATE TABLE IF NOT EXISTS `#__cck_store_item_language` (
+  `id` int(10) UNSIGNED NOT NULL,
+  `type` tinyint(3) NOT NULL DEFAULT 0,
+  `access_live` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+INSERT INTO `#__cck_store_item_language` (`id`, `type`, `access_live`) VALUES
+(1, 0, 1);
 
 
 -- --------------------------------------------------------
