@@ -676,9 +676,9 @@ class plgSearchCCK extends JPlugin
 							$target	=	$tables[$s_table]['_'].'.'.$s_field;
 
 							if ( isset( $field->storage ) && $field->storage == 'json' ) {
-								$target	=	'JSON_EXTRACT('.$target.', '.JCckDatabase::quote('$."'.$field->storage_field2.'"').')';
+								$target	=	'JSON_EXTRACT('.$target.', '.JCckDatabase::quote('$."'.$field->storage_field2.'"').') COLLATE utf8mb4_unicode_ci';
 							} elseif ( $isMultiLanguage && (int)$field->storage_mode == 1 ) {
-								$target	=	'JSON_EXTRACT('.$target.', '.JCckDatabase::quote('$."'.$lang->getTag().'"').')';
+								$target	=	'JSON_EXTRACT('.$target.', '.JCckDatabase::quote('$."'.$lang->getTag().'"').') COLLATE utf8mb4_unicode_ci';
 							}
 							$order	.=	$modifier.$target.$modifier2.$modifier3;
 						} elseif ( strpos( $str, $s_field.'.' ) !== false || strpos( $str, 'AS '.$s_field ) !== false ) {
