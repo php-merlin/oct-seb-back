@@ -338,7 +338,11 @@ class plgCCK_Storage_LocationFree extends JCckPluginLocation
 					self::_core( $data, $config );
 				} else {
 					if ( ! isset( $config['primary'] ) && self::$pk ) {
-						self::_core( $data, $config );
+						$id	=	self::_core( $data, $config );
+
+						if ( !$config['id'] ) {
+							$config['id']	=	$id;
+						}
 					}
 				}
 			}
@@ -351,16 +355,22 @@ class plgCCK_Storage_LocationFree extends JCckPluginLocation
 	protected function _core( $data, $config = array() )
 	{
 		$core					=	JCckTable::getInstance( '#__cck_core', 'id' );
+		
 		$core->load( $config['id'] );
+		
 		$core->cck				=	$config['type'];
+		
 		if ( ! $core->pk ) {
 			$core->date_time	=	JFactory::getDate()->toSql();
 		}
+		
 		$core->pk				=	self::$pk ? self::$pk : $config['pk'];
 		$core->storage_location	=	self::$type;
 		$core->storage_table	=	$data['_']->table;
 		$core->author_id		=	( $config['author'] ) ? $config['author'] : JFactory::getUser()->id;
 		$core->storeIt();
+
+		return $core->id;
 	}
 	
 	// _getTable
