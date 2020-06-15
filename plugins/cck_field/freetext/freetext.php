@@ -67,6 +67,25 @@ class plgCCK_FieldFreeText extends JCckPluginField
 				$value	=	JText::_( 'COM_CCK_' . str_replace( ' ', '_', $value ) );
 			}
 		}
+
+		if ( $value != '' && strpos( $value, '%' ) !== false ) {
+			$matches	=	'';
+			$search		=	'#\%([a-zA-Z0-9-]*)\%#U';
+
+			preg_match_all( $search, $value, $matches );
+
+			if ( count( $matches[1] ) ) {
+				foreach ( $matches[1] as $target ) {
+					$replace	=	'';
+
+					if ( isset( $config['context'][$target] ) && $config['context'][$target] != '' ) {
+						$replace	=	$target.'="'.$config['context'][$target].'"';
+					}
+					
+					$value	=	str_replace( '%'.$target.'%', $replace, $value );
+				}
+			}
+		}
 		
 		// Set
 		$field->value	=	$value;
