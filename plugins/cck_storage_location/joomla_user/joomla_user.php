@@ -294,7 +294,8 @@ class plgCCK_Storage_LocationJoomla_User extends JCckPluginLocation
 		$app			=	JFactory::getApplication();
 		$parameters		=	JComponentHelper::getParams( 'com_users' );
 		$data['params']	=	( isset( $data['params'] ) ) ? JCckDev::fromJSON( $data['params'] ) : array();	//Fix
-		
+		$user			=	JFactory::getUser();
+
 		if ( ! $config['id'] ) {
 			$config['id']	=	parent::g_onCCK_Storage_LocationPrepareStore();
 		}
@@ -306,16 +307,19 @@ class plgCCK_Storage_LocationJoomla_User extends JCckPluginLocation
 			self::_initTable_fromSite( $table, $data, $config );
 			
 			if ( $isNew ) {
-				$activation		=	$parameters->get( 'useractivation' );
-
 				if ( empty( $data['password'] ) ) {
 					$data['password']	=	JUserHelper::genRandomPassword( 20 );
 					$data['password2']	=	$data['password'];
 				}
-				if ( ( $activation == 1 ) || ( $activation == 2 ) ) {
-					$data['activation']					=	JApplication::getHash( JUserHelper::genRandomPassword() );
-					$data['block']						=	1;
-					$config['registration_activation']	=	$data['activation'];
+
+				if ( !( $user->id && !$user->guest ) ) {
+					$activation		=	$parameters->get( 'useractivation' );
+
+					if ( ( $activation == 1 ) || ( $activation == 2 ) ) {
+						$data['activation']					=	JApplication::getHash( JUserHelper::genRandomPassword() );
+						$data['block']						=	1;
+						$config['registration_activation']	=	$data['activation'];
+					}
 				}
 			}
 			
@@ -332,7 +336,7 @@ class plgCCK_Storage_LocationJoomla_User extends JCckPluginLocation
 				return false;
 			}
 			
-			if ( $isNew ) {
+			if ( $isNew && !( $user->id && !$user->guest ) ) {
 				self::_sendMails( $table, $activation, self::getStaticParams()->get( 'auto_email', 1 ), $parameters->get( 'mail_to_admin' ), $parameters->get( 'sendpassword', 1 ) );
 			}
 			
