@@ -18,7 +18,7 @@ JCck::loadModalBox();
 	<?php echo JCckDev::renderLegend( JText::_( 'COM_CCK_CONSTRUCTION' ), JText::_( 'PLG_CCK_FIELD_LIVE_'.$this->item->name.'_DESC' ) ); ?>
     <ul class="adminformlist adminformlist-2cols">
         <?php
-		echo JCckDev::renderForm( 'core_dev_select', '', $config, array( 'defaultvalue'=>'', 'label'=>'User', 'selectlabel'=>'Current', 'options'=>'', 'storage_field'=>'content' ) );
+		echo JCckDev::renderForm( 'core_dev_select', '', $config, array( 'defaultvalue'=>'', 'label'=>'User', 'selectlabel'=>'Current', 'options'=>'Session=session', 'storage_field'=>'content' ) );
 		echo '<li><label>'.JText::_( 'COM_CCK_PROPERTY' ).'<span class="star"> *</span></label>'
 		 .	 JCckDev::getForm( 'core_dev_text', '', $config, array( 'label'=>'Property', 'required'=>'required', 'storage_field'=>'property' ) )
 		 .	 '<span id="storage_field_pick_property" name="property" class="value-picker"><span class="icon-menu-2"></span></span>';
