@@ -352,9 +352,7 @@ class JCckPluginLocation extends JPlugin
 				$user					=	JFactory::getUser();
 
 				if ( !( $user->id && !$user->guest ) ) {
-					if ( $user->authorise( 'core.edit.own', 'com_cck.form.'.$config['type_id'] ) ) {
-						$core->author_session	=	JFactory::getSession()->getId();
-					}
+					$core->author_session	=	JFactory::getSession()->getId();
 				}
 
 				$core->parent_id		=	$config['parent'];
