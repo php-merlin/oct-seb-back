@@ -34,6 +34,7 @@
 	
 	<positions>
 		<position>mainbody</position>
+		<position toggle="position_maintop" toggle_value="1">maintop</position>
 		<position toggle="position_modal" toggle_value="1,2,3,4,5">modal</position>
 		<position toggle="position_modal" toggle_value="2,3,4,5">modal2</position>
 		<position toggle="position_modal" toggle_value="3,4,5">modal3</position>
@@ -52,6 +53,10 @@
 			
 			<fieldset name="positions" label="TPL_SEB_MINIMA_LEGEND_POSITIONS">
 				<field name="variation_default" type="cck" construction="core_variation" default="" label="TPL_SEB_MINIMA_DEFAULT_VARIATION" description="" class="inputbox" cck_selectlabel="Inherited" />
+				<field name="position_maintop" type="list" default="0" label="TPL_SEB_MINIMA_MAINTOP_POSITION" description="" class="inputbox">
+					<option	value="0">JHIDE</option>
+					<option	value="1">JSHOW</option>
+				</field>
 				<field name="position_modal" type="list" default="1" label="TPL_SEB_MINIMA_MODAL_POSITION" description="" class="inputbox">
 					<option	value="0">JHIDE</option>
 					<option	value="1">JSHOW</option>

@@ -972,6 +972,27 @@ class CCK_Rendering
 	}
 	
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Variations
+
+	// getVariation
+	public function getVariation( $position )
+	{
+		$variation	=	new stdClass;
+
+		if ( isset( $this->positions_m[$position]->variation ) && $this->positions_m[$position]->variation ) {
+			$variation->name	=	$this->positions_m[$position]->variation;
+		} else {
+			$variation->name	=	$this->params['variation_default'];
+		}
+
+		if ( isset( $this->positions_m[$position]->variation_options ) && $this->positions_m[$position]->variation_options != '' ) {
+			$variation->options	=	new JRegistry;
+			$variation->options->loadString( $this->positions_m[$position]->variation_options );
+		} else {
+			$variation->options	=	$this->loadDefaultOptions( $variation );
+		}
+
+		return $variation;
+	}
 	
 	// loadVariationOptions
 	protected function loadDefaultOptions( $variation )

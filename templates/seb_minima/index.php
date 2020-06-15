@@ -33,7 +33,20 @@ if ( $cck->id_class != '' ) {
 if ( $wrap ) { ?>
 <div<?php echo $class.$attributes; ?>>
 <?php }
-echo $cck->renderPosition( 'mainbody', '', $cck->h( 'mainbody' ) );
+if ( $cck->countFields( 'maintop' ) ) {
+	$html		=	$cck->renderPosition( 'maintop', '', 0 )
+				.	$cck->renderPosition( 'mainbody', 'none', 0 )
+				;
+	$variation	=	$cck->getVariation( 'mainbody' );
+
+	if ( $html != '' && trim( $variation->name ) ) {
+		$html	=	$cck->renderVariation( $variation->name, '', $html, $variation->options, 'mainbody', 0 );
+	}
+
+	echo $html;
+} else {
+	echo $cck->renderPosition( 'mainbody', '', $cck->h( 'mainbody' ) );
+}
 if ( $wrap ) { ?>
 </div>
 <?php }
