@@ -355,7 +355,7 @@ class plgCCK_FieldButton_Submit extends JCckPluginField
 			} elseif ( $task == 'save2redirect' ) {
 				$custom		=	'';
 				if ( isset( $options2['custom'] ) && $options2['custom'] ) {
-					$custom	=	JCckDevHelper::replaceLive( $options2['custom'] );
+					$custom	=	JCckDevHelper::replaceLive( $options2['custom'], '', $config );
 					$custom	=	$custom ? '&'.$custom : '';
 				}
 				if ( $config['client'] == 'search' ) {
