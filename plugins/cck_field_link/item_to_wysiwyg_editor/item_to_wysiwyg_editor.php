@@ -39,17 +39,35 @@ class plgCCK_Field_LinkItem_To_Wysiwyg_Editor extends JCckPluginLink
 		$custom 		=	$link->get( 'custom', '' );
 		$type			=	$link->get( 'type', 'link' );
 		$editor 		=	$app->input->get( 'editor', '' );
+		$item 			=	$app->input->get( 'item', '' );
 
 		//
-		$field->link	=	'#';
-		$params 		=	array( 'name'=>$field->name, 'type'=>$type, 'editor'=>$editor, 'custom'=>$custom );
+		$field->link			=	'#';
+		$field->link_class		=	$link->get( 'class', '' );
+		$link_title				=	$link->get( 'title', '' );
+		$link_title2			=	$link->get( 'title_custom', '' );
+
+		if ( $link_title ) {
+			if ( $link_title == '2' ) {
+				$field->link_title	=	$link_title2;
+			} elseif ( $link_title == '3' ) {
+				$field->link_title	=	JText::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $link_title2 ) ) );
+			}
+			if ( !isset( $field->link_title ) ) {
+				$field->link_title	=	'';
+			}
+		} else {
+			$field->link_title		=	'';
+		}
+
+		$params 		=	array( 'name'=>$field->name, 'type'=>$type, 'editor'=>$editor, 'item'=>$item, 'custom'=>$custom, 'tag'=>$tag );
 
 		if ( $type == 'link' ) {
 			$params['field_link'] 	=	$link->get( 'field_link', '' );
 			$params['field_text'] 	=	$link->get( 'field_text', '' );
 		}
 
-		parent::g_addProcess( 'beforeRenderContent', self::$type, $config, $params );
+		parent::g_addProcess( 'beforeRenderContent', self::$type, $config, $params, 5 );
 	}
 	
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Special Events
@@ -65,7 +83,8 @@ class plgCCK_Field_LinkItem_To_Wysiwyg_Editor extends JCckPluginLink
 			$text 						=	( isset( $fields[$field_text] ) && $fields[$field_text]->value != '' ) ? $fields[$field_text]->value : '';
 			$fields[$name]->onclick 	=	'JCck.More.ButtonXtd.insertText(&quot;'.$process['editor'].'&quot;,&quot;'.$link.'&quot;,&quot;'.$text.'&quot;);';
 		} elseif ( $process['type'] == 'content' ) {
-			$fields[$name]->onclick 	=	'JCck.More.ButtonXtd.insertContent(&quot;'.$process['editor'].'&quot;,&quot;'.$config['id'].'&quot;,&quot;'.$process['custom'].'&quot;);';
+			$process['item']			=	( $process['item'] != '' ) ? strtolower( trim( $process['item'] ) ) : '';
+			$fields[$name]->onclick 	=	'JCck.More.ButtonXtd.insertContent(&quot;'.$process['editor'].'&quot;,&quot;'.$config['id'].'&quot;,&quot;'.$process['custom'].'&quot;,&quot;'.$process['item'].'&quot;);';
 		} else {
 			$fields[$name]->onclick 	=	'return false;';
 		}

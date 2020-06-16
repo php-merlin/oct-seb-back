@@ -35,6 +35,7 @@ class plgButtonCCK extends JPlugin
 			}
 
 			$button->custom 		=	( $button->custom != '' ) ? '&'.$button->custom : '';
+			$button->custom 		.=	'&item='.strtolower( $button->text );
 
 			$toolbar[$i]			=	new JObject;
 			$toolbar[$i]->class		=	'btn';
@@ -64,12 +65,12 @@ class plgButtonCCK extends JPlugin
 										if (text != "" ) {
 											selection = text;
 										} else {
-											alert("'.JText::_( 'PLG_EDITORS-XTD_CCK_PLEASE_FIRST_MAKE_A_SELECTION_FROM_THE_EDITOR' ).'");
+											alert("'.JText::_( 'COM_CCK_PLEASE_FIRST_MAKE_A_SELECTION_FROM_THE_EDITOR' ).'");
 											return false;
 										}
 									}
 
-									var replace = "<a href=\""+link+"\">"+selection+"</a>";
+									var replace = "<a class=\"wysiwyg-link\" href=\""+link+"\">"+selection+"</a>";
 									if (window.parent.Joomla && window.parent.Joomla.editors && window.parent.Joomla.editors.instances && window.parent.Joomla.editors.instances.hasOwnProperty(editor)) {
 										window.parent.Joomla.editors.instances[editor].replaceSelection(replace);
 									} else {
@@ -77,19 +78,27 @@ class plgButtonCCK extends JPlugin
 									}
 									JCck.More.ButtonXtd.modal.hide();
 								},
-								insertContent: function(editor,id,custom) {
+								insertContent: function(editor,id,custom,item) {
 									if (custom != "") {
-										custom = custom.replace(/,/g,"\",\"");
-										custom = custom.replace(/:/g,"\":\"");
-										custom = " {\""+custom+"\"}";
+										custom = custom.replace(/\'/g,"\"");
 									}
-									window.parent.jInsertEditorText("{cck_item:"+id+custom+"}", editor);
+									window.parent.jInsertEditorText("<ins id=\""+id+"\""+custom+">{"+item+":"+id+"}</ins>", editor);
 									JCck.More.ButtonXtd.modal.hide();
 								},
 								select: function(list,custom,editor) {
+									if (custom.search("lang_sef") >= 0) {
+										custom = custom.replace("lang_sef", "lang_sef="+editor.substr(-2));
+									}
 									JCck.More.ButtonXtd.modal.loadUrl(JCck.More.ButtonXtd.link_select+"&search="+list+"&editor="+editor+custom);
 								}
 							}
+							$(document).ready(function() {
+								JCck.More.ButtonXtd.modal.settings.callbacks.loaded = function() {
+									$(".hasTooltip").tooltip({"html": true,"container": "#modal-cck"}).on("hidden", function (e) {
+									   e.stopPropagation();
+									});
+								};
+							});
 						})(jQuery);
 						';
 			$loaded	=	1;
