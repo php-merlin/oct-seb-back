@@ -170,9 +170,11 @@ class plgCCK_Field_TypoJoomla_Jgrid extends JCckPluginTypo
 						$config['validation']	=	array();
 					}
 				}
+				
 				JEventDispatcher::getInstance()->trigger( 'onCCK_FieldPrepareForm', array( &$field, $field->value, &$config, $inherit ) );
 				
 				$field->form			=	JCck::callFunc_Array( 'plgCCK_Field'.$field->type, 'onCCK_FieldRenderForm', array( $field, &$config ) );
+				$field->label			=	$field->label2 != 'clear' ? $field->label2 : '';
 				$value					=	$field->form;
 				$config['formWrapper']	=	true;
 
@@ -259,9 +261,17 @@ class plgCCK_Field_TypoJoomla_Jgrid extends JCckPluginTypo
 						if ( ( isset( $field->state ) && $field->state ) || !isset( $field->state ) ) {
 							$app			=	JFactory::getApplication();
 							$formId			=	( @$config['formId'] != '' ) ? $config['formId'] : 'seblod_form';
+							$legacy		=	(int)JCck::getConfig_Param( 'core_legacy', '2012' );
+							$legacy		=	$legacy && $legacy <= 2019 ? true : false;
+
 							$listDir		=	'asc';
 							$loaded			= 	true;
-							$tableWrapper	=	$formId . ' table.table';
+
+							if ( $legacy ) {
+								$tableWrapper	=	$formId . ' table.table';
+							} else {
+								$tableWrapper	=	$formId . ' table.o-table-manager';
+							}
 							
 							$task			=	$typo->get( 'task', '' );
 							$task_id		=	$typo->get( 'task_id_process', '' );
