@@ -301,7 +301,7 @@ foreach ( $fields as $field ) {
 			if ( $field->live ) {
 				$dispatcher->trigger( 'onCCK_Field_LivePrepareForm', array( &$field, &$value, &$config ) );
 
-				if ( !( $field->variation == 'hidden_auto' || $field->variation == 'hidden_isfilled' ) ) {
+				if ( !( $field->variation == 'hidden_auto' || $field->variation == 'hidden_isfilled' || $field->variation == 'disabled_isfilled' ) ) {
 					JCckDevHelper::secureField( $field, $value );
 				}
 			} else {
@@ -311,9 +311,9 @@ foreach ( $fields as $field ) {
 	}
 	$field->value	=	$value;
 	
-	if ( $field->variation == 'hidden_isfilled' ) {
+	if ( $field->variation == 'hidden_isfilled' || $field->variation == 'disabled_isfilled' ) {
 		if ( $value != '' ) {
-			$field->variation	=	'hidden';
+			$field->variation	=	str_replace( '_isfilled', '', $field->variation );
 
 			if ( !$id ) {
 				JCckDevHelper::secureField( $field, $value );
@@ -322,6 +322,7 @@ foreach ( $fields as $field ) {
 			$field->variation	=	'';
 		}
 	}
+	
 	$dispatcher->trigger( 'onCCK_FieldPrepareForm', array( &$field, $value, &$config, array() ) );
 	
 	$position				=	$field->position;

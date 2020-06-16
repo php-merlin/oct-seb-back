@@ -430,6 +430,7 @@ class Helper_Workshop
 											'100'=>JHtml::_( 'select.option', '<OPTGROUP>', JText::_( 'COM_CCK_FORM' ) ),
 											''=>JHtml::_( 'select.option', '', JText::_( 'COM_CCK_DEFAULT' ) ),
 											'disabled'=>JHtml::_( 'select.option', 'disabled', JText::_( 'COM_CCK_FORM_DISABLED_AND_SECURED' ) ),
+											'disabled_isfilled'=>JHtml::_( 'select.option', 'disabled_isfilled', JText::_( 'COM_CCK_FORM_DISABLED_IS_FILLED_AND_SECURED' ) ),
 											'101'=>JHtml::_( 'select.option', '</OPTGROUP>', '' )
 										);
 				$data['live']		=	array_merge(
