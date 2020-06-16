@@ -378,6 +378,130 @@ class plgContentCCK extends JPlugin
 		return true;
 	}
 
+	// onContentBeforeDelete
+	public function onContentBeforeDelete( $context, $item )
+	{
+		if ( empty( $context ) ) {
+			return false;
+		}
+
+		$db		=	JFactory::getDbo();
+		$query	=	$db->getQuery( true )->select( 'name AS object' )
+										 ->from( '#__cck_core_objects' )
+										 ->where( 'context = '. $db->quote( $context ) );
+
+		$db->setQuery( $query );
+		$object	=	$db->loadResult();
+		
+		if ( ! $object ) {
+			return true;
+		}
+		
+		$table_key	=	$item->getKeyName();
+		$table_name	=	$item->getTableName();
+		$pk			= 	$item->$table_key;
+		
+		require_once JPATH_SITE.'/plugins/cck_storage_location/'.$object.'/'.$object.'.php';
+		$properties		= 	array( 'bridge_object', 'custom' );
+		$properties		= 	JCck::callFunc( 'plgCCK_Storage_Location'.$object, 'getStaticProperties', $properties );
+		$custom 		= 	$properties['custom'];
+		$parent			=	'';
+		$pkb			=	0;
+		$type			=	'';
+
+		// Core
+		if ( $custom ) {
+			preg_match( '#::cck::(\d+)::/cck::#U', $item->$custom, $matches );
+			$id		=	$matches[1];
+
+			if ( ! $id ) {
+				return true;
+			}
+
+			$table	=	JCckTable::getInstance( '#__cck_core', 'id', $id );
+			$type	=	$table->cck;
+			$pkb	=	(int)$table->pkb;
+		} else {
+			$idx	=	array( 'pk'=>$pk, 'storage_location'=>$object );
+			$table	=	JCckTable::getInstance( '#__cck_core' );
+
+			if ( $object == 'free' ) {
+				$idx['storage_table']	=	$table_name;
+			}
+			if ( $table->load( $idx ) ) {
+				$type	=	$table->cck;
+				$pkb	=	(int)$table->pkb;
+			}
+		}
+
+		if ( $table->pk > 0 ) {
+			// -- Leave nothing behind
+			if ( $type != '' ) {
+				require_once JPATH_LIBRARIES.'/cck/base/form/form.php';
+
+				JPluginHelper::importPlugin( 'cck_field' );
+				JPluginHelper::importPlugin( 'cck_storage' );
+				JPluginHelper::importPlugin( 'cck_storage_location' );
+
+				$config		=	array(
+									'id'=>$table->id,
+									'location'=>$table->storage_location,
+									'pk'=>$table->pk,
+									'storages'=>array(),
+									'type'=>$table->cck
+								);
+				$dispatcher	=	JEventDispatcher::getInstance();
+				$parent		=	JCckDatabase::loadResult( 'SELECT parent FROM #__cck_core_types WHERE name = "'.$type.'"' );
+				$fields		=	CCK_Form::getFields( array( $type, $parent ), 'all', -1, '', true );
+				
+				if ( count( $fields ) ) {
+					foreach ( $fields as $field ) {
+						$Pt		=	$field->storage_table;
+						$value	=	'';
+						
+						/* Yes but, .. */
+
+						if ( $Pt && ! isset( $config['storages'][$Pt] ) ) {
+							$config['storages'][$Pt]	=	'';
+							
+							if ( $Pt == $table_name ) {
+								$config['storages'][$Pt]	=	$item;
+							} else {
+								$dispatcher->trigger( 'onCCK_Storage_LocationPrepareDelete', array( &$field, &$config['storages'][$Pt], $pk, &$config ) );	
+							}
+						}
+						$dispatcher->trigger( 'onCCK_StoragePrepareDelete', array( &$field, &$value, &$config['storages'][$Pt], &$config ) );
+					}
+				}
+			}
+			// -- Leave nothing behind
+		}
+
+		if ( isset( $config, $config['pk'] ) && $config['pk'] ) {
+			if ( JCckToolbox::getConfig()->get( 'processing', 0 ) ) {
+				if ( $this->legacy && $this->legacy <= 2019 ) {
+					JCckToolbox::process( 'onCckPostBeforeDelete', $config );
+				} else {
+					$event		=	'onCckPostBeforeDelete';
+					$processing	=	JCckDatabaseCache::loadObjectListArray( 'SELECT type, scriptfile, options FROM #__cck_more_processings WHERE published = 1 ORDER BY ordering', 'type' );
+
+					if ( isset( $processing[$event] ) ) {
+						foreach ( $processing[$event] as $p ) {
+							$process	=	new JCckProcessing( $event, JPATH_SITE.$p->scriptfile, $p->options );
+							$result		=	call_user_func_array( array( $process, 'execute' ), array( &$config, &$fields ) );
+
+							if ( !$result ) {
+								return false;
+							}
+						}
+					}
+				}
+			}
+		}
+
+		return true;
+	}
+
 	// onContentBeforeDisplay
 	public function onContentBeforeDisplay( $context, &$article, &$params, $limitstart = 0 )
 	{
