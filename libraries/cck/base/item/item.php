@@ -18,7 +18,7 @@ class CCK_Item
 	{
 		$lang_tag		=	JFactory::getLanguage()->getTag();
 
-		if ( $lang_tag != JComponentHelper::getParams( 'com_languages' )->get( 'site', 'en-GB' ) ) {
+		if ( $lang_tag != 'en-GB'/*JComponentHelper::getParams( 'com_languages' )->get( 'site', 'en-GB' )*/ ) {
 			$assoc_item		=	JCckDatabase::loadObject( 'SELECT id, pk, storage_location, storage_table FROM #__cck_core WHERE id = '.(int)$id );
 
 			if ( is_object( $assoc_item ) && $assoc_item->pk ) {
