@@ -87,6 +87,9 @@ class plgCCK_Field_ValidationAjax_Availability extends JCckPluginValidation
 			}
 		}
 		
+		if ( (int)$validation->do ) {
+			$error	=	 !$error ? true : false;
+		}
 		if ( $error ) {
 			self::_setError( $name, $config );
 		}
