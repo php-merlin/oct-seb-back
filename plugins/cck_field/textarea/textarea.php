@@ -78,7 +78,14 @@ class plgCCK_FieldTextarea extends JCckPluginField
 			$id		=	$field->name;
 			$name	=	$field->name;
 		}
-		$value		=	( $value != '' ) ? ( ( $field->bool2 ) ? self::_p2nl( $value ) : self::_br2nl( $value ) ) : $field->defaultvalue;
+
+		if ( $value != '' ) {
+			if ( $field->bool2 != -1 ) {
+				$value	=	$field->bool2 ? self::_p2nl( $value ) : self::_br2nl( $value );
+			}
+		} else {
+			$value	=	$field->defaultvalue;
+		}
 		$value		=	( $value != ' ' ) ? $value : '';
 		
 		// Validate

@@ -26,7 +26,7 @@ defined( '_JEXEC' ) or die;
 
         echo JCckDev::renderHelp( 'field', 'seblod-2-x-textarea-field' );
         echo JCckDev::renderSpacer( JText::_( 'COM_CCK_PROCESSING' ), JText::_( 'COM_CCK_PROCESSING_DESC_TEXTAREA' ), 2 );
-        echo JCckDev::renderForm( 'core_bool2', $this->item->bool2, $config, array( 'label'=>'New Lines', 'options'=>'tag_br=0||tag_br_in_p=2||tag_p=1' ) );
+        echo JCckDev::renderForm( 'core_bool2', $this->item->bool2, $config, array( 'label'=>'New Lines', 'options'=>'Raw=-1||Format=optgroup||tag_br=0||tag_br_in_p=2||tag_p=1' ) );
         echo JCckDev::renderForm( 'core_bool3', $this->item->bool3, $config, array( 'label'=>'Clear Blank Lines' ) );
 
         echo JCckDev::renderSpacer( JText::_( 'COM_CCK_STORAGE' ), JText::_( 'COM_CCK_STORAGE_DESC' ) );
