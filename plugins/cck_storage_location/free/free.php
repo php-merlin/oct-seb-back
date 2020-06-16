@@ -298,11 +298,14 @@ class plgCCK_Storage_LocationFree extends JCckPluginLocation
 				
 				// Prepare
 				if ( is_array( $data ) ) {
+					unset( $data['id'] );
+
 					$table->bind( $data );
 				}
+
 				$table->check();
 				self::_completeTable( $table, $data, $config );
-				
+
 				// Store
 				JPluginHelper::importPlugin( 'content' );
 				$dispatcher	=	JEventDispatcher::getInstance();
@@ -324,6 +327,7 @@ class plgCCK_Storage_LocationFree extends JCckPluginLocation
 				}
 				
 				self::$pk	=	$table->{self::$key};
+
 				if ( ! $config['pk'] ) {
 					$config['pk']	=	self::$pk;
 				}
@@ -345,6 +349,25 @@ class plgCCK_Storage_LocationFree extends JCckPluginLocation
 						}
 					}
 				}
+			} else {
+				$table	=	self::_getTable( self::$pk, $data['_']->table, $config );
+
+				if ( is_array( $data ) ) {
+					$table->bind( $data );
+				}
+				
+				$table->check();
+
+				if ( !$table->store() ) {
+					JFactory::getApplication()->enqueueMessage( $table->getError(), 'error' );
+					
+					if ( $isNew ) {
+						parent::g_onCCK_Storage_LocationRollback( $config['id'] );
+					}
+					$config['error']	=	true;
+
+					return false;
+				}
 			}
 		}
 		
@@ -355,7 +378,8 @@ class plgCCK_Storage_LocationFree extends JCckPluginLocation
 	protected function _core( $data, $config = array() )
 	{
 		$core					=	JCckTable::getInstance( '#__cck_core', 'id' );
-		
+		$user					=	JFactory::getUser();
+
 		$core->load( $config['id'] );
 		
 		$core->cck				=	$config['type'];
@@ -367,7 +391,13 @@ class plgCCK_Storage_LocationFree extends JCckPluginLocation
 		$core->pk				=	self::$pk ? self::$pk : $config['pk'];
 		$core->storage_location	=	self::$type;
 		$core->storage_table	=	$data['_']->table;
-		$core->author_id		=	( $config['author'] ) ? $config['author'] : JFactory::getUser()->id;
+		
+		if ( !( $user->id && !$user->guest ) ) {
+			$core->author_session	=	JFactory::getSession()->getId();
+		} else {
+			$core->author_id		=	$user->id;
+		}
+
 		$core->storeIt();
 
 		return $core->id;
