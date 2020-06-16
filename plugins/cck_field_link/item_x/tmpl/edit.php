@@ -17,7 +17,7 @@ JCckDev::initScript( 'link', $this->item );
 	<?php echo JCckDev::renderLegend( JText::_( 'COM_CCK_CONSTRUCTION' ), JText::_( 'PLG_CCK_FIELD_LINK_'.$this->item->name.'_DESC' ) ); ?>
     <ul class="adminformlist adminformlist-2cols">
         <?php
-        echo JCckDev::renderForm( 'core_dev_select', '', $config, array( 'label'=>'Task', 'selectlabel'=>'', 'defaultvalue'=>'', 'options'=>'Add=add||Select=select||Current=optgroup||Assign=assign||Process=process||Remove=remove||Save=save||Selection=optgroup||Assign=assign_multiple', 'storage_field'=>'type', 'required'=>'required' ) );
+        echo JCckDev::renderForm( 'core_dev_select', '', $config, array( 'label'=>'Task', 'selectlabel'=>'', 'defaultvalue'=>'', 'options'=>'Add=add||Select=select||Current=optgroup||Assign=assign||Fill=fill||Process=process||Remove=remove||Save=save||Selection=optgroup||Assign=assign_multiple', 'storage_field'=>'type', 'required'=>'required' ) );
         echo JCckDev::renderForm( 'core_form', '', $config, array( 'selectlabel'=>'Inherited', 'options2'=>'{"query":"","table":"#__cck_core_types","name":"title","where":"published=1 AND location != \"collection\"","value":"name","orderby":"title","orderby_direction":"ASC"}', 'required'=>'' ) );
         echo JCckDev::renderForm( 'core_task_processing', '', $config, array( 'storage_field'=>'processing' ) );
         echo JCckDev::renderForm( 'core_dev_bool', '', $config, array( 'defaultvalue'=>'0', 'label'=>'Close', 'storage_field'=>'close' ) );
@@ -25,6 +25,7 @@ JCckDev::initScript( 'link', $this->item );
 		echo JCckDev::renderForm( 'core_dev_text', '', $config, array( 'label'=>'Alert', 'defaultvalue'=>'Please Confirm', 'size'=>32, 'storage_field'=>'confirm_alert' ) );
         echo JCckDev::renderForm( 'core_dev_bool', '', $config, array( 'label'=>'Identifier', 'defaultvalue'=>'pk', 'options'=>'ID=id||Primary Key=pk||Use Value=optgroup||Field=field', 'storage_field'=>'identifier' ) );
         echo JCckDev::renderForm( 'core_dev_text', '', $config, array( 'label'=>'Field Name', 'storage_field'=>'identifier_fieldname' ) );
+        echo JCckDev::renderForm( 'core_dev_text', '', $config, array( 'label'=>'Target', 'storage_field'=>'target_fieldname' ) );
 
 		echo JCckDev::renderSpacer( JText::_( 'COM_CCK_CONSTRUCTION' ) . '<span class="mini">('.JText::_( 'COM_CCK_GENERIC' ).')</span>' );
 		echo JCckDev::renderForm( 'core_dev_text', '', $config, array( 'label'=>'Class', 'size'=>24, 'storage_field'=>'class' ) );
@@ -44,5 +45,6 @@ jQuery(document).ready(function($) {
     $('#title_custom').isVisibleWhen('title','2,3',false);
     $('#identifier_fieldname').isVisibleWhen('identifier','field');
     $('#form').isVisibleWhen('type','add');
+    $('#target_fieldname').isVisibleWhen('type','select');
 });
 </script>

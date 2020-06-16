@@ -57,7 +57,9 @@ class plgCCK_Field_LinkItem_X extends JCckPluginLink
 			$form				=	$form ? '\''.$form.'\'' : '';
 			$link_onclick		=	'JCck.More.ItemX.setFromClick(this).add('.$form.');';
 		} elseif ( $type == 'select' ) {
-			$link_onclick		=	'JCck.More.ItemX.setFromClick(this).select();';
+			$target				=	$link->get( 'target_fieldname', '' );
+			$target				=	$target ? '\''.$target.'\'' : '';
+			$link_onclick		=	'JCck.More.ItemX.setFromClick(this).select('.$target.');';
 		} elseif ( $type == 'remove' ) {
 			$close				=	(int)$link->get( 'close', '0' );
 			$close				=	$close ? ',true' : '';
@@ -75,6 +77,14 @@ class plgCCK_Field_LinkItem_X extends JCckPluginLink
 			$link_onclick		=	'JCck.More.ItemX.process('.$config['id'].','.$processing.',true);';
 		} elseif ( $type == 'assign_multiple' ) {
 			$link_onclick		=	'JCck.More.ItemX.assignX();';
+		} elseif ( $type == 'fill' ) {
+			$link_onclick		=	'JCck.More.ItemX.fill(\''.JFactory::getApplication()->input->get( 'target' ).'\',';
+
+			if ( $identifier_fieldname ) {
+				parent::g_addProcess( 'beforeRenderContent', self::$type, $config, array( 'name'=>$field->name, 'fieldname'=>$link->get( 'identifier_fieldname', '' ), 'onclick'=>$link_onclick, 'onclick_identifier'=>$config[$identifier] ) );
+			}
+
+			$link_onclick		.=	$config[$identifier].',true);';			
 		} else {
 			$link_class			.=	' item_x-assign';
 			$link_onclick		=	'JCck.More.ItemX.assign(';

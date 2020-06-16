@@ -36,6 +36,8 @@ $options    =   implode( '||', $options );
         echo JCckDev::renderForm( 'core_extended', @$locations[0], $config, array( 'label'=>_C2_TEXT, 'storage_field'=>'location' ) );
         echo JCckDev::renderForm( 'core_dev_textarea', @$options2['add_custom'], $config, array( 'label'=>'Custom Variables', 'defaultvalue'=>'', 'cols'=>92, 'rows'=>1, 'storage_field'=>'json[options2][add_custom]' ), array(), 'w100' );
 
+        echo JCckDev::renderForm( 'core_dev_select', @$options2['identifier'], $config, array( 'label'=>'Identifier', 'defaultvalue'=>'pk', 'selectlabel'=>'', 'options'=>'ID=id||Primary Key=pk', 'storage_field'=>'json[options2][identifier]' ) );
+
         echo JCckDev::renderSpacer( JText::_( 'COM_CCK_SELECT' ) );
         echo JCckDev::renderForm( 'core_bool3', $this->item->bool3, $config, array( 'label'=>'Mode', 'defaultvalue'=>'0', 'options'=>'None=-2||Yes=optgroup||Checkbox List=-1||Modal Box=0' ) );
         echo JCckDev::renderForm( 'core_extended', @$locations[1], $config, array( 'label'=>_C4_TEXT, 'storage_field'=>'location2' ) );

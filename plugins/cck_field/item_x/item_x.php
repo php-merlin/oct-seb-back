@@ -110,9 +110,11 @@ class plgCCK_FieldItem_X extends JCckPluginField
 				$list	=	$form[1];
 				$form	=	$form[0];
 			}
-			$tmpl		=	'raw';
+
+			$identifier	=	'pk';
 			$itemId		=	JFactory::getApplication()->input->getInt( 'Itemid' );
 			$options2	=	JCckDev::fromJSON( $field->options2 );
+			$tmpl		=	'raw';
 
 			if ( !isset( $options2['add_custom'] ) ) {
 				$options2['add_custom']		=	'';
@@ -128,6 +130,9 @@ class plgCCK_FieldItem_X extends JCckPluginField
 
 			if ( isset( $options2['select_task'] ) && $options2['select_task'] == 'no' ) {
 				$options2['select_custom']	.=	'&task=no';
+			}
+			if ( isset( $options2['identifier'] ) && $options2['identifier'] != '' ) {
+				$identifier	=	$options2['identifier'];
 			}
 			if ( $app->isClient( 'administrator' ) ) {
 				$layout	=	'default';
@@ -160,10 +165,11 @@ class plgCCK_FieldItem_X extends JCckPluginField
 				$extended	=	$extended[0];
 			}
 
-			$link2		=	( $app->isClient( 'administrator' ) ) ? $link2 : JRoute::_( $link2.'&Itemid='.$itemId );
-			$link5		=	JCckDevHelper::getAbsoluteUrl( 'auto', 'format=raw&view=list&layout=default&search='.$extended ).$context;
-			$link6		=	JCckDevHelper::getAbsoluteUrl( 'auto', 'format=raw&task='.$task );
-			$link7		=	JCckDevHelper::getAbsoluteUrl( 'auto', 'format=raw&task='.$task2 );
+			$link2				=	( $app->isClient( 'administrator' ) ) ? $link2 : JRoute::_( $link2.'&Itemid='.$itemId );
+			$link5				=	JCckDevHelper::getAbsoluteUrl( 'auto', 'format=raw&view=list&layout=default&search='.$extended ).$context;
+			$link6				=	JCckDevHelper::getAbsoluteUrl( 'auto', 'format=raw&task='.$task );
+			$link7				=	JCckDevHelper::getAbsoluteUrl( 'auto', 'format=raw&task='.$task2 );
+			$toolbar_selector	=	'[class*=\"-toolbar\"]';
 
 			static $loaded	=	0;
 
@@ -215,8 +221,8 @@ class plgCCK_FieldItem_X extends JCckPluginField
 													}
 													JCck.More.ItemX.toggleReorder();
 												} else {
-													$("#"+JCck.More.ItemX.active+" > [class$=\"-toolbar\"]").hide();
-													$("#"+JCck.More.ItemX.active+" > [class$=\"-toolbar\"] + *").show();
+													$("#"+JCck.More.ItemX.active+" > '.$toolbar_selector.'").hide();
+													$("#"+JCck.More.ItemX.active+" > '.$toolbar_selector.' + *").show();
 													$("#"+JCck.More.ItemX.active+" .cck-loading-more").html(response);
 												}
 		    									$(".hasTooltip").tooltip({"html": true,"container": "body"});
@@ -276,6 +282,15 @@ class plgCCK_FieldItem_X extends JCckPluginField
 											});
 										}
 									},
+									fill: function(key,value,close) {
+										var close = close || false;
+
+										$("#"+key).myVal(value); /* TODO: use query: target=... ?? JCck.More.ItemX.active */
+
+										if (close !== false) {
+											JCck.More.ItemX.modal.hide();
+										}
+									},
 									process: function(id,tid) {
 										$.ajax({
 											cache: false,
@@ -286,8 +301,8 @@ class plgCCK_FieldItem_X extends JCckPluginField
 											success: function(response) {
 												var resp = jQuery.parseJSON(response);
 												if(typeof resp == "object") {
-													if (resp.isNew && resp.pk) {
-														JCck.More.ItemX.assign(resp.pk,true);
+													if (resp.isNew && resp[JCck.More.ItemX.instances[JCck.More.ItemX.active].identifier]) {
+														JCck.More.ItemX.assign(resp[JCck.More.ItemX.instances[JCck.More.ItemX.active].identifier],true);
 													} else {
 														JCck.More.ItemX.modal.hide();
 													}
@@ -316,8 +331,8 @@ class plgCCK_FieldItem_X extends JCckPluginField
 											$("#"+JCck.More.ItemX.active+" .cck-loading-more").find(".hasTooltip").tooltip("destroy");
 											$("#"+JCck.More.ItemX.active+" .cck-loading-more").html("");
 											JCck.More.ItemX.toggleRequired(true);
-											$("#"+JCck.More.ItemX.active+" > [class$=\"-toolbar\"]").show();
-											$("#"+JCck.More.ItemX.active+" > [class$=\"-toolbar\"] + *").hide();
+											$("#"+JCck.More.ItemX.active+" > '.$toolbar_selector.'").show();
+											$("#"+JCck.More.ItemX.active+" > '.$toolbar_selector.' + *").hide();
 										}
 										JCck.More.ItemX.search();
 
@@ -345,8 +360,8 @@ class plgCCK_FieldItem_X extends JCckPluginField
 												xhr.onload = function(e) {
 													var resp = JSON.parse(this.response);
 													if(typeof resp == "object") {
-														if (resp.isNew && resp.pk) {
-															JCck.More.ItemX.assign(resp.pk,true);
+														if (resp.isNew && resp[JCck.More.ItemX.instances[JCck.More.ItemX.active].identifier]) {
+															JCck.More.ItemX.assign(resp[JCck.More.ItemX.instances[JCck.More.ItemX.active].identifier],true);
 														} else {
 															JCck.More.ItemX.modal.hide();
 														}
@@ -365,8 +380,8 @@ class plgCCK_FieldItem_X extends JCckPluginField
 													success: function(response) {
 														var resp = jQuery.parseJSON(response);
 														if(typeof resp == "object") {
-															if (resp.isNew && resp.pk) {
-																JCck.More.ItemX.assign(resp.pk,true);
+															if (resp.isNew && resp[JCck.More.ItemX.instances[JCck.More.ItemX.active].identifier]) {
+																JCck.More.ItemX.assign(resp[JCck.More.ItemX.instances[JCck.More.ItemX.active].identifier],true);
 															} else {
 																JCck.More.ItemX.modal.hide();
 															}
@@ -384,7 +399,8 @@ class plgCCK_FieldItem_X extends JCckPluginField
 											JCck.Core.executeFunctionByName(JCck.More.ItemX.instances[JCck.More.ItemX.active].trigger, window, \'search\');
 										}
 									},
-									select: function() {
+									select: function(target) {
+										var target = target || "";
 										var selection = "";
 										if (!JCck.More.ItemX.instances[JCck.More.ItemX.active].behavior) {
 											selection = $("#"+JCck.More.ItemX.active+" [name=\'"+JCck.More.ItemX.active+"[]\']").val();
@@ -394,6 +410,9 @@ class plgCCK_FieldItem_X extends JCckPluginField
 											if (selection) {
 												selection = "&pks="+selection;
 											}
+										}
+										if (target) {
+											selection += "&target="+target;
 										}
 										JCck.More.ItemX.modal.loadUrl(JCck.More.ItemX.instances[JCck.More.ItemX.active].link_select+selection);
 									},
@@ -431,11 +450,11 @@ class plgCCK_FieldItem_X extends JCckPluginField
 										} else {
 											if($("#"+name+" .cck-loading-more").length) {
 												if($("#"+name+" .cck-loading-more").html().length > 1) {
-													$("#"+name+" > [class$=\"-toolbar\"]").hide();
-													$("#"+name+" > [class$=\"-toolbar\"] + *").show();
+													$("#"+name+" > '.$toolbar_selector.'").hide();
+													$("#"+name+" > '.$toolbar_selector.' + *").show();
 												} else {
 													JCck.More.ItemX.toggleRequired(true,name);
-													$("#"+name+" > [class$=\"-toolbar\"] + *").hide();
+													$("#"+name+" > '.$toolbar_selector.' + *").hide();
 												}
 											}
 										}
@@ -447,9 +466,9 @@ class plgCCK_FieldItem_X extends JCckPluginField
 										name = name || JCck.More.ItemX.active;
 										if (JCck.More.ItemX.instances[name].required) {
 											if (state) {
-												$("#"+name+" > [class$=\"-toolbar\"] > button:last-child").addClass("validate[required]");
+												$("#"+name+" > '.$toolbar_selector.' > button:last-child").addClass("validate[required]");
 											} else {
-												$("#"+name+" > [class$=\"-toolbar\"] > button:last-child").removeClass("validate[required]").validationEngine("hide");
+												$("#"+name+" > '.$toolbar_selector.' > button:last-child").removeClass("validate[required]").validationEngine("hide");
 											}
 										}
 									}
@@ -498,6 +517,7 @@ class plgCCK_FieldItem_X extends JCckPluginField
 							$(document).ready(function() {
 								var data = {
 									"behavior":'.$field->bool.',
+									"identifier":"'.$identifier.'",
 									"link_add":"'.htmlspecialchars_decode( $link ).'",
 									"link_list":\''.$link5.'\',
 									"link_process":\''.$link7.'\',
@@ -557,6 +577,16 @@ class plgCCK_FieldItem_X extends JCckPluginField
 		if ( $return === true ) {
 			return $field;
 		}
+	}
+
+	// onCCK_FieldPrepareResource
+	public function onCCK_FieldPrepareResource( &$field, $value = '', &$config = array() )
+	{
+		if ( self::$type != $field->type ) {
+			return;
+		}
+		
+		$field->data	=	array( 0=>array( 'title'=>'AA' ), 1=>array( 'title'=>'BB' ) );
 	}
 	
 	// onCCK_FieldPrepareSearch

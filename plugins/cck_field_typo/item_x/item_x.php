@@ -61,8 +61,11 @@ class plgCCK_Field_TypoItem_X extends JCckPluginTypo
 			return '';
 		}
 
+		$identifier_name	=	$typo->get( 'identifier_name', '' );
+		$identifier_name	=	( $identifier_name != '' ) ? $identifier_name : $referrer;
+
 		// Set
-		$attr	=	'id="'.$value.'_'.$referrer.'" name="'.$referrer.$name_suffix.'" value="'.$value.'"'.$attr;
+		$attr	=	'id="'.$value.'_'.$referrer.'" name="'.$identifier_name.$name_suffix.'" value="'.$value.'"'.$attr;
 
 		if ( $ui ) {
 			parent::g_addProcess( 'beforeRenderContent', self::$type, $config, array( 'name'=>$field->name, 'attr'=>$attr, 'referrer'=>$referrer ) );
