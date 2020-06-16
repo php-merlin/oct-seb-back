@@ -63,70 +63,20 @@ class plgCCK_FieldGroup extends JCckPluginField
 		}
 	
 		// Prepare
-		$name			=	$field->name;
-		$dispatcher		=	JEventDispatcher::getInstance();
-		$fields			=	self::_getChildren( $field, $config );
-		$lang			=	JFactory::getLanguage();
-		$lang_default	=	$lang->getDefault();
-		$lang_tag		=	$lang->getTag();
-
-		$xn			=	1;
 		$content	=	array();
-		for ( $xi = 0; $xi < $xn; $xi++ ) {
-			foreach ( $fields as $f ) {
-				if ( is_object( $f ) ) {
-					$f_name				=	$f->name;
-					$f_value			=	'';
-					$inherit			=	array();
-					$content[$f_name]	=	clone $f;
-					$table				=	$f->storage_table;
-					$storage_mode		=	(int)$f->storage_mode;
+		$dispatcher	=	JEventDispatcher::getInstance();
+		$name		=	$field->name;
 
-					if ( $table && ! isset( $config['storages'][$table] ) ) {
-						$config['storages'][$table]	=	'';
-						$dispatcher->trigger( 'onCCK_Storage_LocationPrepareContent', array( &$f, &$config['storages'][$table], $config['pk'], &$config ) );
-					}
-					$dispatcher->trigger( 'onCCK_StoragePrepareContent_Xi', array( &$f, &$f_value, &$config['storages'][$table], $name, $xi ) );
-					
-					if ( $storage_mode && $f_value != '' ) {
-						if ( $storage_mode == -1 ) {
-							$json		=	json_decode( $f_value );
-							$f_value	=	isset( $json->$lang_default ) ? $json->$lang_default : '';
-						} elseif ( $storage_mode == 1 ) {
-							$json		=	json_decode( $f_value );
-							$f_value	=	isset( $json->$lang_tag ) ? $json->$lang_tag : '';
-						}
-					}
+		if ( $field->bool == 2 ) {
+			$lang_current		=	JFactory::getLanguage()->getTag();
+			$lang_current		=	substr( $lang_current, 0, 2 );
+			$field->extended	=	$field->location.$lang_current;
 
-					$dispatcher->trigger( 'onCCK_FieldPrepareContent', array( &$content[$f_name], $f_value, &$config, $inherit, true ) );
-					
-					$target	=	( isset( $content[$f_name]->typo_target ) ) ? $content[$f_name]->typo_target : 'value';
-					if ( $content[$f_name]->link != '' ) {
-						$dispatcher->trigger( 'onCCK_Field_LinkPrepareContent', array( &$content[$f_name], &$config ) );
-						if ( $content[$f_name]->link && !@$content[$f_name]->linked ) {
-							JCckPluginLink::g_setHtml( $content[$f_name], $target );
-						}
-					}
-					if ( @$content[$f_name]->typo && ( $content[$f_name]->$target != '' || $content[$f_name]->typo_label == -2 ) ) {
-						$dispatcher->trigger( 'onCCK_Field_TypoPrepareContent', array( &$content[$f_name], $content[$f_name]->typo_target, &$config ) );
-					} else {
-						$content[$f_name]->typo	=	'';
-					}
-					$config['fields'][$f->name]	=	$content[$f_name];
-
-					// Was it the last one?
-					if ( $content[$f_name]->type == 'cck_break' && isset( $content[$f_name]->process ) ) {
-						if ( $content[$f_name]->process->type ) {
-							if ( !JCck::callFunc_Array( 'plg'.$content[$f_name]->process->group.$content[$f_name]->process->type, 'on'.$content[$f_name]->process->group.'BeforeRenderContent', array( $content[$f_name]->process->params, &$config['fields'], &$config['storages'], &$config ) ) ) {
-								$config['error']	=	0;
-							}
-						}
-					}
-					if ( $config['error'] ) {
-						break;
-					}
-				}
-			}
+			self::_prepareContentFields( $dispatcher, $field, $content, $name, $config );
+		} elseif ( $field->bool ) {
+			/* TODO */
+		} else {
+			self::_prepareContentFields( $dispatcher, $field, $content, $name, $config );
 		}
 		
 		// Set
@@ -150,10 +100,8 @@ class plgCCK_FieldGroup extends JCckPluginField
 		
 		// Init
 		if ( count( $inherit ) ) {
-			$id		=	( isset( $inherit['id'] ) && $inherit['id'] != '' ) ? $inherit['id'] : $field->name;
 			$name	=	( isset( $inherit['name'] ) && $inherit['name'] != '' ) ? $inherit['name'] : $field->name;
 		} else {
-			$id		=	$field->name;
 			$name	=	$field->name;
 		}
 		
@@ -622,6 +570,73 @@ class plgCCK_FieldGroup extends JCckPluginField
 		return $fields;
 	}
 
+	// _prepareContentFields
+	protected static function _prepareContentFields( $dispatcher, $field, &$content, $name, &$config )
+	{
+		$fields			=	self::_getChildren( $field, $config );
+		$lang			=	JFactory::getLanguage();
+		$lang_default	=	$lang->getDefault();
+		$lang_tag		=	$lang->getTag();
+		$xn				=	1;
+		
+		for ( $xi = 0; $xi < $xn; $xi++ ) {
+			foreach ( $fields as $f ) {
+				if ( is_object( $f ) ) {
+					$f_name				=	$f->name;
+					$f_value			=	'';
+					$inherit			=	array();
+					$content[$f_name]	=	clone $f;
+					$table				=	$f->storage_table;
+					$storage_mode		=	(int)$f->storage_mode;
+
+					if ( $table && ! isset( $config['storages'][$table] ) ) {
+						$config['storages'][$table]	=	'';
+						$dispatcher->trigger( 'onCCK_Storage_LocationPrepareContent', array( &$f, &$config['storages'][$table], $config['pk'], &$config ) );
+					}
+					$dispatcher->trigger( 'onCCK_StoragePrepareContent_Xi', array( &$f, &$f_value, &$config['storages'][$table], $name, $xi ) );
+					
+					if ( $storage_mode && $f_value != '' ) {
+						if ( $storage_mode == -1 ) {
+							$json		=	json_decode( $f_value );
+							$f_value	=	isset( $json->$lang_default ) ? $json->$lang_default : '';
+						} elseif ( $storage_mode == 1 ) {
+							$json		=	json_decode( $f_value );
+							$f_value	=	isset( $json->$lang_tag ) ? $json->$lang_tag : '';
+						}
+					}
+
+					$dispatcher->trigger( 'onCCK_FieldPrepareContent', array( &$content[$f_name], $f_value, &$config, $inherit, true ) );
+					
+					$target	=	( isset( $content[$f_name]->typo_target ) ) ? $content[$f_name]->typo_target : 'value';
+					if ( $content[$f_name]->link != '' ) {
+						$dispatcher->trigger( 'onCCK_Field_LinkPrepareContent', array( &$content[$f_name], &$config ) );
+						if ( $content[$f_name]->link && !@$content[$f_name]->linked ) {
+							JCckPluginLink::g_setHtml( $content[$f_name], $target );
+						}
+					}
+					if ( @$content[$f_name]->typo && ( $content[$f_name]->$target != '' || $content[$f_name]->typo_label == -2 ) ) {
+						$dispatcher->trigger( 'onCCK_Field_TypoPrepareContent', array( &$content[$f_name], $content[$f_name]->typo_target, &$config ) );
+					} else {
+						$content[$f_name]->typo	=	'';
+					}
+					$config['fields'][$f->name]	=	$content[$f_name];
+
+					// Was it the last one?
+					if ( $content[$f_name]->type == 'cck_break' && isset( $content[$f_name]->process ) ) {
+						if ( $content[$f_name]->process->type ) {
+							if ( !JCck::callFunc_Array( 'plg'.$content[$f_name]->process->group.$content[$f_name]->process->type, 'on'.$content[$f_name]->process->group.'BeforeRenderContent', array( $content[$f_name]->process->params, &$config['fields'], &$config['storages'], &$config ) ) ) {
+								$config['error']	=	0;
+							}
+						}
+					}
+					if ( $config['error'] ) {
+						break;
+					}
+				}
+			}
+		}
+	}
+
 	// _prepareFormFields
 	protected static function _prepareFormFields( $dispatcher, $field, &$form, $name, &$config )
 	{
@@ -645,6 +660,18 @@ class plgCCK_FieldGroup extends JCckPluginField
 					}
 				} elseif ( $f->live ) {
 					$dispatcher->trigger( 'onCCK_Field_LivePrepareForm', array( &$f, &$f_value, &$config ) );
+
+					if ( $f->variation == 'hidden_isfilled' || $f->variation == 'disabled_isfilled' ) {
+						if ( $f_value != '' ) {
+							$f->variation	=	str_replace( '_isfilled', '', $f->variation );
+
+							// if ( !$id ) {
+								// JCckDevHelper::secureField( $field, $f_value );
+							// }
+						} else {
+							$f->variation	=	'';
+						}
+					}
 				} else {
 					$f_value				=	$f->live_value;
 				}
