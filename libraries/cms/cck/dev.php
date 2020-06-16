@@ -368,7 +368,13 @@ abstract class JCckDev
 
 		if ( $type == 'field' ) {
 			if ( !isset( $options['root'] ) ) {
-				$options['root']		=	'#sortable_core_options';
+				$options['base']	=	'core_options';
+				$options['picker']	=	'core_options_fields_list';
+				$options['root']	=	'#sortable_'.$options['base'];
+			} else {
+				$options['base']	=	$options['root'];
+				$options['picker']	=	$options['base'].'_fields_list';
+				$options['root']	=	'#sortable_'.$options['base'];
 			}
 			if ( $app->input->get( 'option' ) == 'com_cck' && $app->input->get( 'view' ) == 'form' ) {
 				unset( $options['doTranslation'] );
@@ -453,16 +459,22 @@ abstract class JCckDev
 									$attribs	.=	'<span>'.$customAttr['label'].'</span>';
 								}
 								if ( isset( $customAttr['form'] ) && $customAttr['form'] ) {
-									$attribs	.=	'<select id="attr__\'+k+\'_'.$attr_id.'" name="'.$attr_name.'[\'+k+\']['.$attr_id.']" class="inputbox'.$attr_class.'" data-value="\'+(val['.$i.'] !== undefined ? val['.$i.'] : \'\' )+\'">'.$customAttr['form']['options'].'</select>';
+									$default_value	=	isset( $customAttr['default'] ) && $customAttr['default'] ? $customAttr['default'] : '';
+									$attribs		.=	'<select id="attr__\'+k+\'_'.$attr_id.'" name="'.$attr_name.'[\'+k+\']['.$attr_id.']" class="inputbox adminformlist-minwidth'.$attr_class.'" data-value="\'+(val['.$i.'] !== undefined ? val['.$i.'] : \''.$default_value.'\' )+\'">'.$customAttr['form']['options'].'</select>';
 								} else {
 									if ( isset( $customAttr['placeholder'] ) && $customAttr['placeholder'] ) {
 										$placeholder	=	$customAttr['placeholder'];
 									} else {
 										$placeholder	=	JText::_( 'COM_CCK_'.$elem->type.'_attr_'.$attr_id );
 									}
+									if ( isset( $customAttr['size'] ) && $customAttr['size'] ) {
+										$size	=	$customAttr['size'];
+									} else {
+										$size	=	$attr_size;
+									}
 
 									$attribs		.=	'<input type="text" id="attr__\'+k+\'" name="'.$attr_name.'[\'+k+\']['.$attr_id.']" value="\'+(val['.$i.'] !== undefined ? val['.$i.'] : \'\' )+\'"'
-													.	' class="inputbox'.$attr_class.'" size="'.$attr_size.'" placeholder="'.htmlspecialchars( $placeholder ).'" />';									
+													.	' class="inputbox'.$attr_class.'" size="'.$size.'" placeholder="'.htmlspecialchars( $placeholder ).'" />';									
 								}
 							} else {
 								$attr_id	=	$customAttr;
@@ -474,9 +486,15 @@ abstract class JCckDev
 							$attribs		.=	'</div>';
 
 							if ( isset( $customAttr['form'] ) ) {
-								$attribs_append	=	'<select id="attr__\'+cur+\'" name="'.$attr_name.'[]['.$attr_id.']" class="inputbox'.$attr_class.'" data-value="">'.$customAttr['form']['options'].'</select>';
+								$default_value	=	isset( $customAttr['default'] ) && $customAttr['default'] ? $customAttr['default'] : '';
+								$attribs_append	=	'<select id="attr__\'+cur+\'" name="'.$attr_name.'[\'+('.( $i == ( $nb - 1 ) ? 'cur++' : 'cur' ).')+\']['.$attr_id.']" class="inputbox adminformlist-minwidth'.$attr_class.'" data-value="'.$default_value.'">'.$customAttr['form']['options'].'</select>';
 							} else {
-								$attribs_append	=	'<input type="text" id="attr__0" name="'.$attr_name.'[\'+('.( $i == ( $nb - 1 ) ? 'cur++' : 'cur' ).')+\']['.$attr_id.']" value="" class="inputbox'.$attr_class.'" size="'.$attr_size.'" />';
+								if ( isset( $customAttr['size'] ) && $customAttr['size'] ) {
+									$size	=	$customAttr['size'];
+								} else {
+									$size	=	$attr_size;
+								}
+								$attribs_append	=	'<input type="text" id="attr__0" name="'.$attr_name.'[\'+('.( $i == ( $nb - 1 ) ? 'cur++' : 'cur' ).')+\']['.$attr_id.']" value="" class="inputbox'.$attr_class.'" size="'.$size.'" />';
 							}
 							$keys[]			=	$attr_id;
 							$js3			.=	'$("'.$options['root'].'>div:last input:text[name=\''.$opt_name.'[]\']").parent().append(\'<div class="clr"></div><div class="attr"\'+disp+\'>'.$attribs_append.'</div>\');';
@@ -568,14 +586,14 @@ abstract class JCckDev
 					$fields	=	JCckDatabase::loadObjectList( 'SELECT a.title as text, a.name as value FROM #__cck_core_fields AS a'
 															. ' WHERE a.published = 1 AND a.storage !="dev" AND a.name != "'.$elem->name.'" ORDER BY text' );
 					$fields	=	is_array( $fields ) ? array_merge( array( JHtml::_( 'select.option', '', '- '.JText::_( 'COM_CCK_ADD_A_FIELD' ).' -' ) ), $fields ) : array();
-					$elem->init['fieldPicker']	=	JHtml::_( 'select.genericlist', $fields, 'fields_list', 'class="inputbox select" style="max-width:175px;"',
-															  'value', 'text', '', 'fields_list' );
+					$elem->init['fieldPicker']	=	JHtml::_( 'select.genericlist', $fields, $options['picker'], 'class="inputbox select" style="max-width:175px;"',
+															  'value', 'text', '', $options['picker'] );
 					$isNew	=	( !$elem->options ) ? 1 : 0;
-					$js2	.=	'/*var cur = 9999;*/ var cur = $("#sortable_core_options").children().length; var isNew = '.$isNew.';
-								$("ul.adminformlist").on("change", "select#fields_list", function() {
+					$js2	.=	'/*var cur = 9999;*/ var cur = $("'.$options['root'].'").children().length; var isNew = '.$isNew.';
+								$("ul.adminformlist").on("change", "select#'.$options['picker'].'", function() {
 									var val = $(this).val();
 									if (val) {
-										$("'.$options['root'].'>div:last .button-add-core_options").click();
+										$("'.$options['root'].'>div:last .button-add-'.$options['base'].'").click();
 										$("'.$options['root'].'>div:last input:text[name=\''.$opt_name.'[]\']").val(val);
 										'.$js3.'
 									}
@@ -585,13 +603,13 @@ abstract class JCckDev
 									} isNew = 0;
 								';
 					if ( !$elem->options ) {
-						$js2	.=	'if ($("'.$options['root'].'").children().length == 2 && $("#collection-group-wrap-core_options__0").length) { $("#collection-group-wrap-core_options__0").parent().remove(); }';
+						$js2	.=	'if ($("'.$options['root'].'").children().length == 2 && $("#collection-group-wrap-'.$options['base'].'__0").length) { $("#collection-group-wrap-core_options__0").parent().remove(); }';
 					}
 					$js2	.=	'});';
 					$css	.=	( isset( $options['root'] ) ? $options['root'].' ' : '' ).'.button-add{display:none;}';
 
 					if ( !$elem->options ) {
-						$css	.=	'#collection-group-wrap-core_options__0{display:none;}';
+						$css	.=	'#collection-group-wrap-'.$options['base'].'__0{display:none;}';
 					}
 					$js3	=	'';
 				} else {
