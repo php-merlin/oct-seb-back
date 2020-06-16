@@ -18,7 +18,7 @@ JCckDev::forceStorage();
     <ul class="adminformlist adminformlist-2cols">
         <?php
 		echo JCckDev::renderForm( 'core_icons', $this->item->location, $config, array( 'storage_field'=>'location' ) );
-        echo JCckDev::renderBlank();
+        echo JCckDev::renderForm( 'core_extended', $this->item->extended, $config, array( 'label'=>'Prefix', 'storage_field'=>'extended', 'required'=>'' ) );
 
         echo JCckDev::renderSpacer( JText::_( 'COM_CCK_STORAGE' ), JText::_( 'COM_CCK_STORAGE_DESC' ) );
         echo JCckDev::getForm( 'core_storage', $this->item->storage, $config );

@@ -61,7 +61,8 @@ class plgCCK_FieldIcon extends JCckPluginField
 		// Init
 		$html			=	'';
 		$value			=	$field->location;
-		$html			=	'<span class="icon-'.$value.'"></span>';
+		$extended		=	$field->extended ? $field->extended.'-' : 'icon-';
+		$html			=	'<span class="'.$extended.$value.'"></span>';
 		
 		// Set
 		$field->text		=	$html;
