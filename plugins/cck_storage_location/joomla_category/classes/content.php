@@ -46,8 +46,14 @@ class JCckContentJoomla_Category extends JCckContentJoomla_CategoryPlaceholder
 	// saveBase
 	protected function saveBase()
 	{
-		if ( property_exists( $this->_instance_base, 'language' ) && $this->_instance_base->language == '' ) {
-			$this->_instance_base->language	=	'*';
+		if ( !$this->getId() ) {
+			if ( $this->_instance_base->title == '' ) {
+				$this->_instance_base->title	=	JFactory::getDate()->format( 'Y-m-d-H-i-s' );
+				$this->_instance_base->alias	=	$this->_instance_base->title;
+			}
+			if ( property_exists( $this->_instance_base, 'language' ) && $this->_instance_base->language == '' ) {
+				$this->_instance_base->language	=	'*';
+			}
 		}
 		$status			=	$this->_instance_base->store();
 
