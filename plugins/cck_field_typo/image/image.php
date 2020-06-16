@@ -64,9 +64,9 @@ class plgCCK_Field_TypoImage extends JCckPluginTypo
 							);
 
 		if ( is_array( $field->value ) ) {
-			$typo	=	self::_addImages( $field, $thumb_array, $options );
+			$typo	=	self::_addImages( $field, $thumb_array, $options, $config );
 		} else {
-			$typo	=	self::_addImage( $field, $thumb_array, $options );
+			$typo	=	self::_addImage( $field, $thumb_array, $options, $config );
 		}
 		if ( $thumb_array['image_alt'] && $thumb_array['image_alt_fieldname'] != '' ) {
 			parent::g_addProcess( 'beforeRenderContent', self::$type, $config, array( 'name'=>$field->name, 'alt_fieldname'=>$thumb_array['image_alt_fieldname']  ) );
@@ -110,7 +110,7 @@ class plgCCK_Field_TypoImage extends JCckPluginTypo
 	}
 
 	// _addImage
-	protected static function _addImage( &$field, $params, $options )
+	protected static function _addImage( &$field, $params, $options, $config )
 	{
 		$alt				=	'';
 		$value				=	$field->value;
@@ -156,7 +156,25 @@ class plgCCK_Field_TypoImage extends JCckPluginTypo
 
 			return $typo;
 		}
-		
+
+		if ( $attr != '' && strpos( $attr, '%' ) !== false ) {
+			$matches	=	'';
+			$search		=	'#\%([a-zA-Z0-9-]*)\%#U';
+
+			preg_match_all( $search, $attr, $matches );
+
+			if ( count( $matches[1] ) ) {
+				foreach ( $matches[1] as $target ) {
+					$replace	=	'';
+
+					if ( isset( $config['context'][$target] ) && $config['context'][$target] != '' ) {
+						$replace	=	$target.'="'.$config['context'][$target].'"';
+					}
+					
+					$attr	=	str_replace( '%'.$target.'%', $replace, $attr );
+				}
+			}
+		}
 		$img		=	'<img'.$attr.' />';
 
 		if ( isset( $field->link ) && $field->link ) {
@@ -181,14 +199,14 @@ class plgCCK_Field_TypoImage extends JCckPluginTypo
 	}
 
 	// _addImages
-	protected static function _addImages( &$field, $params, $options )
+	protected static function _addImages( &$field, $params, $options, $config )
 	{
 		// Prepare
 		$value	=	$field->value;
 		$typo	=	'';
 		
 		foreach ( $field->value as $value_img ) {
-			$typo	.=	self::_addImage( $value_img, $params, $options );
+			$typo	.=	self::_addImage( $value_img, $params, $options, $config );
 		}
 		
 		return $typo;
