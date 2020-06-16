@@ -622,6 +622,16 @@ if("undefined"===typeof JCck)var JCck={};
 		}
 		return v;
 	};
+	$.fn.myProp = function(a,v) {
+		var $el = $(this);
+
+		if ($el.is("fieldset")) {
+			$el.find("input").prop(a,v);
+		} else {
+			$el.prop(a,v);
+		}
+		return v;
+	};
 	$.fn.myConditional = function(condition, opts) {
 		var el	= this.attr("id");
 		var status = 0;
@@ -702,9 +712,9 @@ if("undefined"===typeof JCck)var JCck={};
 					}
 				}
 				if (status == 1) {
-					$("#"+el).prop("disabled", false);
+					$("#"+el).myProp("disabled", false);
 				} else if (revert) {
-					$("#"+el).prop("disabled", true);
+					$("#"+el).myProp("disabled", true);
 				}
 				break;
 			case 'isFilled':
