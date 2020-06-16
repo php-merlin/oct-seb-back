@@ -151,7 +151,6 @@ class plgCCK_FieldJForm_UserGroups extends JCckPluginField
 		if ( is_array( $value ) ) {
 			$value	=	implode( ',', $value );
 		}
-		$isMultiple	=	( strpos( $value, ',' ) !== false ) ? 1 : 0;
 
 		if ( $value != '' ) {
 			if ( $field->storage_location != '' ) {
@@ -164,6 +163,7 @@ class plgCCK_FieldJForm_UserGroups extends JCckPluginField
 				$field->storage_field		=	'group_id';
 				$field->storage_field2		=	'';
 
+				// #1
 				$join						=	new stdClass;
 				$join->table				=	'#__user_usergroup_map';
 				$join->column				=	'user_id';
@@ -173,9 +173,17 @@ class plgCCK_FieldJForm_UserGroups extends JCckPluginField
 
 				$config['joins'][$field->stage][]		=	$join;
 
-				if ( $isMultiple ) {
-					$config['query_parts']['group'][]	=	't0.id';
-				}
+				// #2
+				// $join						=	new stdClass;
+				// $join->table				=	'#__usergroups';
+				// $join->column				=	'id';
+				// $join->column2				=	'group_id';
+				// $join->table2				=	'#__user_usergroup_map';
+				// $join->and					=	'';
+
+				// $config['joins'][$field->stage][]		=	$join;
+
+				$config['query_parts']['group'][]	=	't0.id';
 			}
 		} else {
 			$field->storage					=	'none';
