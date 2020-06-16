@@ -25,7 +25,13 @@ $isResponsive	=	( $table_layout == 'responsive' ) ? 1 : 0;
 $class_body		=	'';
 $class_table	=	trim( $cck->getStyleParam( 'class_table', 'category zebra table' ) );
 $class_table	=	( $isFixed ) ? $class_table.' fixed' : $class_table;
-$class_table	=	( $isResponsive ) ? $class_table.' responsive' : $class_table;
+if ( $isResponsive ) {
+	if ( $class_table == 'o-table' ) {
+		$class_table	=	'o-table-responsive';
+	} else {
+		$class_table	=	str_replace( 'o-table ', 'o-table-responsive ', $class_table );
+	}
+}
 $class_table	=	$class_table ? ' class="'.$class_table.'"' : '';
 $translate		=	JCck::getConfig_Param( 'language_jtext', 1 );
 
