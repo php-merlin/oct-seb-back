@@ -811,28 +811,29 @@ class plgSystemCCK extends JPlugin
 		if ( JCckWebservice::getConfig()->params->def( 'KO' ) ) {
 		 	return false;
 		} else {
-			$apis		=	JCckDatabase::loadObjectList( 'SELECT path'
+			$api_paths	=	JCckDatabase::loadObjectList( 'SELECT path'
 														. ' FROM #__menu WHERE'
 														. ' link = "index.php?option=com_cck_webservices&view=api" AND published = 1', 'path' );
-			$path		=	JUri::getInstance()->getPath();
+			$base_path	=	JUri::getInstance()->getPath();
 			$prefix		=	( !JFactory::getConfig()->get( 'sef_rewrite' ) ) ? '/index.php' : '';
 
 			if ( JCckDevHelper::isMultilingual( true ) ) {
-				$lang_sef	=	JCckDevHelper::getLanguageCode();
+				$language_codes	=	JCckDevHelper::getLanguageCodes();
 
-				if ( $lang_sef != '' ) {
-					$prefix	.=	'/'.$lang_sef;
+				foreach ( $language_codes as $k=>$sef ) {
+					$language_codes[$k]	=	$prefix.'/'.$sef;
 				}
 			}
 
-			if ( count( $apis ) ) {
-				foreach ( $apis as $api ) {
-					$api	=	$prefix.'/'.$api->path.'/';
+			if ( count( $api_paths ) ) {
+				foreach ( $api_paths as $api_path ) {
+					foreach ( $language_codes as $sef ) {
+						$path	=	$sef.'/'.$api_path->path.'/';
+						$pos	=	strpos( $base_path, $path );
 
-					$pos	=	strpos( $path, $api );
-
-					if ( $pos !== false && $pos == 0 ) {
-						return true;
+						if ( $pos !== false && $pos == 0 ) {
+							return true;
+						}
 					}
 				}
 			}
@@ -1199,17 +1200,24 @@ class plgSystemCCK extends JPlugin
 	protected function _setRestApi()
 	{
 		$format		=	JCckWebservice::getConfig_Param( 'resources_format', 'json' );
-		$path		=	JUri::getInstance()->getPath();
-		$segment	=	substr( $path, strrpos( $path, '/' ) + 1 );
+		$request	=	(int)JCckWebservice::getConfig_Param( 'resources_format_request', 0 );
 
-		if ( $segment != '' ) {
-			if ( ( $pos = strpos( $segment, '.' ) ) !== false ) {
-				$format	=	substr( $segment, $pos + 1 );
+		/* TODO: We may redirect or return bad request if not allowed ONLY when last segment has no ":" (unique/identifier) */
+		if ( $request == 1 ) {
+			$path		=	JUri::getInstance()->getPath();
+			$segment	=	substr( $path, strrpos( $path, '/' ) + 1 );
 
-				if ( $format[0] == 'w' ) {
-					$format	=	substr( $format, 1 );
+			if ( $segment != '' ) {
+				if ( ( $pos = strpos( $segment, '.' ) ) !== false ) {
+					$format	=	substr( $segment, $pos + 1 );
+
+					if ( $format[0] == 'w' ) {
+						$format	=	substr( $format, 1 );
+					}
 				}
 			}
+		} elseif ( $request == 2 ) {
+			$format	=	JFactory::getApplication()->input->get( 'format', $format );
 		}
 
 		JFactory::getApplication()->input->set( 'format', $format );
