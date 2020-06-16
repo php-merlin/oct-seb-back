@@ -19,6 +19,10 @@ JCckDev::initScript( 'restriction', $this->item );
         <?php
 		echo JCckDev::renderBlank();
 		echo JCckDev::renderForm( 'core_bool', '', $config, array( 'label'=>'Invert', 'defaultvalue'=>'0', 'options'=>'Yes=1||No=0', 'storage_field'=>'do' ) );
+		echo '<li class="w100"><label>'.JText::_( 'COM_CCK_VARIABLE_VALUES' ).'</label>'
+		 .	 JCckDev::getForm( 'core_dev_select', '', $config, array( 'label'=>'', 'selectlabel'=>'', 'defaultvalue'=>'isHigherOnly', 'options'=>'MATCH_NUMERIC_HIGHER_ONLY=isHigherOnly', 'storage_field'=>'match' ) )
+		 .	 JCckDev::getForm( 'core_dev_text', '', $config, array( 'label'=>'', 'defaultvalue'=>'0', 'css'=>'input-small', 'storage_field'=>'values' ) )
+		 .	 '</li>';
         ?>
     </ul>
 </div>
