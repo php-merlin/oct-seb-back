@@ -14,7 +14,16 @@ defined( '_JEXEC' ) or die;
 class plgContentCCK extends JPlugin
 {
 	protected $cache	=	false;
+	protected $legacy	=	0;
 	protected $loaded	=	array();
+
+	// __construct
+	public function __construct( &$subject, $config )
+	{
+		parent::__construct( $subject, $config );
+
+		$this->legacy	=	(int)JCck::getConfig_Param( 'core_legacy', '2012' );
+	}
 	
 	// onContentAfterSave
 	public function onContentAfterSave( $context, $article, $isNew )
@@ -353,12 +362,10 @@ class plgContentCCK extends JPlugin
 		}
 		
 		if ( isset( $config, $config['pk'] ) && $config['pk'] ) {
-			$legacy		=	(int)JCck::getConfig_Param( 'core_legacy', '2012' );
-
 			if ( JCckToolbox::getConfig()->get( 'processing', 0 ) ) {
 				unset( $config['storages'] );
 
-				if ( $legacy && $legacy <= 2019 ) {
+				if ( $this->legacy && $this->legacy <= 2019 ) {
 					JCckToolbox::process( 'onCckPostAfterDelete', $config );
 				} else {
 					$event		=	'onCckPostAfterDelete';
@@ -518,10 +525,16 @@ class plgContentCCK extends JPlugin
 	public function onContentPrepare( $context, &$article, &$params, $limitstart = 0 )
 	{
 		if ( strpos( $article->text, '/cck' ) === false ) {
-			if ( strpos( $article->text, '{cck_item:' ) !== false ) {
-				$article->text	=	$this->_replace( $article->text );
+			if ( $this->legacy && $this->legacy <= 2019 ) {
+				if ( strpos( $article->text, '{cck_item:' ) !== false ) {
+					$article->text	=	$this->_replace( $article->text );
+				}	
+			} else {
+				if ( strpos( $article->text, '<ins id=' ) !== false ) {
+					$article->text	=	$this->_insert( $article->text );
+				}
 			}
-
+			
 			return true;
 		}
 		
@@ -971,11 +984,73 @@ class plgContentCCK extends JPlugin
 		
 		$data					=	$doc->render( false, $params );
 
-		if ( strpos( $data, '{cck_item:' ) !== false ) {
-			$data	=	$this->_replace( $data );
+		if ( $this->legacy && $this->legacy <= 2019 ) {
+			if ( strpos( $data, '{cck_item:' ) !== false ) {
+				$data	=	$this->_replace( $data );
+			}
+		} else {
+			if ( strpos( $data, '<ins id=' ) !== false ) {
+				$data	=	$this->_insert( $data );
+			}
 		}
 
 		$article->$property		=	str_replace( $article->$property, $data, $article->$property );
+	}
+
+	// _insert
+	protected function _insert( $text )
+	{
+		jimport( 'cck.base.item.item' );
+
+		$matches	=	array();
+		$regex		=	'/\<ins id="(\d+)"(.*)?\>(.*)\<\/ins\>/';
+
+		preg_match_all( $regex, $text, $matches );
+
+		if ( isset( $matches[1] ) && is_array( $matches[1] ) ) {
+			foreach ( $matches[1] as $k=>$id ) {
+				if ( isset( $matches[2][$k] ) && $matches[2][$k] != '' ) {
+					$params	=	trim( $matches[2][$k] );
+
+					if ( $params ) {
+						$params	=	$this->_insertParams( $params );
+					} else {
+						$params	=	'{}';
+					}
+				} else {
+					$params	=	'{}';
+				}
+
+				$params	=	new JRegistry( $params );
+				$data	=	CCK_Item::render( $id, $params->toArray(), false );
+				$text	=	str_replace( $matches[0][$k], $data, $text );
+			}
+		}
+
+		return $text;
+	}
+
+	// _insertParams
+	protected function _insertParams( $string )
+	{
+		$params	=	array();
+		$parts	=	explode( ' ', $string );
+
+		foreach ( $parts as $part ) {
+			$val	=	explode( '=', $part );
+
+			if ( $val[0] ) {
+				$v					=	$val[1];
+
+				if ( $v != '' ) {
+					$len	=	strlen( $v );
+					$v		=	substr( $v, 1, $len - 2 );
+				}
+				$params[$val[0]]	=	$v;
+			}
+		}
+
+		return $params;
 	}
 
 	// _replace
