@@ -23,6 +23,7 @@ class CCKController extends JControllerLegacy
 		parent::__construct( $config );
 
 		$this->registerTask( 'apply', 'save' );
+		$this->registerTask( 'read', 'download' );
 		$this->registerTask( 'save2copy', 'save' );
 		$this->registerTask( 'save2new', 'save' );
 		$this->registerTask( 'save2redirect', 'save' );
@@ -132,6 +133,7 @@ class CCKController extends JControllerLegacy
 		$id				=	$app->input->getInt( 'id', 0 );
 		$fieldname		=	$app->input->getString( 'file', '' );
 		$to_be_erased	=	false;
+		$task			=	$this->getTask();
 		
 		if ( ! $id ) {
 			$file	=	$fieldname;
@@ -211,7 +213,7 @@ class CCKController extends JControllerLegacy
 				return;
 			}
 			if ( $path ) {
-				if ( isset( $config['task2'] ) && $config['task2'] == 'read' ) {
+				if ( $task == 'read' || isset( $config['task2'] ) && $config['task2'] == 'read' ) {
 					$this->setRedirect( JUri::root( true ).'/'.$file );
 				} else {
 					if ( $id ) {
