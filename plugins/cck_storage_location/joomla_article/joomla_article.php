@@ -756,6 +756,35 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 					}
 				} else {
 					$id			=	$query['id'];
+
+					if ( $config['doSEF'] == '23' && is_numeric( $id ) ) {
+						$db			=	JFactory::getDbo();
+						$dbQuery	=	$db->getQuery( true );
+						$lang_tag	=	JFactory::getLanguage()->getTag();
+
+						$dbQuery->select( 'JSON_UNQUOTE(JSON_EXTRACT(b.aliases, '.JCckDatabase::quote('$."'.$lang_tag.'"').')) AS alias' )
+								->from( $db->quoteName( '#__content', 'a' ) )
+								->join( 'LEFT', '#__cck_store_item_content AS b ON b.id = a.id' )
+								->where( $db->quoteName( 'b.id' ) . ' = ' . (int)$query['id'] );
+						
+						if ( $config['sef_aliases'] == 2 ) {
+							if ( isset( $query['lang'] ) && $query['lang'] ) {
+								$lang_tag	=	$query['lang'];
+							} else {
+								$lang_tag	=	JFactory::getLanguage()->getTag();
+							}
+						}
+
+						$db->setQuery( $dbQuery );
+
+						$alias		=	$db->loadResult();
+
+						if ( $alias != '' ) {
+							$id		=	$alias;
+						} else {
+							$id		=	0;
+						}
+					}
 				}
 			}
 			$segments[]	=	$id;
