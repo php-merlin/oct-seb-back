@@ -699,11 +699,13 @@ class plgSearchCCK extends JPlugin
 					}
 				}
 			}
-			if ( !$ordered ) {
-				$ordering	=	'alpha';
+			if ( !$ordered ) {				
 				if ( @$config['location'] ) {
+					$ordering	=	'alpha';
+
 					$dispatcher->trigger( 'onCCK_Storage_LocationPrepareOrder', array( $config['location'], &$ordering, &$tables, &$config ) );
-					if ( $ordering ) {
+					
+					if ( $ordering && $ordering != 'alpha' ) {
 						$query->order( $ordering );
 					}
 				}
