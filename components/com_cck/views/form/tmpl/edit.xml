@@ -41,6 +41,9 @@
 			<field name="variation" type="cckhidden" label="" description="" />
 		</fieldset>
 		<fieldset name="advanced">
+			<field name="menu_item"	type="menuitem"	label="COM_CCK_FORM_CONFIG_MENU_ITEM" description="COM_CCK_FORM_CONFIG_MENU_ITEM_DESC" class="inputbox">
+				<option value="">COM_CCK_INHERITED</option>
+			</field>
 			<field name="raw_rendering" type="list" label="LIB_CCK_RAW_RENDERING" default="" description="LIB_CCK_RAW_RENDERING_DESC" class="inputbox">
 				<option value="">COM_CCK_INHERITED_SL</option>
 				<option value="0">JNO</option>
