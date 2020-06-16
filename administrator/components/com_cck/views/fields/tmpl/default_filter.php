@@ -10,7 +10,7 @@
 
 defined( '_JEXEC' ) or die;
 
-$clear	=	"document.getElementById('filter_folder').value='';document.getElementById('filter_state').value='1';document.getElementById('filter_type').value='';document.getElementById('filter_storage').value='';";
+$clear	=	"document.getElementById('filter_folder').value='';document.getElementById('filter_state').value='1';document.getElementById('filter_type').value='';document.getElementById('filter_storage').value='';document.getElementById('filter_language').value='';";
 if ( $this->js['filter'] ) {
 	$doc->addScriptDeclaration( $this->js['filter'] );
 }
