@@ -19,18 +19,23 @@ class JCckProcessing
 	protected static $apps_map	=	array();
 
 	protected $_event			=	null;
+	protected $_mode			=	null;
 	protected $_options			=	null;
 	protected $_path			=	null;
 
 	protected $_data			=	array();
+	protected $_error			=	false;
+	protected $_instance		=	null;
+	protected $_pk				=	0;
 	protected $_type			=	'';
 
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Construct
 
 	// __construct
-	public function __construct( $event, $path, $options = array() )
+	public function __construct( $event, $path, $options = array(), $multiple = false )
 	{
 		$this->_event	=	$event;
+		$this->_mode	=	$multiple;
 		$this->_path	=	$path;
 		$this->_options	=	new Registry( $options );
 	}
@@ -47,29 +52,36 @@ class JCckProcessing
 		$this->_data['config']	=	$config;
 		$this->_data['fields']	=	$fields;
 
-		$this->_type			=	$this->_data['config']['type'];
+		$this->_pk				=	$this->_data['config']['pk'];
+		$this->_type			=	isset( $this->_data['config']['content_type'] ) ? $this->_data['config']['content_type'] : $this->_data['config']['type'];
 
-		$this->run( 'once' );
+/*
+JCckTable::getInstance( '#__aa' )->save( array( 'data'=>'FORM', 'note'=>uniqid() ) );
+*/
+
+		$this->run();
 
 		$config	=	$this->_data['config'];
 		$fields	=	$this->_data['fields'];
-
+		
 		unset( $this->_data );
+		
+		return $this->_error ? false : true;
 	}
 
-	// initialize
-	public function initialize()
+	// loadField
+	protected function loadField( $name )
 	{
-
+		return JCckDatabase::loadObject( 'SELECT storage, storage_table, storage_field, storage_field2 FROM #__cck_core_fields WHERE name = "'.$name.'" AND storage_field != ""' );
 	}
 
 	// run
-	public function run( $type = '' )
+	public function run()
 	{
-		if ( $type == 'once' ) {
-			include_once $this->_path;
-		} else {
+		if ( $this->_mode ) {
 			include $this->_path;
+		} else {
+			include_once $this->_path;
 		}
 	}
 
@@ -106,6 +118,32 @@ class JCckProcessing
 	// sendMail
 	// public function sendMail() {}
 
+	// setError
+	public function setError( $key = '', $value = '' )
+	{
+		// JCckTable::getInstance( '#__aa' )->save( array( 'data'=>'** ERROR **', 'note'=>$key.' -- '.$value ) );
+
+		$this->_error	=	true;
+
+		if ( array_key_exists( 'error', $this->_data['config'] ) ) {
+			if ( $key != '' ) {
+				$this->_data['config']['error']	=	array( $key=>$value );
+			} else {
+				$this->_data['config']['error']	=	true;
+			}
+		}
+	}
+
+	// setProperty
+	public function setProperty( $name, $value )
+	{
+		if ( is_array( $this->_data['fields'] ) ) {
+			$this->_data['fields'][$name]	=	$value;
+		} else {
+			$this->_data['fields']->$name	=	$value;
+		}
+	}
+
 	// setType
 	public function setType( $content_type )
 	{
@@ -120,7 +158,7 @@ class JCckProcessing
 		if ( isset( $this->_data['fields'][$name] ) ) {
 			$this->_data['fields'][$name]->value	=	$value;
 
-			$field	=	JCckDatabase::loadObject( 'SELECT storage, storage_table, storage_field, storage_field2 FROM #__cck_core_fields WHERE name = "'.$name.'"' );
+			$field	=	$this->loadField( $name );
 
 			if ( is_object( $field ) && $field->storage_table && $field->storage_field ) {
 				switch ( $field->storage ) {
@@ -130,8 +168,8 @@ class JCckProcessing
 
 						$this->_data['config']['storages'][$field->storage_table][$field->storage_field]	=	$json->toString( 'JSON', array( 'bitmask'=>JSON_UNESCAPED_UNICODE ) );
 
-						if ( strpos( $this->_event, 'afterStore' ) !== false && $this->_pk ) {
-							JCckDatabase::execute( 'UPDATE '.$field->storage_table.' SET '.$field->storage_field.'= "'.JCckDatabase::escape( $value ).'" WHERE id = '.(int)$pk );
+						if ( stripos( $this->_event, 'afterStore' ) !== false && $this->_pk ) {
+							JCckDatabase::execute( 'UPDATE '.$field->storage_table.' SET '.$field->storage_field.'= "'.JCckDatabase::escape( $value ).'" WHERE id = '.(int)$this->_pk );
 						}
 						break;
 					case 'standard':
@@ -139,8 +177,8 @@ class JCckProcessing
 							$this->_data['config']['storages'][$field->storage_table][$field->storage_field]	=	$value;
 						}
 
-						if ( strpos( $this->_event, 'afterStore' ) !== false && $this->_pk ) {
-							JCckDatabase::execute( 'UPDATE '.$field->storage_table.' SET '.$field->storage_field.'= "'.$value.'" WHERE id = '.(int)$pk );
+						if ( stripos( $this->_event, 'afterStore' ) !== false && $this->_pk ) {
+							JCckDatabase::execute( 'UPDATE '.$field->storage_table.' SET '.$field->storage_field.'= "'.$value.'" WHERE id = '.(int)$this->_pk );
 						}
 						break;
 					default:
@@ -170,6 +208,16 @@ class JCckProcessing
 		return self::$apps[self::$apps_map[$this->_type]];
 	}
 
+	// getMethod
+	public function getMethod()
+	{
+		if ( isset( $this->_data['config']['method'] ) ) {
+			return $this->_data['config']['method'];
+		}
+
+		return '';
+	}
+
 	// getId
 	public function getId()
 	{
@@ -188,6 +236,21 @@ class JCckProcessing
 		}
 
 		return '';
+	}
+
+	// getProperty
+	public function getProperty( $name )
+	{
+		if ( is_array( $this->_data['fields'] ) ) {
+			if ( isset( $this->_data['fields'][$name] ) ) {
+				return $this->_data['fields'][$name];
+			}
+		} else {
+			if ( isset( $this->_data['fields']->$name ) ) {
+				return $this->_data['fields']->$name;
+			}
+		}
+		
 	}
 
 	// getPk
