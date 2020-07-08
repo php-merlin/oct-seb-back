@@ -144,6 +144,9 @@ abstract class JCckWebservice
 
 			JEventDispatcher::getInstance()->trigger( 'onCCK_WebserviceCall', array( &$webservice, $fields, $config ) );
 
+			$table->bind( array( 'response'=>json_encode( $webservice->response ) ) );
+			$table->store();
+
 			if ( 1 == 1 ) {
 				$table->updateStatus( true );
 			}
