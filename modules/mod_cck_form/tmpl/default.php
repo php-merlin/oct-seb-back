@@ -31,6 +31,7 @@ echo ( $raw_rendering ) ? $data : '<div class="cck_module_form'.$class_sfx.'">' 
 <div class="clr"></div>
 <div>
 <?php } ?>
+<?php if ( $config['core'] !== 2 ) { ?>
 <input type="hidden" id="task" name="task" value="" />
 <input type="hidden" id="myid" name="id" value="0" />
 <input type="hidden" name="config[type]" value="<?php echo $preconfig['type']; ?>">
@@ -41,6 +42,7 @@ echo ( $raw_rendering ) ? $data : '<div class="cck_module_form'.$class_sfx.'">' 
 <input type="hidden" name="config[itemId]" value="<?php echo $itemId; ?>" />
 <input type="hidden" name="config[tmpl]" value="<?php echo $app->input->getCmd( 'tmpl' ); ?>" />
 <input type="hidden" name="config[unique]" value="" />
+<?php } ?>
 <?php echo JHtml::_( 'form.token' ); ?>
 <?php if ( !$raw_rendering ) { ?>
 </div>
