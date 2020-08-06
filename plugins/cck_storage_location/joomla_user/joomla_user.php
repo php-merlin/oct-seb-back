@@ -319,7 +319,10 @@ class plgCCK_Storage_LocationJoomla_User extends JCckPluginLocation
 						$data['activation']					=	JApplication::getHash( JUserHelper::genRandomPassword() );
 						$data['block']						=	1;
 						$config['registration_activation']	=	$data['activation'];
+						$config['registration_password']	=	$data['password'];
 					}
+				} else {
+					$config['registration_password']	=	$data['password'];
 				}
 			}
 			
