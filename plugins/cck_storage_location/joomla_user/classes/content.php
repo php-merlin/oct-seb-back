@@ -59,7 +59,11 @@ class JCckContentJoomla_User extends JCckContent
 		if ( !$this->getId() ) {
 			if ( empty( $this->_instance_base->groups ) ) {
 				$this->_instance_base->groups	=	array( 2 );
+			} else {
+				$this->_checkGroup();
 			}
+		} else {
+			$this->_checkGroup();
 		}
 
 		return $this->_instance_base->save();
@@ -68,6 +72,8 @@ class JCckContentJoomla_User extends JCckContent
 	// storeBase
 	protected function storeBase()
 	{
+		$this->_checkGroup();
+		
 		return $this->_instance_base->save();
 	}
 
@@ -101,6 +107,22 @@ class JCckContentJoomla_User extends JCckContent
 			return JUserHelper::addUserToGroup( $this->_pk, $group_id );
 		} else {
 			return JCckDatabase::execute( 'INSERT IGNORE INTO #__user_usergroup_map VALUES ('.(int)$this->_pk.', '.(int)$group_id.')' );
+		}
+	}
+
+	// _checkGroup
+	protected function _checkGroup()
+	{
+		$groups	=	json_decode( $this->_instance_base->groups );
+
+		if ( is_null( $groups ) ) {
+			$this->_instance_base->groups	=	explode( ',', $this->_instance_base->groups );
+		} else {
+			if ( is_array( $groups ) ) {
+				$this->_instance_base->groups	=	$groups;
+			} else {
+				$this->_instance_base->groups	=	explode( ',', (string)$groups );
+			}
 		}
 	}
 
