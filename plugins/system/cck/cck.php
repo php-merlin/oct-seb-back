@@ -816,7 +816,12 @@ class plgSystemCCK extends JPlugin
 														. ' link = "index.php?option=com_cck_webservices&view=api" AND published = 1', 'path' );
 			$base_path	=	JUri::getInstance()->getPath();
 			$prefix		=	( !JFactory::getConfig()->get( 'sef_rewrite' ) ) ? '/index.php' : '';
+			$root_path	=	JUri::root( true );
 
+			if ( $root_path && $root_path != '/' ) {
+				$base_path	=	substr( $base_path, strlen( $root_path ) );
+			}
+			
 			if ( JCckDevHelper::isMultilingual( true ) ) {
 				$language_codes	=	JCckDevHelper::getLanguageCodes();
 
