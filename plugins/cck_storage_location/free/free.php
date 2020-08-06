@@ -342,10 +342,12 @@ class plgCCK_Storage_LocationFree extends JCckPluginLocation
 					self::_core( $data, $config );
 				} else {
 					if ( ! isset( $config['primary'] ) && self::$pk ) {
-						$id	=	self::_core( $data, $config );
+						if ( $isNew ) {
+							$id	=	self::_core( $data, $config );
 
-						if ( !$config['id'] ) {
-							$config['id']	=	$id;
+							if ( !$config['id'] ) {
+								$config['id']	=	$id;
+							}
 						}
 					}
 				}
