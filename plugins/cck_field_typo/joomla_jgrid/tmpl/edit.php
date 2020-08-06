@@ -53,16 +53,16 @@ JCckDev::initScript( 'typo', $this->item );
 jQuery(document).ready(function($) {
 	$('#class').isVisibleWhen('type','activation,block,featured,state');
 	$('#class1').isVisibleWhen('type','dropdown,selection');
-	$('#class2,#identifier').isVisibleWhen('type','form,form_disabled,form_hidden');
-	$('#identifier_name').isVisibleWhen('type','form,form_disabled,form_hidden,increment');
+	$('#class2,#identifier').isVisibleWhen('type','form,form_disabled,form_hidden,form_custom_number');
+	$('#identifier_name').isVisibleWhen('type','form,form_disabled,form_hidden,form_custom_number,increment');
 	$('#task').isVisibleWhen('type','sort');
 	$('#blank_li2,#task_id_process').isVisibleWhen('task','process_ajax');	
 
 	$('#identifier_suffix').isDisabledWhen('type','increment');
 	$('#blank_li').isVisibleWhen('type','increment');
 	$('#start').isVisibleWhen('type','increment');
-	$('#required').isVisibleWhen('type','form');
-	$('#trigger').isVisibleWhen('type','form,selection');
+	$('#required').isVisibleWhen('type','form,form_custom_number');
+	$('#trigger').isVisibleWhen('type','form,form_custom_number,selection');
 	$('#state_up,#state_down,#state_title').isVisibleWhen('type','state');
 	$('#required2').isVisibleWhen('required','grouprequired');
 });

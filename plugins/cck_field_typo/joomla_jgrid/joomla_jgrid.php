@@ -108,8 +108,16 @@ class plgCCK_Field_TypoJoomla_Jgrid extends JCckPluginTypo
 				$config['formWrapper']	=	true;
 				break;
 			case 'form':
+			case 'form_custom_number':
 			case 'form_disabled':
 			case 'form_hidden':
+				if ( $type == 'form_custom_number' ) {
+					$type	=	'form';
+					$type2	=	'custom_number';
+				} else {
+					$type2	=	'';
+				}
+
 				$class				=	$typo->get( 'class2', '' );
 				$unset_validation	=	false;
 
@@ -171,6 +179,14 @@ class plgCCK_Field_TypoJoomla_Jgrid extends JCckPluginTypo
 					}
 				}
 				
+				if ( $type2 ) {
+					$field->variation	=	$type2;
+				}
+
+				/* TODO#SEBLOD4 temporary fix */
+				$field->options			=	JCckDatabase::loadResult( 'SELECT options FROM #__cck_core_fields WHERE name = "'.$field->name.'"' );
+				/* TODO#SEBLOD4 */
+
 				JEventDispatcher::getInstance()->trigger( 'onCCK_FieldPrepareForm', array( &$field, $field->value, &$config, $inherit ) );
 				
 				$field->form			=	JCck::callFunc_Array( 'plgCCK_Field'.$field->type, 'onCCK_FieldRenderForm', array( $field, &$config ) );
