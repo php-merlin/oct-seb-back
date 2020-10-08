@@ -23,7 +23,7 @@ if ( $hide && JCckDevHelper::matchUrlVars( $hide ) !== false ) {
 jimport( 'cck.base.item.item' );
 
 $id		=	CCK_Item::getAssociation( $params->get( 'id', '' ), ( (int)$params->get( 'auto_translate', '1' ) ? false : true ) );
-$data	=	CCK_Item::render( $id );
+$data	=	CCK_Item::render( $id, null, ( (int)$params->get( 'enable_caching', '1' ) ? true : false ) );
 
 $raw_rendering		=	$params->get( 'raw_rendering', JCck::getConfig_Param( 'raw_rendering', '1' ) );
 $moduleclass_sfx	=	htmlspecialchars( $params->get( 'moduleclass_sfx' ) );
