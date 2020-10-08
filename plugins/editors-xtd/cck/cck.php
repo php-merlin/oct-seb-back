@@ -57,7 +57,7 @@ class plgButtonCCK extends JPlugin
 						(function ($){
 							JCck.More.ButtonXtd = {
 								link_select:"'.htmlspecialchars_decode( $link ).'",
-								modal: JCck.Core.getModal({"backclose":false,"class":"modal-picker modal-backend","title":"'.JText::_( 'COM_CCK_ADD' ).' / '.JText::_( 'COM_CCK_EDIT' ).'"}),
+								modal: JCck.Core.getModal({"backclose":false,"class":"modal-picker modal-backend o-modal-stretch","title":"'.JText::_( 'COM_CCK_ADD' ).' / '.JText::_( 'COM_CCK_EDIT' ).'"}),
 								token:"'.JSession::getFormToken().'=1",
 								insertText: function(editor,link,text) {
 									var selection = window.parent.Joomla.editors.instances[editor].instance.selection.getContent();
