@@ -200,7 +200,9 @@ class plgCCK_Field_TypoJoomla_Jgrid extends JCckPluginTypo
 					if ( !$validation_loaded )	{
 						$validation_loaded		=	1;
 					} else {
-						$config['validation']	=	null;
+						if ( $i > 1 ) {
+							$config['validation']	=	null;
+						}
 					}
 				}
 
@@ -209,6 +211,7 @@ class plgCCK_Field_TypoJoomla_Jgrid extends JCckPluginTypo
 				} else {
 					$config['doValidation']	=	$doValidation;
 				}
+				
 				break;
 			case 'increment':
 				$identifier_name	=	$typo->get( 'identifier_name', '' );
