@@ -954,7 +954,7 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 						if ( $legacy ) {
 							$where		=	' AND b.alias_'.$lang_sef.' = '.JCckDatabase::quote( $segments[$idx] );
 						} else {
-							$where		=	' AND JSON_EXTRACT(b.aliases, '.JCckDatabase::quote('$."'.$lang_tag.'"').') = '.JCckDatabase::quote( $segments[$idx] );
+							$where		=	' AND JSON_EXTRACT(b.aliases, '.JCckDatabase::quote('$."'.$lang_tag.'"').') = '.JCckDatabase::quote( strtolower( $segments[$idx] ) );
 						}
 						
 					} else {
@@ -973,7 +973,7 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 							if ( $legacy ) {
 								$where		.=	' AND d.alias_'.$lang_sef.' = '.JCckDatabase::quote( $segments[$idx] );
 							} else {
-								$where		.=	' AND JSON_EXTRACT(d.aliases, '.JCckDatabase::quote('$."'.$lang_tag.'"').') = '.JCckDatabase::quote( $segments[$idx] );
+								$where		.=	' AND JSON_EXTRACT(d.aliases, '.JCckDatabase::quote('$."'.$lang_tag.'"').') = '.JCckDatabase::quote( strtolower( $segments[$idx] ) );
 							}
 							
 						} else {
@@ -1021,9 +1021,9 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 				$join		.=	' LEFT JOIN #__cck_store_item_content AS f on f.id = a.id';
 
 				if ( $legacy ) {
-					$where		=	' WHERE f.alias_'.$lang_sef.' = '.JCckDatabase::quote( $segments[$n - 1] ).$where;
+					$where	=	' WHERE f.alias_'.$lang_sef.' = '.JCckDatabase::quote( $segments[$n - 1] ).$where;
 				} else {
-					$where		=	' WHERE JSON_EXTRACT(f.aliases, '.JCckDatabase::quote('$."'.$lang_tag.'"').') = '.JCckDatabase::quote( $segments[$n - 1] ).$where;
+					$where	=	' WHERE JSON_EXTRACT(f.aliases, '.JCckDatabase::quote('$."'.$lang_tag.'"').') = '.JCckDatabase::quote( strtolower( $segments[$n - 1] ) ).$where;
 				}
 			} else {
 				$where		=	' WHERE a.alias = '.JCckDatabase::quote( $segments[$n - 1] ).$where;

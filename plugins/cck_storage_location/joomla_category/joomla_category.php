@@ -860,9 +860,9 @@ class plgCCK_Storage_LocationJoomla_Category extends JCckPluginLocation
 				$join			.=	' LEFT JOIN #__cck_store_item_categories AS f on f.id = a.id';
 
 				if ( $legacy ) {	
-					$where			=	' WHERE f.alias_'.$lang_sef.' = '.JCckDatabase::quote( $segments[$n - 1] ).$where;
+					$where		=	' WHERE f.alias_'.$lang_sef.' = '.JCckDatabase::quote( $segments[$n - 1] ).$where;
 				} else {
-					$where			=	' WHERE JSON_EXTRACT(f.aliases, '.JCckDatabase::quote('$."'.$lang_tag.'"').') = '.JCckDatabase::quote( $segments[$n - 1] ).$where;
+					$where		=	' WHERE JSON_EXTRACT(f.aliases, '.JCckDatabase::quote('$."'.$lang_tag.'"').') = '.JCckDatabase::quote( strtolower( $segments[$n - 1] ) ).$where;
 				}
 			} else {
 				$where			=	' WHERE a.alias = '.JCckDatabase::quote( $segments[$n - 1] ).$where;
