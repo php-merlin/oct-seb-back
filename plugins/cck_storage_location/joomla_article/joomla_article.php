@@ -562,7 +562,7 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 	// _completeTable
 	protected function _completeTable( &$table, &$data, &$config )
 	{
-		if ( $table->state == 1 && (int)$table->publish_up == 0 ) {
+		if ( (int)$table->publish_up == 0 ) {
 			$table->publish_up	=	substr( JFactory::getDate()->toSql(), 0, -3 );
 		}
 		if ( ! $table->{self::$key} ) {

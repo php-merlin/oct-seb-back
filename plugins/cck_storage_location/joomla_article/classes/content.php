@@ -30,7 +30,7 @@ class JCckContentJoomla_Article extends JCckContentJoomla_ArticlePlaceholder
 			if ( property_exists( $this->_instance_base, 'language' ) && $this->_instance_base->language == '' ) {
 				$this->_instance_base->language	=	'*';
 			}
-			if ( $this->_instance_base->state == 1 && (int)$this->_instance_base->publish_up == 0 ) {
+			if ( (int)$this->_instance_base->publish_up == 0 ) {
 				$this->_instance_base->publish_up	=	substr( JFactory::getDate()->toSql(), 0, -3 );
 			}
 		}
