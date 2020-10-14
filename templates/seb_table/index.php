@@ -97,7 +97,7 @@ if ( $cck->id_class && !$isMore ) {
 					}
 				}
 				if ( $isResponsive ) {
-					$attr['label'][$name]	=	' data-label="'.$legend.'"';
+					$attr['label'][$name]	=	' data-label="'.strip_tags( $legend ).'"';
 				}
 			}
 		} else {
@@ -105,7 +105,7 @@ if ( $cck->id_class && !$isMore ) {
 				$legend					=	trim( $position->legend2 );
 				$legend2				=	$legend;
 				if ( $isResponsive ) {
-					$attr['label'][$name]	=	' data-label="'.$legend.'"';
+					$attr['label'][$name]	=	' data-label="'.strip_tags( $legend ).'"';
 				}
 			}
 		}
