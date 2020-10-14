@@ -1119,8 +1119,9 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 		$route		=	'';
 
 		if ( is_numeric( $item ) ) {
-			$join	=	'';
-			$select	=	( $sef[0] == '5' ) ? ', a.created_by, dd.alias AS author_alias' : '';
+			$join		=	'';
+			$sef_slug	=	false;
+			$select		=	( $sef[0] == '5' ) ? ', a.created_by, dd.alias AS author_alias' : '';
 
 			if ( JCckDevHelper::isMultilingual() ) {
 				$lang_tag		=	JFactory::getLanguage()->getTag();
@@ -1135,10 +1136,12 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 						$select		.=	', c.alias_'.$lang_sef.' AS alias, d.alias_'.$lang_sef.' AS category_alias';
 					} else {
 						$select		.=	', JSON_UNQUOTE(JSON_EXTRACT(c.aliases, '.JCckDatabase::quote('$."'.$lang_tag.'"').')) AS alias'
-									.	', JSON_UNQUOTE(JSON_EXTRACT(d.aliases, '.JCckDatabase::quote('$."'.$lang_tag.'"').')) AS category_alias';
+									.	', JSON_UNQUOTE(JSON_EXTRACT(d.aliases, '.JCckDatabase::quote('$."'.$lang_tag.'"').')) AS category_alias'
+									.	', JSON_UNQUOTE(JSON_EXTRACT(g2.aliases, '.JCckDatabase::quote('$."'.$lang_tag.'"').')) AS category_parent_alias';
 					}
-					
-					$join		.=	' LEFT JOIN #__cck_store_item_content AS c ON c.id = a.id'
+				
+					$join		.=	' LEFT JOIN #__categories AS b ON b.id = a.catid'
+								.	' LEFT JOIN #__cck_store_item_content AS c ON c.id = a.id'
 								.	' LEFT JOIN #__cck_store_item_categories AS d ON d.id = a.catid';
 				}
 			}
@@ -1156,10 +1159,17 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 				$query	.=	' LEFT JOIN #__cck_core AS cc ON (c.storage_location = "joomla_user" AND cc.pk = a.created_by)'
 						.	' LEFT JOIN #__content AS dd ON d.id = cc.pkb';
 			}
+
+			if ( $sef_slug ) {
+				$query			.=	' LEFT JOIN #__categories AS b2 on b2.id = b.parent_id'
+								.	' LEFT JOIN #__cck_store_item_categories AS g2 on g2.id = b2.id'
+								;
+			}
+
 			$query	.=	' WHERE a.id = '.(int)$item;
 			
 			$item	=	JCckDatabaseCache::loadObject( $query );
-			
+
 			if ( empty( $item ) ) {
 				return '';
 			}
@@ -1170,14 +1180,18 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 		
 		$pk			=	( isset( $item->pk ) ) ? $item->pk : $item->id;
 		$item->slug	=	( $item->alias ) ? $pk.':'.$item->alias : $pk;
-		
+
 		if ( $sef ) {
 			if ( $sef == '0' || $sef == '1' ) {
 				$path	=	'&catid='.$item->catid;
 			} elseif ( $sef[0] == '5' ) {
 				$path	=	'&userid='.( isset( $item->author_alias ) ? $item->author_alias : $item->created_by );
 			} elseif ( $sef[0] == '4' || $sef[0] == '8' ) {
-				$path	=	'&catid='.( isset( $item->category_alias ) ? $item->category_alias : $item->catid );
+				$path	=	isset( $item->category_alias ) ? $item->category_alias : $item->catid;
+				if ( isset( $item->category_parent_alias ) && $item->category_parent_alias ) {
+					$path	=	$item->category_parent_alias.'/'.$path;
+				}
+				$path	=	'&catid='.$path;
 			} elseif ( $sef[0] == '3' ) {
 				$path	=	( $config['type'] ) ? '&typeid='.$config['type'] : '';
 			} else {
@@ -1188,7 +1202,7 @@ class plgCCK_Storage_LocationJoomla_Article extends JCckPluginLocation
 			require_once JPATH_SITE.'/components/com_content/helpers/route.php';
 			$route		=	ContentHelperRoute::getArticleRoute( $item->slug, $item->catid, $item->language );
 		}
-		
+
 		return $route;
 	}
 

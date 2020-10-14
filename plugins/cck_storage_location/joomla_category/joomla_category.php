@@ -962,6 +962,9 @@ class plgCCK_Storage_LocationJoomla_Category extends JCckPluginLocation
 		$route		=	'';
 
 		if ( is_numeric( $item ) ) {
+			if ( !self::$sef_aliases && $sef_aliases != $config['sef_aliases'] ) {
+				self::$sef_aliases	=	$config['sef_aliases'];
+			}
 			$item	=	self::_getTable( (int)$item, true );
 
 			if ( empty( $item ) ) {
