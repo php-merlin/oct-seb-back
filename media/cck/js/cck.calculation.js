@@ -242,7 +242,7 @@
 		for( var k in vars ){
 			// replace the keys in the expression
 			// k = String.fromCharCode(97+i);
-			expr = expr.replace( (new RegExp("(" + k + ")", "g")), "_.$1");
+			expr = expr.replace( (new RegExp("(" + k + ")", "g")), "_.$1").replace("M_.a","Ma");
 			if( !!vars[k] && !!vars[k].jquery ){
 				target[0] = targets[i];
 				parsedVars[k] = vars[k].parseNumber(target);
@@ -251,7 +251,7 @@
 			}
 			i++;
 		}
-		
+
 		this.each(
 			function (i, el, el2){
 				var p, len, v;
