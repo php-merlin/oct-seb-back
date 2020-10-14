@@ -139,6 +139,7 @@ class plgCCK_FieldJform_Calendar extends JCckPluginField
 		// Prepare
 		$attr		=	'';
 		$class		=	'inputbox text'.$validate . ( $field->css ? ' '.$field->css : '' );
+		$desc		=	$field->description;
 		$readonly	=	( $field->variation == 'disabled' ) ? 'disabled="disabled"' : '';
 
 		if ( $field->attributes != '' ) {
@@ -171,6 +172,9 @@ class plgCCK_FieldJform_Calendar extends JCckPluginField
 			$form	=	$form->getInput( $name, '', $value );
 			$form	=	str_replace( 'btn btn-secondary', 'hasTooltip', $form );
 
+			if ( $desc ) {
+				$form	=	str_replace( 'title="'.JText::_( 'JLIB_HTML_BEHAVIOR_OPEN_CALENDAR' ).'"', 'title="'.$desc.'"', $form );
+			}
 			if ( JFactory::getApplication()->input->get( 'tmpl' ) == 'raw' ) {
 				$form	=	str_replace( 'class="field-calendar"', 'class="field-calendar raw"', $form );
 				$form	.=	self::_addScript();
@@ -179,6 +183,9 @@ class plgCCK_FieldJform_Calendar extends JCckPluginField
 			}
 
 			$form	=	str_replace( '<input ', '<input '.trim( $attr ).' ', $form );
+		}
+		if ( $desc ) {
+			$field->description	=	'';
 		}
 		
 		// Set
