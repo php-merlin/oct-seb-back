@@ -58,8 +58,8 @@ if ( $id_class && !$isMore ) {
 <div class="<?php echo trim( $cck->id_class ); ?>"<?php echo ( $cck->id_attributes ? ' '.$cck->id_attributes : '' ); ?>><?php }
 echo $cck->renderPosition( '_above_' );
 if ( !( $isRaw || $isMore ) ) { ?>
-<<?php echo $tags[0]; ?><?php echo $class.$custom_attr; ?>>
-<?php }
+<<?php echo $tags[0]; ?><?php echo $class.$custom_attr; ?>><?php
+	}
 	if ( $count ) {
 		if ( $display_mode == 2 ) {
 			foreach ( $items as $item ) {
