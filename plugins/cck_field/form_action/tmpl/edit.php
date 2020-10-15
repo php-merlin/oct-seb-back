@@ -20,6 +20,8 @@ $options2   =   JCckDev::fromJSON( $this->item->options2 );
 	<?php echo JCckDev::renderLegend( JText::_( 'COM_CCK_CONSTRUCTION' ), JText::_( 'PLG_CCK_FIELD_'.$this->item->type.'_DESC' ) ); ?>
     <ul class="adminformlist adminformlist-2cols">
         <?php
+        echo JCckDev::renderForm( 'core_dev_bool', $this->item->bool4, $config, array( 'label'=>'Behavior', 'defaultvalue'=>'0', 'options'=>'Start=0||End=1', 'storage_field'=>'bool4' ) );
+        echo JCckDev::renderBlank();
         echo JCckDev::renderForm( 'core_bool', $this->item->bool, $config, array( 'defaultvalue'=>0, 'label'=>'Action', 'options'=>'Auto=0||Custom=1' ) );
         echo '<li><label>'.JText::_( 'COM_CCK_ACTION_ANCHOR' ).'</label>'
          .   JCckDev::getForm( 'core_bool2', $this->item->bool2, $config, array( 'defaultvalue'=>0, 'options'=>'None=0||Custom=1||Form ID=2' ) )
@@ -29,7 +31,7 @@ $options2   =   JCckDev::fromJSON( $this->item->options2 );
         
         echo JCckDev::renderForm( 'core_method', @$options2['method'], $config );
         echo JCckDev::renderForm( 'core_bool', @$options2['autocomplete'], $config, array( 'label'=>'Autocomplete', 'defaultvalue'=>'0', 'storage_field'=>'json[options2][autocomplete]' ) );        
-        echo JCckDev::renderForm( 'core_menuitem', @$options2['itemid'], $config, array( 'selectlabel'=>'Inherited', 'storage_field'=>'json[options2][itemid]' ) );
+        echo JCckDev::renderForm( 'core_menuitem', @$options2['itemid'], $config, array( 'selectlabel'=>'Inherited', 'options'=>'Parent=-1', 'storage_field'=>'json[options2][itemid]' ) );
         
         echo JCckDev::renderForm( 'core_options_enctype', @$options2['enctype'], $config );
         echo JCckDev::renderForm( 'core_options_target', @$options2['target'], $config, array( 'defaultvalue'=>'_self', 'options'=>'Target Blank=_blank||Target IFrame=iframe||Target Parent=_parent||Target Self=_self||Target Top=_top' ) );
@@ -46,6 +48,8 @@ $options2   =   JCckDev::fromJSON( $this->item->options2 );
 
 <script type="text/javascript">
 jQuery(document).ready(function($) {
+    $('#bool,#bool2,#json_options2_method,#json_options2_autocomplete,#json_options2_itemid,#json_options2_target,#bool3').isVisibleWhen('bool4','0');
+
     $('#json_options2_action').isVisibleWhen('bool','1');
     $('#json_options2_anchor').isVisibleWhen('bool2','1',false);
     $('#json_options2_enctype').isVisibleWhen('json_options2_method','post');

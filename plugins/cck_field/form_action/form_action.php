@@ -66,6 +66,84 @@ class plgCCK_FieldForm_Action extends JCckPluginField
 		if ( self::$type != $field->type ) {
 			return;
 		}
+
+		if ( $field->bool4 ) {
+			$formId	=	$config['formId'];
+			$js	=	'';
+
+			if ( (int)JCck::getConfig_Param( 'validation', '3' ) > 1 && $config['validation'] != '' ) {
+				$config['validation']	=	( count( $config['validation'] ) ) ? implode( ',', $config['validation'] ) : '';
+				$opts					=	 JCckDatabase::loadResult( 'SELECT options FROM #__cck_core_searchs WHERE name ="'.JCckDatabase::escape( (string)$config['type'] ).'"' );
+				$options				=	new JRegistry;
+
+				if ( $opts ) {
+					$options->loadString( $opts );
+				}
+
+				JCckDev::addValidation( $config['validation'], $options, $formId );
+				
+				// $js	=	'if (jQuery("#'.$formId.'").validationEngine("validate",task) === true) { if (jQuery("#'.$formId.'").isStillReady() === true) { jQuery("#'.$formId.' input[name=\'config[unique]\']").val("'.$formId.'"); JCck.Core.submitForm("save", document.getElementById("'.$formId.'")); } }';
+			} else {
+				// ??
+			}
+			if ( $js ) {
+				$html	.=	'<script type="text/javascript">'
+						.	$config['submit'].' = function(task) { '.$js.' }'
+						.	'</script>';
+			}
+
+			$html	.=	'</form>';
+		} else {
+			$app		=	JFactory::getApplication();
+			$options2	=	new JRegistry( $field->options2 );
+
+			$config['doValidation']			=	(int)JCck::getConfig_Param( 'validation', '3' );
+			$config['validate']				=	array();
+			$config['validation']			=	array();
+			$config['validation_options']	=	array();
+
+			// Validation
+			if ( $config['doValidation'] > 1 ) {
+				JFactory::getLanguage()->load( 'plg_cck_field_validation_required', JPATH_ADMINISTRATOR, null, false, true );
+
+				require_once JPATH_PLUGINS.'/cck_field_validation/required/required.php';
+			}
+
+			$action			=	$options2->get( 'action', '' );
+			$autocomplete	=	$options2->get( 'autocomplete', 0 ) ? 'on' : 'off';
+			$class			=	( $field->css ? ' class="'.$field->css.'"' : '' );
+			$enctype		=	$options2->get( 'enctype', '' );
+			$itemId			=	$options2->get( 'itemid', '' );
+			$method			=	$options2->get( 'method', 'get' );
+			$target			=	$options2->get( 'target', '_self' );
+
+			if ( $field->bool ) {
+				//
+			} else {
+				if ( $itemId ) {
+					if ( (int)$itemId == -1 ) {
+						$menu	=	$app->getMenu()->getActive();
+
+						if ( is_object( $menu ) ) {
+							$itemId	=	$menu->parent_id;
+						}
+					}
+					$action		=	 JRoute::_( 'index.php?Itemid='.$itemId );
+				} else {
+					$action		=	 JRoute::_( 'index.php?option=com_cck' );
+				}
+			}
+
+			$enctype		=	( $enctype && $method == 'post' ) ? ' enctype="'.$enctype.'"' : '';
+			$target			=	( $target ) ? ' target="'.$target.'"' : '';
+			$html			=	'<form'.$enctype.$target.' action="'.$action.'" autocomplete="'.$autocomplete.'" method="'.$method.'" id="'.$config['formId'].'" name="'.$config['formId'].'"'.$class.'>';
+		}
+
+		// Set
+		$field->display	=	1;
+		$field->html	=	$html;
+		$field->value	=	'';
+		$field->label	=	'';
 	}
 	
 	// onCCK_FieldPrepareForm
@@ -105,7 +183,7 @@ class plgCCK_FieldForm_Action extends JCckPluginField
 					if ( $itemId ) {
 						$action		=	 JRoute::_( 'index.php?Itemid='.$itemId );
 					} else {
-						$action		=	 JRoute::_( 'index.php?option='.JFactory::getApplication()->input->get( 'option' ) );
+						$action		=	 JRoute::_( 'index.php?option=com_cck' );
 					}
 				}
 				if ( $field->bool2 == '2' ) {
@@ -161,7 +239,9 @@ class plgCCK_FieldForm_Action extends JCckPluginField
 	// onCCK_FieldRenderContent
 	public static function onCCK_FieldRenderContent( $field, &$config = array() )
 	{
-		return parent::g_onCCK_FieldRenderContent( $field );
+		$field->markup	=	'none';
+		
+		return parent::g_onCCK_FieldRenderContent( $field, 'html' );
 	}
 	
 	// onCCK_FieldRenderForm
