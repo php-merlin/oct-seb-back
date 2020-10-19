@@ -666,6 +666,12 @@ class plgCCK_FieldSelect_Dynamic extends JCckPluginField
 		$results	=	array();
 		$optgroup	=	0;
 		$options	=	explode( '||', $options );
+
+		/*
+		if ( isset( $field->typo_target ) ) {
+			return $results;
+		}
+		*/
 		if ( $field->bool8 ) {
 			$field->bool8	=	$config['doTranslation'];
 		}
