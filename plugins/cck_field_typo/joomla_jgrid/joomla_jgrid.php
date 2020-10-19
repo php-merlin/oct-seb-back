@@ -383,7 +383,7 @@ class plgCCK_Field_TypoJoomla_Jgrid extends JCckPluginTypo
 					$output->loadValue( $process['value'] );
 					$value	=	preg_replace( '#title=".*"#U', 'title="'.$output->getText().'"', $value );
 				}
-				$value		=	preg_replace( '#class="[a-zA-Z0-9\-\ ]*" #U', 'class="'.$class.'"', $value );
+				$value		=	preg_replace( '#class="[a-zA-Z0-9\-\ ]*" #U', 'class="'.$class.'" ', $value );
 			}
 
 			$fields[$name]->typo	=	$value;
@@ -450,7 +450,7 @@ class plgCCK_Field_TypoJoomla_Jgrid extends JCckPluginTypo
 					} else {
 						$value	=	str_replace( array( 'title=""', 'title="COM_USERS_ACTIVATED"' ), 'title="'.JText::_( $title ).'"', $value );
 					}
-					$value		=	preg_replace( '#class="[a-zA-Z0-9\-\ ]*" #U', 'class="'.$class.'"', $value );
+					$value		=	preg_replace( '#class="[a-zA-Z0-9\-\ ]*" #U', 'class="'.$class.'" ', $value );
 				}
 				/*
 				$value		=	str_replace( 'return listItemTask(', 'return JCck.Core.doTask(', $value );
@@ -484,7 +484,7 @@ class plgCCK_Field_TypoJoomla_Jgrid extends JCckPluginTypo
 					} else {
 						$value	=	str_replace( 'title=""', 'title="'.JText::_( $title ).'"', $value );
 					}
-					$value		=	preg_replace( '#class="[a-zA-Z0-9\-\ ]*" #U', 'class="'.$class.'"', $value );
+					$value		=	preg_replace( '#class="[a-zA-Z0-9\-\ ]*" #U', 'class="'.$class.'" ', $value );
 				}
 				/*
 				$value		=	str_replace( 'return listItemTask(', 'return JCck.listItemTask(', $value );
