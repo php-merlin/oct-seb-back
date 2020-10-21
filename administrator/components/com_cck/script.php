@@ -158,27 +158,23 @@ class com_cckInstallerScript
 			JFolder::delete( $src );
 		}
 
-		// Additional stuff: /project
-		if ( $type == 'install' ) {	
-			$src	=	JPATH_ADMINISTRATOR.'/components/com_cck/install/project';
-			
-			if ( JFolder::exists( $src ) ) {
-				if ( !JFolder::exists( JPATH_SITE.'/project' ) ) {
-					JFolder::copy( $src, JPATH_SITE.'/project', '', true );
-				}
-				JFolder::delete( $src );
-			}
-		}
+		// Additional stuff: /project|private|resources
+		if ( $type == 'install' ) {
+			$folders	=	array(
+								'private',
+								'project',
+								'resources'
+							);
 
-		// Additional stuff: /resources
-		if ( $type == 'install' ) {	
-			$src	=	JPATH_ADMINISTRATOR.'/components/com_cck/install/resources';
-			
-			if ( JFolder::exists( $src ) ) {
-				if ( !JFolder::exists( JPATH_SITE.'/resources' ) ) {
-					JFolder::copy( $src, JPATH_SITE.'/resources', '', true );
+			foreach ( $folders as $folder ) {
+				$src	=	JPATH_ADMINISTRATOR.'/components/com_cck/install/'.$folder;
+				
+				if ( JFolder::exists( $src ) ) {
+					if ( !JFolder::exists( JPATH_SITE.'/'.$folder ) ) {
+						JFolder::copy( $src, JPATH_SITE.'/'.$folder, '', true );
+					}
+					JFolder::delete( $src );
 				}
-				JFolder::delete( $src );
 			}
 		}
 	}
