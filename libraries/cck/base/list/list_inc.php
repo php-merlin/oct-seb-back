@@ -740,8 +740,19 @@ if ( $preconfig['show_form'] > 0 ) {
 	$infos			=	array( 'context'=>'', 'params'=>$templateStyle->params, 'path'=>$path, 'root'=>JUri::root( true ), 'template'=>$templateStyle->name, 'theme'=>$tpl['home'] );
 	$doc->finalize( 'form', $search->name, $config['client'], $positions, $positions_more, $infos );
 	$form			=	$doc->render( false, $rparams );
-} elseif ( $preconfig['show_form'] && $preconfig['task'] != 'search' ) {
-	$doc->fields	=	&$fields['search'];
+} elseif ( $preconfig['show_form'] ) {
+	// BeforeRender
+	if ( isset( $config['process']['beforeRenderForm'] ) && count( $config['process']['beforeRenderForm'] ) ) {
+		foreach ( $config['process']['beforeRenderForm'] as $process ) {
+			if ( $process->type ) {
+				JCck::callFunc_Array( 'plg'.$process->group.$process->type, 'on'.$process->group.'beforeRenderForm', array( $process->params, &$fields['search'], &$config['storages'], &$config ) );
+			}
+		}
+	}
+
+	if ( $preconfig['task'] != 'search' ) {
+		$doc->fields	=	&$fields['search'];
+	}
 }
 
 // Validation
