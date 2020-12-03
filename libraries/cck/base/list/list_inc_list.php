@@ -110,6 +110,14 @@ if ( $go_for_item || $go_for_both ) {
 	include JPATH_SITE.'/libraries/cck/base/list/list_inc_list_items.php';
 }
 
+$config	=	array(
+				'client'=>'list',
+				'doTranslation'=>$config_list['doTranslation'],
+				'ids'=>( isset( $config['ids'] ) ? $config['ids'] : '' ),
+				'pks'=>( isset( $config['pks'] ) ? $config['pks'] : '' ),
+				'total'=>$config_list['total']
+			);
+
 foreach ( $fields as $field ) {
 	if ( $field->position == '_above_' || $field->position == '_below_' ) {
 		if ( !$field->name ) {
@@ -192,8 +200,6 @@ foreach ( $fields as $field ) {
 		} else {
 			$field->typo	=	'';
 		}
-
-
 
 		// Set Field
 		$doc->fields[$fieldName]	=	$field;

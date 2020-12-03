@@ -270,6 +270,9 @@ if ( $count ) {
 			if ( isset( $config['validation'] ) ) {
 				$validation	=	$config['validation'];
 			}
+			if ( $config['formWrapper'] ) {
+				$form_wrapper	=	$config['formWrapper'];
+			}
 		}
 
 		if ( $count3 ) {
@@ -446,6 +449,10 @@ if ( $count ) {
 			}
 
 			$item->fields_list		=	$fieldsI;
+
+			if ( $config['formWrapper'] ) {
+				$form_wrapper		=	$config['formWrapper'];
+			}
 		}
 		
 		// --

@@ -358,28 +358,29 @@ class CCK_List
 	// render
 	public static function render( $items, $search, $path, $client, $itemId, $options, $config_list )
 	{
-		$access	=	implode( ',', JFactory::getUser()->getAuthorisedViewLevels() );
-		$app	=	JFactory::getApplication();
-		$data	=	array(
-						'buffer'=>'',
-						'config'=>array()
-					);
-		$list	=	array(
-						'doSEF'=>$config_list['doSEF'],
-						'formId'=>$config_list['formId'],
-						'isCore'=>$config_list['doQuery'],
-						'itemId'=>( ( $itemId == '' ) ? $app->input->getInt( 'Itemid', 0 ) : $itemId ),
-						'location'=>$config_list['location'],
-						'sef_aliases'=>$config_list['sef_aliases']
-					);
+		$access			=	implode( ',', JFactory::getUser()->getAuthorisedViewLevels() );
+		$app			=	JFactory::getApplication();
+		$data			=	array(
+								'buffer'=>'',
+								'config'=>array()
+							);
+		$form_wrapper	=	false;
+		$list			=	array(
+								'doSEF'=>$config_list['doSEF'],
+								'formId'=>$config_list['formId'],
+								'isCore'=>$config_list['doQuery'],
+								'itemId'=>( ( $itemId == '' ) ? $app->input->getInt( 'Itemid', 0 ) : $itemId ),
+								'location'=>$config_list['location'],
+								'sef_aliases'=>$config_list['sef_aliases']
+							);
 		
 		include JPATH_SITE.'/libraries/cck/base/list/list_inc_list.php';
 
 		if ( $validation ) {
 			$data['config']['formValidation']	=	$validation;
 		}
-		if ( isset( $config['formWrapper'] ) && $config['formWrapper'] ) {
-			$data['config']['formWrapper']	=	$config['formWrapper'];
+		if ( $form_wrapper ) {
+			$data['config']['formWrapper']	=	$form_wrapper;
 		}
 		if ( $options->get( 'prepare_content', JCck::getConfig_Param( 'prepare_content', 0 ) ) ) {
 			JPluginHelper::importPlugin( 'content' );

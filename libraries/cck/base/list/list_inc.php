@@ -612,6 +612,13 @@ if ( $preconfig['task'] == 'search' ) {
 			}
 		} else {
 			$no_action	=	$options->get( 'action', '' );
+
+			// --
+			if ( is_object( $options2 ) && $options2->get( 'action', '' ) == '0' && $options2->get( 'action', '' ) != $no_action ) {
+				$no_action	=	$options2->get( 'action', '' );
+			}
+			// --
+
 			$no_message	=	$options->get( 'message', '' );
 			$no_style	=	$options->get( 'message_style', 'message' );
 			
