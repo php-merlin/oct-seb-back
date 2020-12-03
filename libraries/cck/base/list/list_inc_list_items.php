@@ -74,7 +74,6 @@ if ( $count ) {
 			$items[$i]->pk				=	$i;
 			$items[$i]->pkb				=	0;
 			$items[$i]->type_id			=	0;
-			$items[$i]->type_alias		=	'';
 		}
 		$item	=	new CCK_Rendering_Item( $templateStyle->name, $search->name, $items[$i]->pk );
 		
@@ -102,8 +101,7 @@ if ( $count ) {
 								'sef_aliases'=>$list['sef_aliases'],
 								'storages'=>array(),
 								'type'=>$items[$i]->cck,
-								'type_id'=>(int)$items[$i]->type_id,
-								'type_alias'=>( $items[$i]->type_alias ? $items[$i]->type_alias : $items[$i]->cck )
+								'type_id'=>(int)$items[$i]->type_id
 							);
 			$fieldsI	=	array();
 			$unset		=	array();
@@ -140,7 +138,7 @@ if ( $count ) {
 								$dispatcher->trigger( 'onCCK_Storage_LocationPrepareItems', array( &$field, &$storages, $config['pks'], &$config, true ) );
 								$config['storages'][$Pt]				=	isset( $storages[$Pt][$config['pk']] ) ? $storages[$Pt][$config['pk']] : null;
 								if ( $storages['_'] && !isset( $config['storages'][$storages['_']] ) ) {
-									$config['storages'][$storages['_']]	=	$storages[$storages['_']][$config['pk']];
+									$config['storages'][$storages['_']]	=	@$storages[$storages['_']][$config['pk']];
 								}
 							}
 						} else {
@@ -150,7 +148,7 @@ if ( $count ) {
 								$dispatcher->trigger( 'onCCK_Storage_LocationPrepareItems', array( &$field, &$storages, $config['pks'], &$config, false ) );
 								$config['storages'][$Pt]				=	isset( $storages[$Pt][$config['pk']] ) ? $storages[$Pt][$config['pk']] : null;
 								if ( $storages['_'] && !isset( $config['storages'][$storages['_']] ) ) {
-									$config['storages'][$storages['_']]	=	$storages[$storages['_']][$config['pk']];
+									$config['storages'][$storages['_']]	=	@$storages[$storages['_']][$config['pk']];
 								}
 							}
 						}
@@ -297,8 +295,7 @@ if ( $count ) {
 								'sef_aliases'=>$list['sef_aliases'],
 								'storages'=>array(),
 								'type'=>$items[$i]->cck,
-								'type_id'=>(int)$items[$i]->type_id,
-								'type_alias'=>( $items[$i]->type_alias ? $items[$i]->type_alias : $items[$i]->cck )
+								'type_id'=>(int)$items[$i]->type_id
 							);
 			$fieldsI	=	array();
 			$unset		=	array();
@@ -332,7 +329,7 @@ if ( $count ) {
 								$dispatcher->trigger( 'onCCK_Storage_LocationPrepareItems', array( &$field, &$storages, $config['pks'], &$config, true ) );
 								$config['storages'][$Pt]				=	isset( $storages[$Pt][$config['pk']] ) ? $storages[$Pt][$config['pk']] : null;
 								if ( $storages['_'] && !isset( $config['storages'][$storages['_']] ) ) {
-									$config['storages'][$storages['_']]	=	$storages[$storages['_']][$config['pk']];
+									$config['storages'][$storages['_']]	=	@$storages[$storages['_']][$config['pk']];
 								}
 							}
 						} else {
@@ -342,7 +339,7 @@ if ( $count ) {
 								$dispatcher->trigger( 'onCCK_Storage_LocationPrepareItems', array( &$field, &$storages, $config['pks'], &$config, false ) );
 								$config['storages'][$Pt]				=	isset( $storages[$Pt][$config['pk']] ) ? $storages[$Pt][$config['pk']] : null;
 								if ( $storages['_'] && !isset( $config['storages'][$storages['_']] ) ) {
-									$config['storages'][$storages['_']]	=	$storages[$storages['_']][$config['pk']];
+									$config['storages'][$storages['_']]	=	@$storages[$storages['_']][$config['pk']];
 								}
 							}
 						}

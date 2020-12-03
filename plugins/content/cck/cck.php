@@ -567,7 +567,7 @@ class plgContentCCK extends JPlugin
 
 		$join			=	' LEFT JOIN #__cck_core_folders AS f ON f.id = b.folder';
 		$join_select	=	', f.app as folder_app';
-		$query			=	'SELECT a.id, a.pk, a.pkb, a.cck, a.storage_location, a.store_id, a.author_id AS author, b.id AS type_id, b.alias AS type_alias, b.indexed, b.parent, b.parent_inherit, b.stylesheets,'
+		$query			=	'SELECT a.id, a.pk, a.pkb, a.cck, a.storage_location, a.store_id, a.author_id AS author, b.id AS type_id, b.indexed, b.parent, b.parent_inherit, b.stylesheets,'
 						.	' b.options_content, b.options_intro, c.template AS content_template, c.params AS content_params, d.template AS intro_template, d.params AS intro_params'.$join_select
 						.	' FROM #__cck_core AS a'
 						.	' LEFT JOIN #__cck_core_types AS b ON b.name = a.cck'
@@ -843,8 +843,7 @@ class plgContentCCK extends JPlugin
 							   'storages'=>array(),
 							   'store_id'=>(int)$cck->store_id,
 							   'type'=>$cck->cck,
-							   'type_id'=>(int)$cck->type_id,
-							   'type_alias'=>( $cck->type_alias ? $cck->type_alias : $cck->cck )
+							   'type_id'=>(int)$cck->type_id
 							);
 
 			if ( is_array( $article_params ) ) {

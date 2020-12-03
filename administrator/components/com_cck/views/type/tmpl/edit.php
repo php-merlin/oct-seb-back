@@ -12,7 +12,7 @@ defined( '_JEXEC' ) or die;
 
 $config		=	JCckDev::init( array( '42', 'jform_rules', 'radio', 'select_dynamic', 'select_simple', 'text', 'textarea', 'wysiwyg_editor' ), true, array( 'item'=>$this->item, 'vName'=>$this->vName ) );
 $cck		=	JCckDev::preload( array( 'core_title_type', 'core_description', 'core_state',
-										 'core_location', 'core_rules_type', 'core_parent_type', 'core_indexing', 'core_alias', 'core_access' ) );
+										 'core_location', 'core_rules_type', 'core_parent_type', 'core_indexing', 'core_access' ) );
 $lang		=	JFactory::getLanguage();
 $key		=	'COM_CCK_TRANSLITERATE_CHARACTERS';
 $style		=	'seblod';
@@ -111,7 +111,7 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
 	            </ul>
 			<?php if ( $this->item->location != 'collection' ) { ?>
 	            <ul class="spe spe_type">
-	            	<?php echo JCckDev::renderForm( $cck['core_alias'], $this->item->alias, $config, array( 'css'=>'max-width-150' ) ); ?>
+	            	<?php echo JCckDev::renderForm( 'core_dev_textarea', $this->item->relationships, $config, array( 'css'=>'max-width-150', 'storage_field'=>'relationships' ) ); ?>
 	            </ul>
 	            <ul class="spe spe_sixth">
 	            	<?php echo JCckDev::renderForm( $cck['core_indexing'], $this->item->indexed, $config, array( 'attributes'=>'style="width:130px;"' ) ); ?>

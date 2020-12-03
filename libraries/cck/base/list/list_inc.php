@@ -172,7 +172,6 @@ $config			=	array( 'action'=>$preconfig['action'],
 						   'submit'=>$preconfig['submit'],
 						   'type'=>$search->name,
 						   'type_id'=>$search->id,
-						   'type_alias'=>( $search->alias ? $search->alias : $search->name ),
 						   'validate'=>array(),
 						   'validation'=>array(),
 						   'validation_options'=>array()
@@ -587,7 +586,7 @@ if ( $preconfig['task'] == 'search' ) {
 			// Render
 			$doCache2		=	$options->get( 'cache2' );
 			if ( $doCache2 ) {
-				$group		=	( $doCache2 == '2' ) ? 'com_cck_'.$config['type_alias'].'_list' : 'com_cck';
+				$group		=	( $doCache2 == '2' ) ? 'com_cck_'.$config['type'].'_list' : 'com_cck';
 				$cache		=	JFactory::getCache( $group );
 				$cache->setCaching( 1 );
 				$data		=	$cache->call( array( 'CCK_List', 'render' ), $items, ${$target}, $path, $preconfig['client'], $config['Itemid'], $options, $config );

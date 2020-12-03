@@ -368,9 +368,9 @@ class plgSearchCCK extends JPlugin
 				self::_buildQuery( $dispatcher, $query, $tables, $t, $config, $inherit, $user, $config['doSelect'] );
 				$query->select( 't0.cck AS cck,t0.storage_location AS loc' );
 				if ( $config['location'] == 'cck_type' ) {
-					$query->select( $tables['#__cck_core_types']['_'].'.id AS type_id,'.$tables['#__cck_core_types']['_'].'.alias AS type_alias' );
+					$query->select( $tables['#__cck_core_types']['_'].'.id AS type_id' );
 				} else {
-					$query->select( 'tt.id AS type_id,tt.alias AS type_alias' );
+					$query->select( 'tt.id AS type_id' );
 					$query->join( 'LEFT', '`#__cck_core_types` AS tt ON tt.name = t0.cck' );
 				}
 				if ( isset( $config['query_parts']['select'] ) ) {
