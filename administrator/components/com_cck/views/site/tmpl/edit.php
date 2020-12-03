@@ -149,6 +149,8 @@ Helper_Include::addDependencies( $this->getName(), $this->getLayout() );
                 echo JCckDev::renderForm( $cck['core_public_viewlevel'], $this->item->public_viewlevel, $config );
                 echo JCckDev::renderForm( $cck['core_groups'], $this->item->groups, $config );
                 echo JCckDev::renderForm( $cck['core_viewlevels'], $this->item->viewlevels, $config );
+                echo JCckDev::renderBlank();
+                echo JCckDev::renderForm( 'core_viewlevels', @$cfg['viewlevels2'], $config, array( 'storage_field'=>'json[configuration][viewlevels2]' ) );
                 ?>
             </ul>
         </div>

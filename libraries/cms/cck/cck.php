@@ -279,10 +279,32 @@ abstract class JCck
 					public_viewlevel: -
 					*/
 
+					// Keeping own public_viewlevel (for logged-in users)
+					if ( self::$_sites[$host]->public_viewlevel ) {
+						$json						=	json_decode( self::$_sites[$host]->configuration, true );
+						$parent->public_viewlevel	.=	','.self::$_sites[$host]->public_viewlevel;
+
+						if ( isset( $json['viewlevels2'] ) && is_array( $json['viewlevels2'] ) && count( $json['viewlevels2'] ) ) {
+							$parent->public_viewlevel	.=	','.implode( ',', $json['viewlevels2'] );
+						}
+
+						$parent->public_viewlevel	=	explode( ',', $parent->public_viewlevel );
+						$parent->public_viewlevel	=	ArrayHelper::toInteger( $parent->public_viewlevel );
+					}
+
 					foreach ( $properties as $property ) {
 						self::$_sites[$host]->$property	=	$parent->$property;
 					}
+				} else {
+					$json	=	json_decode( self::$_sites[$host]->configuration, true );
+
+					if ( isset( $json['viewlevels2'] ) && is_array( $json['viewlevels2'] ) && count( $json['viewlevels2'] ) ) {
+						self::$_sites[$host]->public_viewlevel	.=	','.implode( ',', $json['viewlevels2'] );
+						self::$_sites[$host]->public_viewlevel	=	explode( ',', self::$_sites[$host]->public_viewlevel );
+						self::$_sites[$host]->public_viewlevel	=	ArrayHelper::toInteger( self::$_sites[$host]->public_viewlevel );	
+					}
 				}
+
 			}
 
 			return true;

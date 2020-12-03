@@ -951,7 +951,12 @@ class plgSystemCCK extends JPlugin
 				$viewlevels		=	array_diff( $authlevels, $nolevels );
 				$otherlevels	=	array_diff( explode( ',', $this->site->viewlevels ), $viewlevels );
 				$otherlevels	=	array_intersect( $otherlevels, $authlevels );
-				$otherlevels[]	=	(int)$this->site->public_viewlevel;
+
+				if ( is_array( $this->site->public_viewlevel ) ) {
+					$otherlevels	=	array_merge( $otherlevels, $this->site->public_viewlevel );
+				} else {
+					$otherlevels[]	=	(int)$this->site->public_viewlevel;
+				}
 				$otherlevels	=	ArrayHelper::toInteger( $otherlevels );
 
 				if ( count( $otherlevels ) ) {
@@ -959,7 +964,12 @@ class plgSystemCCK extends JPlugin
 				}
 			} else {
 				$viewlevels		=	$authlevels;
-				$viewlevels[]	=	(int)$this->site->public_viewlevel;
+
+				if ( is_array( $this->site->public_viewlevel ) ) {
+					$viewlevels		=	array_merge( $viewlevels, $this->site->public_viewlevel );
+				} else {
+					$viewlevels[]	=	(int)$this->site->public_viewlevel;
+				}
 			}
 
 			if ( $app->isClient( 'administrator' ) && (int)$this->site->guest_only_viewlevel > 0 ) {
