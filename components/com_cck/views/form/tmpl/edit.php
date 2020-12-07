@@ -111,4 +111,13 @@ if ( $this->show_form_desc == 2 && $this->description != '' ) {
 ?>
 <?php if ( !$this->raw_rendering ) { ?>
 </div></div>
+<?php }
+if ( $app->input->get( 'tmpl', '' ) == 'raw' ) { ?>
+<script>
+	jQuery(function ($) {
+		$(".hasPopover").popover({"html": true,"trigger": "hover","container": "body"}).on("hidden", function (e) {
+		   e.stopPropagation();
+		});
+	});
+</script>
 <?php } ?>
