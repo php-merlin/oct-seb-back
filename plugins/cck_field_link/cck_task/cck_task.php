@@ -50,7 +50,7 @@ class plgCCK_Field_LinkCck_Task extends JCckPluginLink
 
 		if ( !$task ) {
 			return;
-		} elseif ( $task != 'impersonate' ) {
+		} elseif ( !( $task == 'impersonate' || $task == 'toggle' ) ) {
 			$task_id	=	$link->get( 'task_id_'.$task, '' );
 
 			if ( !$task_id ) {
@@ -73,6 +73,8 @@ class plgCCK_Field_LinkCck_Task extends JCckPluginLink
 				}
 				return;
 			}
+		} elseif ( $task == 'toggle' ) {
+			$task_id	=	$config['id'];
 		} else {
 			if ( !$user->authorise( 'core.'.$task, 'com_cck.form.'.$config['type_id'] ) ) {
 				if ( !$link->get( 'no_access', 0 ) ) {
