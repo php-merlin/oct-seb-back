@@ -146,14 +146,19 @@ class plgCCK_FieldButton_Submit extends JCckPluginField
 		}
 
 		if ( $form != '' ) {
-			$form	=	'<form action="'.JRoute::_( 'index.php?option=com_cck' ).'" autocomplete="off" enctype="multipart/form-data" method="get" id="'.$form_id.'" name="'.$form_id.'">'
-					.	$form
-					.	'<input type="hidden" name="task" value="'.$task.'" />'
+			if ( !( isset( $config['formWrapper'] ) && $config['formWrapper'] ) ) {
+				$form	=	'<form action="'.JRoute::_( 'index.php?option=com_cck' ).'" autocomplete="off" enctype="multipart/form-data" method="get" id="'.$form_id.'" name="'.$form_id.'">'.$form;
+			}
+			
+			$form	.=	'<input type="hidden" name="task" value="'.$task.'" />'
 					.	'<input type="hidden" name="cid" value="'.$config['id'].'">'
 					.	'<input type="hidden" name="return" value="'.base64_encode( JUri::getInstance()->toString() ).'">'
-					.	'<input type="hidden" name="tid" value="'.$task_id.'">'
-					.	JHtml::_( 'form.token' )
-					.	'</form>';
+					.	'<input type="hidden" name="tid" value="'.$task_id.'">';
+			$form	.=	JHtml::_( 'form.token' );
+
+			if ( !( isset( $config['formWrapper'] ) && $config['formWrapper'] ) ) {
+				$form	.=	'</form>';
+			}
 		}
 
 		// Set
@@ -354,16 +359,32 @@ class plgCCK_FieldButton_Submit extends JCckPluginField
 				$click		=	isset( $config['submit'] ) ? ' onclick="'.$click.'"' : '';
 			} elseif ( $task == 'save2redirect' ) {
 				$custom		=	'';
+				$submit		=	$config['submit'];
+
 				if ( isset( $options2['custom'] ) && $options2['custom'] ) {
 					$custom	=	JCckDevHelper::replaceLive( $options2['custom'], '', $config );
 					$custom	=	$custom ? '&'.$custom : '';
 				}
+				if ( (int)$options2['itemid'] == -2 ) {
+					$options2['itemid']	=	JCckDatabaseCache::loadResult( 'SELECT id FROM #__menu WHERE parent_id = '.(int)JFactory::getApplication()->input->getInt( 'Itemid', 0 ).' ORDER BY lft ASC' );
+
+					if ( !$options2['itemid'] ) {
+						return;
+					}
+				} elseif ( (int)$options2['itemid'] == -3 ) {
+					$options2['itemid']	=	JFactory::getApplication()->input->getInt( 'Itemid' );
+				}
 				if ( $config['client'] == 'search' ) {
-					$pre_task	=	htmlspecialchars( 'jQuery("#'.$config['formId'].'").attr(\'action\', \''.JRoute::_( 'index.php?Itemid='.$options2['itemid'].$custom ).'\');' );
+					if ( strpos( $config['submit'], 'JCck.Core.submit_f' ) !== false ) {
+						$submit		=	'JCck.Core.submit';
+						$pre_task	=	htmlspecialchars( 'jQuery("#'.$config['formId'].' input[name=\'config[url]\']").val(\''.JRoute::_( 'index.php?Itemid='.$options2['itemid'].$custom ).'\');' );
+					} else {
+						$pre_task	=	htmlspecialchars( 'jQuery("#'.$config['formId'].'").attr(\'action\', \''.JRoute::_( 'index.php?Itemid='.$options2['itemid'].$custom ).'\');' );
+					}					
 				} else {
 					$pre_task	=	htmlspecialchars( 'jQuery("#'.$config['formId'].' input[name=\'config[url]\']").val(\''.JRoute::_( 'index.php?Itemid='.$options2['itemid'].$custom ).'\');' );
 				}
-				$click		=	isset( $config['submit'] ) ? ' onclick="'.$pre_task.$config['submit'].'(\''.$task.'\');return false;"' : '';			
+				$click		=	isset( $config['submit'] ) ? ' onclick="'.$pre_task.$submit.'(\''.$task.'\');return false;"' : '';			
 			} else {
 				$click		=	isset( $config['submit'] ) ? ' onclick="'.$pre_task.$config['submit'].'(\''.$task.'\');return false;"' : '';
 
