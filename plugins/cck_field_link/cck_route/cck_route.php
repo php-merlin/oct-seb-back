@@ -39,6 +39,7 @@ class plgCCK_Field_LinkCck_Route extends JCckPluginLink
 		$fieldnames		=	array();
 		$link_url		=	'';
 		$mode			=	(int)$link->get( 'mode', '0' );
+		$path_type		=	$link->get( 'path_type', '' );
 
 		if ( $mode == -1 ) {
 			$link_url	=	JCck::callFunc_Array( 'plgCCK_Storage_Location'.$config['location'], 'getRouteById', array( $config['pk'] ) );
@@ -83,7 +84,7 @@ class plgCCK_Field_LinkCck_Route extends JCckPluginLink
 		}
 
 		if ( count( $fieldnames ) ) {
-			parent::g_addProcess( 'beforeRenderContent', self::$type, $config, array( 'name'=>$field->name, 'fieldnames'=>$fieldnames ), 5 );
+			parent::g_addProcess( 'beforeRenderContent', self::$type, $config, array( 'name'=>$field->name, 'fieldnames'=>$fieldnames, 'path_type'=>$path_type ), 5 );
 		}
 		
 		$field->link			=	$link_url;
@@ -99,8 +100,9 @@ class plgCCK_Field_LinkCck_Route extends JCckPluginLink
 	// onCCK_Field_LinkBeforeRenderContent
 	public static function onCCK_Field_LinkBeforeRenderContent( $process, &$fields, &$storages, &$config = array() )
 	{
-		$name	=	$process['name'];
-		$route	=	'';
+		$name		=	$process['name'];
+		$path_type	=	(string)$process['path_type'];
+		$route		=	'';
 		
 		if ( count( $process['fieldnames'] ) ) {
 			foreach ( $process['fieldnames'] as $fieldname ) {
@@ -113,6 +115,13 @@ class plgCCK_Field_LinkCck_Route extends JCckPluginLink
 		}
 		
 		if ( $route != '' ) {
+			if ( $path_type == '1' ) {
+				$base	=	JUri::getInstance()->toString( array( 'scheme', 'host' ) );
+				$route	=	$base.$route;
+			} else {
+				$base	=	'';
+			}
+
 			$fields[$name]->link	=	$route;
 			$target					=	 $fields[$name]->typo_target;
 			

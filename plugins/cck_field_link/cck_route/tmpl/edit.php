@@ -29,7 +29,7 @@ defined( '_JEXEC' ) or die;
 		echo JCckDev::renderForm( 'core_dev_textarea', '', $config, array( 'label'=>'Parameters', 'cols'=>92, 'rows'=>1, 'storage_field'=>'target_params' ), array(), 'w100' );
 		echo JCckDev::renderForm( 'core_dev_text', '', $config, array( 'label'=>'Rel', 'size'=>24, 'storage_field'=>'rel' ) );
 		echo JCckDev::renderBlank();
-		echo JCckDev::renderForm( 'core_dev_select', '', $config, array( 'label'=>'Path Paths', 'selectlabel'=>'Inherited', 'defaultvalue'=>'', 'options'=>'', 'storage_field'=>'path_type' ) );
+		echo JCckDev::renderForm( 'core_dev_select', '', $config, array( 'label'=>'Path Paths', 'selectlabel'=>'Inherited', 'defaultvalue'=>'', 'options'=>'Absolute=1', 'storage_field'=>'path_type' ) );
 		echo JCckDev::renderForm( 'core_dev_select', '', $config, array( 'label'=>'Behavior', 'selectlabel'=>'', 'defaultvalue'=>'1', 'options'=>'Apply=1||Prepare=0', 'storage_field'=>'state' ) );
         ?>
     </ul>
