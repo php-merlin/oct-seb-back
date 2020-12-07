@@ -18,7 +18,7 @@ JCckDev::initScript( 'link', $this->item );
     <ul class="adminformlist adminformlist-2cols">
         <?php
 		echo JCckDev::renderForm( 'core_form', '', $config, array( 'selectlabel'=>'Inherited', 'options'=>'Use Value=optgroup||Field=-2||Forms=optgroup', 'options2'=>'{"query":"","table":"#__cck_core_types","name":"title","where":"published=1 AND location != \"collection\"","value":"name","orderby":"title","orderby_direction":"ASC"}', 'bool4'=>1, 'required'=>'' ) );
-		echo JCckDev::renderForm( 'core_menuitem', '', $config, array( 'selectlabel'=>'Inherited' ) );
+		echo JCckDev::renderForm( 'core_menuitem', '', $config, array( 'selectlabel'=>'Inherited', 'options'=>'Parent=-1' ) );
 		echo '<li><label>'.JText::_( 'COM_CCK_ACTION' ).'</label>'
 			. JCckDev::getForm( 'core_dev_bool', '', $config, array( 'options'=>'Auto SL=1||Action=optgroup||Add=0||Copy=2||Edit=3', 'storage_field'=>'form_edition' ) )
 			. JCckDev::getForm( 'core_dev_select', '', $config, array( 'selectlabel'=>'Auto', 'defaultvalue'=>'', 'options'=>'1=1||2=2||3=3||4=4||5=5||Final=0', 'bool8'=>0, 'storage_field'=>'form_edition_stage' ) )

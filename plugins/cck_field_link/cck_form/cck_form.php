@@ -59,6 +59,14 @@ class plgCCK_Field_LinkCCK_Form extends JCckPluginLink
 		$redirection	=	$link->get( 'redirection', '' );
 		$uri			=	JUri::getInstance()->toString();
 
+		if ( (int)$itemId == -1 ) {
+			$menu	=	$app->getMenu()->getActive();
+
+			if ( is_object( $menu ) ) {
+				$itemId	=	$menu->parent_id;
+			}
+		}
+
 		if ( strpos( $uri, 'format=raw&infinite=1' ) !== false ) {
 			$return		=	$app->input->get( 'return' );
 		} else {
