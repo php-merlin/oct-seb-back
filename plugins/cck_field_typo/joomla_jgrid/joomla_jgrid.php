@@ -162,6 +162,13 @@ class plgCCK_Field_TypoJoomla_Jgrid extends JCckPluginTypo
 				} elseif ( $type == 'form_hidden' ) {
 					$field->variation	=	'hidden';
 				} else {
+					if ( $typo->get( 'validation', '' ) != '' ) {
+						$field->validation			=	$typo->get( 'validation', '' );
+						$field->validation_options	=	'{}';
+
+						require_once JPATH_PLUGINS.'/cck_field_validation/'.$field->validation.'/'.$field->validation.'.php';
+						JCck::callFunc_Array( 'plgCCK_Field_Validation'.$field->validation, 'onCCK_Field_ValidationPrepareForm', array( &$field, $inherit['id'], &$config ) );
+					}
 					if ( $typo->get( 'required' ) == 'required' ) {
 						// JFactory::getLanguage()->load( 'plg_cck_field_validation_required', JPATH_ADMINISTRATOR );
 

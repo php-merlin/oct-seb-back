@@ -33,9 +33,10 @@ JCckDev::initScript( 'typo', $this->item );
 		echo '<li><label>'.JText::_( 'COM_CCK_CONTAINER_NAME' ).'</label>'
 			. JCckDev::getForm( 'core_dev_text', '', $config, array( 'label'=>'', 'defaultvalue'=>'', 'css'=>'input-xsmall', 'storage_field'=>'identifier_suffix' ) )
 			. JCckDev::getForm( 'core_dev_text', '', $config, array( 'label'=>'', 'defaultvalue'=>'', 'size'=>13, 'storage_field'=>'identifier_name' ) )
-			. '</li>';
-		echo JCckDev::renderForm( 'core_required', '', $config, array( 'defaultvalue'=>'0', 'selectlabel'=>'', 'options'=>'No=||Yes=required||Yes GroupRequired=grouprequired' ) );
+			. '</li>';		
+		echo JCckDev::renderForm( 'core_dev_text', '', $config, array( 'label'=>'Validation', 'defaultvalue'=>'', 'storage_field'=>'validation' ) );
 		echo JCckDev::renderForm( 'core_dev_bool', '', $config, array( 'label'=>'Trigger Change', 'defaultvalue'=>'0', 'storage_field'=>'trigger' ) );
+		echo JCckDev::renderForm( 'core_required', '', $config, array( 'defaultvalue'=>'0', 'selectlabel'=>'', 'options'=>'No=||Yes=required||Yes GroupRequired=grouprequired' ) );		
 		echo JCckDev::renderForm( 'core_dev_text', '', $config, array( 'label'=>'Group', 'required'=>'required', 'storage_field'=>'required2' ) );
 
 		echo JCckDev::renderForm( 'core_dev_text', '', $config, array( 'label'=>'Status Up Field Name', 'defaultvalue'=>'', 'storage_field'=>'state_up', 'attributes'=>'placeholder="'.JText::_( 'COM_CCK_FIELD_NAME' ).'"' ) );
