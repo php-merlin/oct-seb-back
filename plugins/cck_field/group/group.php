@@ -382,15 +382,17 @@ class plgCCK_FieldGroup extends JCckPluginField
 		}
 		
 		if ( $target == 'form' ) {
-			if ( $field->markup != 'none' ) {
-				$html	=	'<div id="cck1_sortable_'.$field->name.'" class="vertical_gx">'
-						.	'<div id="'.$rId.'_forms_'.$field->name.'_'.$i.'" class="cck_form cck_form_group cck_form_group_first cck_form_group_last">'
-						.	'<div id="'.$rId.'_form_'.$field->name.'_'.$i.'" class="cck_cgx cck_cgx_form cck_cgx_form_first cck_cgx_form_last">'
-						.	$html
-						.	'</div>'
-						.	'</div>'
-						.	'</div>'
-						;
+			if ( $config['legacy'] && $config['legacy'] <= 2018 ) {
+				if ( $field->markup != 'none' ) {
+					$html	=	'<div id="cck1_sortable_'.$field->name.'" class="vertical_gx">'
+							.	'<div id="'.$rId.'_forms_'.$field->name.'_'.$i.'" class="cck_form cck_form_group cck_form_group_first cck_form_group_last">'
+							.	'<div id="'.$rId.'_form_'.$field->name.'_'.$i.'" class="cck_cgx cck_cgx_form cck_cgx_form_first cck_cgx_form_last">'
+							.	$html
+							.	'</div>'
+							.	'</div>'
+							.	'</div>'
+							;
+				}
 			}
 		
 			if ( $js ) {
@@ -586,7 +588,7 @@ class plgCCK_FieldGroup extends JCckPluginField
 					$f_value			=	'';
 					$inherit			=	array();
 					$content[$f_name]	=	clone $f;
-					$table				=	$f->storage_table;
+					$table				=	$f->storage_table ? $f->storage_table : '_';
 					$storage_mode		=	(int)$f->storage_mode;
 
 					if ( $table && ! isset( $config['storages'][$table] ) ) {
