@@ -63,7 +63,9 @@ class plgCCK_Field_LinkContent extends JCckPluginLink
 
 		// -- Inherit SEF
 		if ( $sef && (int)$itemId > 0 ) {
-			$sef	=	JCckDevHelper::getRouteSef( $itemId, $config['type'], $sef );
+			if ( $content != '2' ) {
+				$sef	=	JCckDevHelper::getRouteSef( $itemId, $config['type'], $sef );
+			}
 		}
 		// -- Inherit SEF
 
@@ -309,7 +311,7 @@ class plgCCK_Field_LinkContent extends JCckPluginLink
 		if ( $isCurrent ) {
 			$fields[$name]->link	=	JCck::callFunc_Array( 'plgCCK_Storage_Location'.$location, 'getRouteByStorage', array( &$config['storages'], $process['sef'], $itemId, $config, $process['lang_tag'] ) );
 		} else {
-			$fields[$name]->link	=	JCck::callFunc_Array( 'plgCCK_Storage_Location'.$location, 'getRoute', array( $pk, $process['sef'], $itemId, $config ) );
+			$fields[$name]->link	=	JCck::callFunc_Array( 'plgCCK_Storage_Location'.$location, 'getRoute', array( $pk, $process['sef'], $itemId, $config, $process['lang_tag'] ) );
 		}
 		
 		$target					=	 $fields[$name]->typo_target;
