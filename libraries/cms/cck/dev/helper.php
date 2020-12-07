@@ -165,10 +165,10 @@ abstract class JCckDevHelper
 			$where	=	'name = "'.$app.'"';
 		}
 
-		$app			=	JCckDatabase::loadObject( 'SELECT id, name, params FROM #__cck_core_folders WHERE '.$where );
+		$app		=	JCckDatabase::loadObject( 'SELECT id, name, params FROM #__cck_core_folders WHERE '.$where );
 
 		if ( !$app ) {
-			return (object)array( 'id'=>0, 'name'=>'' );
+			$app	=	(object)array( 'id'=>0, 'name'=>'', 'params'=>'{}' );
 		}
 
 		$app->params	=	new Registry( $app->params );
