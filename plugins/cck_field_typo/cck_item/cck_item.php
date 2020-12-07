@@ -46,7 +46,7 @@ class plgCCK_Field_TypoCck_Item extends JCckPluginTypo
 
 		$value	=	CCK_Item::getAssociation( $value );
 
-		return CCK_Item::render( $value );
+		return CCK_Item::render( $value, null, ( (int)$typo->get( 'caching', '1' ) ? true : false ) );
 	}
 }
 ?>

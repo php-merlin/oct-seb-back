@@ -17,7 +17,7 @@ JCckDev::initScript( 'typo', $this->item );
 	<?php echo JCckDev::renderLegend( JText::_( 'COM_CCK_CONSTRUCTION' ), JText::_( 'PLG_CCK_FIELD_TYPO_'.$this->item->name.'_DESC' ) ); ?>
     <ul class="adminformlist adminformlist-2cols">
         <?php
-		//
+		echo JCckDev::renderForm( 'core_dev_bool', '', $config, array( 'label'=>'Enable Caching', 'defaultvalue'=>1,  'storage_field'=>'caching' ) );
         ?>
     </ul>
 </div>
