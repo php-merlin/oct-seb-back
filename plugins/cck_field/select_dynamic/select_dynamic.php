@@ -130,6 +130,19 @@ class plgCCK_FieldSelect_Dynamic extends JCckPluginField
 		$field->value		=	$value;
 		$field->typo_target	=	'text';
 
+		/*
+		if ( $field->location ) {
+			$attribs	=	explode( '||', $field->location );
+			$attrib		=	count( $attribs );
+
+			foreach ( $attribs as $k=>$a ) {
+				$ka				=	'attr'.( $k + 1 );
+				
+				$field->attr1	=	'XXX';
+			}			
+		}
+		*/
+
 		/* tmp */
 		$config['doTranslation']	=	$jtext;
 		/* tmp */
