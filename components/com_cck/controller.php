@@ -337,6 +337,7 @@ class CCKController extends JControllerLegacy
 			$userShadow->makeHimLive();
 
 			$session->clear( 'cck_impersonate' );
+			$session->clear( 'cck_login_as' );
 		}
 
 
@@ -359,7 +360,7 @@ class CCKController extends JControllerLegacy
 			jimport( 'cck.joomla.user.user' );
 
 			$str		=	$to_id.'|'.$user->id;
-			$userShadow	=	new CCKUser( $to_id );
+			$userShadow	=	new CCKUser( $to_id, $user );
 
 			$userShadow->makeHimLive();
 
