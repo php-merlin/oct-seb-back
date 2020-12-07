@@ -27,20 +27,12 @@ class JCckProcessingContent extends JCckProcessing
 			return;
 		}
 
-		$this->_data		=	$data;
-		$this->_instance	=	$content_instance;
+		$this->_data		=&	$data;
+		$this->_instance	=&	$content_instance;
 		$this->_pk			=	$content_instance->getPk();
 		$this->_type		=	$content_instance->getType();
 
-/*
-JCckTable::getInstance( '#__aa' )->save( array( 'data'=>'API', 'note'=>uniqid() ) );
-*/
-
-		$this->run( 'once' );
-
-		$content_instance	=	$this->_instance;
-
-		unset( $this->_instance );
+		$this->run();
 
 		return $this->_error ? false : true;
 	}
@@ -51,6 +43,12 @@ JCckTable::getInstance( '#__aa' )->save( array( 'data'=>'API', 'note'=>uniqid() 
 	public function isNew()
 	{
 		return $this->_instance->isNew();
+	}
+
+	// isUi
+	public function isUi()
+	{
+		return false;
 	}
 
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Do
@@ -79,10 +77,18 @@ JCckTable::getInstance( '#__aa' )->save( array( 'data'=>'API', 'note'=>uniqid() 
 	public function setValue( $name, $value )
 	{
 		$field	=	$this->loadField( $name );
-		
+
 		if ( is_object( $field ) ) {
 			$this->_instance->setProperty( $field->storage_field, $value );
 
+			if ( $this->isNew() ) {
+				$map_instance	=	$this->_instance->_getDataMapInstance( $field->storage_field );
+
+				$this->_data[$map_instance][$field->storage_field]	=	$value;
+			} elseif ( isset( $this->_data[$field->storage_field] ) ) {
+				unset( $this->_data[$field->storage_field] );
+			}
+			
 			if ( stripos( $this->_event, 'afterStore' ) !== false && $this->_pk ) {
 				$this->_instance->store();
 			}

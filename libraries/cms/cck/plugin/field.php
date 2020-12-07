@@ -810,42 +810,6 @@ class JCckPluginField extends JPlugin
 		if ( $field->label == 'clear' || $field->label == 'none' ) {
 			$field->label	=	'';
 		}
-		if ( $config['doTranslation'] ) {
-			if ( $field->label == '&nbsp;' ) {
-				$field->label	=	'Nbsp';
-			}
-			if ( trim( $field->label ) ) {
-				$field->label	=	JText::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $field->label ) ) );
-			}
-			if ( trim( $field->description ) ) {
-				$desc	=	trim( strip_tags( $field->description ) );
-				if ( $desc ) {
-					$field->description	=	JText::_( 'COM_CCK_' . str_replace( ' ', '_', $desc ) );
-				}
-			}
-		}
-		
-		$field->linked		=	false;
-		$field->state		=	1;
-		$field->typo_target	=	'value';
-		
-		// Restriction
-		if ( isset( $field->restriction ) && $field->restriction ) {
-			$field->authorised	=	JCck::callFunc_Array( 'plgCCK_Field_Restriction'.$field->restriction, 'onCCK_Field_RestrictionPrepareContent', array( &$field, &$config ) );
-			if ( !$field->authorised ) {
-				$field->display	=	0;
-				$field->state	=	0;
-			}
-		}
-	}
-	
-	// g_onCCK_FieldPrepareForm
-	public static function g_onCCK_FieldPrepareForm( &$field, &$config = array() )
-	{
-		$field->label		=	( @$field->label2 ) ? $field->label2 : ( ( $field->label ) ? $field->label : $field->title );
-		if ( $field->label == 'clear' || $field->label == 'none' ) {
-			$field->label	=	'';
-		}
 		$pos	=	strpos( $field->description, 'J(' );
 
 		if ( trim( $field->description ) && $pos !== false ) {
@@ -877,6 +841,60 @@ class JCckPluginField extends JPlugin
 			}
 		}
 		
+		$field->linked		=	false;
+		$field->state		=	1;
+		$field->typo_target	=	'value';
+		
+		// Restriction
+		if ( isset( $field->restriction ) && $field->restriction ) {
+			$field->authorised	=	JCck::callFunc_Array( 'plgCCK_Field_Restriction'.$field->restriction, 'onCCK_Field_RestrictionPrepareContent', array( &$field, &$config ) );
+			if ( !$field->authorised ) {
+				$field->display	=	0;
+				$field->state	=	0;
+			}
+		}
+	}
+	
+	// g_onCCK_FieldPrepareForm
+	public static function g_onCCK_FieldPrepareForm( &$field, &$config = array() )
+	{
+		if ( !isset( $field->typo_target ) ) {
+			$field->label		=	( @$field->label2 ) ? $field->label2 : ( ( $field->label ) ? $field->label : $field->title );
+			if ( $field->label == 'clear' || $field->label == 'none' ) {
+				$field->label	=	'';
+			}
+			$pos	=	strpos( $field->description, 'J(' );
+
+			if ( trim( $field->description ) && $pos !== false ) {
+				$desc		=	trim( $field->description );
+				if ( $desc ) {
+					$matches	=	'';
+					$search		=	'#J\((.*)\)#U';
+					preg_match_all( $search, $desc, $matches );
+					if ( count( $matches[1] ) ) {
+						foreach ( $matches[1] as $text ) {
+							$desc	=	str_replace( 'J('.$text.')', JText::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $text ) ) ), $desc );
+						}
+						$field->description	=	$desc;
+					}
+				}
+			}
+			if ( $config['doTranslation'] ) {
+				if ( $field->label == '&nbsp;' ) {
+					$field->label	=	'Nbsp';
+				}
+				if ( trim( $field->label ) ) {
+					$field->label	=	JText::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $field->label ) ) );
+				}
+				if ( $pos === false && trim( $field->description ) ) {
+					$desc	=	trim( strip_tags( $field->description ) );
+					if ( $desc ) {
+						$field->description	=	JText::_( 'COM_CCK_' . str_replace( ' ', '_', $desc ) );
+					}
+				}
+			}
+		}
+
 		$field->link		=	'';
 		$field->state		=	1;
 		$field->typo_target	=	'value';

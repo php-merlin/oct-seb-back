@@ -40,6 +40,7 @@ class JCckField2
 	protected $_name					=	'';
 	protected $_object					=	'';
 	protected $_pk						=	0;
+	protected $_value					=	'';
 
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Construct
 
@@ -279,6 +280,12 @@ class JCckField2
 		return $this->_data;
 	}
 
+	// getDataObject
+	public function getDataObject()
+	{
+		return (object)$this->getData();
+	}
+
 	// getPk
 	public function getPk()
 	{
@@ -464,6 +471,61 @@ class JCckField2
 	protected function saveBase()
 	{
 		return $this->_instance_base->store();
+	}
+
+	// setProperty
+	public function setProperty( $property, $value )
+	{
+		$table_instance_name	=	'base';
+
+		if ( property_exists( $this->{'_instance_'.$table_instance_name}, $property ) ) {
+			$this->{'_instance_'.$table_instance_name}->$property					=	$value;
+		}
+
+		return $this;
+	}
+
+	// setValue
+	public function setValue( $value = '' )
+	{
+		$this->_value	=	$value;
+	}
+
+	// -------- -------- -------- -------- -------- -------- -------- -------- // Render
+
+	// prepare
+	public function prepare()
+	{
+		$config			=	array(
+								'doTranslation'=>JCck::getConfig_Param( 'language_jtext', ( JCck::is( '4' ) ? 1 : 0 ) )
+							);
+		$data_object	=	$this->getDataObject();
+		$mode			=	'content';
+
+		JEventDispatcher::getInstance()->trigger( 'onCCK_FieldPrepare'.$mode, array( &$data_object, $this->_value, &$config ) );
+
+$table_instance_name	=	'base';
+
+		foreach ( $data_object as $k=>$v ) {
+			if ( isset( self::$data_map[$k] ) ) {
+
+			} else {
+				self::$data_map[$k]	=	'base';
+			}
+
+			$this->{'_instance_'.$table_instance_name}->$k					=	$v;
+
+		}
+		// dump($data_object);
+	}
+
+	// render
+	public function render()
+	{
+		// $config	=	array();
+		// $mode	=	'content';
+
+		// JCck::callFunc_Array( 'plgCCK_Field'.$this->_type, 'onCCK_FieldRender'.$mode, array( $this->getDataObject(), &$config ) );
 	}
 
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Trigger
@@ -666,7 +728,7 @@ class JCckField2
 	// _setTypeByName
 	protected function _setTypeByName( $identifier )
 	{
-		$query	=	'SELECT a.id AS pk, a.storage_location AS storage_location'
+		$query	=	'SELECT a.id AS pk, a.type, a.storage_location AS storage_location'
 				.	' FROM #__cck_core_fields AS a'
 				.	' WHERE a.name = "'.$identifier.'"';
 
@@ -679,6 +741,7 @@ class JCckField2
 		}
 
 		$this->_object	=	$core->storage_location;
+		$this->_type	=	$core->type;
 
 		/* TODO#SEBLOD4 */
 

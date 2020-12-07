@@ -55,10 +55,6 @@ class JCckProcessing
 		$this->_pk				=	$this->_data['config']['pk'];
 		$this->_type			=	isset( $this->_data['config']['content_type'] ) ? $this->_data['config']['content_type'] : $this->_data['config']['type'];
 
-/*
-JCckTable::getInstance( '#__aa' )->save( array( 'data'=>'FORM', 'note'=>uniqid() ) );
-*/
-
 		$this->run();
 
 		$config	=	$this->_data['config'];
@@ -87,14 +83,20 @@ JCckTable::getInstance( '#__aa' )->save( array( 'data'=>'FORM', 'note'=>uniqid()
 
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Check
 
+	// isJob
+	public function isJob()
+	{
+		return (bool)JFactory::getApplication()->input->getInt( 'cck_is_job', 0 );
+	}
+
 	// isNew
 	public function isNew()
 	{
-		if ( isset( $this->_data['config']['isNew'] ) && $this->_data['config']['isNew'] ) {
-			return true;
+		if ( isset( $this->_data['config']['isNew'] ) ) {
+			return (bool)$this->_data['config']['isNew'];
+		} else {
+			return $this->getPk() ? false : true;
 		}
-
-		return false;
 	}
 
 	// isFirstItem
@@ -111,6 +113,12 @@ JCckTable::getInstance( '#__aa' )->save( array( 'data'=>'FORM', 'note'=>uniqid()
 		}
 
 		return false;
+	}
+
+	// isUi
+	public function isUi()
+	{
+		return true;
 	}
 
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Do
@@ -132,6 +140,13 @@ JCckTable::getInstance( '#__aa' )->save( array( 'data'=>'FORM', 'note'=>uniqid()
 				$this->_data['config']['error']	=	true;
 			}
 		}
+	}
+
+	// setOutput
+	public function setOutput( $output = array() )
+	{
+		$this->_data['config']['error_output']	=	$output;
+		$this->_error							=	true;
 	}
 
 	// setProperty
@@ -185,6 +200,16 @@ JCckTable::getInstance( '#__aa' )->save( array( 'data'=>'FORM', 'note'=>uniqid()
 						break;
 				}
 			}
+		}
+	}
+
+	// unset
+	public function unset( $name )
+	{
+		if ( is_array( $this->_data['fields'] ) ) {
+			unset( $this->_data['fields'][$name] );
+		} else {
+			unset( $this->_data['fields']->$name );
 		}
 	}
 
@@ -256,11 +281,34 @@ JCckTable::getInstance( '#__aa' )->save( array( 'data'=>'FORM', 'note'=>uniqid()
 	// getPk
 	public function getPk()
 	{
-		if ( isset( $this->_data['config']['pk'] ) ) {
+		if ( isset( $this->_data['config']['resource_id'] ) && $this->_data['config']['resource_id']
+		  && !( isset( $this->_data['config']['resource_identifier'] ) && $this->_data['config']['resource_identifier'] != '' ) ) {
+			return (int)$this->_data['config']['resource_id'];
+		} elseif ( isset( $this->_data['config']['pk'] ) ) {
 			return (int)$this->_data['config']['pk'];
 		}
 
 		return 0;
+	}
+
+	// getRedirectionUrl
+	public function getRedirectionUrl()
+	{
+		if ( isset( $this->_data['config']['url'] ) ) {
+			return $this->_data['config']['url'];
+		}
+
+		return '';
+	}
+
+	// getTask
+	public function getTask()
+	{
+		if ( isset( $this->_data['config']['task'] ) ) {
+			return $this->_data['config']['task'];
+		}
+
+		return '';
 	}
 
 	// getType
@@ -277,6 +325,20 @@ JCckTable::getInstance( '#__aa' )->save( array( 'data'=>'FORM', 'note'=>uniqid()
 		}
 
 		return '';
+	}
+
+	// -------- -------- -------- -------- -------- -------- -------- -------- // Set
+
+	// setRedirectionUrl
+	public function setRedirectionUrl( $url )
+	{
+		if ( isset( $this->_data['config']['url'] ) ) {
+			$this->_data['config']['url']	=	$url;
+
+			return true;
+		}
+
+		return false;
 	}
 
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Trigger
@@ -298,5 +360,14 @@ JCckTable::getInstance( '#__aa' )->save( array( 'data'=>'FORM', 'note'=>uniqid()
 		}
 	}
 	*/
+
+	// -------- -------- -------- -------- -------- -------- -------- -------- // Misc
+
+	// dump
+	public function dump()
+	{
+		dump( $this->_data['config'], 'config' );
+		dump( $this->_data['fields'], 'fields' );
+	}
 }
 ?>

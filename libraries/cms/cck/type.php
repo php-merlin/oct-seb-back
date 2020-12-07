@@ -40,6 +40,7 @@ class JCckType
 	protected $_name					=	'';
 	protected $_object					=	'';
 	protected $_pk						=	0;
+	protected $_relationships			=	array();
 
 	// -------- -------- -------- -------- -------- -------- -------- -------- // Construct
 
@@ -330,6 +331,16 @@ class JCckType
 		}
 
 		return $default;
+	}
+
+	// getRelationship
+	public function getRelationship( $name )
+	{
+		if ( isset( $this->_relationships[$name] ) ) {
+			return $this->_relationships[$name];
+		}
+
+		return null;
 	}
 
 	// hasCallable
@@ -705,7 +716,7 @@ class JCckType
 	// _setTypeByName
 	protected function _setTypeByName( $identifier )
 	{
-		$query	=	'SELECT a.id AS pk, a.storage_location AS storage_location'
+		$query	=	'SELECT a.id AS pk, a.storage_location AS storage_location, a.relationships'
 				.	' FROM #__cck_core_types AS a'
 				.	' WHERE a.name = "'.$identifier.'"';
 
@@ -724,6 +735,16 @@ class JCckType
 		$this->_id					=	0;
 		$this->_pk					=	$core->pk;
 		$this->_name				=	$identifier;
+
+		// Prepare Relationships
+		if ( $core->relationships == '' ) {
+			$core->relationships	=	'[]';
+		}
+		$core->relationships		=	json_decode( $core->relationships );
+
+		foreach ( $core->relationships as $relationship ) {
+			$this->_relationships[$relationship->name]	=	$relationship;
+		}
 
 		/* TODO#SEBLOD4 */
 
