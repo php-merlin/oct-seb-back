@@ -113,10 +113,16 @@ class JCckContentJoomla_User extends JCckContent
 	// _checkGroup
 	protected function _checkGroup()
 	{
-		$groups	=	json_decode( $this->_instance_base->groups );
+		if ( is_array( $this->_instance_base->groups ) ) {
+			$groups	=	$this->_instance_base->groups;
+		} else {
+			$groups	=	json_decode( $this->_instance_base->groups );
+		}
 
 		if ( is_null( $groups ) ) {
-			$this->_instance_base->groups	=	explode( ',', $this->_instance_base->groups );
+			if ( !is_array( $this->_instance_base->groups ) ) {
+				$this->_instance_base->groups	=	explode( ',', $this->_instance_base->groups );	
+			}
 		} else {
 			if ( is_array( $groups ) ) {
 				$this->_instance_base->groups	=	$groups;
