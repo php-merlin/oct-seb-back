@@ -66,8 +66,17 @@ class plgCCK_Field_RestrictionCck_Workflow extends JCckPluginRestriction
 		if ( $action ) {
 			if ( ( $action == 'add' && !$config['isNew'] )
 			  || ( $action == 'edit' && $config['isNew'] ) ) {
-				$field->display	=	0;
-				return false;
+			  	if ( !$do ) {
+					$field->display	=	0;
+					$field->state	=	0;
+					return false;
+				}
+			} else {
+				if ( $do ) {
+					$field->display	=	0;
+					$field->state	=	0;
+					return false;					
+				}
 			}
 		}
 
@@ -78,6 +87,7 @@ class plgCCK_Field_RestrictionCck_Workflow extends JCckPluginRestriction
 			if ( ( $author  == '1' && $config['author'] != $user->id )
 			  || ( $author  == '-1' && $config['author'] == $user->id ) ) {
 				$field->display	=	0;
+				$field->state	=	0;
 				return false;
 			}
 		}
@@ -87,11 +97,13 @@ class plgCCK_Field_RestrictionCck_Workflow extends JCckPluginRestriction
 			if ( $type != $config['type'] ) {
 				if ( !$do ) {
 					$field->display	=	0;
+					$field->state	=	0;
 					return false;					
 				}
 			} else {
 				if ( $do ) {
 					$field->display	=	0;
+					$field->state	=	0;
 					return false;					
 				}
 			}
@@ -101,6 +113,7 @@ class plgCCK_Field_RestrictionCck_Workflow extends JCckPluginRestriction
 		if ( $location ) {
 			if ( !JFactory::getApplication()->{'is'.$location}() ) {
 				$field->display	=	0;
+				$field->state	=	0;
 				return false;
 			}
 		}
@@ -152,6 +165,7 @@ class plgCCK_Field_RestrictionCck_Workflow extends JCckPluginRestriction
 				return true;
 			} else {
 				$field->display	=	0;
+				$field->state	=	0;
 				return false;
 			}
 		}
