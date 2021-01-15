@@ -143,7 +143,10 @@ class plgCCK_FieldItem_X extends JCckPluginField
 				$task	=	'saveAjax';
 				$task2	=	'processAjax';
 			}
-			$context	=	'&context={"view":"form","referrer":""}';
+
+			$referrer_id	=	(int)$config['pk'];
+
+			$context	=	'&context={"view":"form","referrer":"","referrer_id":"'.$referrer_id.'"}';
 			$doc		=	JFactory::getDocument();
 			$html		=	'';
 			$link		=	'index.php?option=com_cck&view=form&layout='.$layout.'&type='.$form.'&tmpl='.$tmpl.$options2['add_custom'];
@@ -180,7 +183,7 @@ class plgCCK_FieldItem_X extends JCckPluginField
 								JCck.More.ItemX = {
 									active: "",
 									instances: [],
-									modal: JCck.Core.getModal({"backclose":false,"class":"modal-backend","title":"'.JText::_( 'COM_CCK_ADD' ).' / '.JText::_( 'COM_CCK_EDIT' ).'"}),
+									modal: JCck.Core.getModal({"backclose":false,"class":"modal-backend o-modal-stretch","title":"'.JText::_( 'COM_CCK_ADD' ).' / '.JText::_( 'COM_CCK_EDIT' ).'"}),
 									modal_preview: JCck.Core.getModal({"backclose":false,"backdrop":false,"title":"'.JText::_( 'COM_CCK_PREVIEW' ).'"}),
 									modal_form_id:"'.$config['formId'].'_'.$tmpl.'",
 									token:"'.JSession::getFormToken().'=1",
@@ -201,6 +204,10 @@ class plgCCK_FieldItem_X extends JCckPluginField
 												infinite = 1;
 											} else if ($("#"+JCck.More.ItemX.active+" ul").children().length) {
 												infinite = 1;
+											} else if ($("#"+JCck.More.ItemX.active+" .is-x").length && $("#"+JCck.More.ItemX.active+" .is-x > .cck-loading-more").length) {
+												if ($("#"+JCck.More.ItemX.active+" .is-x > .cck-loading-more").children().length) {
+													infinite = 1;
+												}
 											}
 										}
 										$.ajax({
@@ -215,7 +222,11 @@ class plgCCK_FieldItem_X extends JCckPluginField
 												JCck.More.ItemX.toggleRequired(false);
 												if (JCck.More.ItemX.instances[JCck.More.ItemX.active].behavior) {
 													if (infinite == -1) {
-														$("#"+JCck.More.ItemX.active+" .cck-loading-more").parent().html(response);
+														if (response.indexOf("cck-loading-more") == -1) {
+															$("#"+JCck.More.ItemX.active+" .cck-loading-more").html(response);
+														} else {
+															$("#"+JCck.More.ItemX.active+" .cck-loading-more").parent().html(response);
+														}
 													} else {
 														$("#"+JCck.More.ItemX.active+" .cck-loading-more").append(response);
 													}
@@ -225,13 +236,16 @@ class plgCCK_FieldItem_X extends JCckPluginField
 													$("#"+JCck.More.ItemX.active+" > '.$toolbar_selector.' + *").show();
 													$("#"+JCck.More.ItemX.active+" .cck-loading-more").html(response);
 												}
+												if (JCck.More.ItemX.instances[JCck.More.ItemX.active].callback) {
+													JCck.Core.executeFunctionByName(JCck.More.ItemX.instances[JCck.More.ItemX.active].callback, window);
+												}
 		    									$(".hasTooltip").tooltip({"html": true,"container": "body"});
 
 												if (close !== false) {
 													JCck.More.ItemX.search();
 													JCck.More.ItemX.modal.hide();
 													JCck.More.ItemX.modal.groups.ajax	=	[];
-													$("a[data-cck-modal]").each(function(i, e) {
+													$("#"+JCck.More.ItemX.active+" a[data-cck-modal]").each(function(i, e) {
 														JCck.More.ItemX.modal.groups.ajax.push($(e));
 													});
 		    										JCck.More.ItemX.modal.init();
@@ -269,6 +283,11 @@ class plgCCK_FieldItem_X extends JCckPluginField
 										$(".hasTooltip").tooltip({"html": true,"container": "#modal-cck"}).on("hidden", function (e) {
 										   e.stopPropagation();
 										});
+										/*
+										$(".hasPopover").popover({"html": true,"trigger": "hover","container":"body"}).on("hidden", function (e) {
+										   e.stopPropagation();
+										});
+										*/
 										$("#"+JCck.More.ItemX.modal_form_id+" a[data-cck-modal]").CckModal();
 
 										if ($("#"+JCck.More.ItemX.modal_form_id+" .cck-loading-more").length) {
@@ -334,6 +353,11 @@ class plgCCK_FieldItem_X extends JCckPluginField
 											$("#"+JCck.More.ItemX.active+" > '.$toolbar_selector.'").show();
 											$("#"+JCck.More.ItemX.active+" > '.$toolbar_selector.' + *").hide();
 										}
+
+										if (JCck.More.ItemX.instances[JCck.More.ItemX.active].callback) {
+											JCck.Core.executeFunctionByName(JCck.More.ItemX.instances[JCck.More.ItemX.active].callback, window);
+										}
+
 										JCck.More.ItemX.search();
 
 										if (close !== false) {
@@ -433,8 +457,11 @@ class plgCCK_FieldItem_X extends JCckPluginField
 
 										if($("#"+name+" .cck-loading-more").length) {
 											var tag = $("#"+name+" .cck-loading-more").prop("tagName");
+											
 											if (tag == "UL") {
 												JCck.More.ItemX.instances[name].html_tag = "li";
+											} else if (tag == "DIV") {
+												JCck.More.ItemX.instances[name].html_tag = "article";
 											}
 										}
 
@@ -502,6 +529,7 @@ class plgCCK_FieldItem_X extends JCckPluginField
 				$doc->addScriptDeclaration( $js );
 			}
 
+			$callback	=	'';
 			$trigger	=	'';
 
 			if ( $config['client'] == 'search' && $field->variation == 'form_filter' ) {
@@ -512,16 +540,27 @@ class plgCCK_FieldItem_X extends JCckPluginField
 				}
 			}
 
+			$extended_opts	=	JCckDatabase::loadResult( 'SELECT options FROM #__cck_core_searchs WHERE name = "'.$extended.'"' );
+
+			if ( $extended_opts ) {
+				$extended_opts	=	json_decode( $extended_opts );
+
+				if ( isset( $extended_opts->callback_pagination ) && $extended_opts->callback_pagination ) {
+					$callback	=	$extended_opts->callback_pagination;
+				}
+			}
+
 			$js 	=	'
 						(function ($){
 							$(document).ready(function() {
 								var data = {
 									"behavior":'.$field->bool.',
+									"callback":"'.$callback.'",
 									"identifier":"'.$identifier.'",
 									"link_add":"'.htmlspecialchars_decode( $link ).'",
 									"link_list":\''.$link5.'\',
 									"link_process":\''.$link7.'\',
-									"link_select":"'.htmlspecialchars_decode( $link2 ).'",
+									"link_select":"'.htmlspecialchars_decode( $link2 ).'&referrer_id='.$referrer_id.'",
 									"link_save":\''.$link6.'\',
 									"referrer":\''.$referrer.'\',
 									"required":'.( $field->required ? 1 : 0 ).',
@@ -554,9 +593,10 @@ class plgCCK_FieldItem_X extends JCckPluginField
 			}
 
 			$buffer		=	self::_render( $field, $value, array(), $config, $referrer );
+			$css		=	$field->css ? ' '.$field->css : '';
 			$html		.=	$buffer['form'];
 			$html		.=	$buffer['list'];
-			$html		=	'<div id="'.$field->name.'" class="item_x">'.$html.'</div>';
+			$html		=	'<div id="'.$field->name.'" class="item_x'.$css.'">'.$html.'</div>';
 
 			if ( $buffer['validation'] ) {
 				$config['validation']	=	array_merge( $config['validation'], $buffer['validation'] );
@@ -585,8 +625,28 @@ class plgCCK_FieldItem_X extends JCckPluginField
 		if ( self::$type != $field->type ) {
 			return;
 		}
-		
-		$field->data	=	array( 0=>array( 'title'=>'AA' ), 1=>array( 'title'=>'BB' ) );
+
+		if ( $config['resource_type'] ) {
+			$context		=	array(
+									'resource_relation'=>$config['resource'],
+									'resource_relation_id'=>$config['resource_id'],
+								);
+
+			if ( $config['resource_identifier'] != '' ) {
+				$context['resource_relation_id']	=	(string)((int)$config['pk']);
+			}
+
+			$output			=	JCckWebservice::output( $config['resource_relation'], $context );
+
+			// Tweak Output
+			if ( isset( $output['data']['code'] ) ) {
+				$output		=	array();
+			} else {
+				$output		=	$output['data'];
+			}
+
+			$field->data	=	$output;
+		}
 	}
 	
 	// onCCK_FieldPrepareSearch
@@ -1013,8 +1073,8 @@ class plgCCK_FieldItem_X extends JCckPluginField
 		*/
 		$app			=	JFactory::getApplication();
 		$class_sfx		=	'';
-		$uniqId			=	'f'.$field->id;
-		$formId			=	'seblod_form'; /* 'seblod_list_'.$uniqId; */
+		$uniqId			=	'_f'.$field->id;
+		$formId			=	'seblod_form'; /* 'seblod_list'.$uniqId; */
 		$formValidation	=	'';
 		$option			=	$app->input->get( 'option', '' );
 		$view			=	'';
@@ -1039,7 +1099,7 @@ class plgCCK_FieldItem_X extends JCckPluginField
 								'ordering2'=>'',
 								'search'=>$extended,
 								'show_form'=>1,
-								'submit'=>'JCck.Core.submit_'.$uniqId,
+								'submit'=>'JCck.Core.submit'.$uniqId,
 								'task'=>'search',
 							);
 
