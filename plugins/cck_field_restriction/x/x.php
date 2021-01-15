@@ -121,8 +121,20 @@ class plgCCK_Field_RestrictionX extends JCckPluginRestriction
 				}
 			}
 			if ( count( $todo ) ) {
-				foreach ( $todo as $k=>$v ) {
-					parent::g_addProcess( $k, self::$type, $config, array( 'name'=>$field->name, 'event'=>$k, 'restrictions'=>$v ) );
+				foreach ( $todo as $k=>$v_restrictions ) {
+					$priority		=	3;
+					$priority_base	=	10;
+
+					foreach ( $v_restrictions as $v_restriction ) {
+						if ( isset( $v_restriction->priority ) && $v_restriction->priority && $v_restriction->priority < $priority_base ) {
+							$priority_base	=	$v_restriction->priority;
+						}
+					}
+					if ( $priority_base > $priority && $priority_base != 10 ) {
+						$priority	=	$priority_base;
+					}
+
+					parent::g_addProcess( $k, self::$type, $config, array( 'name'=>$field->name, 'event'=>$k, 'restrictions'=>$v_restrictions ), $priority );
 				}
 			}
 			$field->restriction			=	'x';
