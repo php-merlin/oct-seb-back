@@ -72,6 +72,9 @@ class plgCCK_FieldEmail extends JCckPluginField
 		
 		// Prepare
 		$class	=	'inputbox text'.$validate . ( $field->css ? ' '.$field->css : '' );
+		if ( $value != '' ) {
+			$class	.=	' has-value';
+		}
 		$maxlen	=	( $field->maxlength > 0 ) ? ' maxlength="'.$field->maxlength.'"' : '';
 		$attr	=	'class="'.$class.'" size="'.$field->size.'"'.$maxlen . ( $field->attributes ? ' '.$field->attributes : '' );
 		$form	=	'<input type="text" id="'.$id.'" name="'.$name.'" value="'.$value.'" '.$attr.' />';
@@ -318,10 +321,11 @@ class plgCCK_FieldEmail extends JCckPluginField
 			}
 			
 			if ( isset( $config['registration_activation'] ) ) {
-				$body		=	str_replace( '[activation]', JUri::root().'index.php?option=com_users&task=registration.activate&token='.$config['registration_activation'], $body );
-				$body		=	str_replace( '[username]', $fields['username']->value, $body );
-				$subject	=	str_replace( '[username]', $fields['username']->value, $subject );
+				$body	=	str_replace( '[activation]', JUri::root().'index.php?option=com_users&task=registration.activate&token='.$config['registration_activation'], $body );
+				$body	=	str_replace( '[password]', $config['registration_password'], $body );
 			}
+
+			$body	=	str_replace( '[password]', $config['registration_password'], $body );
 
 			// {del fieldname}{/del}
 			if ( $body != '' && strpos( $body, '{del' ) !== false ) {
