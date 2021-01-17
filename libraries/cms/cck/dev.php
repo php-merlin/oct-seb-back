@@ -179,16 +179,25 @@ abstract class JCckDev
 	{
 		$app	=	JFactory::getApplication();
 		$doc	=	JFactory::getDocument();
-		
+		$lang	=	JFactory::getLanguage();
+
 		if ( !$id ) {
 			$id	=	'seblod_form';
 		}
 		if ( empty( $rules ) ) {
 			$rules	=	'';
 		}
-		$root	=	JUri::root( true );
-		$rules	=	str_replace( array( "\r\n", "\r", "\n", "\t", '  ', '    ', '    ' ), '', $rules );
-		
+
+		$message	=	'';
+		$root		=	JUri::root( true );
+		$rules		=	str_replace( array( "\r\n", "\r", "\n", "\t", '  ', '    ', '    ' ), '', $rules );
+
+		if ( $lang->hasKey( 'COM_CCK_PLEASE_CHECK_REQUIRED_TABS' ) ) {
+			$message	=	JText::_( 'COM_CCK_PLEASE_CHECK_REQUIRED_TABS' );
+		}		
+
+		$rules	.=	',"_tabs":{"regex":"","alertText":"'.addslashes( $message ).'"}';
+
 		if ( is_object( $options ) ) {
 			$bgcolor	=	$options->get( 'validation_background_color', JCck::getConfig_Param( 'validation_background_color', '' ) );
 			$color		=	$options->get( 'validation_color', JCck::getConfig_Param( 'validation_color', '' ) );
