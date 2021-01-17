@@ -41,12 +41,14 @@
 			<file type="module" id="mod_cck_search" client="site">mod_cck_search.zip</file>
 			<!-- Template // Site -->
 			<file type="template" id="seb_list" client="site">tpl_seb_list.zip</file>
+			<file type="template" id="seb_manager_search" client="site">tpl_seb_manager_search.zip</file>
 			<file type="template" id="seb_minima" client="site">tpl_seb_minima.zip</file>
 			<file type="template" id="seb_table" client="site">tpl_seb_table.zip</file>
 			<!-- Plugin // CCK Field -->
 			<file type="plugin" id="button_free" group="cck_field">plg_cck_field_button_free.zip</file>
 			<file type="plugin" id="button_submit" group="cck_field">plg_cck_field_button_submit.zip</file>
 			<file type="plugin" id="cck_break" group="cck_field">plg_cck_field_cck_break.zip</file>
+			<file type="plugin" id="cck_list" group="cck_field">plg_cck_field_cck_list.zip</file>
 			<file type="plugin" id="checkbox" group="cck_field">plg_cck_field_checkbox.zip</file>
 			<file type="plugin" id="colorpicker" group="cck_field">plg_cck_field_colorpicker.zip</file>
 			<file type="plugin" id="div" group="cck_field">plg_cck_field_div.zip</file>
@@ -71,10 +73,13 @@
 			<file type="plugin" id="message_redirection" group="cck_field">plg_cck_field_message_redirection.zip</file>
 			<file type="plugin" id="password" group="cck_field">plg_cck_field_password.zip</file>
 			<file type="plugin" id="radio" group="cck_field">plg_cck_field_radio.zip</file>
+			<file type="plugin" id="search_breadcrumbs" group="cck_field">plg_cck_field_search_breadcrumbs.zip</file>
 			<file type="plugin" id="search_generic" group="cck_field">plg_cck_field_search_generic.zip</file>
 			<file type="plugin" id="search_join" group="cck_field">plg_cck_field_search_join.zip</file>
 			<file type="plugin" id="search_operator" group="cck_field">plg_cck_field_search_operator.zip</file>
 			<file type="plugin" id="search_ordering" group="cck_field">plg_cck_field_search_ordering.zip</file>
+			<file type="plugin" id="search_query" group="cck_field">plg_cck_field_search_query.zip</file>
+			<file type="plugin" id="search_total" group="cck_field">plg_cck_field_search_total.zip</file>
 			<file type="plugin" id="select_dynamic" group="cck_field">plg_cck_field_select_dynamic.zip</file>
 			<file type="plugin" id="select_multiple" group="cck_field">plg_cck_field_select_multiple.zip</file>
 			<file type="plugin" id="select_numeric" group="cck_field">plg_cck_field_select_numeric.zip</file>
