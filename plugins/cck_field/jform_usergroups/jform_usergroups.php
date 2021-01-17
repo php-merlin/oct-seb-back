@@ -159,8 +159,8 @@ class plgCCK_FieldJForm_UserGroups extends JCckPluginField
 				$properties	=	JCck::callFunc( 'plgCCK_Storage_Location'.$field->storage_location, 'getStaticProperties', $properties );
 
 				$field->storage_location	=	'free';
-				$field->storage_table		=	'#__user_usergroup_map';
-				$field->storage_field		=	'group_id';
+				$field->storage_table		=	'#__usergroups';
+				$field->storage_field		=	'id';
 				$field->storage_field2		=	'';
 
 				// #1
@@ -174,14 +174,14 @@ class plgCCK_FieldJForm_UserGroups extends JCckPluginField
 				$config['joins'][$field->stage][]		=	$join;
 
 				// #2
-				// $join						=	new stdClass;
-				// $join->table				=	'#__usergroups';
-				// $join->column				=	'id';
-				// $join->column2				=	'group_id';
-				// $join->table2				=	'#__user_usergroup_map';
-				// $join->and					=	'';
+				$join						=	new stdClass;
+				$join->table				=	'#__usergroups';
+				$join->column				=	'id';
+				$join->column2				=	'group_id';
+				$join->table2				=	'#__user_usergroup_map';
+				$join->and					=	'';
 
-				// $config['joins'][$field->stage][]		=	$join;
+				$config['joins'][$field->stage][]		=	$join;
 
 				$config['query_parts']['group'][]	=	't0.id';
 			}
