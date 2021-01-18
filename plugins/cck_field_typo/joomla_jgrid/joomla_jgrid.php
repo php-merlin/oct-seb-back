@@ -127,7 +127,7 @@ class plgCCK_Field_TypoJoomla_Jgrid extends JCckPluginTypo
 				} else {
 					$doValidation	=	$config['doValidation'];
 				}
-				$hasIdentifier		=	$typo->get( 'use_identifier', '1' );
+				$hasIdentifier		=	(int)$typo->get( 'use_identifier', '1' );
 				$identifier			=	( $typo->get( 'identifier', 'id' ) == 'pk' ) ? $config['pk'] : $config['id'];
 				$identifier_name	=	$typo->get( 'identifier_name', '' );
 				$identifier_name	=	( $identifier_name != '' ) ? $identifier_name : $field->name;
@@ -135,7 +135,9 @@ class plgCCK_Field_TypoJoomla_Jgrid extends JCckPluginTypo
 				$inherit			=	array( 'id'=>$identifier.'_', 'name'=>'' );
 				
 				if ( $identifier_suffix ) {
-					if ( $hasIdentifier ) {
+					if ( $hasIdentifier == 2 ) {
+						$inherit['name']	=	$identifier_suffix.'['.$identifier.']'.'['.$identifier_name.']';
+					} else if ( $hasIdentifier ) {
 						$inherit['name']	=	$identifier.'['.$identifier_suffix.']'.'['.$identifier_name.']';
 					} else {
 						$inherit['name']	=	$identifier_suffix.'['.$identifier_name.'][]';

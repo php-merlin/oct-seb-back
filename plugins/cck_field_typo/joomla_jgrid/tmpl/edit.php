@@ -27,7 +27,7 @@ JCckDev::initScript( 'typo', $this->item );
 		echo JCckDev::renderForm( 'core_task_processing', '', $config, array( 'storage_field'=>'task_id_process' ) );
 		echo '<li><label>'.JText::_( 'COM_CCK_IDENTIFIER' ).'</label>'
 			. JCckDev::getForm( 'core_dev_bool', '', $config, array( 'label'=>'', 'defaultvalue'=>'id', 'options'=>'ID=id||Primary Key=pk', 'storage_field'=>'identifier' ) )
-			. JCckDev::getForm( 'core_dev_bool', '', $config, array( 'label'=>'', 'defaultvalue'=>'1', 'storage_field'=>'use_identifier' ) )
+			. JCckDev::getForm( 'core_dev_bool', '', $config, array( 'label'=>'', 'defaultvalue'=>'1', 'options'=>'No=0||Yes=1||Yes Within Container=2', 'storage_field'=>'use_identifier', 'attributes'=>'style="width:90px;"' ) )
 			. '</li>';
 		echo JCckDev::renderBlank( '<input type="hidden" id="blank_li" value="" />' );
 		echo '<li><label>'.JText::_( 'COM_CCK_CONTAINER_NAME' ).'</label>'
