@@ -72,6 +72,10 @@
 			<option value="1">JYES</option>
 			<option value="0">JNO</option>
 		</field>
+		<field name="force_delete" type="radio" default="0" label="COM_CCK_CONFIG_FORCE_DELETE" description="COM_CCK_CONFIG_FORCE_DELETE_DESC" class="btn-group btn-group-yesno">
+			<option value="1">JYES</option>
+			<option value="0">JNO</option>
+		</field>
 		<field name="COM_CCK_CONFIG_LEGEND_CONSTRUCTION" type="spacer" hr="false" />
 		<field name="storage_dev" type="list" default="0" label="COM_CCK_CONFIG_DEV_MODE" description="COM_CCK_CONFIG_DEV_MODE_DESC" class="btn-group btn-group-yesno">
 			<option value="0">COM_CCK_STANDARD</option>

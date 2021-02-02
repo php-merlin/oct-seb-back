@@ -52,17 +52,23 @@ class CCK_TableFolder extends JTable
 	public function delete( $pk = null )
 	{
 		if ( $this->id ) {
-			$count	=	0;
-			$types		=	JCckDatabase::loadResult( 'SELECT COUNT( a.folder ) FROM #__cck_core_types AS a WHERE folder = '.(int)$this->id.' GROUP BY a.folder' );
-			$fields		=	JCckDatabase::loadResult( 'SELECT COUNT( a.folder ) FROM #__cck_core_fields AS a WHERE folder = '.(int)$this->id.' GROUP BY a.folder' );
-			$searchs	=	JCckDatabase::loadResult( 'SELECT COUNT( a.folder ) FROM #__cck_core_searchs AS a WHERE folder = '.(int)$this->id.' GROUP BY a.folder' );
-			$templates	=	JCckDatabase::loadResult( 'SELECT COUNT( a.folder ) FROM #__cck_core_templates AS a WHERE folder = '.(int)$this->id.' GROUP BY a.folder' );
-			$count		=	$types + $fields + $searchs + $templates;
-			if ( (int)$count > 0 ) {
-				JFactory::getApplication()->enqueueMessage( JText::sprintf( 'COM_CCK_DELETE_FOLDER_NOT_ALLOWED', $this->title, $count ), 'error' );
-				return false;
-			} else {
+			if ( (int)JCck::getConfig_Param( 'force_delete', '0' ) ) {
 				return parent::delete();
+			} else {
+				$count		=	0;
+				$types		=	JCckDatabase::loadResult( 'SELECT COUNT( a.folder ) FROM #__cck_core_types AS a WHERE folder = '.(int)$this->id.' GROUP BY a.folder' );
+				$fields		=	JCckDatabase::loadResult( 'SELECT COUNT( a.folder ) FROM #__cck_core_fields AS a WHERE folder = '.(int)$this->id.' GROUP BY a.folder' );
+				$searchs	=	JCckDatabase::loadResult( 'SELECT COUNT( a.folder ) FROM #__cck_core_searchs AS a WHERE folder = '.(int)$this->id.' GROUP BY a.folder' );
+				$templates	=	JCckDatabase::loadResult( 'SELECT COUNT( a.folder ) FROM #__cck_core_templates AS a WHERE folder = '.(int)$this->id.' GROUP BY a.folder' );
+				
+				$count		=	$types + $fields + $searchs + $templates;
+
+				if ( (int)$count > 0 ) {
+					JFactory::getApplication()->enqueueMessage( JText::sprintf( 'COM_CCK_DELETE_FOLDER_NOT_ALLOWED', $this->title, $count ), 'error' );
+					return false;
+				} else {
+					return parent::delete();
+				}
 			}
 		}
 	}
