@@ -58,7 +58,7 @@ class plgCCK_Field_TypoJoomla_Jgrid extends JCckPluginTypo
 			case 'block':
 				parent::g_addProcess( 'beforeRenderContent', self::$type, $config, array( 'name'=>$field->name, 'type'=>$type, 'value'=>$value, 'class'=>$class, 'pk'=>$pk, 'pk_i'=>$pks[$pk] ) );
 
-				$config['formWrapper']	=	true;
+				$config['formWrapper']	=	1;
 				break;
 			case 'dropdown':
 				static $dropdown		=	array();
@@ -105,7 +105,7 @@ class plgCCK_Field_TypoJoomla_Jgrid extends JCckPluginTypo
 
 				parent::g_addProcess( 'beforeRenderContent', self::$type, $config, array( 'name'=>$field->name, 'type'=>$type, 'value'=>$value, 'class'=>$class, 'pk'=>$pks[$pk] ) );
 
-				$config['formWrapper']	=	true;
+				$config['formWrapper']	=	1;
 				break;
 			case 'form':
 			case 'form_custom_number':
@@ -201,7 +201,7 @@ class plgCCK_Field_TypoJoomla_Jgrid extends JCckPluginTypo
 				$field->form			=	JCck::callFunc_Array( 'plgCCK_Field'.$field->type, 'onCCK_FieldRenderForm', array( $field, &$config ) );
 				$field->label			=	$field->label2 != 'clear' ? $field->label2 : '';
 				$value					=	$field->form;
-				$config['formWrapper']	=	true;
+				$config['formWrapper']	=	1;
 
 				if ( $config['doValidation'] ) {
 					static $validation_loaded	=	0;
@@ -250,7 +250,7 @@ class plgCCK_Field_TypoJoomla_Jgrid extends JCckPluginTypo
 					$value	=	str_replace( 'this.checked);"', 'this.checked, document.getElementById(\''.$formId.'\'));"' . $class, $value );
 				}
 
-				$config['formWrapper']	=	true;
+				$config['formWrapper']	=	1;
 				break;
 			case 'selection_label':
 				$value		=	'<label for="cb'.$pks[$pk].'">'.$value.'</label>';
@@ -326,12 +326,12 @@ class plgCCK_Field_TypoJoomla_Jgrid extends JCckPluginTypo
 					$value	=	'<input type="text" style="display:none" name="order[]" size="5" value="'.$order.'" data-cck-remove-before-search="" />';
 				}
 				
-				$config['formWrapper']	=	true;
+				$config['formWrapper']	=	1;
 				break;
 			case 'state':
 				parent::g_addProcess( 'beforeRenderContent', self::$type, $config, array( 'name'=>$field->name, 'type'=>$type, 'value'=>$field->value, 'class'=>$class, 'pk'=>$pks[$pk], 'title'=>$typo->get( 'state_title', '' ), 'fieldname_up'=>$typo->get( 'state_up', '' ), 'fieldname_down'=>$typo->get( 'state_down', '' ) ) );
 
-				$config['formWrapper']	=	true;
+				$config['formWrapper']	=	1;
 				break;
 			default:
 				break;

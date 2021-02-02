@@ -146,7 +146,7 @@ class plgCCK_FieldButton_Submit extends JCckPluginField
 		}
 
 		if ( $form != '' ) {
-			if ( !( isset( $config['formWrapper'] ) && $config['formWrapper'] ) ) {
+			if ( !( isset( $config['formWrapper'] ) && $config['formWrapper'] == 1 ) ) {
 				$form	=	'<form action="'.JRoute::_( 'index.php?option=com_cck' ).'" autocomplete="off" enctype="multipart/form-data" method="get" id="'.$form_id.'" name="'.$form_id.'">'.$form;
 			}
 			
@@ -156,7 +156,7 @@ class plgCCK_FieldButton_Submit extends JCckPluginField
 					.	'<input type="hidden" name="tid" value="'.$task_id.'">';
 			$form	.=	JHtml::_( 'form.token' );
 
-			if ( !( isset( $config['formWrapper'] ) && $config['formWrapper'] ) ) {
+			if ( !( isset( $config['formWrapper'] ) && $config['formWrapper'] == 1 ) ) {
 				$form	.=	'</form>';
 			}
 		}

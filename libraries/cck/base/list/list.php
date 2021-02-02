@@ -364,7 +364,7 @@ class CCK_List
 								'buffer'=>'',
 								'config'=>array()
 							);
-		$form_wrapper	=	false;
+		$form_wrapper	=	0;
 		$list			=	array(
 								'doSEF'=>$config_list['doSEF'],
 								'formId'=>$config_list['formId'],

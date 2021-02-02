@@ -93,6 +93,10 @@ class plgCCK_FieldForm_Action extends JCckPluginField
 			}
 
 			$html	.=	'</form>';
+
+			if ( isset( $config['formWrapper'] ) && $config['formWrapper'] == 1 ) {
+				$config['formWrapper']	=	2;
+			}
 		} else {
 			$app		=	JFactory::getApplication();
 			$options2	=	new JRegistry( $field->options2 );
@@ -137,6 +141,10 @@ class plgCCK_FieldForm_Action extends JCckPluginField
 			$enctype		=	( $enctype && $method == 'post' ) ? ' enctype="'.$enctype.'"' : '';
 			$target			=	( $target ) ? ' target="'.$target.'"' : '';
 			$html			=	'<form'.$enctype.$target.' action="'.$action.'" autocomplete="'.$autocomplete.'" method="'.$method.'" id="'.$config['formId'].'" name="'.$config['formId'].'"'.$class.'>';
+
+			if ( isset( $config['formWrapper'] ) && $config['formWrapper'] == 2 ) {
+				$config['formWrapper']	=	1;
+			}
 		}
 
 		// Set
