@@ -90,6 +90,9 @@ class CCK_TableType extends JTable
 	// delete
 	public function delete( $pk = null )
 	{
+		if ( $pk ) {
+			$this->load( $pk );
+		}
 		if ( $this->id ) {
 			$clients	=	array( 'admin', 'site', 'content', 'intro' );
 			foreach ( $clients as $client ) {

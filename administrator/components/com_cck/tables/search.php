@@ -41,6 +41,9 @@ class CCK_TableSearch extends JTable
 	// delete
 	public function delete( $pk = null )
 	{
+		if ( $pk ) {
+			$this->load( $pk );
+		}
 		if ( $this->id ) {
 			$clients	=	array( 'search', 'filter', 'list', 'item' );
 			foreach ( $clients as $client ) {
