@@ -826,7 +826,7 @@ class JCckPluginField extends JPlugin
 				}
 			}
 		}
-		if ( $config['doTranslation'] ) {
+		if ( isset( $config['doTranslation'] ) && $config['doTranslation'] ) {
 			if ( $field->label == '&nbsp;' ) {
 				$field->label	=	'Nbsp';
 			}
