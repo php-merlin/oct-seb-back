@@ -6,12 +6,12 @@ if ( !( isset( $this ) && $this->isSecure() ) ) {
 }
 
 if ( $this->getType() != '' ) {
-	$path	=	JPATH_SITE.'/project/apps/'.$this->getApp()->name.'/trigger/before_store/'.$this->getType().'.php';
+	$path	=	JPATH_SITE.'/project/apps/'.$this->getApp()->name.'/trigger/resource_input/'.$this->getType().'.php';
 
 	if ( is_file( $path ) ) {
 		include $path;
 	} else {
-		$path	=	JPATH_SITE.'/project/apps/'.$this->getApp()->name.'/trigger/before_store.php';
+		$path	=	JPATH_SITE.'/project/apps/'.$this->getApp()->name.'/trigger/resource_input.php';
 
 		if ( is_file( $path ) ) {
 			include $path;

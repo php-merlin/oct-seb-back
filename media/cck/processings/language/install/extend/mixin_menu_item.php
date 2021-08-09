@@ -5,8 +5,8 @@ $mixin	=	new class() {
 	// _createNavItems
 	protected function _createNavItems()
 	{
-		return function( $data_default, $src_pks, $params ) {
-			$aliases	=	array();
+		return function( $data_default, $src_pks ) {
+			// $aliases	=	array();
 
 			// Create
 			foreach ( $src_pks as $src_pk=>$null ) {
@@ -16,19 +16,24 @@ $mixin	=	new class() {
 					continue;
 				}
 
-				$data	=	$this->getData();
+				$associations	=	array();
+				$data			=	$this->getData();
 
 				// Alias
-				if ( $data['type'] == 'alias' ) {
-					$aliases[$src_pk]	=	(int)$this->getRegistry( 'params' )->get( 'aliasoptions' );
-				}
+				// if ( $data['type'] == 'alias' ) {
+				// 	$aliases[$src_pk]	=	(int)$this->getRegistry( 'params' )->get( 'aliasoptions' );
+				// }
 
 				// Association
-				$this->_loadLanguageAssociation( 'en-GB', $params );
+				// $this->_loadLanguageAssociation( 'en-GB', $params );
 
-				$associations		=	$this->_getLanguageAssociations();
+				if ( $data['language'] != '*' ) {
+					$associations		=	$this->_getLanguageAssociations();
 
-				if ( count( $associations ) ) {
+					if ( !is_array( $associations ) ) {
+						$associations	=	array();
+					}
+
 					$associations['en-GB']	=	(string)$this->getPk();
 				}
 
@@ -51,7 +56,7 @@ $mixin	=	new class() {
 
 				unset( $data['lft'], $data['rgt'], $data['level'], $data['path'] );
 
-				if ( !$this->create( 'menu_item', $data )->isSuccessful() ) {
+				if ( !$this->create( 'o_nav_item', $data )->isSuccessful() ) {
 					continue;
 				}
 
@@ -63,21 +68,21 @@ $mixin	=	new class() {
 			}
 
 			// Update Aliases
-			foreach ( $aliases as $src_pk=>$alias_pk ) {
-				if ( !isset( $src_pks[$src_pk], $src_pks[$alias_pk] ) ) {
-					continue;
-				}
+			// foreach ( $aliases as $src_pk=>$alias_pk ) {
+			// 	if ( !isset( $src_pks[$src_pk], $src_pks[$alias_pk] ) ) {
+			// 		continue;
+			// 	}
 
-				if ( !$this->load( $src_pks[$src_pk] )->isSuccessful() ) {
-					continue;
-				}
+			// 	if ( !$this->load( $src_pks[$src_pk] )->isSuccessful() ) {
+			// 		continue;
+			// 	}
 
-				$json	=	$this->getRegistry( 'params' );
-				$json->set( 'aliasoptions', (string)$src_pks[$alias_pk] );
+			// 	$json	=	$this->getRegistry( 'params' );
+			// 	$json->set( 'aliasoptions', (string)$src_pks[$alias_pk] );
 
-				$this->setProperty( 'params', $json->toString( 'JSON', array( 'bitmask'=>JSON_UNESCAPED_UNICODE ) ) )
-					 ->store();
-			}
+			// 	$this->setProperty( 'params', $json->toString( 'JSON', array( 'bitmask'=>JSON_UNESCAPED_UNICODE ) ) )
+			// 		 ->store();
+			// }
 
 			return $src_pks;
 		};
@@ -86,8 +91,8 @@ $mixin	=	new class() {
 	// _getLanguageAssociationId
 	protected function _getLanguageAssociationId()
 	{
-		return function( $lang_tag ) {
-			$associations	=	$this->_getLanguageAssociations();
+		return function( $lang_tag, $where_clause ) {
+			$associations	=	$this->_getLanguageAssociations( $where_clause );
 
 			if ( isset( $associations[$lang_tag] ) ) {
 				return $associations[$lang_tag];
@@ -100,9 +105,9 @@ $mixin	=	new class() {
 	// _getLanguageAssociations
 	protected function _getLanguageAssociations()
 	{
-		return function() {
+		return function( $where_clause = array() ) {
 			$associations	=	array();
-			$items			=	JLanguageAssociations::getAssociations( 'com_menus', '#__menu', 'com_menus.item', $this->getPk(), 'id', '', '' );
+			$items			=	JLanguageAssociations::getAssociations( 'com_menus', '#__menu', 'com_menus.item', $this->getPk(), 'id', '', '', $where_clause );
 
 			foreach ( $items as $lang_tag=>$item ) {
 				$associations[$lang_tag]	=	$item->id;

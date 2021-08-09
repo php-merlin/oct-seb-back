@@ -49,7 +49,7 @@ $mixin	=	new class() {
 	{
 		return function() {
 			$content_element	=	new JCckContentFree;
-			$content_element->setTable( '#__cck_store_free_elements' );
+			$content_element->setTable( '#__cck_store_form_o_element' );
 
 			$content_element->extend( __DIR__.'/mixin_free.php' );
 
@@ -66,7 +66,7 @@ $mixin	=	new class() {
 									);
 
 			foreach ( $element_types as $element_type ) {
-				$src_pks		=	$content_element->search( $element_type, array( 'language'=>'ru-RU', 'published'=>'1' ) )
+				$src_pks		=	$content_element->search( $element_type, array( 'language'=>'en-GB', 'published'=>'1' ) )
 													->findPks();
 				$src_pks		=	array_flip( $src_pks );
 				
@@ -85,9 +85,11 @@ $mixin	=	new class() {
 
 					$associations	=	$content_element->_getLanguageAssociations();
 
-					if ( count( $associations ) ) {
-						$associations['en-GB']	=	(string)$content_element->getPk();
+					if ( !is_array( $associations ) ) {
+						$associations	=	array();
 					}
+
+					$associations['en-GB']	=	(string)$content_element->getPk();
 
 					$data['language']	=	$this->_( 'lang_tag' );
 					$data['params']		=	json_decode( $data['params'], true );
@@ -166,6 +168,19 @@ $mixin	=	new class() {
 				}
 			}
 
+			// --
+			switch ( $data['name'] ) {
+				case 'o_freetext_translate_to_'.$this->_( 'lang_sef' ):
+					$data['defaultvalue']	=	'J(Translate to '.str_replace( '-', '_', $this->_( 'lang_tag' ) ).')';
+					break;
+				case 'o_tab_languages_'.$this->_( 'lang_sef' ):
+					$data['label']			=	str_replace( '-', '_', $this->_( 'lang_tag' ) );
+					break;
+				default:
+					break;
+			}
+			// --
+
 			unset( $data['checked_out'], $data['checked_out_time'] );
 
 			if ( !$field->create( 'o_field', $data )->isSuccessful() ) {
@@ -195,57 +210,77 @@ $mixin	=	new class() {
 			$type	=	new JCckType;
 			$type->extend( __DIR__.'/mixin_type.php' );
 
-			foreach ( $this->_getDef( $app_name, 'types' ) as $name=>$null ) {
-				if ( !$type->load( $name )->isSuccessful() ) {
-					continue;
+			// $content_types	=	$this->_getDef( $app_name, 'types' );
+
+			// $content_types	=	array();
+			// $content_types[$app_name.'_grp_form_'.$this->_( 'lang_sef' )]	=	true;
+
+			// $name	=	$app_name.'_grp_form_en';
+// dump($name);
+			// foreach ( $content_types as $name=>$null ) {
+				if ( !$type->load( $app_name )->isSuccessful() ) {
+					return;
 				}
 
 				$data	=	$type->getData();
 				$fields	=	$type->_getFields( 'admin' );
 
 				// Data
-				$data['name']	=	$this->_swapFieldProperty( $data['name'], 'name' );
-				$data['title']	=	$this->_swapFieldProperty( $data['title'], 'title' );				
+				$data['name']		=	$this->_swapFieldProperty( $data['name'], 'name' );
+				$data['title']		=	$this->_swapFieldProperty( $data['title'], 'title' );
+				$data['language']	=	$this->_( 'lang_tag' );
 
 				unset( $data['asset_id'], $data['checked_out'], $data['checked_out_time'] );
 
 				if ( !$type->create( 'o_type', $data )->isSuccessful() ) {
-					continue;
+					return;
 				}
 
-				// Fields
-				$fields	=	$type->_changeFields( $fields, $this->_( 'lang_sef' ) );
+				// Alter Fields
+				foreach ( $fields as $key=>$field ) {
+					if ( $field->required != '' && strpos( $field->required, 'required[cond:' ) !== false ) {
+						$field->required	=	str_replace( array( 'required[cond:', ']' ), '', $field->required );
+						$field->required	=	'required[cond:'.$this->_swapFieldProperty( $field->required, 'name' ).']';
+					}
+					if ( $field->conditional != '' ) {
+						$parts	=	explode( ',', $field->conditional );
+
+						foreach ( $parts as $k=>$v ) {
+							if ( strpos( $v, 'o_' ) !== false ) {
+								$parts[$k]	=	$this->_swapFieldProperty( $v, 'name' );
+							}
+						}
+
+						$fields[$key]->conditional	=	implode( ',', $parts );
+
+						if ( $field->conditional_options != '' ) {
+							$parts	=	explode( '"', $field->conditional_options );
+
+							foreach ( $parts as $k=>$v ) {
+								if ( strpos( $v, 'o_' ) !== false ) {
+									$parts[$k]	=	$this->_swapFieldProperty( $v, 'name' );
+								}
+							}
+
+							$fields[$key]->conditional_options	=	implode( '"', $parts );
+						}
+					}
+				}
+				
+				// Update Fields
+				$fields	=	$type->_changeFields( $fields, $this );
+
 				$type->_setFields( $fields );
 
 				// $this->_createField( $name );
-			}
-		};
-	}
-
-	// _createNav
-	protected function _createNav()
-	{
-		return function( $menu_type ) {
-			if ( !$this->_( 'lang_tag' ) ) {
-				return $this;
-			}
-
-			$content_menu	=	new JCckContentMenu;
-
-			$content_menu->create( 'menu', array(
-											'client_id'=>'0',
-											'description'=>'The main menu for the site ('.$this->_( 'lang_tag' ).')',
-											'menutype'=>$menu_type,
-											'title'=>'Main Menu ('.$this->_( 'lang_tag' ).')'
-										   )
-								 );
+			// }
 		};
 	}
 
 	// _createNavItems
 	protected function _createNavItems()
 	{
-		return function( $data_search, $menu_type, $params ) {
+		return function( $data_search, $menu_type ) {
 			if ( !$this->_( 'lang_tag' ) ) {
 				return $this;
 			}
@@ -258,13 +293,57 @@ $mixin	=	new class() {
 										'menutype'=>$menu_type
 									);
 
-			$src_pks			=	$content_menu_item->search( 'menu_item', $data_search )
+			$src_pks			=	$content_menu_item->search( 'o_nav_item', $data_search )
 													  ->by( 'lft' )
 													  ->findPks();
 			$src_pks			=	array_flip( $src_pks );
-			$src_pks			=	$content_menu_item->_createNavItems( $data_create, $src_pks, $params );
+			$src_pks			=	$content_menu_item->_createNavItems( $data_create, $src_pks );
 
 			return $src_pks;
+		};
+	}
+
+	// _parseNavLists
+	protected function _parseNavLists()
+	{
+		return function() {
+			if ( !$this->_( 'lang_tag' ) ) {
+				return $this;
+			}
+
+			$content_menu	=	new JCckContentMenu;
+
+			foreach ( $content_menu->find( 'o_nav_list' )->getPks() as $pk ) {
+				$content_menu->load( $pk );
+
+				if ( !$content_menu->isSuccessful() ) {
+					continue;
+				}
+
+				$nav_list	=	$content_menu->getProperty( 'menutype' );
+				$nav_list2	=	$nav_list;
+
+				if ( strpos( $nav_list, 'en-gb' ) !== false ) {
+					$data	=	$content_menu->getData();
+
+					unset( $data['asset_id'] );
+
+					$data['description']	=	str_replace( 'en-GB', $this->_( 'lang_tag' ), $data['description'] );
+					$data['title']			=	str_replace( 'en-GB', $this->_( 'lang_tag' ), $data['title'] );
+					$data['menutype']		=	str_replace( 'en-gb', strtolower( $this->_( 'lang_tag' ) ), $data['menutype'] );
+
+					$content_menu->create( 'o_nav_list', $data );
+
+					if ( !$content_menu->isSuccessful() ) {
+						continue;
+					}
+
+					$nav_list2	=	$data['menutype'];
+				}
+				if ( $content_menu->isSuccessful() ) {
+					$this->_createNavItems( array( 'language'=>'en-GB', 'menutype'=>$nav_list ), $nav_list2 );
+				}
+			}
 		};
 	}
 
@@ -298,25 +377,24 @@ $mixin	=	new class() {
 	// _getNavItemAssociation
 	protected function _getNavItemAssociation()
 	{
-		return function( $id ) {
-			$assoc_id	=	'';
+		return function( $id, $force = false ) {
+			$assoc_id	=	0;
 
 			$content_menu_item	=	new JCckContentMenuItem;
 			$content_menu_item->extend( __DIR__.'/mixin_menu_item.php' );
 
 			if ( $content_menu_item->load( $id )->isSuccessful() ) {
-				return $content_menu_item->_getLanguageAssociationId( $this->_( 'lang_tag' ) );
+				$assoc_id	=	$content_menu_item->_getLanguageAssociationId( $this->_( 'lang_tag' ), array( 'c.language = ' . JCckDatabase::quote( 'en-GB' ) ) );
 			}
 
-
-			return $assoc_id;
+			return ( $force && !$assoc_id ) ? $id : $assoc_id;
 		};
 	}
 
 	// _updateApp
 	protected function _updateApp()
 	{
-		return function( $app_name ) {
+		return function( $app_name, $app_id ) {
 			if ( !$this->_( 'lang_tag' ) ) {
 				return $this;
 			}
@@ -324,11 +402,20 @@ $mixin	=	new class() {
 				return $this;
 			}
 
+			$types	=	JCckDatabase::loadObjectList( 'SELECT id, name, language, parent FROM #__cck_core_types WHERE folder = '.(int)$app_id );
 			// $this->_createAppFields( $app_name );
 
-			$this->_createType( $app_name );
-
-			// $this->_updateTypes( $app_name );
+			foreach ( $types as $type ) {
+				if ( !$type->parent ) {
+					// OK
+				} else {
+					if ( $type->language == '*' ) {
+						$this->_updateType( $type->name );
+					} elseif ( $type->language == 'en-GB' ) {
+						$this->_createType( $type->name );
+					}
+				}
+			}
 		};
 	}
 
@@ -336,61 +423,73 @@ $mixin	=	new class() {
 	protected function _updateApps()
 	{
 		return function() {
-			$apps	=	JFolder::files( dirname( __DIR__ ).'/def', '\.json$' );
+			// $apps	=	JFolder::files( dirname( __DIR__ ).'/def', '\.json$' );
+			$apps	=	JCckDatabase::loadObjectList( 'SELECT id, name FROM #__cck_core_folders WHERE featured = 1' );
 
 			foreach ( $apps as $app ) {
-				$app	=	basename( $app, '.json' );
+				// $app	=	basename( $app, '.json' );
 
-				$this->_updateApp( $app );
+				$this->_updateApp( $app->name, $app->id );
 			}
 		};
 	}
 
-	// _updateTypes
-	protected function _updateTypes()
+	// _updateType
+	protected function _updateType()
 	{
 		return function( $app_name ) {
 			$type	=	new JCckType;
-			
-			$type->load( $app_name.'_grp_description' )
-				 ->assign( $app_name.'_text_'.$this->_( 'lang_sef' ), 'content', array(
-						 															'access'=>'1',
-																					'label'=>'clear',
-																					'markup'=>'none',
-																					'position'=>'_main_',
-																					'restriction'=>'joomla_language',
-																					'restriction_options'=>'{"languages":"'.$this->_( 'lang_tag' ).'","do":"0"}'
-																				) );
+			$type->extend( __DIR__.'/mixin_type.php' );
 
-			$type->load( $app_name.'_grp_snippet' )
-				 ->assign( $app_name.'_snippet_'.$this->_( 'lang_sef' ), 'content', array(
-							 															'access'=>'1',
-																						'label'=>'clear',
-																						'markup'=>'none',
-																						'position'=>'_main_',
-																						'restriction'=>'joomla_language',
-																						'restriction_options'=>'{"languages":"'.$this->_( 'lang_tag' ).'","do":"0"}'
-																					) );
+// $app_name.'_grp_content_title'
 
-			$type->load( $app_name.'_grp_title' )
-				 ->assign( $app_name.'_title_'.$this->_( 'lang_sef' ), 'content', array(
-						 															'access'=>'1',
-						 															'label'=>'clear',
-																					'markup'=>'none',
-																					'position'=>'_main_',
-																					'restriction'=>'joomla_language',
-																					'restriction_options'=>'{"languages":"'.$this->_( 'lang_tag' ).'","do":"0"}'
-																				) )
-				 ->assign( $app_name.'_title_'.$this->_( 'lang_sef' ), 'intro', array(
-						 															'access'=>'1',
-						 															'label'=>'clear',
-						 															'link'=>'content',
-						 															'link_options'=>'{"sef":"","itemid":"'.$this->_getNavItemAssociation( $this->_getDef( $app_name, 'menu_item' ) ).'","itemid_fieldname":"","content":"","content_fieldname":"","content_location":"joomla_article","language":"","itemid_mapping":"","attributes":"","class":"","target":"","target_params":"","rel":"","title":"","title_custom":"","state":"0","tmpl":"","custom":"","path_type":"0","site":""}',
-																					'markup'=>'none',
-																					'position'=>'_main_',
-																					'restriction'=>'joomla_language',
-																					'restriction_options'=>'{"languages":"'.$this->_( 'lang_tag' ).'","do":"0"}'
-																				) );
+			if ( $type->load( $app_name )->isSuccessful() ) {
+				// Content
+				$fields	=	$type->_getFields( 'content' );
+
+				if ( count( $fields ) ) {
+					$fields	=	$type->_parseFields( $fields, 'en-GB' );
+
+					foreach ( $fields as $field ) {
+						$name	=	$type->_getFieldName( $field->fieldid );
+						$name	=	$this->_swapFieldProperty( $name, 'name' );
+
+						unset( $field->client, $field->fieldid, $field->ordering, $field->typeid );
+
+						$properties	=	(array)$field;
+
+						$properties['restriction_options']	=	'{"languages":"'.$this->_( 'lang_tag' ).'","do":"0"}';
+
+						$type->assign( $name, 'content', $properties );
+					}	
+				}
+
+				// Intro
+				$fields	=	$type->_getFields( 'intro' );
+
+				if ( count( $fields ) ) {
+					$fields	=	$type->_parseFields( $fields, 'en-GB' );
+
+					foreach ( $fields as $field ) {
+						$name	=	$type->_getFieldName( $field->fieldid );
+						$name	=	$this->_swapFieldProperty( $name, 'name' );
+
+						unset( $field->client, $field->fieldid, $field->ordering, $field->typeid );
+
+						$properties	=	(array)$field;
+
+						if ( $properties['link'] == 'content' ) {
+							$properties['link_options']				=	json_decode( $properties['link_options'], true );
+							$properties['link_options']['itemid']	=	$this->_getNavItemAssociation( $properties['link_options']['itemid'], true );
+							$properties['link_options']				=	json_encode( $properties['link_options'] );
+						}
+
+						$properties['restriction_options']	=	'{"languages":"'.$this->_( 'lang_tag' ).'","do":"0"}';
+
+						$type->assign( $name, 'intro', $properties );
+					}
+				}
+			}
 		};
 	}
 };

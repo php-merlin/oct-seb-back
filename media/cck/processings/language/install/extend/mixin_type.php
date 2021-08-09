@@ -5,7 +5,7 @@ $mixin	=	new class() {
 	// _changeFields
 	public function _changeFields()
 	{
-		return function( $fields, $lang_sef ) {
+		return function( $fields, $content_instance ) {
 			$ids	=	array();
 
 			foreach ( $fields as $field ) {
@@ -15,7 +15,8 @@ $mixin	=	new class() {
 
 			foreach ( $fields as $field ) {
 				if ( isset( $names[$field->fieldid] ) ) {
-					$id	=	$this->_getFieldAssociation( $names[$field->fieldid]->name, $lang_sef );
+					$name	=	$content_instance->_swapFieldProperty( $names[$field->fieldid]->name, 'name' );
+					$id		=	(string)$this->_getFieldId( $name );
 
 					if ( $id ) {
 						$field->fieldid	=	$id;
@@ -27,21 +28,19 @@ $mixin	=	new class() {
 		};
 	}
 
-	// _getFieldAssociation
-	protected function _getFieldAssociation()
+	// _getFieldId
+	protected function _getFieldId()
 	{
-		return function( $name, $lang_sef ) {
-			$pos	=	strpos( $name, 'tab_ru' );
+		return function( $name ) {			
+			return (int)JCckDatabase::loadResult( 'SELECT id FROM #__cck_core_fields WHERE name = "'.$name.'"' );
+		};
+	}
 
-			if ( $pos === 0 ) {
-				$name	=	'tab_'.$lang_sef.substr( $name, 6 );
-			} else {
-				$name	=	substr( $name, 0, -2 ).$lang_sef;
-			}
-			
-			$assoc_id	=	(int)JCckDatabase::loadResult( 'SELECT id FROM #__cck_core_fields WHERE name = "'.$name.'"' );
-			
-			return (string)$assoc_id;
+	// _getFieldName
+	protected function _getFieldName()
+	{
+		return function( $id ) {
+			return JCckDatabase::loadResult( 'SELECT name FROM #__cck_core_fields WHERE id = '.(int)$id );
 		};
 	}
 
@@ -54,6 +53,30 @@ $mixin	=	new class() {
 			$table->load( 'typeid = '.$this->getPk().' AND client = "'.$client.'"' );
 
 			return $table->getRows();
+		};
+	}
+
+	// _parseFields
+	public function _parseFields()
+	{
+		return function( $fields, $lang_tag ) {
+			$items	=	array();
+
+			foreach ( $fields as $field ) {
+				$items[]	=	$field->fieldid;
+			}
+
+			if ( count( $items ) ) {
+				$items	=	JCckDatabase::loadObjectList( 'SELECT id, language FROM #__cck_core_fields WHERE language = "'.$lang_tag.'" AND id IN ('.implode( ',', $items ).')', 'id' );
+			}
+
+			foreach ( $fields as $k=>$field ) {
+				if ( !isset( $items[$field->fieldid] ) ) {
+					unset( $fields[$k] );
+				}
+			}
+
+			return $fields;
 		};
 	}
 

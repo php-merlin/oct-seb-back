@@ -27,45 +27,24 @@ if ( !$content_language->count( $content_type, array( 'lang_id'=>$pk ) ) ) {
 		$content_language->_( 'lang_sef', substr( $lang_tag, 0, 2 ) );
 		$content_language->_( 'lang_tag', $lang_tag );
 
-		// $params		=	array( 'associations'=>array(
-		// 										'292'=>'246',
-		// 										'294'=>'144',
-		// 										'289'=>'247',
-		// 										'293'=>'147',
-		// 										'285'=>'123',
-		// 										'316'=>'128'
-		// 									   )
-		// 				);
-
-		// Create Nav: Main Menu
-		// $content_language->_createNav( 'mainmenu-'.strtolower( $lang_tag ) );
-		// $pks		=	$content_language->_createNavItems( array( 'language'=>'ru-RU', 'menutype'=>'mainmenu-ru-ru' ), 'mainmenu-'.strtolower( $lang_tag ), $params );
-		// $redirect	=	$pks[283];
-
-		// Create Nav: Hidden Menu
-		// $pks		=	$content_language->_createNavItems( array( 'language'=>'ru-RU', 'menutype'=>'hiddenmenu' ), 'hiddenmenu', $params );
-
-		// Create Nav: Footer Menu
-		// $pks		=	$content_language->_createNavItems( array( 'language'=>'ru-RU', 'menutype'=>'footermenu' ), 'footermenu', $params );
+		// Create Nav
+		$content_language->_parseNavLists();
 
 		// Create Elements
-		// $content_language->_createElements();
+		$content_language->_createElements();
 
 		// Create Fields
-		$content_language->_createFields();
+		$content_language->_createFields(); // base only?!
 
 		// Create Types
 		// ...
 
 		// Update Apps
-		$content_language->_updateApps();
+		$content_language->_updateApps(); // more only?!
 
 		// Store Language
-		// $content_language->setProperty( 'published', 1 )
-		// 				 ->setProperty( 'access_live', 3 )
-		// 				 ->setProperty( 'redirect_items', $redirect )
-		// 				 ->setProperty( 'type', 1 )
-		// 				 ->store();
+		$content_language->setProperty( 'published', 1 )
+						 ->store();
 	}
 }
 ?>

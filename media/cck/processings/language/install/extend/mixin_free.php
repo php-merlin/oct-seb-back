@@ -7,7 +7,7 @@ $mixin	=	new class() {
 	{
 		return function() {
 			$associations	=	array();
-			$items			=	JLanguageAssociations::getAssociations( 'com_cck', '#__cck_store_free_elements', 'com_cck.free.#__cck_store_free_elements', $this->getPk(), 'id', '', '' );
+			$items			=	JLanguageAssociations::getAssociations( 'com_cck', '#__cck_store_form_o_element', 'com_cck.free.#__cck_store_form_o_element', $this->getPk(), 'id', '', '' );
 								
 			foreach ( $items as $lang_tag=>$item ) {
 				$associations[$lang_tag]	=	$item->id;
@@ -24,7 +24,7 @@ $mixin	=	new class() {
 			$query	=	'SELECT name AS value, REPLACE(SUBSTRING(title, 10),"]","") AS text'
 					.	' FROM #__cck_core_types'
 					.	' WHERE published = 1'
-					.	' AND name LIKE "seb_element_%"'
+					.	' AND name LIKE "o_element_%"'
 					.	' AND name NOT LIKE "%_grp%"'
 					.	' ORDER BY text ASC'
 					;
@@ -38,7 +38,7 @@ $mixin	=	new class() {
 	{
 		return function( $lang_tag ) {
 			$assoc_id		=	0;
-			$associations	=	JLanguageAssociations::getAssociations( 'com_cck', '#__cck_store_free_elements', 'com_cck.free.#__cck_store_free_elements', $this->getPk(), 'id', '', '' );
+			$associations	=	JLanguageAssociations::getAssociations( 'com_cck', '#__cck_store_form_o_element', 'com_cck.free.#__cck_store_form_o_element', $this->getPk(), 'id', '', '' );
 
 			if ( isset( $associations[$lang_tag] ) ) {
 				$assoc_id	=	(int)$associations[$lang_tag]->id;
